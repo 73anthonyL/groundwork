@@ -1,0 +1,69 @@
+{
+  "slug": "summit-drywall",
+  "contractKey": "summit",
+  "file": "summit-drywall.pdf",
+  "notes": "Pay-if-paid (void in CA → pay-when-paid + 7-day clock), 10% retention released at final completion, backcharge with 5 business days' notice, no joint-check clause, stored materials not payable.",
+  "expected": {
+    "parties": {
+      "contractor": "Meridian Builders, Inc.",
+      "subcontractor": "Summit Drywall, Inc.",
+      "owner": "Bayview Health",
+      "project": "Bayview Clinic Tenant Improvement"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_if_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of final retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {
+    "parties.contractor": "MERIDIAN BUILDERS, INC., a California corporation holding California Contractors State License Board License No. 1083421",
+    "parties.subcontractor": "SUMMIT DRYWALL, INC., a California corporation holding License No. 1057730",
+    "parties.owner": "with Bayview Health, a California nonprofit public benefit corporation (\"Owner\")",
+    "parties.project": "Bayview Clinic Tenant Improvement located at 1400 Embarcadero West, Oakland, California 94607",
+    "governing_law_state": "governed by and construed in accordance with the laws of the State of California",
+    "timing.type": "Contractor's receipt of payment from Owner for the Subcontract Work is a condition precedent to Contractor's obligation to make any progress payment or final payment to Subcontractor",
+    "timing.days": "within seven (7) days after Contractor receives payment from Owner on account of the Subcontract Work covered by Subcontractor's application",
+    "timing.agreed_in_writing": "within seven (7) days after Contractor receives payment from Owner on account of the Subcontract Work covered by Subcontractor's application",
+    "retainage.percent_bps": "retention equal to ten percent (10%) of the amount otherwise due to Subcontractor",
+    "retainage.cap_bps": null,
+    "retainage.reduction_trigger": null,
+    "retainage.release_condition": "Retention shall be released to Subcontractor with final payment, following Final Completion of the Subcontract Work and Contractor's receipt of final retention from Owner",
+    "retainage.release_days": "in no event later than ten (10) days after Contractor receives from Owner the retention attributable to the Subcontract Work",
+    "waivers.conditional_before_progress": "a conditional waiver and release on progress payment, in the form prescribed by California Civil Code Section 8132, executed by Subcontractor and covering the amount requested",
+    "waivers.unconditional_after_payment": "unconditional waivers and releases on progress payment, in the form prescribed by California Civil Code Section 8134",
+    "waivers.lower_tier_required": "executed by Subcontractor and by each of its sub-subcontractors and suppliers of any tier, covering all amounts paid under the immediately preceding application",
+    "waivers.statutory_form_required": "in the statutory forms set out in California Civil Code Sections 8132, 8134, 8136 and 8138, as applicable",
+    "offsets.joint_check": null,
+    "offsets.backcharge_setoff": "does not cure the failure within five (5) business days after written notice from Contractor, Contractor may perform the obligation itself or through others and deduct the cost of doing so",
+    "offsets.withhold_defective": "Contractor may withhold from any payment otherwise due to Subcontractor an amount reasonably sufficient to protect Contractor and Owner on account of: (a) defective or nonconforming work not remedied",
+    "stored_materials": "No payment shall be made on account of materials or equipment delivered to the site, or stored on or off the site, that have not yet been incorporated into the Subcontract Work"
+  },
+  "anomalies": [
+    {
+      "field": "timing.type",
+      "description": "Section 5.2 makes owner payment a condition precedent to any obligation to pay and shifts the risk of owner insolvency to the subcontractor (pay-if-paid).",
+      "anchor": "Subcontractor expressly assumes the risk of Owner's nonpayment, insolvency, or delay in payment"
+    }
+  ]
+}

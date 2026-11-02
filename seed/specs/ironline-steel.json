@@ -1,0 +1,63 @@
+{
+  "slug": "ironline-steel",
+  "contractKey": "ironline",
+  "file": "ironline-steel.pdf",
+  "notes": "Clean pay-when-paid 7 days, 10% retention reduced to 5% at substantial completion (50% released), balance at final; statutory waivers; joint checks; stored materials allowed with insurance.",
+  "expected": {
+    "parties": {
+      "contractor": "Meridian Builders, Inc.",
+      "subcontractor": "Ironline Steel Fabricators, Inc.",
+      "owner": "Bayview Health",
+      "project": "Bayview Clinic Tenant Improvement"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": "one-half of accumulated retention released at Substantial Completion",
+      "release_condition": "one-half at Substantial Completion of the Subcontract Work; balance at Final Completion and Contractor's receipt of final retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": true,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": true
+  },
+  "anchors": {
+    "parties.contractor": "Meridian Builders, Inc., a California corporation, License No. 1083421",
+    "parties.subcontractor": "Ironline Steel Fabricators, Inc., a California corporation, License No. 994817",
+    "parties.owner": "The Owner is Bayview Health, a California nonprofit public benefit corporation",
+    "parties.project": "The Project is the Bayview Clinic Tenant Improvement at 1400 Embarcadero West, Oakland, California 94607",
+    "governing_law_state": "This Subcontract shall be governed by the laws of the State of California",
+    "timing.type": "the parties intend this Section 6.2 as a pay-when-paid provision and not as a pay-if-paid provision",
+    "timing.days": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor's receipt of the corresponding progress payment from Owner",
+    "timing.agreed_in_writing": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor's receipt of the corresponding progress payment from Owner",
+    "retainage.percent_bps": "Contractor shall withhold ten percent (10%) of each progress payment as retention",
+    "retainage.cap_bps": null,
+    "retainage.reduction_trigger": "Upon Substantial Completion of the Subcontract Work, as certified by the Architect, Contractor shall release to Subcontractor one-half of the accumulated retention then held",
+    "retainage.release_condition": "The balance of retention shall be released upon Final Completion of the Subcontract Work, acceptance by Owner, and delivery of the closeout documents required by Article 7",
+    "retainage.release_days": "within ten (10) days after Contractor's receipt of final retention from Owner",
+    "waivers.conditional_before_progress": "a conditional waiver and release upon progress payment, in the form prescribed by California Civil Code Section 8132, for the amount of the current application",
+    "waivers.unconditional_after_payment": "unconditional waivers and releases upon progress payment, in the form prescribed by California Civil Code Section 8134",
+    "waivers.lower_tier_required": "from Subcontractor and from each of its sub-subcontractors and suppliers of every tier, covering all prior payments",
+    "waivers.statutory_form_required": "a conditional waiver and release upon final payment in the form prescribed by California Civil Code Section 8136",
+    "offsets.joint_check": "make any payment under this Subcontract by check payable jointly to Subcontractor and any sub-subcontractor, supplier or laborer",
+    "offsets.backcharge_setoff": "Contractor may perform the obligation and deduct the reasonable cost, plus ten percent (10%) for overhead, from amounts due Subcontractor",
+    "offsets.withhold_defective": "Contractor may withhold from any payment an amount reasonably necessary to protect Contractor and Owner from loss on account of defective work not remedied",
+    "stored_materials": "Contractor shall include in progress payments the value of fabricated steel and other materials delivered and suitably stored at the Project site"
+  },
+  "anomalies": []
+}

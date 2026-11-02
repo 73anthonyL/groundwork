@@ -1,0 +1,72 @@
+{
+  "slug": "pacific-electric",
+  "contractKey": "pacific",
+  "file": "pacific-electric.pdf",
+  "notes": "Pay-when-paid 7 days, 5% retention (negotiated, citing §8811), release 'upon completion of the punch list to Contractor's satisfaction' → subjective trigger → Needs Review; joint checks allowed.",
+  "expected": {
+    "parties": {
+      "contractor": "Meridian Builders, Inc.",
+      "subcontractor": "Pacific Electric Company",
+      "owner": "Bayview Health",
+      "project": "Bayview Clinic Tenant Improvement"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "completion of the punch list to Contractor's satisfaction and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": true,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": true
+  },
+  "anchors": {
+    "parties.contractor": "Meridian Builders, Inc. (\"Contractor\"), a California corporation, License No. 1083421",
+    "parties.subcontractor": "Pacific Electric Company (\"Subcontractor\"), a California corporation, License No. 1012276",
+    "parties.owner": "of which Bayview Health is the owner (\"Owner\")",
+    "parties.project": "the project known as the Bayview Clinic Tenant Improvement, 1400 Embarcadero West, Oakland, California",
+    "governing_law_state": "This Agreement is governed by the laws of the State of California",
+    "timing.type": "Receipt of payment from Owner is intended by the parties to establish the time for payment to Subcontractor and not to be a condition precedent to Contractor's obligation to pay for Work properly performed",
+    "timing.days": "within seven (7) days following Contractor's receipt of payment from Owner for the Work covered by that application",
+    "timing.agreed_in_writing": "within seven (7) days following Contractor's receipt of payment from Owner for the Work covered by that application",
+    "retainage.percent_bps": "Contractor shall withhold five percent (5%) of each progress payment as retention",
+    "retainage.cap_bps": null,
+    "retainage.reduction_trigger": null,
+    "retainage.release_condition": "Retention shall be released upon completion of the Punch List to Contractor's satisfaction and Contractor's receipt of the corresponding retention from Owner",
+    "retainage.release_days": "and shall be paid within ten (10) days after such receipt",
+    "waivers.conditional_before_progress": "a conditional waiver and release on progress payment, in the form required by California Civil Code Section 8132, for the amount requested",
+    "waivers.unconditional_after_payment": "unconditional waivers and releases on progress payment, in the form required by Section 8134",
+    "waivers.lower_tier_required": "from Subcontractor and from every sub-subcontractor and supplier of any tier, for all amounts previously paid",
+    "waivers.statutory_form_required": "a conditional waiver and release on final payment in the form required by Section 8136 from itself and from every lower tier",
+    "offsets.joint_check": "Contractor may make payment by joint check payable to Subcontractor and the unpaid party",
+    "offsets.backcharge_setoff": "Contractor may do so and charge Subcontractor the cost plus fifteen percent (15%), by deduction from amounts otherwise payable",
+    "offsets.withhold_defective": "Contractor may withhold from any payment an amount sufficient, in Contractor's reasonable judgment, to protect Contractor and Owner from loss on account of defective Work not corrected",
+    "stored_materials": "Applications for payment may include the cost of materials and equipment delivered and suitably stored at the Project site"
+  },
+  "anomalies": [
+    {
+      "field": "retainage.release_condition",
+      "description": "Release is tied to completion of the punch list \"to Contractor's satisfaction\", a discretionary trigger with no objective date. The controller must choose an operational trigger (for example Substantial Completion as certified by the Architect).",
+      "anchor": "upon completion of the Punch List to Contractor's satisfaction"
+    }
+  ],
+  "confidence": {
+    "retainage.release_condition": "low"
+  }
+}
