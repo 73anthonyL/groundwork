@@ -1,0 +1,50 @@
+{
+  "slug": "adv-subjective-release",
+  "contractKey": "adv-subjective-release",
+  "file": "adv-subjective-release.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "retention released 'to Contractor's satisfaction'.",
+  "brief": "Retention is released within 10 days after 'completion of all punch list items to the satisfaction of Contractor in its sole discretion'. Do not mention Final Completion or Owner release of retention.",
+  "expected": {
+    "parties": {
+      "contractor": "Calder & Webb Builders",
+      "subcontractor": "Brightline Glazing Co.",
+      "owner": "Fresno Community Health Partners",
+      "project": "Kings Canyon Medical Office Building"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Completion of all punch list items to the satisfaction of Contractor in its sole discretion",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "Retention release turns on Contractor's subjective satisfaction.",
+      "anchor": null
+    }
+  ]
+}

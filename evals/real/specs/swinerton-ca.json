@@ -1,0 +1,114 @@
+{
+  "slug": "swinerton-ca",
+  "contractKey": "swinerton-ca",
+  "file": "swinerton-ca.pdf",
+  "category": "real",
+  "source": {
+    "url": "https://www.swinerton.com/Subcontractors_Docs/California%20Subcontract%20Agreement.pdf",
+    "sha256": "098fe3d086135bc1accffa29acab5a25c0187395a5a2a0ab5a68c4b91c8999fe"
+  },
+  "notes": "Swinerton Builders' 21-page California master subcontract form (blank cover sheet + Standard General Terms and Conditions). The cover sheet uses placeholder words, not underscores: \"Subcontractor Name\", \"project name\", \"owner's name\", so subcontractor, owner and project are null, as are the Subcontract Sum and dates. The terms themselves fill in the payment values: 7 days after Contractor receives Owner's payment (6(a)), 10% retention held until final acceptance by Architect and Owner and 10 days after Contractor receives final retention from Owner (6(c)), joint checks (6(g)), a nine-ground withholding clause (6(f)), set-off (16(b)), stored materials payable (6(e)), and California governing law (18(j)). Judgment calls: (1) timing.type = pay_when_paid, not pay_if_paid. 6(a) says payments 'will be made only from a special fund and a specific source, namely, from payments made by Owner', which sounds like pay-if-paid. But 6(b) makes owner payment a condition precedent only 'with respect to the time for payment to Subcontractor'. If Owner is insolvent, 6(b)(ii) conditions the sub's 'right to payment' on 'the passage of such time as may be reasonable and necessary for Contractor to fully exercise and exhaust to final judgment' its collection remedies, with 10% interest accruing after that. Owner nonpayment delays payment but never cancels it, and the sub never expressly assumes the risk of Owner nonpayment, so this is a pay-when-paid structure with a long deferral (the Wm. R. Clarke-compliant drafting style). (2) waivers.unconditional_after_payment and waivers.lower_tier_required = true even though 6(d) only says Contractor 'reserves the right to require' them (lower-tier releases with each application; unconditional waivers for prior payments 'if required by the Contract Documents or the Owner'). The form gives Contractor the right to demand them, and 6(d) makes receipt and approval of 'all required releases' a condition precedent to payment, so a controller has to plan for them. Confidence is medium. (3) waivers.statutory_form_required = null: the form requires Contractor's own standard 'Conditional Waiver and Release Upon Progress Payment' form and never cites Civil Code 8132-8138. That is silence, not a 'no'. (4) waivers.conditional_before_progress = true, because the conditional waiver form must go with every monthly billing. (5) retainage.percent_bps = 1000. 10% is printed in the form text, not left blank. The retention-release anchor also covers release_days (10).",
+  "expected": {
+    "parties": {
+      "contractor": "Swinerton Builders",
+      "subcontractor": null,
+      "owner": null,
+      "project": null
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final acceptance of the work by the Architect and Owner and Contractor's receipt of final retention payment from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": null
+    },
+    "offsets": {
+      "joint_check": true,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": true
+  },
+  "anchors": {
+    "parties.contractor": "AGREEMENT made this date day of month, year (“Effective Date”) (hereinafter “Agreement” or “Subcontract”) between Swinerton Builders (“Contractor”)",
+    "parties.subcontractor": null,
+    "parties.owner": null,
+    "parties.project": null,
+    "governing_law_state": "This Agreement shall be construed and enforced in accordance with the laws of the State of California, and venue for any legal action shall be in California.",
+    "timing.type": "then Contractor’s obligation to make payment to Subcontractor with respect to the time for payment to Subcontractor shall, in addition to any other conditions set forth in this Subcontract or the Contract Documents, be subject to the following conditions precedent",
+    "timing.days": "Contractor shall make payments to Subcontractor within seven (7) days after receipt by Contractor of payment from Owner for the work of Subcontractor for which payment has been made",
+    "timing.agreed_in_writing": "Contractor shall make payments to Subcontractor within seven (7) days after receipt by Contractor of payment from Owner for the work of Subcontractor for which payment has been made",
+    "retainage.percent_bps": "Contractor shall retain from progress or other payments hereunder ten percent (10%) of the amount due",
+    "retainage.cap_bps": null,
+    "retainage.reduction_trigger": null,
+    "retainage.release_condition": "until after final acceptance of the work by the Architect and Owner and until ten (10) days after Contractor’s receipt of final retention payment from Owner",
+    "retainage.release_days": "until ten (10) days after Contractor’s receipt of final retention payment from Owner (or within such shorter period as may be required by law)",
+    "waivers.conditional_before_progress": "All billings for work performed during a calendar month shall be made on Contractor’s standard forms “Progress Payment Request” and “Conditional Waiver and Release Upon Progress Payment”",
+    "waivers.unconditional_after_payment": "Contractor also reserves the right to require Subcontractor to execute an Unconditional Waiver and Release form as to previously paid progress payments if required by the Contract Documents or the Owner.",
+    "waivers.lower_tier_required": "construction lien, materialman and bond claim releases (including releases from lower tier subcontractors) and payment affidavits in duplicate with each application for progress payments and on final payment",
+    "waivers.statutory_form_required": null,
+    "offsets.joint_check": "Contractor reserves the right to make payment by joint check or by direct check to Subcontractor’s materialmen or sub-subcontractors",
+    "offsets.backcharge_setoff": "Unless prohibited by Law, Contractor may set-off against the Subcontract Price the amounts owing from Subcontractor to Contractor, whether or not relating to the project.",
+    "offsets.withhold_defective": "Contractor may withhold or, on account of subsequently discovered evidence, may nullify, the whole or part of any payment to protect Contractor from loss on account of (1) defective work not remedied",
+    "stored_materials": "payments will be made on account of materials or equipment not incorporated in the Work but delivered and suitably stored at the site"
+  },
+  "confidence": {
+    "timing.type": "medium",
+    "waivers.unconditional_after_payment": "medium",
+    "waivers.lower_tier_required": "medium"
+  },
+  "anomalies": [
+    {
+      "field": "timing.type",
+      "description": "6(a) says payments come 'only from a special fund and a specific source', meaning Owner's payments. That reads like pay-if-paid, but 6(b) limits the condition precedent to the time of payment. An extractor that keys on 'special fund' or 'conditions precedent' will mislabel this as pay-if-paid.",
+      "anchor": "Subcontractor understands that all payments to Subcontractor will be made only from a special fund and a specific source, namely, from payments made by Owner from time to time to Contractor"
+    },
+    {
+      "field": "timing.days",
+      "description": "If Owner is insolvent or does not pay for reasons other than Contractor's breach, the 7-day clock is suspended until Contractor has exhausted collection against Owner to final judgment and execution. That could take years. Interest accrues only after that period.",
+      "anchor": "then Subcontractor’s right to payment shall be conditioned upon the passage of such time as may be reasonable and necessary for Contractor to fully exercise and exhaust to final judgment its legal, extra judicial and appellate rights and remedies"
+    },
+    {
+      "field": "timing.type",
+      "description": "6(b)(iv) lets the payment-bond surety, and Contractor as principal, raise the failure or delay of Owner's payment as a defense to the sub's bond claim. That is pay-if-paid-style risk shifting onto the bond remedy, and California generally voids it.",
+      "anchor": "the nonoccurrence of any conditions to payments set forth in this Subcontract, including without limitation the failure or delay of payment to Contractor"
+    },
+    {
+      "field": "waivers.statutory_form_required",
+      "description": "Billings must use Contractor's own 'Conditional Waiver and Release Upon Progress Payment' form, and no other form is accepted. The contract never cites Civil Code 8132, and a California waiver is enforceable only in the statutory form, so the proprietary form must be checked against the statute.",
+      "anchor": "No other form of payment request will be accepted."
+    },
+    {
+      "field": "waivers.lower_tier_required",
+      "description": "Receipt of all required releases and affidavits, and Contractor's approval of them, are conditions precedent to payment. That approval is discretionary and can hold up any progress payment.",
+      "anchor": "Receipt by Contractor of all required releases and affidavits, and approval by Contractor of those documents, are conditions precedent to payment by Contractor to Subcontractor."
+    },
+    {
+      "field": "offsets.backcharge_setoff",
+      "description": "After a default, Contractor may set off against retainage, and against amounts owed on any other contract, including contracts with affiliates of either party. A general set-off clause also applies to amounts 'whether or not relating to the project'.",
+      "anchor": "offset and apply any amounts due Contractor as a result of such default against any earned but unpaid amounts owing to Subcontractor by Contractor under the Subcontract, including without limitation, any retainage held by Contractor"
+    },
+    {
+      "field": "retainage.release_condition",
+      "description": "Retention release depends on final acceptance by the Architect and Owner (the whole project, not the sub's scope) and on Contractor's receipt of final retention from Owner. Both are outside the sub's control. The 'shorter period as may be required by law' savings language defers to Civil Code 8814 and PCC 7107.",
+      "anchor": "until after final acceptance of the work by the Architect and Owner and until ten (10) days after Contractor’s receipt of final retention payment from Owner"
+    },
+    {
+      "field": "general",
+      "description": "The order-of-precedence clause resolves any conflict in favor of the provision that is most stringent on the Subcontractor. Prime Contract payment, retention or waiver terms (not included in this form) could therefore override the values above.",
+      "anchor": "the provision imposing the most stringent obligation on the part of the Subcontractor will control"
+    }
+  ]
+}

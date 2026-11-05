@@ -1,0 +1,50 @@
+{
+  "slug": "adv-amendment-changes-days",
+  "contractKey": "adv-amendment-changes-days",
+  "file": "adv-amendment-changes-days.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "Amendment No. 1 changes 10 days to 7.",
+  "brief": "The payment article says ten (10) days after Owner payment. After the signature block, include 'Amendment No. 1', signed by both parties, amending that period to seven (7) days.",
+  "expected": {
+    "parties": {
+      "contractor": "Redwood Peak Construction Co.",
+      "subcontractor": "Precision Roofing & Sheet Metal",
+      "owner": "City of Santa Rosa",
+      "project": "Fire Station 5 Replacement"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "Amendment No. 1 changes the payment period from 10 to 7 days.",
+      "anchor": null
+    }
+  ]
+}

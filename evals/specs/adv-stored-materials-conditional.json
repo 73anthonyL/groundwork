@@ -1,0 +1,44 @@
+{
+  "slug": "adv-stored-materials-conditional",
+  "contractKey": "adv-stored-materials-conditional",
+  "file": "adv-stored-materials-conditional.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "stored materials payable only with prior written approval.",
+  "brief": "Materials stored off site are payable only with Contractor's prior written approval, proof of insurance, and a bill of sale transferring title.",
+  "expected": {
+    "parties": {
+      "contractor": "Redwood Peak Construction Co.",
+      "subcontractor": "Precision Roofing & Sheet Metal",
+      "owner": "City of Santa Rosa",
+      "project": "Fire Station 5 Replacement"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": true
+  },
+  "anchors": {},
+  "anomalies": []
+}

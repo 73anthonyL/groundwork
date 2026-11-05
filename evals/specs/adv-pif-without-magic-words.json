@@ -1,0 +1,50 @@
+{
+  "slug": "adv-pif-without-magic-words",
+  "contractKey": "adv-pif-without-magic-words",
+  "file": "adv-pif-without-magic-words.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "risk shift without the phrase 'condition precedent'.",
+  "brief": "Never use the words 'condition precedent'. Instead: Subcontractor agrees that it shall be paid only out of funds actually received by Contractor from Owner for Subcontractor's work, and that Subcontractor bears the entire risk that Owner fails to pay for any reason including insolvency.",
+  "expected": {
+    "parties": {
+      "contractor": "Sierra Crest General Contractors, Inc.",
+      "subcontractor": "Granite State Concrete, Inc.",
+      "owner": "Pasadena Arts Foundation",
+      "project": "Colorado Boulevard Gallery Expansion"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_if_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "Risk of Owner nonpayment shifted to Subcontractor (pay-if-paid) without the words 'condition precedent'.",
+      "anchor": null
+    }
+  ]
+}

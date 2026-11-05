@@ -1,0 +1,44 @@
+{
+  "slug": "adv-distractor-prime-retention",
+  "contractKey": "adv-distractor-prime-retention",
+  "file": "adv-distractor-prime-retention.pdf",
+  "category": "adversarial",
+  "executedOn": "2025-03-10",
+  "notes": "prime contract retention (5%) quoted near the sub's own 10%.",
+  "brief": "Contract dated March 10, 2025. In the recitals, mention that under the Prime Contract the Owner withholds five percent (5%) retention from Contractor. The Subcontract's own retention article sets retention at ten percent (10%).",
+  "expected": {
+    "parties": {
+      "contractor": "Harbor Point Construction, Inc.",
+      "subcontractor": "Delta Mechanical Systems, LLC",
+      "owner": "Sacramento Unified School District",
+      "project": "Rosemont Elementary Modernization"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

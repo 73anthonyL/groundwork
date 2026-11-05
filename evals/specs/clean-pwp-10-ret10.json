@@ -1,0 +1,44 @@
+{
+  "slug": "clean-pwp-10-ret10",
+  "contractKey": "clean-pwp-10-ret10",
+  "file": "clean-pwp-10-ret10.pdf",
+  "category": "clean",
+  "executedOn": "2025-06-02",
+  "notes": "10-day period, 10% retention (pre-2026 contract).",
+  "brief": "Contract dated June 2, 2025. Payment within ten (10) days after Contractor receives payment from Owner. Retention 10%.",
+  "expected": {
+    "parties": {
+      "contractor": "Calder & Webb Builders",
+      "subcontractor": "Brightline Glazing Co.",
+      "owner": "Fresno Community Health Partners",
+      "project": "Kings Canyon Medical Office Building"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 10,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

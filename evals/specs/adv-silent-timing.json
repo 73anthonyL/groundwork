@@ -1,0 +1,50 @@
+{
+  "slug": "adv-silent-timing",
+  "contractKey": "adv-silent-timing",
+  "file": "adv-silent-timing.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "no payment timing clause at all.",
+  "brief": "Describe applications for payment and their content, but never say when Contractor must pay. Do not mention Owner payment as a trigger, and give no number of days for progress payments.",
+  "expected": {
+    "parties": {
+      "contractor": "Mesa Verde Contractors, Inc.",
+      "subcontractor": "Lumen Electric Corp.",
+      "owner": "Ventura County Credit Union",
+      "project": "Oxnard Branch Remodel"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "silent",
+      "days": null,
+      "agreed_in_writing": null
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "The contract does not say when progress payments are due.",
+      "anchor": null
+    }
+  ]
+}

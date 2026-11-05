@@ -1,0 +1,124 @@
+{
+  "slug": "ewb-attachment-a",
+  "contractKey": "ewb-attachment-a",
+  "file": "ewb-attachment-a.pdf",
+  "category": "real",
+  "source": {
+    "url": "https://ewbinc.com/wp-content/uploads/2023/11/Subcontractor-Prequalification-Packet-Attachment-A-Subcontract-Agreement-California.pdf",
+    "sha256": "f51e1c85ebe3ee8b11fa9602ca3398abf0403cdc9011a7a0cb2f936c30be6f73"
+  },
+  "notes": "Eleven Western Builders, Inc.'s 23-page 'Attachment A - Subcontract Agreement' (California version, from its subcontractor prequalification packet). It is a blank master. The date, subcontractor, Prime Contract date, Owner, Project and the Section 6 compensation amount are all empty. In the extracted text the empty fields collapse to nothing (e.g. 'made as of , between', 'with (Owner) for the construction of the (Project)'), so subcontractor, owner and project are null. Payment terms (Section 17): progress payments 'within 10 days after being paid therefore by Owner'; retention 'a percentage equal to the percentage retained by Owner'; each application must include 'lien releases for the previous payment' from everyone with lien, stop-notice or bond rights; final payment only 'On completion of the Prime Contract and payment therefore in full by Owner'; joint checks optional; broad withhold/offset rights, including for defective work and backcharges. Judgment calls: (1) timing.type = pay_when_paid. 17(b) ties the 10 days to Owner payment, and if Owner is delinquent, Contractor gets 'a reasonable time to exhaust all remedies ... before Contractor shall be obligated to pay'. That defers the obligation without excusing it, and there is no express condition precedent or assumption of Owner-nonpayment risk. 17(f) (final payment on Owner's payment in full) and 18(e) (extras paid only 'as and when received from Owner', with the claim waived except to the extent Owner allows it) lean toward pay-if-paid and are flagged as anomalies. (2) retainage.percent_bps = null. No rate is stated; retention flows through from whatever Owner retains under the Prime Contract (not in the document), and inferring 5% or 10% would violate the no-norms rule. (3) retainage.release_condition = completion of the Prime Contract and Owner's payment in full. The form has no separate retention-release clause, and 17(f) is the only provision releasing the 'remaining amount due', which includes retention. release_days = null because no number of days is given. (4) governing_law_state = null. There is no choice-of-law clause. Section 39 has arbitrators apply 'the substantive Law of the state in which the Project is located' (the Project is blank) and makes the FAA govern 'to the exclusion of ... any choice of Law provision'. The California title, CSLB notice, Labor Code 218.7 and CCPA references strongly suggest California but do not state it. (5) waivers.unconditional_after_payment = true, read from 'lien releases for the previous payment' (a release for money already paid is in substance unconditional); 17(e) says 'unconditional lien releases' only for final payment. (6) waivers.conditional_before_progress and statutory_form_required = null, because the form is silent on conditional waivers for the current request and never cites Civil Code 8132-8138. (7) stored_materials = null (silent). Other details: the bond line is filled 'N/A percent (N/A %)'. Section 17 opens by letting the Prime Contract's payment terms override this Agreement's.",
+  "expected": {
+    "parties": {
+      "contractor": "Eleven Western Builders, Inc.",
+      "subcontractor": null,
+      "owner": null,
+      "project": null
+    },
+    "governing_law_state": null,
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 10,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": null,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Completion of the Prime Contract and payment in full by Owner",
+      "release_days": null
+    },
+    "waivers": {
+      "conditional_before_progress": null,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": null
+    },
+    "offsets": {
+      "joint_check": true,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": null
+  },
+  "anchors": {
+    "parties.contractor": "between ELEVEN WESTERN BUILDERS INC., a California Corporation (Contractor) whose license number is 439908",
+    "parties.subcontractor": null,
+    "parties.owner": null,
+    "parties.project": null,
+    "governing_law_state": null,
+    "timing.type": "Subcontractor agrees that Contractor shall be entitled to a reasonable time to exhaust all remedies available to Contractor to collect amounts due from Owner before Contractor shall be obligated to pay amounts due hereunder to Subcontractor",
+    "timing.days": "Partial payments for work performed under this Agreement will be made by Contractor within 10 days after being paid therefore by Owner",
+    "timing.agreed_in_writing": "Partial payments for work performed under this Agreement will be made by Contractor within 10 days after being paid therefore by Owner",
+    "retainage.percent_bps": null,
+    "retainage.cap_bps": null,
+    "retainage.reduction_trigger": null,
+    "retainage.release_condition": "On completion of the Prime Contract and payment therefore in full by Owner, Subcontractor will be paid the remaining amount due Subcontractor under this Agreement.",
+    "retainage.release_days": null,
+    "waivers.conditional_before_progress": null,
+    "waivers.unconditional_after_payment": "lien releases for the previous payment, executed by all entities who may have mechanic's lien, stop notice or labor and material bond rights against the Project",
+    "waivers.lower_tier_required": "lien releases for the previous payment, executed by all entities who may have mechanic's lien, stop notice or labor and material bond rights against the Project",
+    "waivers.statutory_form_required": null,
+    "offsets.joint_check": "Contractor, at its option, may make any payment due hereunder by check made payable jointly to Subcontractor and any of its sub-subcontractors, suppliers and/or material men",
+    "offsets.backcharge_setoff": "(d) to reimburse Contractor for any back charges incurred as a result of any act or omission by Subcontractor (or anyone providing any of the work hereunder)",
+    "offsets.withhold_defective": "incurred in connection with such work or any other work on the project; (b) to remedy any defective work; (c) to complete the work",
+    "stored_materials": null
+  },
+  "confidence": {
+    "timing.type": "medium",
+    "retainage.release_condition": "medium",
+    "waivers.unconditional_after_payment": "medium"
+  },
+  "anomalies": [
+    {
+      "field": "timing.days",
+      "description": "Section 17 opens by letting the Prime Contract's payment terms override this Agreement's. The 10-day period, the retention rate and the release terms can all be displaced by a document the sub may not have seen.",
+      "anchor": "In the event of a conflict between the payment terms of the Prime Contract and this Agreement, the payment terms of the Prime Contract shall govern."
+    },
+    {
+      "field": "timing.type",
+      "description": "If Owner is delinquent, Contractor gets an open-ended 'reasonable time to exhaust all remedies' against Owner before any obligation to pay arises. That is an indefinite deferral, and close to the line on pay-if-paid.",
+      "anchor": "To the extent Owner is delinquent in paying amounts to Contractor, Subcontractor agrees that Contractor shall be entitled to a reasonable time to exhaust all remedies available to Contractor to collect amounts due from Owner"
+    },
+    {
+      "field": "retainage.percent_bps",
+      "description": "The form states no retention percentage. Progress payments are reduced by 'a percentage equal to the percentage retained by Owner', so the rate is set by the (absent) Prime Contract.",
+      "anchor": "less the sum of previous payments and less a percentage equal to the percentage retained by Owner"
+    },
+    {
+      "field": "retainage.release_condition",
+      "description": "Final payment, including retention, waits for completion of the entire Prime Contract and Owner's payment in full, not completion of the sub's scope. No release period is stated (Civil Code 8814 would require release within 10 days of Contractor's receipt). The payment-in-full condition reads like pay-if-paid for the final payment.",
+      "anchor": "On completion of the Prime Contract and payment therefore in full by Owner, Subcontractor will be paid the remaining amount due Subcontractor under this Agreement."
+    },
+    {
+      "field": "timing.type",
+      "description": "Extra work: the sub waives any claim except to the extent Owner allows it to Contractor, and is paid only 'as and when received from Owner'. That is pay-if-paid for change-order work.",
+      "anchor": "Subcontractor waives any claim against Contractor for compensation or equitable adjustment for such claims, changed conditions, or extra work, except to the extent the claim is allowed to Contractor by Owner."
+    },
+    {
+      "field": "offsets.backcharge_setoff",
+      "description": "Contractor may withhold progress payments to secure any obligation of the sub or of its affiliates, parent or subsidiaries, including obligations unrelated to this subcontract.",
+      "anchor": "to secure Contractor with respect to any breach or default under any other obligation (whether or not liquidated) of Subcontractor or Subcontractors affiliates, parent company or subsidiaries"
+    },
+    {
+      "field": "general",
+      "description": "Owner's estimates of work done are 'final and binding' and conclusively set what the sub is paid for, so the sub has no independent measurement right.",
+      "anchor": "Estimates and calculations made by Owner, or Owner’s architect or engineer, as to the amount of work done by Subcontractor, shall be final and binding on the parties"
+    },
+    {
+      "field": "governing_law_state",
+      "description": "There is no governing-law clause. Arbitration applies 'the substantive Law of the state in which the Project is located' (Project is blank), and the FAA is chosen 'to the exclusion of' any choice-of-law provision. The page header lists licenses in ten other states, so an extractor should not assume CA from the title.",
+      "anchor": "the arbitrators shall apply the substantive Law of the state in which the Project is located in rendering their decision on the merits of any controversy or dispute"
+    },
+    {
+      "field": "general",
+      "description": "Section 6 (Compensation) is blank: 'agrees to pay Subcontractor as full compensation.' The form states no contract price.",
+      "anchor": "Contractor, for the full, complete, and faithful performance of this Agreement, agrees to pay Subcontractor as full compensation."
+    },
+    {
+      "field": "general",
+      "description": "After a termination for cause, the sub gets no further payment until Contractor has finished all work under the entire Prime Contract.",
+      "anchor": "Subcontractor shall not be entitled to receive any further payment until the work undertaken by Contractor in the Prime Contract is completely finished."
+    }
+  ]
+}

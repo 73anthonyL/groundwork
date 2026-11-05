@@ -1,127 +1,139 @@
 /**
- * Extraction eval. For every spec in seed/specs and evals/specs, the PDF is compiled (by the model
- * when ANTHROPIC_API_KEY is set, otherwise from cached results) and scored against the spec's expected
- * values: value accuracy, quote-verified rate, and calibration (share of wrong fields marked low/medium).
+ * Extraction eval. Every spec in seed/specs, evals/specs and evals/real/specs is an answer key for a
+ * contract PDF in the sibling contracts/ folder. Each PDF is compiled (by the model when
+ * ANTHROPIC_API_KEY is set, otherwise from evals/cache) and scored by evals/score.ts.
  *
- *   pnpm eval               use cache if present, else call the model
- *   pnpm eval --fresh       always call the model
- *   pnpm eval --cache-only  never call the model (CI)
+ *   pnpm eval                 use cache if present, else call the model
+ *   pnpm eval --fresh         always call the model
+ *   pnpm eval --cache-only    never call the model (CI)
+ *   pnpm eval --only=<substr> restrict to matching slugs
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { extractPageTexts } from "../src/lib/pdf/text";
-import { ExtractedRuleSetSchema, RULE_FIELDS, getField, toValues, type ExtractedRuleSet, type RuleFieldPath } from "../src/domain/rules/schema";
-import { verifyQuote } from "../src/lib/verify/quote";
-import type { ContractSpec } from "../src/domain/rules/from-spec";
+import { ExtractedRuleSetSchema, type ExtractedRuleSet } from "../src/domain/rules/schema";
+import { bootstrap, LAYER_LABEL, LAYERS, metrics, scoreContract, type ContractResult, type EvalSpec, type Metrics } from "./score";
 
 const fresh = process.argv.includes("--fresh");
 const cacheOnly = process.argv.includes("--cache-only");
-const cacheDir = path.resolve("evals/cache");
+const only = process.argv.find((a) => a.startsWith("--only="))?.slice(7);
+const CONCURRENCY = 4;
+const cacheDir = path.resolve(process.env.EVAL_CACHE_DIR ?? "evals/cache");
 mkdirSync(cacheDir, { recursive: true });
 
-function loadSpecs(): { spec: ContractSpec; dir: string }[] {
-  const out: { spec: ContractSpec; dir: string }[] = [];
-  for (const dir of ["seed", "evals"]) {
+const SPEC_DIRS = ["seed", "evals", "evals/real"];
+
+function loadSpecs(): { spec: EvalSpec; pdf: string }[] {
+  const out: { spec: EvalSpec; pdf: string }[] = [];
+  for (const dir of SPEC_DIRS) {
     const specDir = path.resolve(dir, "specs");
     if (!existsSync(specDir)) continue;
     for (const f of readdirSync(specDir).filter((x) => x.endsWith(".json"))) {
-      out.push({ spec: JSON.parse(readFileSync(path.join(specDir, f), "utf8")) as ContractSpec, dir });
+      const spec = JSON.parse(readFileSync(path.join(specDir, f), "utf8")) as EvalSpec;
+      spec.category ??= dir === "seed" ? "demo" : "synthetic";
+      if (only && !spec.slug.includes(only)) continue;
+      out.push({ spec, pdf: path.resolve(dir, "contracts", spec.file) });
     }
   }
   return out;
 }
 
-function same(path: RuleFieldPath, a: unknown, b: unknown): boolean {
-  if (a === null || b === null) return a === b;
-  if (typeof a === "string" && typeof b === "string") {
-    const n = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-    // Free-text fields: accept when one contains the other's key words (≥ 70% token overlap).
-    if (["retainage.release_condition", "retainage.reduction_trigger", "parties.project"].includes(path)) {
-      const ta = new Set(n(a).split(" "));
-      const tb = n(b).split(" ");
-      const hit = tb.filter((t) => ta.has(t)).length;
-      return hit / Math.max(1, tb.length) >= 0.7;
-    }
-    return n(a) === n(b);
-  }
-  return a === b;
-}
+type Compiled = { extracted: ExtractedRuleSet; model: string; ms: number; cached: boolean; usage?: { input_tokens: number; output_tokens: number } };
 
-async function compile(spec: ContractSpec, pdfPath: string): Promise<{ extracted: ExtractedRuleSet; model: string; ms: number; cached: boolean }> {
+async function compile(spec: EvalSpec, pdfPath: string): Promise<Compiled> {
   const cacheFile = path.join(cacheDir, `${spec.slug}.json`);
-  if (!fresh && existsSync(cacheFile)) {
-    const c = JSON.parse(readFileSync(cacheFile, "utf8")) as { extracted: ExtractedRuleSet; model: string; ms: number };
-    return { ...c, cached: true };
-  }
-  if (cacheOnly) throw new Error(`no cached extraction for ${spec.slug}`);
+  if (!fresh && existsSync(cacheFile)) return { ...(JSON.parse(readFileSync(cacheFile, "utf8")) as Compiled), cached: true };
+  if (cacheOnly) throw new Error("no cached extraction");
   const { extractRuleSet } = await import("../src/lib/ai/extractRuleSet");
   const r = await extractRuleSet(new Uint8Array(readFileSync(pdfPath)));
   const record = { extracted: r.extracted, model: r.model, ms: r.ms, promptVersion: r.promptVersion, usage: r.usage, at: new Date().toISOString() };
   writeFileSync(cacheFile, JSON.stringify(record, null, 2));
-  return { ...record, cached: false };
+  return { ...record, cached: false } as Compiled;
+}
+
+async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = new Array(items.length);
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(n, items.length) }, async () => {
+      while (next < items.length) {
+        const i = next++;
+        out[i] = await fn(items[i]);
+      }
+    }),
+  );
+  return out;
+}
+
+const pct = (x: number | null) => (x === null ? "n/a" : `${(100 * x).toFixed(1)}%`);
+const ci = (c: [number, number] | null) => (c ? ` [${(100 * c[0]).toFixed(0)}–${(100 * c[1]).toFixed(0)}]` : "");
+
+function report(results: ContractResult[], meta: Map<string, Compiled>): string {
+  const m = metrics(results);
+  const lines: string[] = [];
+  lines.push(`# Extraction eval`, "", `${m.contracts} contracts · ${m.fields} fields · ${new Set(results.map((r) => r.category)).size} categories. 95% bootstrap CIs over contracts in brackets.`, "");
+  lines.push("## Headline", "", "| Metric | Value |", "|---|---|");
+  lines.push(`| Value accuracy | ${pct(m.accuracy)}${ci(bootstrap(results, (x) => x.accuracy))} |`);
+  lines.push(`| Quotes verified verbatim | ${pct(m.quoteVerifiedRate)}${ci(bootstrap(results, (x) => x.quoteVerifiedRate))} |`);
+  lines.push(`| Wrong fields the model itself hedged (calibration) | ${pct(m.calibration)} |`);
+  lines.push(`| Wrong fields reaching the engine unflagged (production policy) | ${m.layers.L3.silentErrors} of ${m.fields} (${pct(m.layers.L3.silentRate)}) |`, "");
+  lines.push("## Ablation: what each review layer buys", "", "Same extractions, re-reviewed under four policies. *Caught* = share of wrong values a human is asked to look at. *Burden* = share of all fields a human must look at.", "");
+  lines.push("| Policy | Silent errors | Caught | Burden |", "|---|---|---|---|");
+  for (const l of LAYERS) {
+    const x = m.layers[l];
+    lines.push(`| ${l} ${LAYER_LABEL[l]} | ${x.silentErrors} (${pct(x.silentRate)}) | ${pct(x.catchRate)}${ci(bootstrap(results, (y: Metrics) => y.layers[l].catchRate))} | ${pct(x.burden)} |`);
+  }
+  lines.push("", "## By category", "", "| Category | Contracts | Accuracy | Quotes verified | Silent (prod) | Burden (prod) |", "|---|---|---|---|---|---|");
+  for (const cat of [...new Set(results.map((r) => r.category))].sort()) {
+    const c = metrics(results.filter((r) => r.category === cat));
+    lines.push(`| ${cat} | ${c.contracts} | ${pct(c.accuracy)} | ${pct(c.quoteVerifiedRate)} | ${c.layers.L3.silentErrors} | ${pct(c.layers.L3.burden)} |`);
+  }
+  lines.push("", "## Per contract", "", "| Contract | Category | Accuracy | Silent (prod) | Model | Time |", "|---|---|---|---|---|---|");
+  for (const r of results) {
+    const c = metrics([r]);
+    const k = meta.get(r.slug)!;
+    lines.push(`| ${r.slug} | ${r.category} | ${r.fields.filter((f) => f.correct).length}/${r.fields.length} | ${c.layers.L3.silentErrors} | ${k.model}${k.cached ? " (cached)" : ""} | ${(k.ms / 1000).toFixed(1)}s |`);
+  }
+  const misses = results.flatMap((r) => r.fields.filter((f) => !f.correct).map((f) => `| ${r.slug} | \`${f.path}\` | ${JSON.stringify(f.expected)} | ${JSON.stringify(f.actual)} | ${f.confidence ?? "—"} | ${f.flagged.L3 ? "flagged" : "**silent**"} |`));
+  if (misses.length) lines.push("", "## Every miss", "", "| Contract | Field | Expected | Got | Model confidence | Production policy |", "|---|---|---|---|---|---|", ...misses);
+  lines.push("", "Synthetic contracts are generated from their spec, so the spec is the answer key; they measure extraction fidelity, not real-world distribution. Real forms are hand-labeled (see evals/real/README.md).");
+  return lines.join("\n");
 }
 
 async function main() {
   const specs = loadSpecs();
-  const rows: { slug: string; fields: number; correct: number; verified: number; quoted: number; wrongLowMed: number; wrong: number; model: string; ms: number; cached: boolean; misses: string[] }[] = [];
-  for (const { spec, dir } of specs) {
-    const pdfPath = path.resolve(dir, "contracts", spec.file);
-    if (!existsSync(pdfPath)) {
-      console.warn(`skip ${spec.slug}: ${pdfPath} missing (run pnpm render:contracts)`);
-      continue;
+  const meta = new Map<string, Compiled>();
+  const scored = await pool(specs, CONCURRENCY, async ({ spec, pdf }) => {
+    if (!existsSync(pdf)) {
+      console.warn(`skip ${spec.slug}: ${path.relative(process.cwd(), pdf)} missing`);
+      return null;
     }
-    const { pages } = await extractPageTexts(new Uint8Array(readFileSync(pdfPath)));
-    let result: Awaited<ReturnType<typeof compile>>;
+    const auditFile = pdf.replace(/\.pdf$/, ".audit.json");
+    if (existsSync(auditFile) && !(JSON.parse(readFileSync(auditFile, "utf8")) as { passed: boolean }).passed) {
+      console.warn(`skip ${spec.slug}: the generated draft failed its audit against the brief, so its answer key is not trustworthy`);
+      return null;
+    }
+    const { pages } = await extractPageTexts(new Uint8Array(readFileSync(pdf)));
     try {
-      result = await compile(spec, pdfPath);
+      const c = await compile(spec, pdf);
+      ExtractedRuleSetSchema.parse(c.extracted);
+      meta.set(spec.slug, c);
+      return scoreContract(spec, c.extracted, pages);
     } catch (e) {
       console.warn(`skip ${spec.slug}: ${(e as Error).message}`);
-      continue;
+      return null;
     }
-    ExtractedRuleSetSchema.parse(result.extracted);
-    const got = toValues(result.extracted);
-    let correct = 0;
-    let verified = 0;
-    let quoted = 0;
-    let wrong = 0;
-    let wrongLowMed = 0;
-    const misses: string[] = [];
-    for (const p of RULE_FIELDS) {
-      const exp = p.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown>)[k], spec.expected);
-      const act = p.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown>)[k], got);
-      const f = getField(result.extracted, p);
-      const ok = same(p, act, exp);
-      if (ok) correct++;
-      else {
-        wrong++;
-        if (f.evidence && f.evidence.confidence !== "high") wrongLowMed++;
-        misses.push(`${p}: expected ${JSON.stringify(exp)} got ${JSON.stringify(act)}`);
-      }
-      if (f.evidence) {
-        quoted++;
-        const v = verifyQuote(pages, f.evidence.quote, f.evidence.page);
-        if (v.status === "exact" || (v.status === "fuzzy" && (v.score ?? 0) >= 0.95)) verified++;
-      }
-    }
-    rows.push({ slug: spec.slug, fields: RULE_FIELDS.length, correct, verified, quoted, wrong, wrongLowMed, model: result.model, ms: result.ms, cached: result.cached, misses });
+  });
+  const results = scored.filter((r): r is ContractResult => r !== null);
+  if (!results.length) {
+    console.error("No contracts scored. Set ANTHROPIC_API_KEY or populate evals/cache.");
+    process.exit(1);
   }
-  const totals = rows.reduce(
-    (t, r) => ({ fields: t.fields + r.fields, correct: t.correct + r.correct, verified: t.verified + r.verified, quoted: t.quoted + r.quoted, wrong: t.wrong + r.wrong, wrongLowMed: t.wrongLowMed + r.wrongLowMed }),
-    { fields: 0, correct: 0, verified: 0, quoted: 0, wrong: 0, wrongLowMed: 0 },
-  );
-  const pct = (a: number, b: number) => (b ? `${((100 * a) / b).toFixed(1)}%` : "—");
-  const lines = [
-    "| Contract | Value accuracy | Quotes verified | Calibration (wrong→low/med) | Model | Time |",
-    "|---|---|---|---|---|---|",
-    ...rows.map((r) => `| ${r.slug} | ${r.correct}/${r.fields} (${pct(r.correct, r.fields)}) | ${r.verified}/${r.quoted} (${pct(r.verified, r.quoted)}) | ${r.wrong ? pct(r.wrongLowMed, r.wrong) : "n/a"} | ${r.model}${r.cached ? " (cached)" : ""} | ${(r.ms / 1000).toFixed(1)}s |`),
-    `| **All** | **${totals.correct}/${totals.fields} (${pct(totals.correct, totals.fields)})** | **${totals.verified}/${totals.quoted} (${pct(totals.verified, totals.quoted)})** | **${totals.wrong ? pct(totals.wrongLowMed, totals.wrong) : "n/a"}** | | |`,
-  ];
-  const md = lines.join("\n");
+  const md = report(results, meta);
   console.log(md);
-  for (const r of rows) for (const m of r.misses) console.log(`  miss ${r.slug} ${m}`);
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   mkdirSync(path.resolve("evals/results"), { recursive: true });
-  writeFileSync(path.resolve("evals/results", `${stamp}.json`), JSON.stringify({ at: stamp, rows, totals }, null, 2));
+  writeFileSync(path.resolve("evals/results", `${stamp}.json`), JSON.stringify({ at: stamp, metrics: metrics(results), results }, null, 2));
   writeFileSync(path.resolve("evals/results", "latest.md"), md + "\n");
 }
 

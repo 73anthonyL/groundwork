@@ -1,0 +1,44 @@
+{
+  "slug": "adv-retention-only-in-exhibit",
+  "contractKey": "adv-retention-only-in-exhibit",
+  "file": "adv-retention-only-in-exhibit.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "retention rate appears only in an exhibit table.",
+  "brief": "The retention article says retention is withheld 'at the rate stated in Exhibit C' and gives no number. Add a short 'EXHIBIT C — PAYMENT TERMS' section (before the schedule of values) with a two-column table whose row 'Retention rate' reads '5%'.",
+  "expected": {
+    "parties": {
+      "contractor": "Mesa Verde Contractors, Inc.",
+      "subcontractor": "Lumen Electric Corp.",
+      "owner": "Ventura County Credit Union",
+      "project": "Oxnard Branch Remodel"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "adv-rider-overrides-retention",
+  "contractKey": "adv-rider-overrides-retention",
+  "file": "adv-rider-overrides-retention.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "body says 10%, a later rider that controls says 5%.",
+  "brief": "The retention article says 10%. At the end, add 'Rider A — Special Conditions' stating that in the event of conflict Rider A controls, and that retention under this Subcontract is five percent (5%).",
+  "expected": {
+    "parties": {
+      "contractor": "Northgate Builders Group",
+      "subcontractor": "Allied Fire Protection, Inc.",
+      "owner": "Coastal Logistics REIT",
+      "project": "Port of Stockton Warehouse 7"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "Rider A overrides the 10% retention in the body with 5%.",
+      "anchor": null
+    }
+  ]
+}

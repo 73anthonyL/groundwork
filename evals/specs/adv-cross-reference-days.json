@@ -1,0 +1,44 @@
+{
+  "slug": "adv-cross-reference-days",
+  "contractKey": "adv-cross-reference-days",
+  "file": "adv-cross-reference-days.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "days stated by cross-reference to another section.",
+  "brief": "Section 4.2 says progress payments are due 'within the Payment Period'. Section 14.6 (Miscellaneous) defines 'Payment Period' as seven (7) days after Contractor's receipt of the corresponding payment from Owner.",
+  "expected": {
+    "parties": {
+      "contractor": "Sierra Crest General Contractors, Inc.",
+      "subcontractor": "Granite State Concrete, Inc.",
+      "owner": "Pasadena Arts Foundation",
+      "project": "Colorado Boulevard Gallery Expansion"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

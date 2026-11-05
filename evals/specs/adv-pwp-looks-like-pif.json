@@ -1,0 +1,44 @@
+{
+  "slug": "adv-pwp-looks-like-pif",
+  "contractKey": "adv-pwp-looks-like-pif",
+  "file": "adv-pwp-looks-like-pif.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "uses the word 'condition' but expressly is NOT a condition precedent.",
+  "brief": "The payment clause says payment is due within 7 days after Contractor receives payment from Owner, and then expressly states that receipt of Owner payment is a timing mechanism only, not a condition precedent, and that Contractor remains liable to pay within a reasonable time even if Owner never pays.",
+  "expected": {
+    "parties": {
+      "contractor": "Calder & Webb Builders",
+      "subcontractor": "Brightline Glazing Co.",
+      "owner": "Fresno Community Health Partners",
+      "project": "Kings Canyon Medical Office Building"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

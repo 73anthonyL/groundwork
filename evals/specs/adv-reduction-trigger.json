@@ -1,0 +1,44 @@
+{
+  "slug": "adv-reduction-trigger",
+  "contractKey": "adv-reduction-trigger",
+  "file": "adv-reduction-trigger.pdf",
+  "category": "adversarial",
+  "executedOn": "2025-08-01",
+  "notes": "10% reducing to 5% at 50% complete.",
+  "brief": "Contract dated August 1, 2025. Retention is ten percent (10%) until the Subcontract Work is fifty percent (50%) complete as certified by the Architect, after which retention on further payments is five percent (5%).",
+  "expected": {
+    "parties": {
+      "contractor": "Northgate Builders Group",
+      "subcontractor": "Allied Fire Protection, Inc.",
+      "owner": "Coastal Logistics REIT",
+      "project": "Port of Stockton Warehouse 7"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 1000,
+      "cap_bps": null,
+      "reduction_trigger": "Reduces to 5% once the Subcontract Work is 50% complete as certified by the Architect",
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "adv-pif-buried-in-definitions",
+  "contractKey": "adv-pif-buried-in-definitions",
+  "file": "adv-pif-buried-in-definitions.pdf",
+  "category": "adversarial",
+  "executedOn": "2026-02-02",
+  "notes": "pay-if-paid stated only in the Definitions article.",
+  "brief": "In Article 1 (Definitions), define 'Owner Payment Condition' as: Contractor's actual receipt of payment from Owner is an express condition precedent to any payment obligation, and Subcontractor assumes the risk of Owner nonpayment. The payment article must only say payment is due 7 days after the Owner Payment Condition is satisfied, without restating the risk shift.",
+  "expected": {
+    "parties": {
+      "contractor": "Harbor Point Construction, Inc.",
+      "subcontractor": "Delta Mechanical Systems, LLC",
+      "owner": "Sacramento Unified School District",
+      "project": "Rosemont Elementary Modernization"
+    },
+    "governing_law_state": "CA",
+    "timing": {
+      "type": "pay_if_paid",
+      "days": 7,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": [
+    {
+      "field": "general",
+      "description": "Pay-if-paid risk shift appears only in the definition of 'Owner Payment Condition'.",
+      "anchor": null
+    }
+  ]
+}

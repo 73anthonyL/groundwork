@@ -1,0 +1,44 @@
+{
+  "slug": "clean-nevada-law",
+  "contractKey": "clean-nevada-law",
+  "file": "clean-nevada-law.pdf",
+  "category": "clean",
+  "executedOn": "2026-02-02",
+  "notes": "Nevada governing law on a Nevada project.",
+  "brief": "Project in Reno, Nevada; the contract is governed by Nevada law. Waivers in the forms prescribed by NRS 108.2457 (so not California statutory forms). Pay within 10 days after Contractor receives payment.",
+  "expected": {
+    "parties": {
+      "contractor": "Mesa Verde Contractors, Inc.",
+      "subcontractor": "Lumen Electric Corp.",
+      "owner": "Washoe County School District",
+      "project": "Sparks Middle School Gymnasium Addition"
+    },
+    "governing_law_state": "NV",
+    "timing": {
+      "type": "pay_when_paid",
+      "days": 10,
+      "agreed_in_writing": true
+    },
+    "retainage": {
+      "percent_bps": 500,
+      "cap_bps": null,
+      "reduction_trigger": null,
+      "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner",
+      "release_days": 10
+    },
+    "waivers": {
+      "conditional_before_progress": true,
+      "unconditional_after_payment": true,
+      "lower_tier_required": true,
+      "statutory_form_required": true
+    },
+    "offsets": {
+      "joint_check": null,
+      "backcharge_setoff": true,
+      "withhold_defective": true
+    },
+    "stored_materials": false
+  },
+  "anchors": {},
+  "anomalies": []
+}
