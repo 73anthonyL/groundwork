@@ -9,6 +9,8 @@ import type { StoredRules } from "@/server/rules/review";
 import { StatusPill } from "@/components/status-pill";
 import { CompileReview, type RuleSetView } from "@/components/compile-review";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { uploadContractPdfAction } from "./actions";
 
 export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string }> }) {
   const { id } = await params;
@@ -51,6 +53,19 @@ export default async function ContractPage({ params, searchParams }: { params: P
           <StatusPill status={contract.status} />
         </div>
       </div>
+      {contract.status !== "active" && (
+        <form action={uploadContractPdfAction} className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+          <input type="hidden" name="contractId" value={contract.id} />
+          <label htmlFor="contract-pdf" className="text-muted-foreground">
+            {contract.documentId ? "Try a different subcontract:" : "Upload the subcontract:"}
+          </label>
+          <input id="contract-pdf" name="file" type="file" accept="application/pdf" required className="max-w-64 text-sm file:mr-2 file:rounded file:border file:bg-card file:px-2 file:py-1" />
+          <Button type="submit" size="sm" variant="outline">
+            Upload PDF
+          </Button>
+          <span className="text-xs text-muted-foreground">Text PDF, up to 4 MB. Compiling it needs the Claude API.</span>
+        </form>
+      )}
       {msg && (
         <p role="status" className="mt-3 rounded-md border bg-card px-3 py-2 text-sm">
           {decodeURIComponent(msg)}

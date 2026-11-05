@@ -9,6 +9,7 @@ import { hasApiKey, MODEL } from "@/lib/ai/client";
 import { ruleSetFromSpec, type ContractSpec } from "@/domain/rules/from-spec";
 import { blockingFields } from "@/server/rules/review";
 import { ID } from "@/db/seed";
+import { stableId } from "@/lib/ids";
 
 export const maxDuration = 300;
 
@@ -34,9 +35,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ contrac
 
   if (wantSeed || !hasApiKey()) {
     const key = (Object.keys(ID.contract) as (keyof typeof ID.contract)[]).find((k) => ID.contract[k] === contractId);
-    const specFile = key ? path.resolve("seed/specs", `${{ ironline: "ironline-steel", pacific: "pacific-electric", summit: "summit-drywall" }[key]}.json`) : null;
+    // The cached extraction belongs to the seeded PDF only; an uploaded replacement must go to the model.
+    const isSeedDoc = doc.id === stableId(`document:${contractId}:${doc.sha256}`);
+    const specFile = key && isSeedDoc ? path.resolve("seed/specs", `${{ ironline: "ironline-steel", pacific: "pacific-electric", summit: "summit-drywall" }[key]}.json`) : null;
     if (!specFile || !existsSync(specFile)) {
-      return NextResponse.json({ error: "no_api_key", message: "ANTHROPIC_API_KEY is not set and no cached extraction exists for this contract." }, { status: 409 });
+      return NextResponse.json({ error: "no_api_key", message: "ANTHROPIC_API_KEY is not set and no cached extraction exists for this PDF." }, { status: 409 });
     }
     const spec = JSON.parse(readFileSync(specFile, "utf8")) as ContractSpec;
     const t0 = Date.now();

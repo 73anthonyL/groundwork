@@ -9,6 +9,8 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts", "evals/**/*.test.ts"],
     testTimeout: 30_000,
+    // Each file boots its own in-memory PGlite and migrates; under parallel load that exceeds the 10s default.
+    hookTimeout: 60_000,
     env: { NODE_ENV: "test", PGLITE_MEMORY: "1" },
   },
 });

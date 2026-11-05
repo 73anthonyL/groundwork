@@ -6,6 +6,7 @@ import { requireAuth } from "@/server/auth";
 import { getContract } from "@/server/scoped";
 import { acknowledgeAnomaly, approveRuleSet, resolveField } from "@/server/actions/rules";
 import { RULE_FIELDS, type RuleFieldPath } from "@/domain/rules/schema";
+import { attachContractDocument, UploadError } from "@/server/actions/documents";
 
 function parseOverride(path: RuleFieldPath, raw: string): unknown {
   const v = raw.trim();
@@ -84,6 +85,30 @@ export async function approveRuleSetAction(formData: FormData) {
     message = `Approved and frozen · sha256 ${r.hash.slice(0, 12)}…`;
   } catch (e) {
     message = (e as Error).message;
+  }
+  back(contract.id, message);
+}
+
+export async function uploadContractPdfAction(formData: FormData) {
+  const session = await requireAuth("gc");
+  const contractId = String(formData.get("contractId") ?? "");
+  const contract = await getContract(session.org, contractId);
+  if (!contract) redirect("/gc");
+  const file = formData.get("file");
+  let message: string;
+  try {
+    if (!(file instanceof File)) throw new UploadError("Choose a PDF to upload.");
+    const r = await attachContractDocument({
+      contractId,
+      orgId: session.org.id,
+      filename: file.name,
+      bytes: new Uint8Array(await file.arrayBuffer()),
+      actor: { userId: session.user.id, label: session.user.name },
+    });
+    message = `Uploaded ${r.pageCount}-page PDF. Compile it with Claude to propose rules.`;
+  } catch (e) {
+    if (!(e instanceof UploadError)) throw e;
+    message = e.message;
   }
   back(contract.id, message);
 }
