@@ -16,6 +16,7 @@
     "demo:reset": "node --env-file-if-exists=.env.local --import tsx scripts/demo-reset.ts",
     "render:contracts": "node --env-file-if-exists=.env.local --import tsx scripts/render-contracts.tsx",
     "gen:contracts": "node --env-file-if-exists=.env.local --import tsx scripts/gen-contracts.tsx",
+    "ramp:webhook": "node --env-file-if-exists=.env.local --import tsx scripts/ramp-webhook.ts",
     "eval": "node --env-file-if-exists=.env.local --import tsx evals/run.ts"
   },
   "dependencies": {

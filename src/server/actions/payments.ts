@@ -62,23 +62,28 @@ export async function initiatePayment(releaseId: string) {
 
   const paymentId = randomUUID();
   await db.insert(schema.payments).values({ id: paymentId, releaseId, rail: rail.name, status: "created", amountCents: release.releaseCents });
-  const bill = await rail.createBill({
-    releaseId,
-    amountCents: release.releaseCents,
-    vendorName: release.contract.sub.name,
-    invoiceNumber: releaseId,
-    memo: `Pay app release · ${release.contract.trade} · owner payment ${release.event.reference}`,
-  });
-  await db.update(schema.payments).set({ externalBillId: bill.externalBillId, raw: { created: bill } }).where(eq(schema.payments.id, paymentId));
+  let bill: { externalBillId: string };
   try {
-    await rail.hold(bill.externalBillId);
-    await db.update(schema.payments).set({ status: "held", updatedAt: now() }).where(eq(schema.payments.id, paymentId));
+    bill = await rail.createBill({
+      releaseId,
+      amountCents: release.releaseCents,
+      subOrgId: release.contract.subOrgId,
+      vendorName: release.contract.sub.name,
+      invoiceNumber: releaseId,
+      memo: `Pay app release · ${release.contract.trade} · owner payment ${release.event.reference}`,
+      payByDate: (release.payByAt ?? now()).toISOString().slice(0, 10),
+    });
+    await db.update(schema.payments).set({ externalBillId: bill.externalBillId, raw: { created: bill } }).where(eq(schema.payments.id, paymentId));
+    if (rail.hold) {
+      await rail.hold(bill.externalBillId);
+      await db.update(schema.payments).set({ status: "held", updatedAt: now() }).where(eq(schema.payments.id, paymentId));
+    }
+    if (rail.release) await rail.release(bill.externalBillId);
   } catch (e) {
     await db.update(schema.payments).set({ status: "failed", raw: { error: String(e) } }).where(eq(schema.payments.id, paymentId));
     await db.update(schema.releases).set({ status: "blocked" }).where(eq(schema.releases.id, releaseId));
     throw e;
   }
-  await rail.release(bill.externalBillId);
   await db.transaction(async (tx) => {
     await tx.update(schema.payments).set({ status: "released", updatedAt: now() }).where(eq(schema.payments.id, paymentId));
     await tx.update(schema.releases).set({ status: "payment_initiated" }).where(eq(schema.releases.id, releaseId));

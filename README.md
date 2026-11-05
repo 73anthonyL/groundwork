@@ -78,7 +78,7 @@ drizzle/        SQL migrations     seed/   contracts (md → pdf) + specs (answe
 - **Database**: Postgres via Drizzle. Neon in production, embedded PGlite locally and in tests. Money is integer cents. `events`, `ledger_entries`, `owner_payment_events` and `webhook_inbox` are append-only; balances are sums.
 - **Rules**: `rule_sets.rules` stores the extracted set, per-field verification and review annotations, and the statutory overlay. Approved versions are immutable; edits create v+1. The engine reads only approved versions.
 - **Engine**: `planWaterfall` is pure (no DB, no clock). `recordOwnerPayment` wraps it in one transaction with an idempotency key.
-- **Rails**: `PaymentRail { createBill, hold, release, attach, getStatus, parseWebhook }`. `SimulatedRail` ships; `RampRail` maps the same calls onto Ramp's Bills API (`POST /bills` → hold → release, `bills.paid` webhook) and is wired but untested against a sandbox.
+- **Rails**: `PaymentRail { createBill, hold?, release?, attach, getStatus, parseWebhook }`. Groundwork is the hold: a bill reaches the rail only after the matching conditional waiver is signed. `SimulatedRail` ships. `RampRail` targets Ramp's Bill Pay API: it creates an auto-approved bill against the sub's mapped vendor, scheduled for the statutory pay-by date, and settles on a `bills.paid` webhook (HMAC-verified, fail-closed) at `/api/webhooks/ramp`; `pnpm ramp:webhook <app-url>` registers and verifies it. Ramp's API has no bill hold or approval, which is why the gate lives in Groundwork. Not yet exercised against a sandbox.
 - **Auth**: persona sessions in a signed cookie; authorization is org-scoped query helpers on every read and write.
 
 ## Honest notes
