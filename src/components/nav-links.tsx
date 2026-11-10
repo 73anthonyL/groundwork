@@ -31,8 +31,18 @@ export const navRow =
   "group flex h-8 w-full items-center gap-2 rounded-md px-2 text-left text-sm leading-5 text-foreground/80 -outline-offset-2 hover:bg-sidebar-accent hover:text-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-foreground";
 export const navIcon = "size-4 shrink-0 text-muted-foreground group-hover:text-foreground group-aria-[current=page]:text-foreground";
 
+/** Pages that live outside their section's URL still belong to it in the sidebar. */
+const SECTION: [prefix: string, section: string][] = [
+  ["/gc/contracts", "/gc/projects"],
+  ["/gc/releases", "/gc/payments"],
+  ["/gc/ledger", "/gc/payments"],
+  ["/sub/contracts", "/sub/payments"],
+  ["/sub/waivers", "/sub/payments"],
+];
+const sectionPath = (path: string) => SECTION.find(([prefix]) => path === prefix || path.startsWith(`${prefix}/`))?.[1] ?? path;
+
 export function NavLink({ href, label, icon, scope }: { href: string; label: string; icon?: NavIcon; scope: string[] }) {
-  const path = usePathname();
+  const path = sectionPath(usePathname());
   const on = matchHref(path, scope) === href;
   const Icon = icon ? ICONS[icon] : null;
   return (

@@ -41,3 +41,25 @@ export const SAMPLE_FLOW: ProjectFlow = {
   totalInCents: $(500_000),
 };
 SAMPLE_FLOW.links = SAMPLE_FLOW.events.flatMap((e) => e.links);
+
+/**
+ * The second owner payment above, as the landing page tells it: what each subcontractor billed, what
+ * its contract holds back, and where each payment stood the next morning. Net and retainage figures
+ * are the same ones the flow carries; the times are Pacific.
+ */
+export type SamplePaymentLine = { name: string; grossCents: number; retainageBps: number; netCents: number; status: "paid" | "waiver" | "due" };
+
+const E2 = SAMPLE_FLOW.events[1];
+const net = (target: string) => E2.links.find((l) => l.target === target)?.cents ?? 0;
+const line = (name: string, target: string, retainageBps: number, status: SamplePaymentLine["status"]): SamplePaymentLine => {
+  const netCents = net(target);
+  return { name, retainageBps, netCents, grossCents: Math.round((netCents * 10_000) / (10_000 - retainageBps)), status };
+};
+
+export const SAMPLE_PAYMENT = {
+  reference: E2.reference,
+  received: "Nov 3, 10:00 AM",
+  amountCents: E2.amountCents,
+  retainageCents: net("retainage"),
+  lines: [line("Ironline Steel", "c:iron", 1000, "paid"), line("Pacific Electric", "c:pac", 500, "waiver"), line("Summit Drywall", "c:sum", 1000, "due")],
+};

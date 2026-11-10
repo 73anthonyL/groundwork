@@ -17,13 +17,13 @@ import { RollingNumber, formatUsd0 } from "./rolling-number";
 
 const W = 960;
 const PAD_Y = 28;
-const NODE_W = 10;
+const NODE_W = 6;
 const GAP = 14;
 const COLOR: Record<FlowLink["kind"], string> = { paid: "var(--flow-paid)", moving: "var(--flow-moving)", held: "var(--flow-held)", setoff: "var(--flow-setoff)", idle: "var(--flow-idle)" };
 const KIND_LABEL: Record<FlowLink["kind"], string> = { paid: "Paid", moving: "On its way", held: "Retainage held", setoff: "Backcharge kept", idle: "Not yet allocated" };
 /** Text sits on a stroke of the card color, so it stays readable over a ribbon. */
 /** The halo takes the color of whatever the chart sits on: set --flow-surface on a parent that is not a card. */
-const HALO = { paintOrder: "stroke", stroke: "var(--flow-surface, var(--card))", strokeWidth: 4, strokeLinejoin: "round" } as const;
+const HALO = { paintOrder: "stroke", stroke: "var(--flow-surface, var(--card))", strokeWidth: 3, strokeLinejoin: "round" } as const;
 const ORDER: FlowNode["kind"][] = ["owner", "gc", "sub", "lower", "retainage", "backcharge", "unallocated"];
 
 type Laid = { node: FlowNode; x: number; y: number; h: number; value: number };
@@ -149,7 +149,7 @@ export function MoneyFlow({
   const h = Math.max(height, 2 * PAD_Y + tallest * 40);
   const { laid, ribbons } = useMemo(() => layout(flow, at, h), [flow, at, h]);
   if (!flow.events.length) {
-    return <div className="rounded-xl border border-dashed bg-transparent p-8 text-center text-sm text-muted-foreground">No money has moved on this project yet. Record an owner payment to see it flow.</div>;
+    return <div className="rounded-lg border border-dashed border-input p-8 text-center text-sm text-muted-foreground">No money has moved on this project yet. Record an owner payment to see it flow.</div>;
   }
   const current = flow.events[at];
   const totals = (["paid", "moving", "held", "setoff", "idle"] as const)
@@ -161,7 +161,7 @@ export function MoneyFlow({
   return (
     <figure className="min-w-0">
       {/* On a phone the diagram keeps a readable width and scrolls sideways; the note below says so. */}
-      <p className="mb-2 text-xs text-muted-foreground sm:hidden">Swipe sideways to see the whole diagram.</p>
+      <p className="type-caption mb-2 text-muted-foreground sm:hidden">Swipe sideways to see the whole diagram.</p>
       <div className="-mx-1 overflow-x-auto px-1">
       <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full min-w-[640px] overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
         <AnimatePresence>
@@ -170,8 +170,13 @@ export function MoneyFlow({
               key={r.key}
               d={r.d}
               fill={COLOR[r.kind]}
+              fillOpacity={r.kind === "idle" ? 0.2 : 0.24}
+              stroke={COLOR[r.kind]}
+              strokeOpacity={0.7}
+              strokeWidth={0.75}
+              strokeLinejoin="round"
               initial={{ opacity: 0 }}
-              animate={{ opacity: dim(r) ? 0.08 : r.kind === "idle" ? 0.25 : 0.42, d: r.d }}
+              animate={{ opacity: dim(r) ? 0.2 : 1, d: r.d }}
               exit={{ opacity: 0 }}
               transition={{ opacity: { duration: hover ? duration.hover : duration.fade, ease: ease.out }, d: reduce ? { duration: 0 } : spring.ui }}
             />
@@ -184,7 +189,7 @@ export function MoneyFlow({
             .filter((r) => r.kind === "moving" && !dim(r))
             .flatMap((r) =>
               [0, 1, 2].map((i) => (
-                <circle key={`${r.key}-${i}`} r={Math.min(3.5, Math.max(1.8, r.thickness / 6))} fill={COLOR.moving}>
+                <circle key={`${r.key}-${i}`} r={Math.min(2.5, Math.max(1.5, r.thickness / 8))} fill={COLOR.moving}>
                   <animateMotion dur="2.4s" begin={`${i * 0.8}s`} repeatCount="indefinite" path={r.mid} keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.65 0 0.35 1" />
                 </circle>
               )),
@@ -194,11 +199,11 @@ export function MoneyFlow({
           const sink = ["retainage", "backcharge", "unallocated"].includes(n.node.kind);
           return (
             <motion.g key={n.node.id} initial={{ opacity: 0 }} animate={{ opacity: hover && hover !== n.node.id && !ribbons.some((r) => (r.source === hover && r.target === n.node.id) || (r.target === hover && r.source === n.node.id)) ? 0.35 : 1 }} transition={{ duration: duration.hover, ease: ease.out }} onMouseEnter={() => setHover(n.node.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.node.id)} onBlur={() => setHover(null)} tabIndex={0} role="img" aria-label={`${n.node.label}, ${formatUsd0(n.value)}`} style={{ cursor: "default" }}>
-              <motion.rect x={n.x} width={NODE_W} rx={2} fill={sink ? COLOR[n.node.kind === "retainage" ? "held" : n.node.kind === "backcharge" ? "setoff" : "idle"] : "var(--foreground)"} animate={{ y: n.y, height: n.h }} transition={spring.ui} />
-              <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY - 3 }} transition={spring.ui} className="fill-foreground text-[13px] font-medium" style={HALO}>
+              <motion.rect x={n.x} width={NODE_W} rx={1} fill={sink ? COLOR[n.node.kind === "retainage" ? "held" : n.node.kind === "backcharge" ? "setoff" : "idle"] : "var(--foreground)"} animate={{ y: n.y, height: n.h }} transition={spring.ui} />
+              <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY - 3 }} transition={spring.ui} className="fill-foreground text-[12px] font-medium" style={HALO}>
                 {n.node.label}
               </motion.text>
-              <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY + 12 }} transition={spring.ui} className="num fill-muted-foreground text-[12px]" style={HALO}>
+              <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY + 12 }} transition={spring.ui} className="type-mono fill-muted-foreground text-[11px]" style={HALO}>
                 {formatUsd0(n.value)}
               </motion.text>
             </motion.g>
@@ -208,12 +213,12 @@ export function MoneyFlow({
       </div>
 
       <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <ul className="flex flex-wrap gap-x-5 gap-y-1 text-xs">
+        <ul className="type-caption flex flex-wrap gap-x-5 gap-y-1">
           {totals.map((t) => (
             <li key={t.k} className="flex items-center gap-1.5">
-              <span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: COLOR[t.k] }} />
+              <span aria-hidden className="size-2 rounded-[2px]" style={{ background: COLOR[t.k] }} />
               <span className="text-muted-foreground">{KIND_LABEL[t.k]}</span>
-              <RollingNumber value={t.cents} className="font-medium" />
+              <RollingNumber value={t.cents} className="type-mono text-foreground" />
             </li>
           ))}
         </ul>
@@ -225,7 +230,7 @@ export function MoneyFlow({
                 if (at >= last) setStep(0);
                 setPlaying((p) => !p);
               }}
-              className="inline-flex h-8 items-center gap-1.5 rounded-full border bg-card px-3 text-xs font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-muted active:scale-[0.97]"
+              className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-input bg-card px-2.5 text-[13px] leading-[18px] font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-muted active:scale-[0.98]"
               aria-label={playing ? "Pause" : at >= last ? "Replay from the first payment" : "Play"}
             >
               {playing ? <Pause className="h-3.5 w-3.5" /> : at >= last ? <RotateCcw className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
@@ -243,9 +248,9 @@ export function MoneyFlow({
                     aria-current={i === at}
                     aria-label={`${e.reference}, ${formatUsd0(e.amountCents)}`}
                     title={`${e.reference}, ${formatUsd0(e.amountCents)}`}
-                    className="group flex h-8 w-5 items-center justify-center"
+                    className="group flex h-7 w-5 cursor-pointer items-center justify-center rounded-sm"
                   >
-                    <span className={`block h-2 w-2 rounded-full transition-[scale,background-color] duration-150 ease-out group-hover:scale-125 ${i === at ? "scale-150 bg-money group-hover:scale-150" : i < at ? "bg-foreground/60" : "bg-border group-hover:bg-foreground/40"} ${e.tier === 2 ? "ring-1 ring-foreground/30 ring-offset-1 ring-offset-background" : ""}`} />
+                    <span className={`block h-3 rounded-[1px] transition-[background-color] duration-150 ease-out ${i === at ? "w-1 bg-foreground" : i < at ? "w-0.5 bg-foreground/50 group-hover:bg-foreground" : "w-0.5 bg-input group-hover:bg-foreground/50"} ${e.tier === 2 ? "h-2" : ""}`} />
                   </button>
                 </li>
               ))}
@@ -253,9 +258,9 @@ export function MoneyFlow({
           </div>
         )}
       </figcaption>
-      <p className="mt-2 text-xs text-muted-foreground" aria-live={playing ? "off" : "polite"}>
-        <span className="type-label mr-2">{current.tier === 2 ? "One hop down" : `Payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
-        {current.reference}, <span className="num">{formatUsd0(current.amountCents)}</span>, received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
+      <p className="type-caption mt-2 text-muted-foreground" aria-live={playing ? "off" : "polite"}>
+        <span className="mr-2 font-medium text-foreground">{current.tier === 2 ? "Passed to the lower tier" : `Owner payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
+        <span className={current.tier === 1 ? "type-mono" : undefined}>{current.reference.replaceAll(" · ", ", ")}</span>, <span className="type-mono">{formatUsd0(current.amountCents)}</span>, received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
       </p>
     </figure>
   );

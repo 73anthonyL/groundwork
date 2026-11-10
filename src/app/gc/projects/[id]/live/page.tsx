@@ -2,35 +2,36 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/server/auth";
 import { getProject } from "@/server/scoped";
-import { ProjectLive } from "@/components/project-live";
+import { PageBody, PageHeader } from "@/components/page-header";
 import { ProjectTabs } from "@/components/project-tabs";
-import { PageHero } from "@/components/page-hero";
+import { ProjectLive } from "@/components/project-live";
+import { buttonVariants } from "@/components/ui/button";
+import { Section } from "@/components/ui/panel";
 
-export const metadata = { title: "Live view" };
+export const metadata = { title: "Charts" };
 
+/** The overview's figures as charts. Reached from the money flow on the overview. */
 export default async function ProjectLivePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { org } = await requireAuth("gc");
   const project = await getProject(org, id);
   if (!project) notFound();
   return (
-    <div>
-      <PageHero
-        kicker={
-          <Link href="/gc" className="text-stage-muted underline decoration-stage-foreground/30 underline-offset-4 hover:text-stage-foreground">
-            All projects
-          </Link>
-        }
-        title={project.name}
-        lede="The same project as the board, drawn instead of listed."
-        aside={<ProjectTabs projectId={id} active="live" />}
-      />
-      <div>
-        <ProjectLive org={org} projectId={id} />
-      </div>
-      <p className="mt-6 text-xs text-muted-foreground">
-        Every picture on this page is drawn from <Link href={`/api/v1/projects/${id}`} className="underline underline-offset-2">/api/v1/projects/{id.slice(0, 8)}…</Link>.
-      </p>
-    </div>
+    <>
+      <PageHeader breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: project.name, href: `/gc/projects/${id}` }, { label: "Charts" }]} title={project.name} tabs={<ProjectTabs projectId={id} />} />
+      <PageBody>
+        <Section
+          title="Charts"
+          description="The same figures as the overview, drawn: where the money is, which deadlines are running, and what has happened."
+          actions={
+            <Link href={`/gc/projects/${id}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
+              Back to overview
+            </Link>
+          }
+        >
+          <ProjectLive org={org} projectId={id} />
+        </Section>
+      </PageBody>
+    </>
   );
 }

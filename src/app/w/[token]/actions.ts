@@ -18,7 +18,8 @@ export async function signByTokenAction(_prev: SignState, formData: FormData): P
   try {
     await signWaiver({ waiverId: waiver.id, signerName, signerTitle, actor: { userId: null, label: `${signerName} (${waiver.release.contract.sub.name})` } });
   } catch (e) {
-    return { error: (e as Error).message };
+    const m = (e as Error).message;
+    return { error: m.charAt(0).toUpperCase() + m.slice(1) + (/[.!?]$/.test(m) ? "" : ".") };
   }
   revalidatePath(`/w/${token}`);
   redirect(`/w/${token}?signed=1`);

@@ -1,70 +1,99 @@
 import { requireAuth } from "@/server/auth";
 import { getLedger } from "@/server/scoped";
-import { formatCents, formatCentsCompact } from "@/lib/money";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatCents } from "@/lib/money";
+import { PageBody, PageHeader } from "@/components/page-header";
+import { Section } from "@/components/ui/panel";
+import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-const ACCOUNT: Record<string, string> = {
-  owner_receipts: "Owner receipts",
-  gc_cash: "GC cash from owner",
-  sub_payable: "Owed to subs",
-  retainage_held: "Retainage held",
-  sub_paid: "Paid to subs",
-  backcharge_recovered: "Backcharges recovered",
-  lower_tier_payable: "Lower tier: owed by subs",
-  lower_tier_paid: "Lower tier: paid by subs",
+export const metadata = { title: "Ledger entries" };
+
+const ACCOUNT: Record<string, { label: string; what: string }> = {
+  owner_receipts: { label: "Received from owners", what: "Every owner payment recorded." },
+  gc_cash: { label: "Your cash from owners", what: "What is left with you after paying out and holding retainage." },
+  sub_payable: { label: "Owed to subcontractors", what: "Split out of an owner payment and not yet paid." },
+  retainage_held: { label: "Retainage held", what: "Withheld from subcontractors until its release condition is met." },
+  sub_paid: { label: "Paid to subcontractors", what: "Confirmed by the bank." },
+  backcharge_recovered: { label: "Backcharges recovered", what: "Set off against payments." },
+  lower_tier_payable: { label: "Lower tier: owed by subcontractors", what: "What your subcontractors owe their own suppliers." },
+  lower_tier_paid: { label: "Lower tier: paid by subcontractors", what: "What they have paid them." },
 };
 
+const money = (cents: number) => (cents < 0 ? `−${formatCents(-cents)}` : formatCents(cents));
+
+/**
+ * The append-only entries behind every balance in the product. Reached from Payments. Each row was
+ * written in the same transaction as the event that caused it; a balance is the sum of its rows.
+ */
 export default async function LedgerPage() {
   const { org } = await requireAuth("gc");
-  const { entries, balances } = await getLedger(org);
+  const { entries, balances, projects } = await getLedger(org);
+  const projectName = (id: string) => projects.find((p) => p.id === id)?.name ?? "";
   return (
-    <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold">Ledger</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Append-only. Every row was written by the deterministic engine inside the same transaction as the event that caused it. Balances are sums; nothing is stored that could drift.</p>
-        </div>
-        <span className="rounded-sm bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">deterministic · replayable</span>
-      </div>
-      <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-md border bg-border sm:grid-cols-5">
-        {Object.entries(ACCOUNT).map(([k, label]) => (
-          <div key={k} className="bg-card p-4">
-            <dt className="text-xs text-muted-foreground">{label}</dt>
-            <dd className="num mt-1 text-lg font-semibold">{formatCentsCompact(balances[k] ?? 0)}</dd>
-          </div>
-        ))}
-      </dl>
-      <div className="mt-6 overflow-hidden rounded-xl bg-card shadow-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>When</TableHead>
-              <TableHead>Account</TableHead>
-              <TableHead>Memo</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-              <TableHead>Correlation</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {entries.map((e) => (
-              <TableRow key={e.id}>
-                <TableCell className="whitespace-nowrap text-muted-foreground">{e.createdAt.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</TableCell>
-                <TableCell>{ACCOUNT[e.account] ?? e.account}</TableCell>
-                <TableCell>{e.memo}</TableCell>
-                <TableCell className={`num text-right ${e.deltaCents < 0 ? "text-muted-foreground" : ""}`}>{e.deltaCents < 0 ? `−${formatCents(-e.deltaCents)}` : formatCents(e.deltaCents)}</TableCell>
-                <TableCell className="font-mono text-[11px] text-muted-foreground">{e.correlationId.slice(0, 8)}</TableCell>
-              </TableRow>
-            ))}
-            {entries.length === 0 && (
+    <>
+      <PageHeader
+        breadcrumbs={[{ label: "Payments", href: "/gc/payments" }, { label: "Ledger entries" }]}
+        title="Ledger entries"
+        description="Every movement of money Groundwork has recorded, newest first. Entries are only ever added, never edited, and each balance is the sum of its entries."
+      />
+      <PageBody>
+        <Section title="Balances">
+          <Table className="min-w-[560px]">
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  No entries yet.
-                </TableCell>
+                <TableHead>Account</TableHead>
+                <TableHead>What it holds</TableHead>
+                <TableHead numeric>Balance</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(ACCOUNT).map(([k, a]) => (
+                <TableRow key={k}>
+                  <TableCell className="font-medium whitespace-nowrap">{a.label}</TableCell>
+                  <TableCell muted>{a.what}</TableCell>
+                  <TableCell numeric>{money(balances[k] ?? 0)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Section>
+        <Section title="Entries" description={entries.length >= 200 ? "The 200 most recent." : undefined}>
+          <Table density="compact" className="min-w-[860px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead>When</TableHead>
+                <TableHead>Project</TableHead>
+                <TableHead>Account</TableHead>
+                <TableHead>Subcontractor</TableHead>
+                <TableHead>Memo</TableHead>
+                <TableHead numeric>Amount</TableHead>
+                <TableHead>Batch</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {entries.length === 0 && <TableEmpty colSpan={7}>No entries yet. The first ones are written when you record an owner payment.</TableEmpty>}
+              {entries.map((e) => (
+                <TableRow key={e.id}>
+                  <TableCell muted className="num whitespace-nowrap">
+                    {e.createdAt.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                  </TableCell>
+                  <TableCell muted className="whitespace-nowrap">
+                    {projectName(e.projectId)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">{ACCOUNT[e.account]?.label ?? e.account}</TableCell>
+                  <TableCell className="whitespace-nowrap">{e.subName ?? ""}</TableCell>
+                  <TableCell muted>{e.memo}</TableCell>
+                  <TableCell numeric className={e.deltaCents < 0 ? "text-muted-foreground" : undefined}>
+                    {money(e.deltaCents)}
+                  </TableCell>
+                  <TableCell className="type-mono text-muted-foreground" title={`Entries written together share this id: ${e.correlationId}`}>
+                    {e.correlationId.slice(0, 8)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Section>
+      </PageBody>
+    </>
   );
 }

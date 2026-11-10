@@ -24,5 +24,6 @@ export async function reviewPayAppAction(formData: FormData) {
   }
   revalidatePath(`/gc/pay-apps/${id}`);
   revalidatePath(`/gc/projects/${app.contract.projectId}`);
+  revalidatePath("/gc/pay-apps");
   redirect(`/gc/pay-apps/${id}${error ? `?error=${encodeURIComponent(error)}` : "?done=1"}`);
 }

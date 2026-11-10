@@ -49,13 +49,13 @@ export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: 
   return (
     <div className="flex items-center gap-3">
       <svg width={size} height={size} viewBox="0 0 64 64" className="shrink-0 -rotate-90" aria-hidden>
-        <circle cx="32" cy="32" r={R} fill="none" stroke="var(--border)" strokeWidth="7" />
-        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeDasharray={C} initial={reduce ? false : { strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: reduce ? 0 : duration.draw, ease: ease.trace }} />
+        <circle cx="32" cy="32" r={R} fill="none" stroke="var(--border)" strokeWidth="4" />
+        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="4" strokeLinecap="butt" strokeDasharray={C} initial={reduce ? false : { strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: reduce ? 0 : duration.draw, ease: ease.trace }} />
       </svg>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">
           <span className="truncate text-sm font-medium">{clock.party}</span>
-          <span className="num shrink-0 text-sm font-semibold">{formatUsd0(clock.cents)}</span>
+          <span className="type-mono shrink-0 font-medium">{formatUsd0(clock.cents)}</span>
         </div>
         <div className="flex items-baseline justify-between gap-3 text-[13px]">
           <span className="truncate text-muted-foreground">
@@ -77,7 +77,7 @@ export function ClockBoard({ clocks, nowIso, empty = "Nothing is on a clock righ
     <ul className="divide-y">
       {clocks.map((c) => (
         <li key={c.releaseId} className="py-3 first:pt-0 last:pb-0">
-          <ClockRing clock={c} nowIso={nowIso} size={34} />
+          <ClockRing clock={c} nowIso={nowIso} size={28} />
         </li>
       ))}
     </ul>

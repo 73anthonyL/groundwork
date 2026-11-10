@@ -20,9 +20,12 @@ export async function signWaiverAction(_prev: SignState, formData: FormData): Pr
   try {
     await signWaiver({ waiverId, signerName, signerTitle, actor: { userId: session.user.id, label: session.user.name } });
   } catch (e) {
-    return { error: (e as Error).message };
+    const m = (e as Error).message;
+    return { error: m.charAt(0).toUpperCase() + m.slice(1) + (/[.!?]$/.test(m) ? "" : ".") };
   }
   revalidatePath("/sub");
+  revalidatePath("/sub/payments");
   revalidatePath(`/sub/contracts/${waiver.contractId}`);
-  redirect(`/sub/contracts/${waiver.contractId}?signed=${waiverId}`);
+  // Back to the same page, which now shows the confirmation and what happens next.
+  redirect(`/sub/waivers/${waiverId}/sign?signed=1`);
 }

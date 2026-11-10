@@ -5,7 +5,7 @@ import { projectOverview } from "@/server/read/project";
 import { latestEval } from "@/server/read/eval";
 import { STATES } from "@/domain/statutes";
 import { AppShell } from "@/components/app-shell";
-import { GC_NAV } from "@/components/gc-nav";
+import { PageBody, PageHeader } from "@/components/page-header";
 import { ThemeSwitcher } from "@/components/viz/theme-switcher";
 import { MoneyFlow } from "@/components/viz/money-flow";
 import { ClockBoard } from "@/components/viz/clock-ring";
@@ -20,16 +20,16 @@ export const metadata = { title: "Lab" };
 
 function Specimen({ id, name, file, data, children, note }: { id: string; name: string; file: string; data: string; note?: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-20 rounded-xl bg-card p-6 shadow-card">
+    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-6 rounded-lg border bg-card p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b pb-3">
-        <h2 id={`${id}-h`} className="text-lg font-semibold">
+        <h2 id={`${id}-h`} className="type-section">
           {name}
         </h2>
-        <div className="font-mono text-[11px] text-muted-foreground">
-          {file} · data: {data}
+        <div className="type-mono type-caption text-muted-foreground">
+          {file}, data: {data}
         </div>
       </div>
-      {note && <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{note}</p>}
+      {note && <p className="type-meta mt-3 max-w-3xl text-muted-foreground">{note}</p>}
       <div className="mt-5">{children}</div>
     </section>
   );
@@ -45,30 +45,21 @@ export default async function LabPage() {
   const [project] = await listProjects(session.org);
   const o = project ? await projectOverview(session.org, project.id) : null;
   const run = latestEval();
-  const nav = session.org.kind === "gc" ? GC_NAV : [{ href: "/", label: "Home" }, { href: "/lab", label: "Lab" }];
   const index = [
     ["flow", "Money flow"], ["flow-story", "Money flow, autoplay"], ["clocks", "Clock rings"], ["bars", "Contract bars"], ["balance", "Balance chart"], ["timeline", "Event timeline"], ["states", "State map"], ["eval", "Eval"], ["gap", "Days gap"], ["type", "Type and color"],
   ];
   return (
-    <AppShell session={session} nav={nav}>
-      <div className="sticky top-0 z-20 -mx-4 border-b bg-background/85 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold">Lab</h1>
-            <p className="text-xs text-muted-foreground">Every visual, on {project ? project.name : "sample"} data. Choices here apply to the whole app in this browser.</p>
-          </div>
-          <ThemeSwitcher />
-        </div>
-        <nav aria-label="Specimens" className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+    <AppShell session={session}>
+      <PageHeader title="Lab" description={`Reference page: every chart and token in one place, on ${project ? project.name : "sample"} data.`} actions={<ThemeSwitcher />}>
+        <nav aria-label="Specimens" className="type-meta flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
           {index.map(([id, label]) => (
-            <a key={id} href={`#${id}`} className="hover:text-foreground">
+            <a key={id} href={`#${id}`} className="rounded-sm underline-offset-4 hover:text-foreground hover:underline">
               {label}
             </a>
           ))}
         </nav>
-      </div>
-
-      <div className="mt-6 space-y-6">
+      </PageHeader>
+      <PageBody className="gap-6">
         <Specimen id="flow" name="Money flow" file="components/viz/money-flow.tsx" data="/api/v1/projects/:id/flow" note="Owner to contractor to subcontractors to their lower tier. Ribbon width is dollars; orange ribbons carry particles until the payment lands. Hover a party to isolate it; the dots step through owner payments.">
           {o ? <MoneyFlow flow={o.flow} /> : <MoneyFlow flow={SAMPLE_FLOW} />}
         </Specimen>
@@ -78,18 +69,18 @@ export default async function LabPage() {
         </Specimen>
 
         <Specimen id="clocks" name="Clock rings" file="components/viz/clock-ring.tsx" data="/api/v1/projects/:id/clocks" note="One ring per release in motion. It empties toward the deadline and names the statute that set it. Green with more than half the period left, amber under half, orange under a quarter, red when late.">
-          {o ? <ClockBoard clocks={o.clocks} nowIso={o.summary.asOf} /> : <p className="text-sm text-muted-foreground">Reset the demo to see clocks.</p>}
+          {o ? <ClockBoard clocks={o.clocks} nowIso={o.summary.asOf} /> : <p className="text-sm text-muted-foreground">Reset the sample workspace to see clocks.</p>}
         </Specimen>
 
-        <Specimen id="bars" name="Contract bars" file="components/viz/charts.tsx · ContractBars" data="/api/v1/projects/:id/summary" note="Each contract sum split into paid, on its way, held, backcharged and billed-but-unfunded. Lower-tier parties hang under the contract that pays them.">
+        <Specimen id="bars" name="Contract bars" file="components/viz/charts.tsx, ContractBars" data="/api/v1/projects/:id/summary" note="Each contract sum split into paid, on its way, held, backcharged and billed-but-unfunded. Lower-tier parties hang under the contract that pays them.">
           {o && <ContractBars contracts={o.summary.contracts} />}
         </Specimen>
 
-        <Specimen id="balance" name="Balance chart" file="components/viz/charts.tsx · BalanceChart" data="/api/v1/projects/:id/series" note="The ledger as a stacked step chart: after each posting, where the owner's money sits. Hover to read a moment.">
+        <Specimen id="balance" name="Balance chart" file="components/viz/charts.tsx, BalanceChart" data="/api/v1/projects/:id/series" note="Payments as a stacked step chart: after each posting, where the owner's money sits. Hover to read a moment.">
           {o && <BalanceChart series={o.series} />}
         </Specimen>
 
-        <Specimen id="timeline" name="Event timeline" file="components/viz/charts.tsx · EventTimeline" data="/api/v1/projects/:id/timeline" note="The append-only event log on five lanes. Larger dots are owner payments and settlements. Hover a dot to read it.">
+        <Specimen id="timeline" name="Event timeline" file="components/viz/charts.tsx, EventTimeline" data="/api/v1/projects/:id/timeline" note="The append-only event log on five lanes. Larger dots are owner payments and settlements. Hover a dot to read it.">
           {o && <EventTimeline entries={o.timeline} />}
         </Specimen>
 
@@ -97,7 +88,7 @@ export default async function LabPage() {
           <StateGrid states={STATES} />
         </Specimen>
 
-        <Specimen id="eval" name="Eval" file="components/viz/charts.tsx · EvalHeadline, AblationChart" data="/api/v1/eval" note="The extraction eval: headline figures, then how many wrong values would reach the engine unflagged under each review policy.">
+        <Specimen id="eval" name="Eval" file="components/viz/charts.tsx, EvalHeadline, AblationChart" data="/api/v1/eval" note="The extraction eval: headline figures, then how many wrong values would reach the engine unflagged under each review policy.">
           {run ? (
             <div className="space-y-6">
               <EvalHeadline run={run} />
@@ -108,7 +99,7 @@ export default async function LabPage() {
           )}
         </Specimen>
 
-        <Specimen id="gap" name="Days gap" file="components/viz/charts.tsx · DaysGap" data="fixed (Built, Aug 2026)" note="The problem in one picture. Shown here on the page background and on the dark stage used by the landing hero.">
+        <Specimen id="gap" name="Days gap" file="components/viz/charts.tsx, DaysGap" data="fixed (Built, Aug 2026)" note="The problem in one picture. Shown here on the page background and on the dark stage used by the landing hero.">
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="rounded-md border p-5">
               <DaysGap />
@@ -124,28 +115,28 @@ export default async function LabPage() {
             <div className="space-y-4">
               <div>
                 <div className="type-label text-muted-foreground">Page title</div>
-                <h1 className="text-4xl font-semibold leading-tight">Bayview Clinic TI</h1>
+                <div className="type-title">Bayview Clinic TI</div>
               </div>
               <div>
                 <div className="type-label text-muted-foreground">Figure</div>
-                <div className="type-numeral text-6xl">
+                <div className="type-figure num">
                   <RollingNumber value={32_500_000} />
                 </div>
               </div>
               <div>
                 <div className="type-label text-muted-foreground">Section heading</div>
-                <h2 className="text-xl font-semibold">Where the money went</h2>
+                <div className="type-section">Where the money went</div>
               </div>
               <div>
                 <div className="type-label text-muted-foreground">Body and data</div>
                 <p className="text-sm">The contract already says when the sub gets paid.</p>
-                <p className="num font-mono text-sm">$45,000.00, sha256 9f2c41ab…, 7d 3h left</p>
+                <p className="type-mono text-sm">$45,000.00, sha256 9f2c41ab…, 7d 3h left</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Button variant="money">Record and allocate</Button>
-                <Button>Continue</Button>
-                <Button variant="outline">Request changes</Button>
-                <Button variant="ghost">Cancel</Button>
+                <Button>Record owner payment</Button>
+                <Button variant="secondary">Request changes</Button>
+                <Button variant="tertiary">Cancel</Button>
+                <Button variant="destructive">Remove</Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {["awaiting_waiver", "waiver_signed", "payment_initiated", "paid", "settled", "blocked"].map((s) => (
@@ -162,20 +153,20 @@ export default async function LabPage() {
               ].map(([name, cls]) => (
                 <li key={name} className="overflow-hidden rounded-md border">
                   <div className={`h-12 ${cls}`} />
-                  <div className="bg-card px-2 py-1.5 font-mono text-[11px] text-muted-foreground">{name}</div>
+                  <div className="bg-card px-2 py-1.5 type-mono type-caption text-muted-foreground">{name}</div>
                 </li>
               ))}
             </ul>
           </div>
         </Specimen>
-      </div>
-      <p className="mt-8 text-xs text-muted-foreground">
+      <p className="type-caption text-muted-foreground">
         Tokens live in <span className="font-mono">src/app/globals.css</span>, motion in <span className="font-mono">src/lib/motion.ts</span>, and every chart reads the JSON listed at{" "}
         <Link href="/api/v1" className="underline underline-offset-2">
           /api/v1
         </Link>
         .
       </p>
+      </PageBody>
     </AppShell>
   );
 }

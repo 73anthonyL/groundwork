@@ -1,18 +1,25 @@
 "use client";
 
+/**
+ * The one orchestrated moment: when an owner payment has just been recorded, a line sweeps across
+ * the top of its table and the rows arrive one after another.
+ *
+ *   <WaterfallReveal active={justRecorded}>
+ *     <Table>… <TableBody>{rows.map((r, i) => <RevealRow key={r.id} index={i} active={justRecorded}>…cells…</RevealRow>)}</TableBody></Table>
+ *   </WaterfallReveal>
+ *
+ * `RevealRow` stands in for `TableRow` (same border and hover). `CountUp` counts a figure up from zero.
+ * Transform and opacity only; with reduced motion, or when `active` is false, everything renders in
+ * its end state.
+ */
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { formatCentsCompact } from "@/lib/money";
 import { duration, ease, spring } from "@/lib/motion";
 
-/** Hover is instant on rows: sweeping the cursor down a table should not leave a trail. */
-const ROW = "border-b border-border/70 last:border-0 hover:bg-muted/40";
+/** Matches TableRow. Hover is instant: sweeping the cursor down a table should not leave a trail. */
+const ROW = "border-b hover:bg-muted/60";
 
-/**
- * The one orchestrated moment: when an owner payment has just landed, the amount sweeps down the
- * board and the release rows arrive one after another. Transform/opacity only; reduced motion
- * renders the end state.
- */
 export function WaterfallReveal({ active, children }: { active: boolean; children: React.ReactNode }) {
   const reduce = useReducedMotion();
   if (!active || reduce) return <>{children}</>;
@@ -20,7 +27,7 @@ export function WaterfallReveal({ active, children }: { active: boolean; childre
     <motion.div initial={{ opacity: 0.6 }} animate={{ opacity: 1 }} transition={{ duration: duration.fade, ease: ease.out }} className="relative">
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left rounded bg-link"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-0.5 origin-left rounded-sm bg-signal"
         initial={{ scaleX: 0, opacity: 1 }}
         animate={{ scaleX: 1, opacity: 0 }}
         transition={{ scaleX: { duration: 0.6, ease: ease.trace }, opacity: { delay: 0.9, duration: duration.fade } }}
@@ -32,9 +39,9 @@ export function WaterfallReveal({ active, children }: { active: boolean; childre
 
 export function RevealRow({ index, active, children }: { index: number; active: boolean; children: React.ReactNode }) {
   const reduce = useReducedMotion();
-  if (!active || reduce) return <tr className={ROW}>{children}</tr>;
+  if (!active || reduce) return <tr data-slot="table-row" className={ROW}>{children}</tr>;
   return (
-    <motion.tr className={ROW} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.ui, delay: 0.3 + Math.min(index, 8) * 0.06 }}>
+    <motion.tr data-slot="table-row" className={ROW} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.ui, delay: 0.3 + Math.min(index, 8) * 0.06 }}>
       {children}
     </motion.tr>
   );

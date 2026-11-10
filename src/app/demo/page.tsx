@@ -1,116 +1,153 @@
 import Link from "next/link";
-import { requireAuth } from "@/server/auth";
+import { redirect } from "next/navigation";
+import { homeFor, isSampleWorkspace, requireAuth } from "@/server/auth";
 import { AppShell } from "@/components/app-shell";
-import { GC_NAV } from "@/components/gc-nav";
+import { PageBody, PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
+import { Panel, Section } from "@/components/ui/panel";
+import { Table, TableBody, TableCell, TableEmpty, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CHECKPOINTS } from "@/server/demo/reset";
 import { now } from "@/server/clock";
 import { hasApiKey } from "@/lib/ai/client";
 import { railName } from "@/server/rails";
 import { dbDriver } from "@/db/client";
-import { resetAction, settleAllAction } from "./actions";
 import { demoOutbox } from "@/server/scoped";
 import { formatCents } from "@/lib/money";
+import { resetAction, settleAllAction } from "./actions";
 
-const DESCRIPTIONS: Record<(typeof CHECKPOINTS)[number], string> = {
-  fresh: "Parties, project, three subcontracts with PDFs, schedules of values. Nothing read yet.",
-  compiled: "Ironline approved. Pacific extracted and waiting on review (subjective release trigger). Summit not compiled: compile it live.",
-  paid1: "All three approved. Pay App #1 approved and funded by Owner Payment #1 ($200,000). Waivers signed, payments settled.",
-  intake: "paid1 + Pay App #2 approved for Ironline and Pacific. Summit's #2 submitted with retainage at 5% instead of 10%.",
-  paid2: "intake + Summit corrected and approved. Owner Payment #2 ($125,000, partial) recorded. Three releases await waivers with live clocks.",
-  closeout: "paid2 settled, then a change order, a backcharge and a rebar supplier one hop down. Owner Payment #3 ($175,000) sets off the backcharge and plans the supplier's share; Ironline's release waits on its supplier's waiver; half of Ironline's retainage is certified and waits for the owner.",
+export const metadata = { title: "Sample workspace" };
+
+const POINTS: Record<(typeof CHECKPOINTS)[number], { name: string; what: string }> = {
+  fresh: { name: "Start", what: "Two projects, their companies and three subcontracts with PDFs and schedules of values. No contract has been read yet." },
+  compiled: { name: "Contracts read", what: "Ironline's payment rules are approved. Pacific's are read and waiting on review. Summit's has not been read: read it yourself." },
+  paid1: { name: "First owner payment", what: "All three subcontracts approved. Pay app 1 approved and paid from owner payment 1 ($200,000). Waivers signed, payments paid." },
+  intake: { name: "Second pay apps in", what: "Pay app 2 approved for Ironline and Pacific. Summit's is submitted with retainage at 5% where the contract says 10%." },
+  paid2: { name: "Second owner payment", what: "Summit corrected and approved. Owner payment 2 ($125,000, partial) recorded. Three payments wait on waivers with deadlines running." },
+  closeout: { name: "Closeout", what: "A change order, a backcharge and a rebar supplier one level down. Owner payment 3 ($175,000) sets off the backcharge; Ironline waits on its supplier's waiver; half its retainage is certified." },
 };
 
-export default async function DemoPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
-  const session = await requireAuth("gc");
+/** Controls for the sample workspace: rebuild its data at a known point, settle its test payments, open lower-tier waiver links. */
+export default async function SampleWorkspacePage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
+  const session = await requireAuth();
+  if (!isSampleWorkspace(session.org)) redirect(homeFor(session.org.kind));
   const { msg } = await searchParams;
   const outbox = await demoOutbox();
+  const home = homeFor(session.org.kind);
   return (
-    <AppShell session={session} nav={GC_NAV}>
-      <h1 className="text-3xl font-semibold">Demo panel</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Every checkpoint is rebuilt by running the real actions in order, so every row has a real history.</p>
-      {msg && (
-        <p role="status" className="mt-3 rounded-xl bg-card shadow-card px-3 py-2 text-sm">
-          {decodeURIComponent(msg)}
-        </p>
-      )}
-      <dl className="mt-6 grid gap-px overflow-hidden rounded-md border bg-border text-sm sm:grid-cols-4">
-        {[
-          ["Clock", `${now().toISOString()}${process.env.DEMO_NOW ? " (frozen by DEMO_NOW)" : ""}`],
-          ["Database", dbDriver() === "neon" ? "Neon Postgres" : "Embedded PGlite"],
-          ["Payment rail", railName()],
-          ["Claude API key", hasApiKey() ? "configured" : "missing → cached extractions"],
-        ].map(([k, v]) => (
-          <div key={k} className="bg-card p-3">
-            <dt className="text-xs text-muted-foreground">{k}</dt>
-            <dd className="mt-0.5 break-all font-medium">{v}</dd>
-          </div>
-        ))}
-      </dl>
-      <section className="mt-8" aria-labelledby="checkpoints">
-        <h2 id="checkpoints" className="text-lg font-semibold">
-          Reset to a checkpoint
-        </h2>
-        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-          {CHECKPOINTS.map((c) => (
-            <li key={c} className="flex items-start justify-between gap-3 rounded-xl bg-card shadow-card p-4">
-              <div>
-                <div className="font-mono text-sm font-semibold">{c}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{DESCRIPTIONS[c]}</div>
-              </div>
-              <form action={resetAction}>
-                <input type="hidden" name="to" value={c} />
-                <Button type="submit" variant="outline" size="sm">
-                  Reset
-                </Button>
-              </form>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <section className="mt-8" aria-labelledby="ops">
-        <h2 id="ops" className="text-lg font-semibold">
-          Bank
-        </h2>
-        <form action={settleAllAction} className="mt-3 flex items-center gap-3 rounded-xl bg-card shadow-card p-4">
-          <Button type="submit" variant="outline" size="sm">
-            Settle every released payment
-          </Button>
-          <span className="text-sm text-muted-foreground">Posts a synthetic bill.paid webhook for each payment on the simulated rail.</span>
-        </form>
-      </section>
-      <section className="mt-8" aria-labelledby="outbox">
-        <h2 id="outbox" className="text-lg font-semibold">
-          Outbox
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Suppliers and sub-subcontractors have no account. Groundwork would email each one a signing link; this demo lists those messages here instead. The party that pays them never sees the link.
-        </p>
-        {outbox.length === 0 ? (
-          <p className="mt-3 rounded-xl border border-dashed bg-transparent p-4 text-sm text-muted-foreground">No waivers are waiting on a lower-tier signature.</p>
-        ) : (
-          <ul className="mt-3 divide-y rounded-xl bg-card shadow-card">
-            {outbox.map((m) => (
-              <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
-                <span>
-                  To <span className="font-medium">{m.to}</span> · {m.form.startsWith("c") ? "sign to release" : "confirm receipt of"} <span className="num font-medium">{formatCents(m.cents)}</span> from {m.from}
-                </span>
-                <Link href={m.href} className="font-medium text-link hover:underline">
-                  Open their link
-                </Link>
-              </li>
-            ))}
-          </ul>
+    <AppShell session={session}>
+      <PageHeader
+        breadcrumbs={[{ label: "Home", href: home }, { label: "Sample workspace" }]}
+        title="Sample workspace"
+        description="Seeded sample data that anyone can explore and change. Reset it here to a known point; real accounts are never touched."
+      />
+      <PageBody>
+        {msg && (
+          <p role="status" className="rounded-md border bg-card px-3 py-2">
+            {msg}
+          </p>
         )}
-      </section>
-      <section className="mt-8" aria-labelledby="personas">
-        <h2 id="personas" className="text-lg font-semibold">
-          Switch persona
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Sign out, then pick a seat on the <Link href="/sign-in" className="underline underline-offset-2">sign-in page</Link>. Open the sub portal on a phone for the second screen.
+
+        <Section title="Reset to a point" description="Each point is rebuilt by running the real steps in order, so every payment has its full history. A reset replaces the sample data for everyone using it.">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Point</TableHead>
+                <TableHead>What the workspace holds</TableHead>
+                <TableHead>
+                  <span className="sr-only">Reset</span>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {CHECKPOINTS.map((c) => (
+                <TableRow key={c} className="align-top">
+                  <TableCell className="font-medium whitespace-nowrap">{POINTS[c].name}</TableCell>
+                  <TableCell muted className="min-w-64">
+                    {POINTS[c].what}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <form action={resetAction}>
+                      <input type="hidden" name="to" value={c} />
+                      <Button type="submit" variant="secondary" size="sm" aria-label={`Reset to ${POINTS[c].name}`}>
+                        Reset
+                      </Button>
+                    </form>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Section>
+
+        <Panel
+          title="Test payments"
+          description="Test mode: no real money moves. This marks every sent payment in the sample workspace as paid, as the bank would."
+          actions={
+            <form action={settleAllAction}>
+              <Button type="submit" variant="secondary" size="sm">
+                Mark sent payments as paid
+              </Button>
+            </form>
+          }
+          padded={false}
+        />
+
+        <Section title="Waiver links for lower-tier parties" description="Suppliers and sub-subcontractors have no account; they sign from a link. Email sending is not connected, so the links are listed here. The company that pays them never sees the link.">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>To</TableHead>
+                <TableHead>Asked to</TableHead>
+                <TableHead>From</TableHead>
+                <TableHead numeric>Amount</TableHead>
+                <TableHead>
+                  <span className="sr-only">Link</span>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {outbox.length === 0 && <TableEmpty colSpan={5}>No waivers are waiting on a lower-tier signature.</TableEmpty>}
+              {outbox.map((m) => (
+                <TableRow key={m.id}>
+                  <TableCell className="font-medium">{m.to}</TableCell>
+                  <TableCell>{m.form.startsWith("c") ? "Sign to release payment" : "Confirm receipt"}</TableCell>
+                  <TableCell>{m.from}</TableCell>
+                  <TableCell numeric>{formatCents(m.cents)}</TableCell>
+                  <TableCell className="text-right">
+                    <Link href={m.href} className="rounded-sm text-link underline-offset-4 hover:underline">
+                      Open link
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Section>
+
+        <Section title="Environment">
+          <dl className="grid overflow-hidden rounded-lg border bg-card sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Clock", `${now().toISOString().slice(0, 16).replace("T", " ")} UTC${process.env.DEMO_NOW ? " (fixed)" : ""}`],
+              ["Database", dbDriver() === "neon" ? "Neon Postgres" : "Embedded PGlite"],
+              ["Payment rail", railName()],
+              ["Claude API key", hasApiKey() ? "Configured" : "Missing; saved readings are used"],
+            ].map(([k, v]) => (
+              <div key={k} className="border-b px-4 py-3 last:border-b-0 sm:border-r lg:border-b-0 lg:last:border-r-0">
+                <dt className="type-caption text-muted-foreground">{k}</dt>
+                <dd className="mt-0.5 font-medium break-words">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+
+        <p className="type-meta text-muted-foreground">
+          To see the workspace as someone else,{" "}
+          <Link href="/sample" className="rounded-sm underline underline-offset-4 hover:text-foreground">
+            choose another person
+          </Link>
+          . The subcontractor pages are built for a phone.
         </p>
-      </section>
+      </PageBody>
     </AppShell>
   );
 }

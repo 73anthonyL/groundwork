@@ -62,7 +62,7 @@ export async function addLowerTierAction(formData: FormData) {
   const sum = parseDollars(formData.get("sum"));
   const daysRaw = String(formData.get("days") ?? "").trim();
   const days = daysRaw === "" ? null : Number(daysRaw);
-  await finish(contract.id, contract.projectId, "Added. Declare what you owe them on your next pay application.", () =>
+  await finish(contract.id, contract.projectId, "Added. Declare what you owe them on your next pay app.", () =>
     addLowerTierParty({
       parentContractId: contract.id,
       name: String(formData.get("name") ?? ""),

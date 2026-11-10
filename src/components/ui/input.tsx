@@ -6,7 +6,7 @@ import * as React from "react"
 import { cn } from "cn"
 
 export const fieldClasses =
-  "w-full min-w-0 rounded-md border border-input bg-card px-3 text-base text-foreground placeholder:text-muted-foreground/80 focus-visible:border-ring focus-visible:-outline-offset-1 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive read-only:bg-muted md:text-sm"
+  "w-full min-w-0 rounded-md border border-input bg-card px-3 text-base text-foreground placeholder:text-muted-foreground/80 focus-visible:border-ring focus-visible:-outline-offset-1 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive [&[readonly]]:bg-muted md:text-sm"
 
 function Input({ className, ...props }: React.ComponentProps<"input">) {
   return (

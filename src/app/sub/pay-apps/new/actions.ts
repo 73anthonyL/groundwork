@@ -14,10 +14,11 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
   const session = await requireAuth("sub");
   const contractId = String(formData.get("contractId") ?? "");
   const contract = await getContract(session.org, contractId);
-  if (!contract) return { error: "Contract not found." };
+  if (!contract) return { error: "This contract is not available to you." };
   const number = Number(formData.get("number"));
+  if (!Number.isInteger(number) || number < 1) return { error: "Enter the pay app number." };
   const periodThrough = String(formData.get("periodThrough") ?? "");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(periodThrough)) return { error: "Choose the period-through date." };
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(periodThrough)) return { error: "Choose the last day of the period you are billing." };
   const money = (name: string) => {
     const raw = String(formData.get(name) ?? "").replace(/[$,\s]/g, "");
     if (raw === "") return 0;
@@ -25,16 +26,16 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
     return Number.isFinite(n) && n >= 0 ? dollars(n) : NaN;
   };
   const lines = contract.sovLines.map((l) => ({ sovLineId: l.id, thisPeriodCents: money(`this_${l.id}`), storedCents: money(`stored_${l.id}`) }));
-  if (lines.some((l) => Number.isNaN(l.thisPeriodCents) || Number.isNaN(l.storedCents))) return { error: "Amounts must be numbers." };
-  if (!lines.some((l) => l.thisPeriodCents > 0 || l.storedCents > 0)) return { error: "Bill at least one line." };
+  if (lines.some((l) => Number.isNaN(l.thisPeriodCents) || Number.isNaN(l.storedCents))) return { error: "Every amount must be a number, like 1250.00." };
+  if (!lines.some((l) => l.thisPeriodCents > 0 || l.storedCents > 0)) return { error: "Enter what you are billing this period on at least one line." };
   const retainageBilledCents = money("retainage");
   const previouslyBilledCents = money("previouslyBilled");
-  if (Number.isNaN(retainageBilledCents) || Number.isNaN(previouslyBilledCents)) return { error: "Amounts must be numbers." };
+  if (Number.isNaN(retainageBilledCents) || Number.isNaN(previouslyBilledCents)) return { error: "Retainage must be a number, like 1250.00." };
   const lowerTier: { contractId: string; amountCents: number }[] = [];
   for (const [k, v] of formData.entries()) {
     if (!k.startsWith("lower_") || String(v).trim() === "") continue;
     const cents = money(k);
-    if (Number.isNaN(cents)) return { error: "Lower-tier amounts must be numbers." };
+    if (Number.isNaN(cents)) return { error: "What you owe a lower-tier party must be a number, like 1250.00." };
     if (cents > 0) lowerTier.push({ contractId: k.slice(6), amountCents: cents });
   }
   let result: Awaited<ReturnType<typeof submitPayApp>>;
@@ -51,7 +52,10 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
       actor: { userId: session.user.id, label: session.user.name },
     });
   } catch (e) {
-    return { error: (e as Error).message };
+    const m = (e as Error).message;
+    // The database refuses a second pay app with the same number on one contract.
+    if (/pay_apps_contract_number_uq|duplicate key|unique/i.test(m)) return { error: `Pay app #${number} already exists on this contract. Use the next number.` };
+    return { error: m.charAt(0).toUpperCase() + m.slice(1) + (/[.!?]$/.test(m) ? "" : ".") };
   }
   // Claude phrases the non-passing checks for the reviewer. Best effort; never blocks submission.
   try {
@@ -62,6 +66,8 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
   } catch (e) {
     console.warn("flagPayApp failed", (e as Error).message);
   }
+  revalidatePath("/sub");
+  revalidatePath("/sub/pay-apps");
   revalidatePath(`/sub/contracts/${contractId}`);
   revalidatePath(`/gc/projects/${contract.projectId}`);
   redirect(`/sub/contracts/${contractId}?submitted=${result.id}`);

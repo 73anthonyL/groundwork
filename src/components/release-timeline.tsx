@@ -1,6 +1,22 @@
+/**
+ * ReleaseTimeline: what has happened to one payment, and what has not happened yet.
+ * Owner payment received, retainage held, waiver requested, waiver signed, payment sent, paid; a
+ * failed bank payment and its retry appear where they occurred.
+ *
+ *   <ReleaseTimeline r={release} ownerName="Bayview Health" gcName="Meridian Builders" nowIso={nowIso} payee="Ironline Steel" log={log} />
+ *
+ * Props: `r` (a release with its event, payment, pay app and waivers); `ownerName`, `gcName`;
+ * `nowIso` (the server's "now", for the countdown); `signHref?` (waiver id to its signing page: pass
+ * it on the payee's own pages); `payee?` (the payee's name: set ONLY when someone other than the
+ * payee is looking); `log?` (the recorded history from `paymentLog`, which adds exact times, who
+ * acted, and failures and retries; without it the timeline is worked out from the release's state).
+ *
+ * Privacy: without `payee` the viewer is the subcontractor being paid, and the timeline leaves out
+ * the amount and bank reference of the owner's payment. Those are the contractor's business.
+ */
 import { Countdown } from "@/components/countdown";
+import { Timeline, type TimelineEvent } from "@/components/ui/timeline";
 import { formatCents, formatCentsCompact } from "@/lib/money";
-import { WAIVER_TITLES, type WaiverFormId } from "@/domain/waivers/ca";
 
 type Waiver = { id: string; form: string; status: string; signedAt: Date | null; signerName: string | null };
 type ReleaseLike = {
@@ -15,98 +31,173 @@ type ReleaseLike = {
   event: { amountCents: number; receivedAt: Date; reference: string; periodThrough: string };
   kind?: string | null;
   payApplication: { number: number } | null;
-  payment: { status: string; rail: string; externalBillId: string | null; updatedAt: Date } | null;
+  payment: { status: string; rail: string; externalBillId: string | null; updatedAt: Date; createdAt?: Date } | null;
   waivers: Waiver[];
 };
 
-const ORDER = ["awaiting_waiver", "waiver_signed", "payment_initiated", "paid", "settled"];
+export type ReleaseLog = {
+  recordedBy: string | null;
+  plannedAt: string;
+  entries: { type: string; actor: string; at: string }[];
+};
 
-function fmt(d: Date) {
-  return d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+function fmt(d: Date | string) {
+  return new Date(d).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-/** Owner paid → allocated to you → waiver → payment sent → paid. The sub's "where is my money". */
-export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref, payee }: { r: ReleaseLike; ownerName: string; gcName: string; nowIso: string; signHref?: (waiverId: string) => string; /** Set when someone other than the payee is looking. */ payee?: string }) {
-  const stage = r.status === "blocked" ? -1 : ORDER.indexOf(r.status);
+const railName = (rail: string) => (rail === "simulated" ? "Test-mode ACH" : rail === "ramp" ? "Ramp bill pay" : rail);
+
+export function ReleaseTimeline({
+  r,
+  ownerName,
+  gcName,
+  nowIso,
+  signHref,
+  payee,
+  log,
+}: {
+  r: ReleaseLike;
+  ownerName: string;
+  gcName: string;
+  nowIso: string;
+  signHref?: (waiverId: string) => string;
+  /** Set when someone other than the payee is looking. */
+  payee?: string;
+  log?: ReleaseLog | null;
+}) {
   const conditional = r.waivers.find((w) => w.form === "cp_8132" || w.form === "cf_8136");
   const unconditional = r.waivers.find((w) => w.form === "up_8134" || w.form === "uf_8138");
-  const steps: { title: string; detail: React.ReactNode; done: boolean; active: boolean; tone?: "money" | "settled" | "hold" }[] = [
-    {
-      title: `${ownerName} paid ${gcName}`,
-      // The size and bank reference of the owner's payment are the contractor's business, not the payee's.
-      detail: payee ? `${formatCentsCompact(r.event.amountCents)}, ${r.event.reference}, ${fmt(r.event.receivedAt)}` : fmt(r.event.receivedAt),
-      done: true,
-      active: false,
-    },
-    {
-      title: payee ? `${payee}'s share, by the rules` : "Your share, by the rules",
-      detail: (
-        <span className="num">
-          {r.payApplication ? `${formatCents(r.grossCents)} funded on pay app #${r.payApplication.number} − ${formatCents(r.retainageWithheldCents)} retainage${r.offsetCents ? ` − ${formatCents(r.offsetCents)} backcharge` : ""} = ` : "Retainage held on this contract, released on certification: "}
-          <strong>{formatCents(r.releaseCents)}</strong>
-          {r.awaitingOwnerCents ? ` · ${formatCents(r.awaitingOwnerCents)} still with the owner` : ""}
-        </span>
-      ),
-      done: true,
-      active: false,
-    },
-    {
-      title: conditional ? WAIVER_TITLES[conditional.form as WaiverFormId].title : "Waiver",
-      detail:
-        conditional?.status === "signed"
-          ? `Signed by ${conditional.signerName}${conditional.signedAt ? `, ${fmt(conditional.signedAt)}` : ""}`
-          : conditional && signHref
-            ? (
-                <a href={signHref(conditional.id)} className="font-medium text-link hover:underline">
-                  Sign to release {formatCents(r.releaseCents)}
-                </a>
-              )
-            : payee ? `Waiting for ${payee} to sign` : "Waiting for your signature",
-      done: stage >= 1,
-      active: stage === 0,
-      tone: "hold",
-    },
-    {
-      title: "Payment sent",
-      detail: r.payment ? `${r.payment.rail === "simulated" ? "Simulated ACH" : r.payment.rail} · ${r.payment.externalBillId ?? ""} · ${r.payment.status}` : "Queued once the waiver is signed",
-      done: stage >= 2,
-      active: stage === 1,
-      tone: "money",
-    },
-    {
-      title: "Paid",
-      detail:
-        stage >= 3
-          ? `${formatCents(r.releaseCents)} landed${r.payment ? ` · ${fmt(r.payment.updatedAt)}` : ""}${unconditional ? ` · ${unconditional.status === "signed" ? "unconditional release signed" : "unconditional release waiting for your signature"}` : ""}`
-          : (
-              <Countdown deadline={r.payByAt?.toISOString() ?? null} amountCents={r.releaseCents} settled={false} nowIso={nowIso} label="Due by law" />
-            ),
-      done: stage >= 3,
-      active: stage === 2,
-      tone: "settled",
-    },
-  ];
-  return (
-    <ol className="relative ml-2 border-l border-border pl-5">
-      {steps.map((s, i) => (
-        <li key={i} className="relative pb-5 last:pb-0">
-          <span
-            aria-hidden
-            className={`absolute -left-[27px] top-1 h-3 w-3 rounded-full border-2 ${
-              s.done ? "border-settled bg-settled" : s.active ? `border-${s.tone ?? "money"} bg-card` : "border-border bg-card"
-            }`}
-          />
-          <div className={`text-sm font-medium ${s.done || s.active ? "" : "text-muted-foreground"}`}>{s.title}</div>
-          <div className="mt-0.5 text-sm text-muted-foreground">{s.detail}</div>
-        </li>
-      ))}
-      {unconditional && unconditional.status !== "signed" && signHref && (
-        <li className="relative">
-          <a href={signHref(unconditional.id)} className="text-sm font-medium text-link hover:underline">
-            Sign the unconditional release
+  const paid = r.status === "paid" || r.status === "settled";
+  const whose = payee ? `${payee}'s` : "your";
+  const at = (type: string) => log?.entries.find((e) => e.type === type)?.at;
+  const events: TimelineEvent[] = [];
+
+  // 1. The owner's payment. Its size and bank reference are shown to the contractor only.
+  events.push({
+    id: "owner",
+    actor: ownerName,
+    verb: `paid ${gcName}`,
+    time: fmt(r.event.receivedAt),
+    detail: payee ? (
+      <>
+        <span className="num">{formatCentsCompact(r.event.amountCents)}</span>, reference <span className="type-mono">{r.event.reference}</span>
+        {log?.recordedBy ? `. Recorded by ${log.recordedBy}.` : ""}
+      </>
+    ) : undefined,
+  });
+
+  // 2. The split: what was funded, what was held back.
+  events.push({
+    id: "split",
+    actor: "Groundwork",
+    verb:
+      r.kind === "retention" || !r.payApplication
+        ? `released retainage held on this subcontract`
+        : r.retainageWithheldCents > 0
+          ? `held ${formatCents(r.retainageWithheldCents)} retainage and set ${whose} payment`
+          : `set ${whose} payment`,
+    time: log ? fmt(log.plannedAt) : undefined,
+    detail: (
+      <span className="num">
+        {r.payApplication ? (
+          <>
+            {formatCents(r.grossCents)} funded on pay app #{r.payApplication.number}, less {formatCents(r.retainageWithheldCents)} retainage
+            {r.offsetCents ? `, less ${formatCents(r.offsetCents)} backcharge` : ""}, leaves{" "}
+          </>
+        ) : (
+          "Released on certification: "
+        )}
+        <strong className="font-medium text-foreground">{formatCents(r.releaseCents)}</strong>
+        {r.awaitingOwnerCents ? `. ${formatCents(r.awaitingOwnerCents)} more is still with the owner.` : ""}
+      </span>
+    ),
+  });
+
+  // 3 and 4. The conditional waiver: asked for, then signed.
+  if (conditional) {
+    events.push({ id: "asked", actor: "Groundwork", verb: `asked ${payee ?? "you"} for a conditional waiver`, time: log ? fmt(log.plannedAt) : undefined });
+    if (conditional.status === "signed") {
+      events.push({ id: "signed", actor: conditional.signerName ?? payee ?? "You", verb: "signed the conditional waiver", time: conditional.signedAt ? fmt(conditional.signedAt) : undefined });
+    } else {
+      events.push({
+        id: "signed",
+        state: "current",
+        verb: payee ? `Waiting for ${payee} to sign the conditional waiver` : "Waiting for your signature on the conditional waiver",
+        detail: signHref ? (
+          <a href={signHref(conditional.id)} className="rounded-sm font-medium text-link underline-offset-4 hover:underline">
+            Sign to release {formatCents(r.releaseCents)}
           </a>
-        </li>
-      )}
-    </ol>
-  );
+        ) : undefined,
+      });
+    }
+  } else if (!paid && !r.payment) {
+    events.push({ id: "signed", state: "todo", verb: "Conditional waiver signed" });
+  }
+
+  // 5. The bank payment, with any failure and retry in the order they happened.
+  const sends = log?.entries.filter((e) => e.type === "payment.initiated" || e.type === "payment.failed" || e.type === "payment.retried") ?? [];
+  const sentDetail = r.payment ? (
+    <>
+      {railName(r.payment.rail)}
+      {r.payment.externalBillId ? (
+        <>
+          , reference <span className="type-mono break-all">{r.payment.externalBillId}</span>
+        </>
+      ) : null}
+    </>
+  ) : undefined;
+  if (sends.length > 0) {
+    const kinds = sends.map((e) => e.type);
+    const firstSend = kinds.indexOf("payment.initiated");
+    const lastSend = kinds.lastIndexOf("payment.initiated");
+    sends.forEach((e, i) => {
+      if (e.type === "payment.initiated") events.push({ id: `send-${i}`, actor: "Groundwork", verb: i === firstSend ? "sent the payment" : "sent the payment again", time: fmt(e.at), detail: i === lastSend ? sentDetail : undefined });
+      else if (e.type === "payment.failed") events.push({ id: `send-${i}`, state: "failed", verb: "The bank did not accept the payment. Nothing was sent.", time: fmt(e.at) });
+      else events.push({ id: `send-${i}`, actor: e.actor, verb: "asked for the payment to be sent again", time: fmt(e.at) });
+    });
+  } else if (r.payment) {
+    events.push({ id: "send", actor: "Groundwork", verb: "sent the payment", time: r.payment.createdAt ? fmt(r.payment.createdAt) : undefined, detail: sentDetail });
+    if (r.payment.status === "failed") events.push({ id: "failed", state: "failed", verb: "The bank did not accept the payment. Nothing was sent.", time: fmt(r.payment.updatedAt) });
+  } else {
+    const ready = r.status === "waiver_signed";
+    events.push({ id: "send", state: ready ? "current" : "todo", verb: ready ? "Payment queued" : "Payment sent", detail: ready ? "It goes out as soon as nothing else is holding it." : undefined });
+  }
+
+  // 6. Paid, or the deadline it is running against.
+  if (paid) {
+    events.push({
+      id: "paid",
+      verb: `${formatCents(r.releaseCents)} paid${payee ? ` to ${payee}` : ""}`,
+      time: fmt(at("payment.paid") ?? r.payment?.updatedAt ?? r.event.receivedAt),
+      detail: "Confirmed by the bank.",
+    });
+  } else {
+    const moving = r.status === "payment_initiated";
+    events.push({
+      id: "paid",
+      state: moving ? "current" : "todo",
+      verb: moving ? "On its way to the bank account" : "Paid",
+      detail: <Countdown deadline={r.payByAt?.toISOString() ?? null} amountCents={r.releaseCents} settled={false} nowIso={nowIso} label="Due by" />,
+    });
+  }
+
+  // 7. The unconditional waiver that follows payment.
+  if (unconditional) {
+    if (unconditional.status === "signed") {
+      events.push({ id: "uncond", actor: unconditional.signerName ?? payee ?? "You", verb: "signed the unconditional waiver", time: unconditional.signedAt ? fmt(unconditional.signedAt) : undefined });
+    } else {
+      events.push({
+        id: "uncond",
+        state: "current",
+        verb: payee ? `Waiting for ${payee} to sign the unconditional waiver` : "Waiting for your signature on the unconditional waiver",
+        detail: signHref ? (
+          <a href={signHref(unconditional.id)} className="rounded-sm font-medium text-link underline-offset-4 hover:underline">
+            Sign the unconditional waiver
+          </a>
+        ) : undefined,
+      });
+    }
+  }
+
+  return <Timeline events={events} />;
 }

@@ -54,9 +54,10 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
           </clipPath>
         </defs>
         <g clipPath={`url(#${clip})`}>
-          {BANDS.map((b, i) => (
-            <path key={b.key} d={area(i)} fill={b.color} opacity={0.78} />
-          ))}
+          {BANDS.map((b, i) =>
+            // A band that never holds money would draw as a stray line along the top of the one below it.
+            series.some((p) => (p.balances[b.key] ?? 0) > 0) ? <path key={b.key} d={area(i)} fill={b.color} fillOpacity={0.3} stroke={b.color} strokeWidth={0.75} strokeLinejoin="round" /> : null,
+          )}
         </g>
         <rect x={x(shown)} y={pad.t} width={slot} height={height - pad.t - pad.b} fill="var(--foreground)" opacity={at === null ? 0 : 0.08} />
         {series.map((_, i) => (
@@ -64,13 +65,13 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
         ))}
         <line x1={pad.l} x2={W - pad.r} y1={height - pad.b} y2={height - pad.b} stroke="var(--border)" />
       </svg>
-      <figcaption className="mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 text-xs">
+      <figcaption className="type-caption mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <ul className="flex flex-wrap gap-x-5 gap-y-1">
           {BANDS.filter((b) => series.some((p) => (p.balances[b.key] ?? 0) > 0)).map((b) => (
             <li key={b.key} className="flex items-center gap-1.5">
-              <span aria-hidden className="h-2.5 w-2.5 rounded-sm" style={{ background: b.color }} />
+              <span aria-hidden className="size-2 rounded-[2px]" style={{ background: b.color }} />
               <span className="text-muted-foreground">{b.label}</span>
-              <span className="num font-medium">{formatUsd0(series[shown].balances[b.key] ?? 0)}</span>
+              <span className="type-mono text-foreground">{formatUsd0(series[shown].balances[b.key] ?? 0)}</span>
             </li>
           ))}
         </ul>
@@ -99,23 +100,23 @@ export function ContractBars({ contracts }: { contracts: ContractSummary[] }) {
         <motion.li key={c.id} variants={list.row}>
           <div className="flex items-baseline justify-between gap-3 text-sm">
             <span className="font-medium">
-              {c.payee} <span className="font-normal text-muted-foreground">· {c.trade}</span>
+              {c.payee} <span className="type-meta ml-1 font-normal text-muted-foreground">{c.trade}</span>
             </span>
-            <span className="num text-muted-foreground">
+            <span className="type-mono text-[13px] text-muted-foreground">
               {c.percentBilled}% billed of <span className="text-foreground">{formatUsd0(c.contractSumCents)}</span>
             </span>
           </div>
-          <div className="mt-1.5 flex h-3 overflow-hidden rounded-full bg-muted" role="img" aria-label={seg(c).filter((s) => s.cents > 0).map((s) => `${s.label} ${formatUsd0(s.cents)}`).join(", ")}>
+          <div className="mt-1.5 flex h-1.5 gap-px overflow-hidden rounded-[2px] bg-muted" role="img" aria-label={seg(c).filter((s) => s.cents > 0).map((s) => `${s.label} ${formatUsd0(s.cents)}`).join(", ")}>
             {seg(c).map((s) => (
               <span key={s.label} title={`${s.label}, ${formatUsd0(s.cents)}`} style={{ background: s.color, width: `${c.contractSumCents > 0 ? (s.cents / c.contractSumCents) * 100 : 0}%` }} />
             ))}
           </div>
           {lower(c.id).map((l) => (
-            <div key={l.id} className="num mt-1 flex items-center gap-2 pl-3 text-xs text-muted-foreground">
+            <div key={l.id} className="type-mono mt-1 flex items-center gap-2 pl-3 text-xs text-muted-foreground">
               <span aria-hidden>↳</span>
               <span className="font-sans">{l.payee}</span>
               <span className="leader" />
-              {formatUsd0(l.paidCents)} paid · {formatUsd0(l.inMotionCents)} on its way
+              {formatUsd0(l.paidCents)} paid, {formatUsd0(l.inMotionCents)} on its way
             </div>
           ))}
         </motion.li>
@@ -127,9 +128,9 @@ export function ContractBars({ contracts }: { contracts: ContractSummary[] }) {
 // ─── What happened, in lanes ────────────────────────────────────────────────
 
 const LANES: { id: TimelineEntry["lane"]; label: string; color: string }[] = [
-  { id: "contract", label: "Contract", color: "var(--foreground)" },
-  { id: "billing", label: "Billing", color: "var(--flow-idle)" },
-  { id: "money", label: "Money", color: "var(--flow-moving)" },
+  { id: "contract", label: "Subcontract", color: "var(--foreground)" },
+  { id: "billing", label: "Pay apps", color: "var(--flow-idle)" },
+  { id: "money", label: "Payments", color: "var(--flow-moving)" },
   { id: "waiver", label: "Waivers", color: "var(--flow-paid)" },
   { id: "adjustment", label: "Adjustments", color: "var(--flow-setoff)" },
 ];
@@ -164,7 +165,7 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
               cy={li * rowH + 13}
               fill={LANES[li].color}
               initial={{ r: 0 }}
-              animate={{ r: at === i ? 6 : big ? 4.5 : 3 }}
+              animate={{ r: at === i ? 4.5 : big ? 3.5 : 2.25 }}
               transition={{ ...spring.pop, delay: at === null ? Math.min(1.2, i * 0.012) : 0 }}
               onMouseEnter={() => setAt(i)}
               onFocus={() => setAt(i)}
@@ -176,13 +177,13 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
           );
         })}
       </svg>
-      <figcaption className="mt-2 flex min-h-9 flex-wrap items-baseline gap-x-3 gap-y-0.5 text-xs" aria-live="polite">
+      <figcaption className="type-caption mt-2 flex min-h-9 flex-wrap items-baseline gap-x-3 gap-y-0.5" aria-live="polite">
         <span className="font-medium text-foreground">{sel.title}</span>
         {sel.party && <span className="text-muted-foreground">{sel.party}</span>}
-        {sel.amountCents !== null && <span className="num">{formatUsd0(sel.amountCents)}</span>}
+        {sel.amountCents !== null && <span className="type-mono">{formatUsd0(sel.amountCents)}</span>}
         {sel.detail && <span className="truncate text-muted-foreground">{sel.detail}</span>}
         <span className="text-muted-foreground" suppressHydrationWarning>
-          {sel.actor} · {new Date(sel.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+          {sel.actor}, {new Date(sel.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
         </span>
       </figcaption>
     </figure>
@@ -209,11 +210,11 @@ export function AblationChart({ run }: { run: EvalRun }) {
               {NAMES[i] ?? l.label}
               {i === last && <span className="ml-2 text-xs font-normal text-muted-foreground">what Groundwork runs</span>}
             </div>
-            <div className="hidden h-2.5 overflow-hidden rounded-full bg-muted sm:block">
-              <motion.div className="h-full rounded-full" style={{ background: i === last ? "var(--settled)" : "var(--foreground)", opacity: i === last ? 1 : 0.55 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(2, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.1 + i * 0.08 }} />
+            <div className="hidden h-1.5 overflow-hidden rounded-[2px] bg-muted sm:block">
+              <motion.div className="h-full rounded-[2px]" style={{ background: i === last ? "var(--settled)" : "var(--foreground)", opacity: i === last ? 1 : 0.55 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(2, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.1 + i * 0.08 }} />
             </div>
-            <div className="num text-right text-base font-semibold">{l.silentErrors}</div>
-            <div className="num text-right text-muted-foreground">{l.burden === null ? "0" : Math.round(l.burden * 100)}%</div>
+            <div className="type-mono text-right font-medium">{l.silentErrors}</div>
+            <div className="type-mono text-right text-muted-foreground">{l.burden === null ? "0" : Math.round(l.burden * 100)}%</div>
           </div>
         ))}
       </div>
@@ -233,11 +234,11 @@ export function EvalHeadline({ run }: { run: EvalRun }) {
     { label: `Wrong values reaching the engine unflagged, of ${run.metrics.fields}`, node: <RollingNumber value={prod.silentErrors} format="int" /> },
   ];
   return (
-    <dl className="grid gap-px overflow-hidden rounded-md border bg-border sm:grid-cols-3">
+    <dl className="grid gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-3">
       {items.map((it) => (
         <div key={it.label} className="bg-card p-4">
-          <dd className="type-numeral text-4xl">{it.node}</dd>
-          <dt className="mt-2 text-xs text-muted-foreground">{it.label}</dt>
+          <dd className="type-figure">{it.node}</dd>
+          <dt className="type-meta mt-1 text-muted-foreground">{it.label}</dt>
         </div>
       ))}
     </dl>
@@ -263,7 +264,7 @@ export function DaysGap({ onStage = false }: { onStage?: boolean }) {
         <li key={r.label}>
           <div className={`text-sm ${onStage ? "text-stage-foreground/80" : "text-muted-foreground"}`}>{r.label}</div>
           <div className="mt-1.5 flex items-center gap-3">
-            <motion.span className="h-3 origin-left rounded-full" style={{ background: r.color, width: `${(r.days / 50) * 72}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: duration.count, ease: ease.trace, delay: 0.2 + i * 0.5 }} />
+            <motion.span className="h-2 origin-left rounded-[2px]" style={{ background: r.color, width: `${(r.days / 50) * 72}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: duration.count, ease: ease.trace, delay: 0.2 + i * 0.5 }} />
             <motion.span className="type-numeral whitespace-nowrap text-2xl" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: duration.fade, delay: reduce ? 0 : 1.1 + i * 0.5 }}>
               {r.days} <span className={`font-sans text-xs tracking-normal ${onStage ? "text-stage-muted" : "text-muted-foreground"}`}>days, {r.note}</span>
             </motion.span>

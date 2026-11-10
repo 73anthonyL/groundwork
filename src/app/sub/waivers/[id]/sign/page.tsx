@@ -1,55 +1,109 @@
 import Link from "next/link";
-import { releaseLabel } from "@/lib/release-label";
 import { notFound } from "next/navigation";
+import { Download } from "lucide-react";
 import { requireAuth } from "@/server/auth";
-import { getWaiver } from "@/server/scoped";
+import { getRelease, getWaiver } from "@/server/scoped";
 import { formatCents } from "@/lib/money";
-import { waiverBody, waiverMeta, type WaiverFields, type WaiverFormId } from "@/domain/waivers/ca";
+import { releaseLabel } from "@/lib/release-label";
+import { waiverMeta, type WaiverFields, type WaiverFormId } from "@/domain/waivers/ca";
+import { PageBody, PageHeader } from "@/components/page-header";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Section } from "@/components/ui/panel";
 import { SignWaiverForm } from "@/components/sign-waiver-form";
+import { Notice } from "../../../_shared/notice";
+import { NextSteps, SignatureRecord, WaiverDocument, WaiverFacts } from "../../../_shared/waiver";
 
-export default async function SignWaiverPage({ params }: { params: Promise<{ id: string }> }) {
+export const metadata = { title: "Sign a lien waiver" };
+
+export default async function SignWaiverPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ signed?: string }> }) {
   const { id } = await params;
+  const { signed } = await searchParams;
   const { org, user } = await requireAuth("sub");
   const waiver = await getWaiver(org, id);
   if (!waiver) notFound();
   const fields = waiver.fields as WaiverFields;
   const meta = waiverMeta(waiver.form as WaiverFormId, fields.state);
-  const body = waiverBody(fields);
   const amount = fields.amountCents !== null ? formatCents(fields.amountCents) : "";
+  const contract = waiver.release.contract;
+  const payerName = contract.project.gc.name;
+  const contractHref = `/sub/contracts/${waiver.contractId}`;
+  const paymentHref = `${contractHref}#release-${waiver.releaseId}`;
+  // Read the payment again so the confirmation shows where it stands right now.
+  const release = waiver.status === "signed" ? await getRelease(org, waiver.releaseId) : null;
+  const isSigned = waiver.status === "signed";
+  const open = waiver.status === "sent" || waiver.status === "drafted";
 
   return (
-    <div>
-      <Link href={`/sub/contracts/${waiver.contractId}`} className="text-sm text-muted-foreground hover:underline">
-        ← Back
-      </Link>
-      <h1 className="mt-2 text-2xl font-semibold">{meta.title}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {meta.conditional ? "It takes effect only when the payment clears." : "It confirms you have been paid."} {meta.cite}.
-      </p>
-
-      <div className="num mt-4 rounded-xl bg-card shadow-card p-4">
-        <div className="text-xs text-muted-foreground">Amount of this release</div>
-        <div className="text-2xl font-semibold">{amount}</div>
-        <div className="mt-1 text-xs text-muted-foreground">
-          {waiver.release.contract.project.gc.name} · {releaseLabel(waiver.release, { lower: true })}
-          {fields.throughDate ? ` · through ${fields.throughDate}` : ""}
-        </div>
-      </div>
-
-      <article className="type-contract mt-4 space-y-0.5 rounded-xl bg-card px-6 py-6 text-[15px] shadow-card sm:px-8" aria-label="Statutory form text">
-        {body.map((line, i) =>
-          line === "" ? <div key={i} className="h-3" /> : <p key={i} className={/^[A-Z ()0-9.§]+$/.test(line) && line.length < 80 ? "font-semibold" : ""}>{line}</p>,
+    <>
+      <PageHeader
+        breadcrumbs={[{ label: "Home", href: "/sub" }, { label: contract.trade, href: contractHref }, { label: `${releaseLabel(waiver.release)} waiver` }]}
+        title={isSigned ? "Waiver signed" : meta.conditional ? `Sign to release ${amount}` : amount ? `Confirm you received ${amount}` : "Sign your final waiver"}
+        badge={isSigned ? <Badge tone="settled">Signed</Badge> : open ? <Badge tone="hold">Waiting for your signature</Badge> : <Badge>Closed</Badge>}
+        description={
+          isSigned
+            ? undefined
+            : meta.conditional
+              ? `${payerName} is ready to pay you for ${releaseLabel(waiver.release, { lower: true })}. Read the waiver, then sign at the bottom.`
+              : `Your payment for ${releaseLabel(waiver.release, { lower: true })} has landed. Read the waiver, then sign at the bottom to confirm it.`
+        }
+        actions={
+          isSigned ? (
+            <>
+              <Link href={paymentHref} className={buttonVariants()}>
+                View this payment
+              </Link>
+              <a href={`/api/waivers/${waiver.id}/pdf`} target="_blank" rel="noreferrer" className={buttonVariants({ variant: "secondary" })}>
+                <Download aria-hidden />
+                Signed waiver (PDF)
+              </a>
+            </>
+          ) : undefined
+        }
+        className="max-w-[820px]"
+      />
+      <PageBody className="max-w-[820px] gap-6">
+        {isSigned && (
+          <>
+            <Notice tone="settled" title={signed ? (meta.conditional ? `Signed. ${amount} is released for payment.` : "Signed. This payment is confirmed and closed.") : `Signed by ${waiver.signerName}`}>
+              {meta.conditional ? `${payerName} can now send your payment. You do not need to do anything else for it to go out.` : "Nothing else is needed from you for this payment."}
+            </Notice>
+            <Section title="What happens next">
+              <div className="rounded-lg border bg-card p-4">
+                <NextSteps
+                  conditional={meta.conditional}
+                  amountCents={waiver.release.releaseCents}
+                  releaseStatus={release?.status ?? waiver.release.status}
+                  payerName={payerName}
+                  payByAt={release?.payByAt ?? waiver.release.payByAt}
+                  signedAt={waiver.signedAt}
+                  signerName={waiver.signerName}
+                />
+              </div>
+            </Section>
+          </>
         )}
-      </article>
 
-      {waiver.status === "signed" ? (
-        <div className="mt-6 rounded-md border border-settled/40 bg-settled-soft p-4 text-sm">
-          <div className="font-medium text-settled">Signed by {waiver.signerName}</div>
-          <div className="mt-1 break-all font-mono text-xs text-muted-foreground">sha256 {waiver.signatureHash}</div>
-        </div>
-      ) : (
-        <SignWaiverForm waiverId={waiver.id} defaultName={user.name} defaultTitle={user.title ?? ""} amountLabel={amount} />
-      )}
-    </div>
+        {!isSigned && !open && <Notice tone="info" title="This waiver is no longer open for signature">A newer waiver replaced it, or the payment it belonged to was withdrawn. Check Home for anything waiting on you.</Notice>}
+
+        <WaiverFacts fields={fields} payerName={payerName} projectName={contract.project.name} conditional={meta.conditional} />
+
+        <section aria-labelledby="doc-heading" className="flex flex-col gap-3">
+          <div>
+            <h2 id="doc-heading" className="type-section">
+              {meta.title}
+            </h2>
+            <p className="type-meta mt-0.5 text-muted-foreground">
+              {meta.conditional ? "A conditional waiver: it takes effect only when the payment reaches you." : "An unconditional waiver: it states that you have been paid."} {meta.statutory ? `The wording is fixed by ${meta.cite}.` : `${meta.cite.replace(" · ", ", ")}.`}
+            </p>
+          </div>
+          {meta.notice && <Notice tone="hold">{meta.notice}</Notice>}
+          <WaiverDocument fields={fields} signature={isSigned && waiver.signerName ? { name: waiver.signerName, title: waiver.signerTitle, at: waiver.signedAt, hash: waiver.signatureHash } : null} />
+          {isSigned && <SignatureRecord hash={waiver.signatureHash} />}
+        </section>
+
+        {open && <SignWaiverForm waiverId={waiver.id} defaultName={user.name} defaultTitle={user.title ?? ""} amountLabel={amount} conditional={meta.conditional} payerName={payerName} claimantName={org.name} />}
+      </PageBody>
+    </>
   );
 }

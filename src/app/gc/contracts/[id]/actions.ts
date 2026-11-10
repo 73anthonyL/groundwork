@@ -9,6 +9,7 @@ import { formatCents, parseDollars } from "@/lib/money";
 import { acknowledgeAnomaly, approveRuleSet, resolveField } from "@/server/actions/rules";
 import { RULE_FIELDS, type RuleFieldPath } from "@/domain/rules/schema";
 import { attachContractDocument, UploadError } from "@/server/actions/documents";
+import type { StoredRules } from "@/server/rules/review";
 
 function parseOverride(path: RuleFieldPath, raw: string): unknown {
   const v = raw.trim();
@@ -59,6 +60,12 @@ export async function resolveFieldAction(formData: FormData) {
   let error: string | undefined;
   try {
     await resolveField({ ruleSetId, path, decision, value, note: note || (decision === "accept" ? "Accepted as read." : "Overridden."), actor });
+    // Notes Claude attached to this term were shown with it; settling the term acknowledges them.
+    const count = (contract.ruleSets.find((r) => r.id === ruleSetId)?.rules as StoredRules | undefined)?.extracted.anomalies.length ?? 0;
+    const acks = [...new Set(formData.getAll("ack").map((v) => Number(v)))].filter((i) => Number.isInteger(i) && i >= 0 && i < count);
+    for (const index of acks) {
+      await acknowledgeAnomaly({ ruleSetId, index, note: decision === "accept" ? "Read with the term and accepted." : "Read with the term, which was changed.", actor });
+    }
   } catch (e) {
     error = (e as Error).message;
   }
@@ -82,9 +89,9 @@ export async function approveRuleSetAction(formData: FormData) {
   const { contract, ruleSetId, actor } = await guard(formData);
   let message: string;
   try {
-    const r = await approveRuleSet({ ruleSetId, actor });
+    await approveRuleSet({ ruleSetId, actor });
     revalidatePath(`/gc/projects/${contract.projectId}`);
-    message = `Approved and frozen · sha256 ${r.hash.slice(0, 12)}…`;
+    message = "Payment rules approved. Payments on this subcontract now follow them.";
   } catch (e) {
     message = (e as Error).message;
   }
@@ -145,7 +152,7 @@ export async function recordBackchargeAction(formData: FormData) {
   const { contract, actor } = await adjustmentGuard(formData);
   const amountCents = parseDollars(formData.get("amount"));
   const noticeDate = String(formData.get("noticeDate") ?? "") || null;
-  await run(contract.id, contract.projectId, "Backcharge recorded. It comes off this subcontractor's next release.", () =>
+  await run(contract.id, contract.projectId, "Backcharge recorded. It comes off this subcontractor's next payment.", () =>
     recordBackcharge({ contractId: contract.id, amountCents: Number.isNaN(amountCents) ? 0 : amountCents, reason: String(formData.get("reason") ?? ""), noticeDate, actor }),
   );
 }

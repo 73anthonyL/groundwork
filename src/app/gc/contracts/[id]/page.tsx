@@ -1,21 +1,25 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/server/auth";
 import { getContract, getContractAdjustments } from "@/server/scoped";
 import { ContractAdjustments } from "@/components/contract-adjustments";
 import { getDb, schema } from "@/db/client";
-import { formatCentsCompact } from "@/lib/money";
+import { formatCents } from "@/lib/money";
 import type { StoredRules } from "@/server/rules/review";
 import { StatusPill } from "@/components/status-pill";
-import { CompileReview, type RuleSetView } from "@/components/compile-review";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { CompileReview, SubmitButton, type RuleSetView } from "@/components/compile-review";
+import { PageBody, PageHeader } from "@/components/page-header";
+import { Section } from "@/components/ui/panel";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { certifyRetentionAction, decideChangeOrderAction, proposeChangeOrderAction, recordBackchargeAction, uploadContractPdfAction, voidBackchargeAction } from "./actions";
 
-export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string; read?: string }> }) {
+const when = (d: Date) => d.toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+
+export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string; read?: string; page?: string }> }) {
   const { id } = await params;
-  const { msg, read } = await searchParams;
+  const { msg, read, page } = await searchParams;
   const { org } = await requireAuth("gc");
   const contract = await getContract(org, id);
   if (!contract) notFound();
@@ -36,82 +40,116 @@ export default async function ContractPage({ params, searchParams }: { params: P
         approvedHash: latest.approvedHash,
         approvedByName,
         approvedAt: latest.approvedAt?.toISOString() ?? null,
+        approvedAtText: latest.approvedAt ? when(latest.approvedAt) : null,
         stored: latest.rules as StoredRules,
       }
     : null;
+  const startPage = Number(page);
+  const sovTotal = contract.sovLines.reduce((s, l) => s + l.scheduledValueCents, 0);
+
+  const upload = (label: string) => (
+    <form action={uploadContractPdfAction} className="flex flex-col gap-1.5">
+      <input type="hidden" name="contractId" value={contract.id} />
+      <div className="flex flex-wrap items-end gap-3">
+        <Field label={label} className="w-full max-w-sm">
+          <Input name="file" type="file" accept="application/pdf" required />
+        </Field>
+        <SubmitButton variant="secondary" className="h-9">
+          Upload
+        </SubmitButton>
+      </div>
+      <p className="type-meta text-muted-foreground">A text PDF up to 4 MB. Scanned pages cannot be read.</p>
+    </form>
+  );
 
   return (
-    <div>
-      <Link href={`/gc/projects/${contract.projectId}`} className="text-sm text-link hover:underline">
-        Back to {contract.project.name}
-      </Link>
-      <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-[2rem] font-semibold leading-tight">{contract.sub.name}</h1>
-          <p className="num mt-1 text-sm text-muted-foreground">
-            {contract.trade}, {formatCentsCompact(contract.contractSumCents)} subcontract
+    <>
+      <PageHeader
+        width="full"
+        breadcrumbs={[
+          { label: "Projects", href: "/gc/projects" },
+          { label: contract.project.name, href: `/gc/projects/${contract.projectId}` },
+          { label: "Subcontracts", href: `/gc/projects/${contract.projectId}/subcontracts` },
+          { label: contract.sub.name },
+        ]}
+        title={contract.sub.name}
+        badge={<StatusPill status={contract.status} />}
+        description={
+          <>
+            {contract.trade}, <span className="num">{formatCents(contract.contractSumCents)}</span> subcontract. The contract becomes payment rules here: read once, checked against the PDF, approved by you.
+          </>
+        }
+      />
+      <PageBody width="full">
+        {msg && (
+          <p role="status" className="rounded-lg border bg-card px-4 py-3">
+            {decodeURIComponent(msg)}
           </p>
-        </div>
-        <StatusPill status={contract.status} />
-      </div>
-      {contract.status !== "active" && (
-        <details className="mt-3 text-sm">
-          <summary className="cursor-pointer text-muted-foreground hover:text-foreground">{contract.documentId ? "Use a different subcontract PDF" : "Upload the subcontract PDF"}</summary>
-          <form action={uploadContractPdfAction} className="mt-3 flex flex-wrap items-center gap-3">
-            <input type="hidden" name="contractId" value={contract.id} />
-            <input id="contract-pdf" name="file" type="file" accept="application/pdf" required aria-label="Subcontract PDF" className="max-w-72 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium" />
-            <Button type="submit" size="sm" variant="outline">
-              Upload
-            </Button>
-            <span className="text-xs text-muted-foreground">A text PDF up to 4 MB. Reading it needs the Claude API.</span>
-          </form>
-        </details>
-      )}
-      {msg && (
-        <p role="status" className="mt-3 rounded-xl bg-card shadow-card px-3 py-2 text-sm">
-          {decodeURIComponent(msg)}
-        </p>
-      )}
+        )}
 
-      <div className="mt-6">
-        <CompileReview contractId={contract.id} documentUrl={contract.documentId ? `/api/documents/${contract.documentId}` : null} subName={contract.sub.name} ruleSet={view} canCompile={Boolean(contract.documentId)} autoCompile={read === "1"} />
-      </div>
+        <CompileReview
+          contractId={contract.id}
+          documentUrl={contract.documentId ? `/api/documents/${contract.documentId}` : null}
+          subName={contract.sub.name}
+          ruleSet={view}
+          canCompile={Boolean(contract.documentId)}
+          autoCompile={read === "1"}
+          initialPage={Number.isInteger(startPage) && startPage > 0 ? startPage : 1}
+          upload={<div className="rounded-lg border border-dashed border-input p-6">{upload("Subcontract PDF")}</div>}
+        />
 
-      {adjustments && (
-        <div className="mt-10">
-          <ContractAdjustments
-            data={adjustments}
-            role="payer"
-            actions={{ proposeChangeOrder: proposeChangeOrderAction, decideChangeOrder: decideChangeOrderAction, recordBackcharge: recordBackchargeAction, voidBackcharge: voidBackchargeAction, certifyRetention: certifyRetentionAction }}
-          />
-        </div>
-      )}
+        <div className="flex w-full max-w-[1100px] flex-col gap-8">
+          {adjustments && (
+            <ContractAdjustments
+              data={adjustments}
+              role="payer"
+              actions={{ proposeChangeOrder: proposeChangeOrderAction, decideChangeOrder: decideChangeOrderAction, recordBackcharge: recordBackchargeAction, voidBackcharge: voidBackchargeAction, certifyRetention: certifyRetentionAction }}
+            />
+          )}
 
-      <section className="mt-10" aria-labelledby="sov-heading">
-        <h2 id="sov-heading" className="text-lg font-semibold">
-          Schedule of values
-        </h2>
-        <div className="mt-3 max-w-xl overflow-hidden rounded-xl bg-card shadow-card">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-10">#</TableHead>
-                <TableHead>Item</TableHead>
-                <TableHead className="text-right">Value</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {contract.sovLines.map((l) => (
-                <TableRow key={l.id}>
-                  <TableCell className="num text-muted-foreground">{l.lineNo}</TableCell>
-                  <TableCell>{l.description}</TableCell>
-                  <TableCell className="num text-right">{formatCentsCompact(l.scheduledValueCents)}</TableCell>
+          <Section title="Schedule of values" description="The lines the subcontractor bills against on each pay app.">
+            <Table density="compact">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12">#</TableHead>
+                  <TableHead>Line</TableHead>
+                  <TableHead numeric>Scheduled value</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {contract.sovLines.map((l) => (
+                  <TableRow key={l.id}>
+                    <TableCell className="type-mono text-muted-foreground">{l.lineNo}</TableCell>
+                    <TableCell>{l.description}</TableCell>
+                    <TableCell numeric>{formatCents(l.scheduledValueCents)}</TableCell>
+                  </TableRow>
+                ))}
+                {contract.sovLines.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-muted-foreground">
+                      No schedule of values yet.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+              {contract.sovLines.length > 0 && (
+                <TableFoot>
+                  <TableRow>
+                    <TableCell colSpan={2}>Subcontract sum</TableCell>
+                    <TableCell numeric>{formatCents(sovTotal)}</TableCell>
+                  </TableRow>
+                </TableFoot>
+              )}
+            </Table>
+          </Section>
+
+          {contract.status !== "active" && contract.documentId && (
+            <Section title="Use a different PDF" description="Replaces the subcontract shown above. Read it again afterwards to propose new payment rules.">
+              {upload("Replacement PDF")}
+            </Section>
+          )}
         </div>
-      </section>
-    </div>
+      </PageBody>
+    </>
   );
 }

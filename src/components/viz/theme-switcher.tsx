@@ -35,10 +35,10 @@ function set(key: "theme" | "type", value: string) {
 
 function Segmented({ name, options, value, onChange }: { name: string; options: typeof THEMES; value: string; onChange: (v: string) => void }) {
   return (
-    <div role="radiogroup" aria-label={name} className="inline-flex gap-0.5 rounded-full bg-secondary p-1 text-xs">
+    <div role="radiogroup" aria-label={name} className="inline-flex gap-0.5 rounded-md bg-secondary p-0.5 text-xs">
       {options.map((o) => (
-        <button key={o.id || "default"} role="radio" aria-checked={o.id === value} title={o.note} onClick={() => onChange(o.id)} className="relative rounded-full px-3 py-1.5 font-medium">
-          {o.id === value && <motion.span layoutId={`seg-${name}`} transition={spring.ui} className="absolute inset-0 rounded-full bg-card shadow-card" />}
+        <button key={o.id || "default"} role="radio" aria-checked={o.id === value} title={o.note} onClick={() => onChange(o.id)} className="relative cursor-pointer rounded-[5px] px-2.5 py-1 font-medium">
+          {o.id === value && <motion.span layoutId={`seg-${name}`} transition={spring.ui} className="absolute inset-0 rounded-[5px] bg-card shadow-card" />}
           <span className={`relative ${o.id === value ? "text-foreground" : "text-muted-foreground"}`}>{o.label}</span>
         </button>
       ))}

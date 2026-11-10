@@ -1,35 +1,36 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { eq } from "drizzle-orm";
-import { getDb, schema } from "@/db/client";
-import { requireAuth } from "@/server/auth";
-import { getProject } from "@/server/scoped";
+import { isSampleWorkspace, requireAuth } from "@/server/auth";
+import { getProject, listContracts } from "@/server/scoped";
+import { gcSubcontractors } from "@/server/read/gc-lists";
+import { PageBody, PageHeader } from "@/components/page-header";
 import { AddSubcontractForm } from "@/components/add-subcontract-form";
 
-export const metadata: Metadata = { title: "Add a subcontract" };
+export const metadata: Metadata = { title: "Add subcontract" };
 
-/** Step one of everything: put a signed subcontract in front of Groundwork. */
+/** Put a signed subcontract in front of Groundwork, and say who bills for the subcontractor. */
 export default async function NewSubcontractPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { org } = await requireAuth("gc");
   const project = await getProject(org, id);
   if (!project) notFound();
-  const db = await getDb();
-  // Subcontractors already on this project can't be added twice; everyone else is offered by name.
-  const onProject = new Set((await db.query.contracts.findMany({ where: eq(schema.contracts.projectId, id), columns: { subOrgId: true } })).map((c) => c.subOrgId));
-  const knownSubs = (await db.query.organizations.findMany({ where: eq(schema.organizations.kind, "sub"), columns: { id: true, name: true } })).filter((o) => !onProject.has(o.id)).map((o) => o.name).sort();
-
+  // Subcontractors this contractor already works with are offered by name, except those already on this project.
+  const onProject = new Set((await listContracts(org, id)).map((c) => c.subOrgId));
+  const knownSubs = (await gcSubcontractors(org)).filter((s) => !onProject.has(s.id)).map((s) => s.name);
+  const base = `/gc/projects/${id}`;
   return (
-    <div className="mx-auto max-w-xl">
-      <Link href={`/gc/projects/${id}`} className="text-sm text-link hover:underline">
-        Back to {project.name}
-      </Link>
-      <h1 className="mt-2 text-[2rem] font-semibold leading-tight">Add a subcontract</h1>
-      <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">Upload the signed contract. Groundwork reads when and how this subcontractor gets paid, shows you each term next to the clause it came from, and waits for your approval.</p>
-      <div className="mt-8">
-        <AddSubcontractForm projectId={id} knownSubs={knownSubs} />
-      </div>
-    </div>
+    <>
+      <PageHeader
+        width="form"
+        breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: project.name, href: base }, { label: "Subcontracts", href: `${base}/subcontracts` }, { label: "Add subcontract" }]}
+        title="Add subcontract"
+        description="Upload the signed contract. Groundwork reads when and how this subcontractor is paid, shows each term beside the clause it came from, and waits for your approval."
+      />
+      <PageBody width="form">
+        <div className="rounded-lg border bg-card p-5">
+          <AddSubcontractForm projectId={id} knownSubs={knownSubs} isSample={isSampleWorkspace(org)} cancelHref={`${base}/subcontracts`} />
+        </div>
+      </PageBody>
+    </>
   );
 }

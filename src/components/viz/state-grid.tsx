@@ -86,10 +86,10 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
   return (
     <div className={compact ? "" : "grid gap-6 lg:grid-cols-[1fr_340px]"}>
       <div className="min-w-0">
-        <div role="tablist" aria-label="Rule" className="flex flex-wrap gap-1 rounded-full bg-secondary p-1 text-xs">
+        <div role="tablist" aria-label="Rule" className="flex flex-wrap gap-0.5 rounded-md bg-secondary p-0.5 text-[13px] leading-[18px]">
           {RULES.map((r) => (
-            <button key={r.id} role="tab" aria-selected={r.id === rule.id} onClick={() => setRuleId(r.id)} className="group relative rounded-full px-3 py-1.5 font-medium">
-              {r.id === rule.id && <motion.span layoutId="rule-pill" transition={spring.ui} className="absolute inset-0 rounded-full bg-card shadow-card" />}
+            <button key={r.id} role="tab" aria-selected={r.id === rule.id} onClick={() => setRuleId(r.id)} className="group relative cursor-pointer rounded-[5px] px-2.5 py-1 font-medium">
+              {r.id === rule.id && <motion.span layoutId="rule-pill" transition={spring.ui} className="absolute inset-0 rounded-[5px] bg-card shadow-card" />}
               <span className={`relative transition-colors duration-150 ${r.id === rule.id ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>{r.label}</span>
             </button>
           ))}
@@ -109,7 +109,7 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
                 aria-label={`${s.name}: ${rule.value(s)}`}
                 aria-pressed={on}
                 title={`${s.name}: ${rule.value(s)}`}
-                className={`absolute flex items-center justify-center rounded-[4px] font-mono text-[10px] font-medium transition-[filter] duration-150 ease-out hover:z-10 hover:brightness-110 sm:text-[11px] ${on ? "z-10 ring-2 ring-foreground ring-offset-1 ring-offset-background" : ""}`}
+                className={`absolute flex cursor-pointer items-center justify-center rounded-[3px] font-mono text-[10px] font-medium transition-[filter] duration-150 ease-out hover:z-10 hover:brightness-110 sm:text-[11px] ${on ? "z-10 ring-2 ring-foreground ring-offset-1 ring-offset-background" : ""}`}
                 style={{ left: `${pos[0] * cell}%`, top: `${pos[1] * 12.5}%`, width: `calc(${cell}% - 3px)`, height: "calc(12.5% - 3px)", opacity: rule.source(s).confidence === "low" ? 0.55 : 1 }}
                 animate={{ backgroundColor: b.color, color: b.ink ?? "var(--settled-foreground)" }}
                 transition={{ duration: duration.fade }}
@@ -123,22 +123,22 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
         <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           {rule.bins.map((b, i) => (
             <li key={b.label} className="flex items-center gap-1.5">
-              <span aria-hidden className="h-2.5 w-2.5 rounded-sm border" style={{ background: b.color }} />
-              {b.label} <span className="num">· {states.filter((s) => rule.bin(s) === i).length}</span>
+              <span aria-hidden className="size-2 rounded-[2px] border" style={{ background: b.color }} />
+              {b.label} <span className="type-mono text-foreground">{states.filter((s) => rule.bin(s) === i).length}</span>
             </li>
           ))}
           <li className="flex items-center gap-1.5">
-            <span aria-hidden className="h-2.5 w-2.5 rounded-sm bg-foreground opacity-50" /> faded: low-confidence source
+            <span aria-hidden className="size-2 rounded-[2px] bg-foreground opacity-50" /> Faded: low-confidence source
           </li>
         </ul>
       </div>
       {!compact && (
-        <aside className="min-w-0 rounded-xl bg-card shadow-card p-4 shadow-card" aria-live="polite">
+        <aside className="min-w-0 rounded-lg border bg-card p-4" aria-live="polite">
           <AnimatePresence initial={false}>
             {sel ? (
               <motion.div key={`${sel.state}-${rule.id}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: duration.hover, ease: ease.out }}>
                 <div className="type-label text-muted-foreground">{rule.label}</div>
-                <h3 className="mt-1 text-2xl font-semibold">{sel.name}</h3>
+                <h3 className="type-title mt-1">{sel.name}</h3>
                 <p className="mt-2 text-sm">{rule.value(sel)}</p>
                 {rule.source(sel).cite && (
                   <p className="mt-3 text-sm">

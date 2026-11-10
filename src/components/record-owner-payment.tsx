@@ -1,94 +1,86 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
-import { motion } from "motion/react";
-import { spring } from "@/lib/motion";
+import { useActionState, useState } from "react";
 import { Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { recordOwnerPaymentAction, type RecordState } from "@/app/gc/projects/[id]/actions";
 
+/**
+ * "Record owner payment": a button that opens the form in a dialog. The dialog traps focus, puts it
+ * on the amount, closes on Escape and hands focus back to the button. Recording redirects to the
+ * project, where the split is shown; an error stays in the dialog beside its field.
+ *
+ * Props: `projectId`; `defaults` (amount, reference, periodThrough; empty strings leave a field blank);
+ * `emphasis` (this is the page's primary action); `deadlineDays` (the state's pay-subcontractors
+ * deadline, to word the help text); `defaultOpen`. `onStage` is ignored; it is accepted so older pages compile.
+ */
 export function RecordOwnerPayment({
   projectId,
   defaults,
-  onStage = false,
   emphasis = false,
+  deadlineDays,
+  defaultOpen = false,
 }: {
   projectId: string;
   defaults: { amount: string; reference: string; periodThrough: string };
-  /** The trigger sits on the dark page header. */
+  /** @deprecated ignored */
   onStage?: boolean;
-  /** This is the next thing to do on the page, so the trigger is the loud button. */
   emphasis?: boolean;
+  deadlineDays?: number | null;
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const trigger = useRef<HTMLButtonElement>(null);
-  const close = () => {
-    setOpen(false);
-    // Hand focus back to the button that opened the form.
-    requestAnimationFrame(() => trigger.current?.focus());
-  };
+  const [open, setOpen] = useState(defaultOpen);
   const [state, action, pending] = useActionState<RecordState, FormData>(recordOwnerPaymentAction, {});
+  const v = { ...defaults, receivedAt: "", retention: "", ...state.values };
+  const err = (field: NonNullable<RecordState["field"]>) => (state.field === field ? state.error : undefined);
   return (
-    <div>
-      {!open ? (
-        <Button ref={trigger} id="record-owner-payment" onClick={() => setOpen(true)} variant={onStage ? (emphasis ? "signal" : "stage") : "money"} size={onStage ? "lg" : "default"}>
-          <Landmark aria-hidden />
-          Record owner payment
-        </Button>
-      ) : (
-        <motion.form
-          action={action}
-          initial={{ opacity: 0, scale: 0.97, y: -4 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={spring.snappy}
-          style={{ transformOrigin: "top left" }}
-          className="w-full max-w-md rounded-xl bg-card p-5 text-foreground shadow-float [--ring:var(--link)]"
-          aria-label="Record owner payment"
-        >
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button id="record-owner-payment" variant={emphasis ? "primary" : "secondary"} />}>
+        <Landmark aria-hidden />
+        Record owner payment
+      </DialogTrigger>
+      <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-lg p-0 shadow-float ring-0 sm:max-w-[480px]">
+        <form action={action} noValidate>
+          <div className="border-b px-5 py-4 pr-12">
+            <DialogTitle className="text-base leading-6 font-semibold">Record owner payment</DialogTitle>
+            <DialogDescription className="type-meta mt-0.5">Groundwork splits it between approved pay apps, holds retainage, requests lien waivers and starts each deadline.</DialogDescription>
+          </div>
           <input type="hidden" name="projectId" value={projectId} />
-          <div className="grid gap-3">
-            <div className="grid gap-1.5">
-              <Label htmlFor="amount">Amount received</Label>
-              <Input id="amount" name="amount" inputMode="decimal" defaultValue={defaults.amount} className="num" required autoFocus />
+          <div className="flex flex-col gap-4 px-5 py-4">
+            <Field label="Amount received" error={err("amount")}>
+              <Input id="amount" name="amount" inputMode="decimal" defaultValue={v.amount} placeholder="0.00" className="type-mono" autoComplete="off" />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Bank reference" error={err("reference")}>
+                <Input id="reference" name="reference" defaultValue={v.reference} placeholder="ACH or wire reference" className="type-mono" autoComplete="off" />
+              </Field>
+              <Field label="Pay period through" error={err("periodThrough")}>
+                <Input id="periodThrough" name="periodThrough" type="date" defaultValue={v.periodThrough} />
+              </Field>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-1.5">
-                <Label htmlFor="reference">Bank reference</Label>
-                <Input id="reference" name="reference" defaultValue={defaults.reference} required />
-              </div>
-              <div className="grid gap-1.5">
-                <Label htmlFor="periodThrough">Pay period through</Label>
-                <Input id="periodThrough" name="periodThrough" type="date" defaultValue={defaults.periodThrough} required />
-              </div>
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="receivedAt">Received</Label>
-              <Input id="receivedAt" name="receivedAt" type="datetime-local" />
-              <p className="text-xs text-muted-foreground">Leave blank for now. The 7-day clock starts from this moment.</p>
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="retention">Of which, retention released by the owner</Label>
-              <Input id="retention" name="retention" inputMode="decimal" placeholder="0.00" className="num" />
-              <p className="text-xs text-muted-foreground">Starts the pass-through clock on retainage you have certified for release. The rest funds progress billing.</p>
-            </div>
-            {state.error && (
-              <p role="alert" className="text-sm text-destructive">
+            <Field label="Received" optional error={err("receivedAt")} help={`Leave blank for now. ${deadlineDays ? `Each subcontractor's ${deadlineDays}-day deadline` : "Each subcontractor's payment deadline"} runs from this moment.`}>
+              <Input id="receivedAt" name="receivedAt" type="datetime-local" defaultValue={v.receivedAt} />
+            </Field>
+            <Field label="Of which, retention released by the owner" optional error={err("retention")} help="Pays out retainage you have certified for release. The rest funds progress billing.">
+              <Input id="retention" name="retention" inputMode="decimal" defaultValue={v.retention} placeholder="0.00" className="type-mono" autoComplete="off" />
+            </Field>
+            {state.error && !state.field && (
+              <p role="alert" className="type-meta text-destructive">
                 {state.error}
               </p>
             )}
-            <div className="flex gap-2">
-              <Button type="submit" disabled={pending} variant="money">
-                {pending ? "Allocating…" : "Record and allocate"}
-              </Button>
-              <Button type="button" variant="outline" onClick={close}>
-                Cancel
-              </Button>
-            </div>
           </div>
-        </motion.form>
-      )}
-    </div>
+          <div className="flex flex-wrap items-center justify-end gap-2 border-t bg-muted/60 px-5 py-3">
+            <DialogClose render={<Button type="button" variant="secondary" />}>Cancel</DialogClose>
+            <Button type="submit" loading={pending}>
+              Record and split
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
