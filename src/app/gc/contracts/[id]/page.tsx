@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/server/auth";
-import { getContract } from "@/server/scoped";
+import { getContract, getContractAdjustments } from "@/server/scoped";
+import { ContractAdjustments } from "@/components/contract-adjustments";
 import { getDb, schema } from "@/db/client";
 import { formatCentsCompact } from "@/lib/money";
 import type { StoredRules } from "@/server/rules/review";
@@ -10,7 +11,7 @@ import { StatusPill } from "@/components/status-pill";
 import { CompileReview, type RuleSetView } from "@/components/compile-review";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { uploadContractPdfAction } from "./actions";
+import { certifyRetentionAction, decideChangeOrderAction, proposeChangeOrderAction, recordBackchargeAction, uploadContractPdfAction, voidBackchargeAction } from "./actions";
 
 export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string }> }) {
   const { id } = await params;
@@ -18,6 +19,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
   const { org } = await requireAuth("gc");
   const contract = await getContract(org, id);
   if (!contract) notFound();
+  const adjustments = contract.status === "active" ? await getContractAdjustments(org, id) : null;
   const latest = contract.ruleSets[0] ?? null;
   let approvedByName: string | null = null;
   if (latest?.approvedBy) {
@@ -75,6 +77,16 @@ export default async function ContractPage({ params, searchParams }: { params: P
       <div className="mt-6">
         <CompileReview contractId={contract.id} documentUrl={contract.documentId ? `/api/documents/${contract.documentId}` : null} subName={contract.sub.name} ruleSet={view} canCompile={Boolean(contract.documentId)} />
       </div>
+
+      {adjustments && (
+        <div className="mt-10">
+          <ContractAdjustments
+            data={adjustments}
+            role="payer"
+            actions={{ proposeChangeOrder: proposeChangeOrderAction, decideChangeOrder: decideChangeOrderAction, recordBackcharge: recordBackchargeAction, voidBackcharge: voidBackchargeAction, certifyRetention: certifyRetentionAction }}
+          />
+        </div>
+      )}
 
       <section className="mt-10" aria-labelledby="sov-heading">
         <h2 id="sov-heading" className="text-lg font-semibold">

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { requireAuth } from "@/server/auth";
 import { getProject } from "@/server/scoped";
 import { recordOwnerPayment } from "@/server/actions/owner-payment";
-import { dollars } from "@/lib/money";
+import { dollars, parseDollars } from "@/lib/money";
 
 export type RecordState = { error?: string; ok?: boolean };
 
@@ -23,13 +23,17 @@ export async function recordOwnerPaymentAction(_prev: RecordState, formData: For
   const receivedRaw = String(formData.get("receivedAt") ?? "");
   const receivedAt = receivedRaw ? new Date(receivedRaw) : new Date();
   if (Number.isNaN(receivedAt.getTime())) return { error: "Received date is not valid." };
+  const retentionRaw = String(formData.get("retention") ?? "").trim();
+  const retentionCents = retentionRaw === "" ? 0 : parseDollars(retentionRaw);
+  if (Number.isNaN(retentionCents) || retentionCents < 0) return { error: "The retention amount is not valid." };
+  if (retentionCents > dollars(amount)) return { error: "The retention portion cannot be more than the payment." };
   const result = await recordOwnerPayment({
     projectId,
     amountCents: dollars(amount),
     receivedAt,
     periodThrough,
     reference,
-    includesRetention: formData.get("includesRetention") === "on",
+    retentionCents,
     actor: { userId: session.user.id, label: session.user.name },
   });
   revalidatePath(`/gc/projects/${projectId}`);

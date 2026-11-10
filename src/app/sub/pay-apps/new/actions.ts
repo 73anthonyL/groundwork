@@ -30,6 +30,13 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
   const retainageBilledCents = money("retainage");
   const previouslyBilledCents = money("previouslyBilled");
   if (Number.isNaN(retainageBilledCents) || Number.isNaN(previouslyBilledCents)) return { error: "Amounts must be numbers." };
+  const lowerTier: { contractId: string; amountCents: number }[] = [];
+  for (const [k, v] of formData.entries()) {
+    if (!k.startsWith("lower_") || String(v).trim() === "") continue;
+    const cents = money(k);
+    if (Number.isNaN(cents)) return { error: "Lower-tier amounts must be numbers." };
+    if (cents > 0) lowerTier.push({ contractId: k.slice(6), amountCents: cents });
+  }
   let result: Awaited<ReturnType<typeof submitPayApp>>;
   try {
     result = await submitPayApp({
@@ -40,6 +47,7 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
       lines,
       retainageBilledCents,
       previouslyBilledCents,
+      lowerTier,
       actor: { userId: session.user.id, label: session.user.name },
     });
   } catch (e) {

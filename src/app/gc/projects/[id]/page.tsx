@@ -117,7 +117,9 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
             {events.map((e) => {
               const released = e.releases.reduce((s, r) => s + r.releaseCents, 0);
               const held = e.releases.reduce((s, r) => s + r.retainageWithheldCents, 0);
-              const unallocated = e.amountCents - released - held;
+              const funded = e.releases.reduce((s, r) => s + r.grossCents, 0);
+              const setOff = e.releases.reduce((s, r) => s + r.offsetCents, 0);
+              const unallocated = e.amountCents - e.retentionCents - funded;
               const active = highlighted === e.id;
               return (
                 <WaterfallReveal key={e.id} active={active}>
@@ -133,6 +135,8 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                     </div>
                     <div className="num text-sm text-muted-foreground">
                       through {fmtDate(e.periodThrough)} · released {formatCentsCompact(released)} · retainage {formatCentsCompact(held)}
+                      {setOff > 0 ? ` · backcharges ${formatCentsCompact(setOff)}` : ""}
+                      {e.retentionCents > 0 ? ` · owner retention ${formatCentsCompact(e.retentionCents)}` : ""}
                       {unallocated > 0 ? ` · unallocated ${formatCentsCompact(unallocated)}` : ""}
                     </div>
                   </header>
@@ -157,9 +161,12 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                             </Link>
                             <div className="text-xs text-muted-foreground">{releaseLabel(r)}</div>
                           </TableCell>
-                          <TableCell className="num text-right">{formatCents(r.grossCents)}</TableCell>
-                          <TableCell className="num text-right text-hold">−{formatCents(r.retainageWithheldCents)}</TableCell>
-                          <TableCell className="num text-right font-semibold">{formatCents(r.releaseCents)}</TableCell>
+                          <TableCell className="num text-right">{r.kind === "retention" ? "—" : formatCents(r.grossCents)}</TableCell>
+                          <TableCell className="num text-right text-hold">{r.kind === "retention" ? "released" : `−${formatCents(r.retainageWithheldCents)}`}</TableCell>
+                          <TableCell className="num text-right font-semibold">
+                            {formatCents(r.releaseCents)}
+                            {r.offsetCents > 0 && <div className="text-xs font-normal text-hold">after −{formatCents(r.offsetCents)} backcharge</div>}
+                          </TableCell>
                           <TableCell className="num text-right text-muted-foreground">{r.awaitingOwnerCents ? formatCents(r.awaitingOwnerCents) : "—"}</TableCell>
                           <TableCell>
                             <StatusPill status={r.status} map={RELEASE} />

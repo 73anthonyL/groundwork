@@ -6,6 +6,7 @@ import { getDb, schema } from "@/db/client";
 import { eq, inArray } from "drizzle-orm";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { PayAppForm } from "@/components/pay-app-form";
+import { listLowerTier } from "@/server/actions/lower-tier";
 import { ID } from "@/db/seed";
 import { stableId } from "@/lib/ids";
 import { dollars } from "@/lib/money";
@@ -39,6 +40,7 @@ export default async function NewPayAppPage({ searchParams }: { searchParams: Pr
     scheduledValueCents: l.scheduledValueCents,
     previouslyCents: priorLines.filter((p) => p.sovLineId === l.id).reduce((s, p) => s + p.thisPeriodCents + p.storedCents, 0),
   }));
+  const lowerTier = (await listLowerTier(db, contract.id)).map((c) => ({ id: c.id, name: c.sub.name, remainingCents: c.remainingCents }));
   const previouslyBilledCents = approved.reduce((s, p) => s + p.workThisPeriodCents + p.storedMaterialsCents, 0);
   // Demo shortcut: Summit's second application, as the seed scenario has it (5% retainage instead of 10%).
   const prefill =
@@ -57,7 +59,7 @@ export default async function NewPayAppPage({ searchParams }: { searchParams: Pr
         {rules?.retainage.percent_bps !== null && rules ? ` · contract retainage ${rules.retainage.percent_bps / 100}%` : ""}
       </p>
       <div className="mt-5">
-        <PayAppForm contractId={contract.id} nextNumber={nextNumber} periodThrough={periodThrough} lines={lines} previouslyBilledCents={previouslyBilledCents} retainageBps={rules?.retainage.percent_bps ?? null} prefill={prefill} />
+        <PayAppForm contractId={contract.id} nextNumber={nextNumber} periodThrough={periodThrough} lines={lines} previouslyBilledCents={previouslyBilledCents} retainageBps={rules?.retainage.percent_bps ?? null} prefill={prefill} lowerTier={lowerTier} />
       </div>
     </div>
   );

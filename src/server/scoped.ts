@@ -6,9 +6,12 @@
  *   - an owner sees the projects it owns.
  * Tests in scoped.test.ts assert that cross-org reads return nothing.
  */
-import { and, desc, eq, inArray, sql, type SQL } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql, type SQL } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import type { Organization } from "@/db/schema";
+import { backchargeBalance, retentionPosition } from "@/server/actions/adjustments";
+import { listLowerTier } from "@/server/actions/lower-tier";
+import { effectiveValues, type StoredRules } from "@/server/rules/review";
 
 const { contracts, projects, documents, lienWaivers, ruleSets, sovLines, payApplications, releases } = schema;
 
@@ -141,7 +144,8 @@ export async function getProjectBoard(org: Organization, projectId: string) {
   });
   const contractIds = contractRows.map((c) => c.id);
   const events = await db.query.ownerPaymentEvents.findMany({
-    where: eq(schema.ownerPaymentEvents.projectId, projectId),
+    // The board shows the owner's payments; lower-tier funding events hang off their upstream release.
+    where: and(eq(schema.ownerPaymentEvents.projectId, projectId), isNull(schema.ownerPaymentEvents.payerContractId)),
     with: {
       releases: {
         with: { waivers: { orderBy: [desc(lienWaivers.createdAt)] }, payment: true, payApplication: true },
@@ -259,4 +263,43 @@ export async function getLedger(org: Organization, limit = 200) {
     balances: Object.fromEntries(totals.map((t) => [t.account, Number(t.total)])) as Record<string, number>,
     projects: projectRows,
   };
+}
+
+/** Change orders, backcharges, retention position and the lower tier for a contract in scope. */
+export async function getContractAdjustments(org: Organization, contractId: string) {
+  const contract = await getContract(org, contractId);
+  if (!contract) return null;
+  const db = await getDb();
+  const [changeOrders, backcharge, retention, lowerTier] = await Promise.all([
+    db.query.changeOrders.findMany({ where: eq(schema.changeOrders.contractId, contractId), orderBy: [desc(schema.changeOrders.number)] }),
+    backchargeBalance(db, contractId),
+    retentionPosition(db, contractId),
+    listLowerTier(db, contractId),
+  ]);
+  const active = contract.ruleSets.find((r) => r.id === contract.activeRuleSetId);
+  const rules = active ? effectiveValues(active.rules as StoredRules) : null;
+  return { contract, changeOrders, backcharge, retention, lowerTier, rules };
+}
+
+/** Lower-tier funding events carried by a release, for the release page. */
+export async function getDownstream(org: Organization, releaseId: string) {
+  const release = await getRelease(org, releaseId);
+  if (!release) return [];
+  const db = await getDb();
+  return db.query.ownerPaymentEvents.findMany({
+    where: eq(schema.ownerPaymentEvents.parentReleaseId, releaseId),
+    with: { releases: { with: { contract: { with: { sub: true } }, waivers: { orderBy: [desc(lienWaivers.createdAt)] }, payment: true } } },
+  });
+}
+
+/** Account-less access: a waiver by its signing token, with what a claimant needs to see. */
+export async function getWaiverByToken(token: string) {
+  if (!/^[\w-]{20,}$/.test(token)) return null;
+  const db = await getDb();
+  return (
+    (await db.query.lienWaivers.findFirst({
+      where: eq(lienWaivers.signToken, token),
+      with: { release: { with: { event: { with: { parentRelease: true } }, payment: true, payApplication: true, waivers: { orderBy: [desc(lienWaivers.createdAt)] }, contract: { with: { sub: true, payer: true, project: { with: { gc: true, owner: true } } } } } } },
+    })) ?? null
+  );
 }

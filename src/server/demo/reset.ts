@@ -7,11 +7,15 @@
  *   intake    paid1 + Pay App #2 approved for Ironline and Pacific, Summit's #2 submitted with its 5% error
  *   paid2     intake + Summit corrected and approved; Owner Payment #2 ($125,000, partial) recorded,
  *             three releases awaiting waivers with live 7-day clocks
+ *   closeout  paid2 settled, then everything after the rules: an approved change order and a pending
+ *             one, a backcharge, a supplier one hop down, Owner Payment #3 ($175,000) with the
+ *             backcharge set off and the supplier's share planned, Ironline's release waiting on its
+ *             supplier's waiver, and half of Ironline's retainage certified and waiting on the owner
  * Runs inside the app process so the embedded PGlite database is never opened by two processes at once.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getDb, schema, type Db } from "@/db/client";
 import { ID, SEED, seedBaseline, truncateAll } from "@/db/seed";
 import { ruleSetFromSpec, type ContractSpec } from "@/domain/rules/from-spec";
@@ -22,9 +26,11 @@ import { reviewPayApp, submitPayApp } from "@/server/actions/pay-apps";
 import { recordOwnerPayment } from "@/server/actions/owner-payment";
 import { settleSimulated, signWaiver } from "@/server/actions/payments";
 import { now } from "@/server/clock";
+import { certifyRetention, decideChangeOrder, proposeChangeOrder, recordBackcharge } from "@/server/actions/adjustments";
+import { addLowerTierParty } from "@/server/actions/lower-tier";
 import type { Actor } from "@/server/events";
 
-export const CHECKPOINTS = ["fresh", "compiled", "paid1", "intake", "paid2"] as const;
+export const CHECKPOINTS = ["fresh", "compiled", "paid1", "intake", "paid2", "closeout"] as const;
 export type Checkpoint = (typeof CHECKPOINTS)[number];
 
 const GC: Actor = { userId: ID.user.priya, label: "Priya Natarajan" };
@@ -178,6 +184,57 @@ async function applyPaid2() {
   });
 }
 
+export const CLOSEOUT = { rebarContract: stableId("contract:bay-rebar"), ownerPayment3: stableId("owner-payment:3") };
+
+async function settleEvent(db: Db, eventId: string) {
+  const releases = await db.query.releases.findMany({ where: eq(schema.releases.eventId, eventId), with: { waivers: true } });
+  for (const r of releases) {
+    const key = (Object.keys(ID.contract) as (keyof typeof ID.contract)[]).find((k) => ID.contract[k] === r.contractId);
+    if (!key) continue;
+    const cond = r.waivers.find((w) => w.status === "sent" && w.form.startsWith("c"));
+    if (cond) await signWaiver({ waiverId: cond.id, signerName: SUB[key].signer, signerTitle: SUB[key].title, actor: SUB[key] });
+    const payment = await db.query.payments.findFirst({ where: eq(schema.payments.releaseId, r.id) });
+    if (payment?.status === "released") await settleSimulated(payment.id);
+    const uncond = await db.query.lienWaivers.findFirst({ where: eq(schema.lienWaivers.releaseId, r.id), orderBy: (w, { desc }) => [desc(w.createdAt)] });
+    if (uncond?.status === "sent" && uncond.form.startsWith("u")) await signWaiver({ waiverId: uncond.id, signerName: SUB[key].signer, signerTitle: SUB[key].title, actor: SUB[key] });
+  }
+}
+
+async function applyCloseout(db: Db) {
+  await settleEvent(db, stableId("owner-payment:2"));
+  // Change orders: one approved (raises Ironline's sum to $420,000), one waiting on the controller.
+  const co = await proposeChangeOrder({ id: stableId("co:ironline:1"), contractId: ID.contract.ironline, title: "Added roof screen framing", description: "Owner-directed screen wall at mechanical yard, ASI-07.", amountCents: dollars(20_000), actor: SUB.ironline });
+  await decideChangeOrder({ changeOrderId: co.id, decision: "approve", note: "Per ASI-07; owner change order OCO-3 executed.", actor: GC });
+  await proposeChangeOrder({ id: stableId("co:pacific:1"), contractId: ID.contract.pacific, title: "Relocate panel EP-2 per RFI-41", description: "Two added 20A circuits and 40 ft of conduit.", amountCents: dollars(6_400), actor: SUB.pacific });
+  // A backcharge against Summit, on the notice its subcontract requires.
+  await recordBackcharge({ id: stableId("backcharge:summit:1"), contractId: ID.contract.summit, amountCents: dollars(1_500), reason: "Cleanup of drywall debris on level 2 after five business days' written notice", noticeDate: "2026-10-20", actor: GC });
+  // One hop down: Ironline's rebar supplier, declared on Ironline's third application.
+  await addLowerTierParty({ id: CLOSEOUT.rebarContract, parentContractId: ID.contract.ironline, name: "Bay Rebar Supply", kind: "supplier", scope: "Reinforcing steel and embeds", sumCents: dollars(60_000), actor: SUB.ironline });
+  const coLine = await db.query.sovLines.findFirst({ where: eq(schema.sovLines.id, (await db.query.changeOrders.findFirst({ where: eq(schema.changeOrders.id, co.id) }))!.sovLineId!) });
+  const app = await submitPayApp({
+    id: stableId("payapp:ironline:3"),
+    contractId: ID.contract.ironline,
+    number: 3,
+    periodThrough: "2026-11-30",
+    lines: [
+      { sovLineId: coLine!.id, thisPeriodCents: dollars(20_000), storedCents: 0 },
+      { sovLineId: sov("ironline", 5), thisPeriodCents: dollars(30_000), storedCents: 0 },
+    ],
+    retainageBilledCents: dollars(5_000),
+    previouslyBilledCents: dollars(200_000),
+    lowerTier: [{ contractId: CLOSEOUT.rebarContract, amountCents: dollars(12_000) }],
+    actor: SUB.ironline,
+  });
+  await reviewPayApp({ payAppId: app.id, decision: "approve", actor: GC });
+  // Owner Payment #3 funds everything outstanding: the rest of Pay App #2 and Ironline's #3.
+  await recordOwnerPayment({ id: CLOSEOUT.ownerPayment3, projectId: ID.project.bayview, amountCents: dollars(175_000), receivedAt: now(), periodThrough: "2026-11-30", reference: "ACH BVH-0188", actor: GC });
+  // Ironline signs its own waiver for #3; the release now waits on Bay Rebar's signature.
+  const iron3 = await db.query.releases.findFirst({ where: and(eq(schema.releases.eventId, CLOSEOUT.ownerPayment3), eq(schema.releases.payApplicationId, app.id)), with: { waivers: true } });
+  await signWaiver({ waiverId: iron3!.waivers[0].id, signerName: SUB.ironline.signer, signerTitle: SUB.ironline.title, actor: SUB.ironline });
+  // Substantial Completion: half of Ironline's retainage is certified and waits for the owner's retention.
+  await certifyRetention({ id: stableId("cert:ironline:1"), contractId: ID.contract.ironline, releaseBps: 5_000, note: "Architect certified Substantial Completion of the steel scope.", actor: GC });
+}
+
 export async function resetTo(checkpoint: Checkpoint): Promise<{ checkpoint: Checkpoint; ms: number }> {
   const db = await getDb();
   const t0 = Date.now();
@@ -188,6 +245,7 @@ export async function resetTo(checkpoint: Checkpoint): Promise<{ checkpoint: Che
   if (order >= 2) await applyPaid1(db);
   if (order >= 3) await applyIntake();
   if (order >= 4) await applyPaid2();
+  if (order >= 5) await applyCloseout(db);
   return { checkpoint, ms: Date.now() - t0 };
 }
 

@@ -44,10 +44,11 @@ export function RecordOwnerPayment({
               <Input id="receivedAt" name="receivedAt" type="datetime-local" />
               <p className="text-xs text-muted-foreground">Leave blank for now. The 7-day clock starts from this moment.</p>
             </div>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="includesRetention" className="h-4 w-4" />
-              Includes retention release
-            </label>
+            <div className="grid gap-1.5">
+              <Label htmlFor="retention">Of which, retention released by the owner</Label>
+              <Input id="retention" name="retention" inputMode="decimal" placeholder="0.00" className="num" />
+              <p className="text-xs text-muted-foreground">Starts the pass-through clock on retainage you have certified for release. The rest funds progress billing.</p>
+            </div>
             {state.error && (
               <p role="alert" className="text-sm text-destructive">
                 {state.error}

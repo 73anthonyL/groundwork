@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/server/auth";
-import { getRelease } from "@/server/scoped";
+import { getDownstream, getRelease } from "@/server/scoped";
+import { releaseLabel } from "@/lib/release-label";
 import { formatCents } from "@/lib/money";
 import { now } from "@/server/clock";
-import { STATUTES, type StatuteId } from "@/domain/statutes";
+import { statute, type StatuteId } from "@/domain/statutes";
 import { fieldLabel } from "@/server/rules/review";
 import type { RuleFieldPath } from "@/domain/rules/schema";
-import { WAIVER_TITLES, type WaiverFormId } from "@/domain/waivers/ca";
+import { waiverMeta, type WaiverFields, type WaiverFormId } from "@/domain/waivers/ca";
 import { ReleaseTimeline } from "@/components/release-timeline";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,8 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
   const r = await getRelease(org, id);
   if (!r) notFound();
   const basis = r.basis as Basis;
+  const downstream = (await getDownstream(org, id)).flatMap((e) => e.releases.map((x) => ({ ...x, pool: e.amountCents })));
+  const waitingOnLowerTier = r.status === "waiver_signed" && downstream.some((x) => x.releaseCents > 0 && x.status === "awaiting_waiver");
   const nowIso = now().toISOString();
   const project = r.contract.project;
 
@@ -31,7 +34,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
         <Link href={`/gc/projects/${project.id}`} className="hover:underline">
           {project.name}
         </Link>{" "}
-        / <Link href={`/gc/contracts/${r.contractId}`} className="hover:underline">{r.contract.sub.name}</Link> / release
+        / <Link href={`/gc/contracts/${r.contractId}`} className="hover:underline">{r.contract.sub.name}</Link> / {releaseLabel(r, { lower: true })}
       </div>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
         <h1 className="num text-3xl font-semibold">{formatCents(r.releaseCents)}</h1>
@@ -71,8 +74,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
               <ul className="mt-2 space-y-2 text-sm">
                 {[...new Set(basis.statutes)].map((s) => (
                   <li key={s}>
-                    <span className="font-medium">{STATUTES[s].cite}</span> — {STATUTES[s].title}.{" "}
-                    <span className="text-muted-foreground">{STATUTES[s].summary}</span>
+                    <span className="font-medium">{statute(s).cite}</span> · {statute(s).title}. <span className="text-muted-foreground">{statute(s).summary}</span>
                   </li>
                 ))}
               </ul>
@@ -103,12 +105,38 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
               <p className="mt-1 text-xs text-muted-foreground">Posts a bill.paid webhook through the same route a real rail would use.</p>
             </form>
           )}
+          {waitingOnLowerTier && (
+            <p role="status" className="mt-5 rounded-md border border-hold/40 bg-hold-soft px-3 py-2 text-sm text-hold">
+              Signed by {r.contract.sub.name}. The subcontract requires lower-tier waivers, so payment goes out when the parties below have signed.
+            </p>
+          )}
+          {downstream.length > 0 && (
+            <>
+              <h3 className="mt-6 text-sm font-semibold">Flows down to</h3>
+              <ul className="mt-2 space-y-2 text-sm">
+                {downstream.map((x) => (
+                  <li key={x.id} className="flex items-center justify-between gap-3 rounded-sm border px-3 py-2">
+                    <div className="min-w-0">
+                      <div className="font-medium">{x.contract.sub.name}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {x.contract.lowerTierKind === "supplier" ? "Supplier" : "Sub-subcontractor"} · {x.contract.trade}
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span className="num font-medium">{formatCents(x.releaseCents)}</span>
+                      <StatusPill status={x.status} map={RELEASE} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
           <h3 className="mt-6 text-sm font-semibold">Waivers</h3>
           <ul className="mt-2 space-y-2 text-sm">
             {r.waivers.map((w) => (
               <li key={w.id} className="rounded-sm border px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span>{WAIVER_TITLES[w.form as WaiverFormId].title}</span>
+                  <span>{waiverMeta(w.form as WaiverFormId, (w.fields as WaiverFields).state).title}</span>
                   <span className="text-xs text-muted-foreground">{w.status}</span>
                 </div>
                 {w.signatureHash && (

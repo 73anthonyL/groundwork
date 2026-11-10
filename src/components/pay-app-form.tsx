@@ -18,6 +18,7 @@ export function PayAppForm({
   previouslyBilledCents,
   retainageBps,
   prefill,
+  lowerTier = [],
 }: {
   contractId: string;
   nextNumber: number;
@@ -27,6 +28,8 @@ export function PayAppForm({
   retainageBps: number | null;
   /** Demo shortcut: seed values keyed by line id. */
   prefill?: { lines: Record<string, number>; retainage: number };
+  /** Suppliers and sub-subcontractors on this contract, to declare what is owed to each. */
+  lowerTier?: { id: string; name: string; remainingCents: number }[];
 }) {
   const [state, action, pending] = useActionState<SubmitState, FormData>(submitPayAppAction, {});
   const [values, setValues] = useState<Record<string, string>>(() =>
@@ -107,6 +110,25 @@ export function PayAppForm({
           <dd className="font-semibold">{usd(gross - retainageCents)}</dd>
         </div>
       </dl>
+
+      {lowerTier.length > 0 && (
+        <fieldset className="rounded-md border bg-card">
+          <legend className="sr-only">Lower tier</legend>
+          <div className="border-b px-3 py-2 text-xs text-muted-foreground">Owed to your suppliers and sub-subcontractors out of this application</div>
+          <ul className="divide-y">
+            {lowerTier.map((p) => (
+              <li key={p.id} className="grid grid-cols-[1fr_120px] items-center gap-2 px-3 py-2">
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium">{p.name}</div>
+                  <div className="num text-xs text-muted-foreground">{usd(p.remainingCents)} left on their agreement</div>
+                </div>
+                <Input aria-label={`Owed to ${p.name}`} name={`lower_${p.id}`} inputMode="decimal" placeholder="0.00" className="num text-right" />
+              </li>
+            ))}
+          </ul>
+          <p className="border-t px-3 py-2 text-xs text-muted-foreground">When you are paid, Groundwork plans their share and sends them a waiver to sign. No account needed on their side.</p>
+        </fieldset>
+      )}
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="isFinal" className="h-4 w-4" /> This is the final application

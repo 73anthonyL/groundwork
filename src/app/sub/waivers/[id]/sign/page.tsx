@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { requireAuth } from "@/server/auth";
 import { getWaiver } from "@/server/scoped";
 import { formatCents } from "@/lib/money";
-import { WAIVER_TITLES, waiverBody, type WaiverFields, type WaiverFormId } from "@/domain/waivers/ca";
+import { waiverBody, waiverMeta, type WaiverFields, type WaiverFormId } from "@/domain/waivers/ca";
 import { SignWaiverForm } from "@/components/sign-waiver-form";
 
 export default async function SignWaiverPage({ params }: { params: Promise<{ id: string }> }) {
@@ -13,7 +13,7 @@ export default async function SignWaiverPage({ params }: { params: Promise<{ id:
   const waiver = await getWaiver(org, id);
   if (!waiver) notFound();
   const fields = waiver.fields as WaiverFields;
-  const meta = WAIVER_TITLES[waiver.form as WaiverFormId];
+  const meta = waiverMeta(waiver.form as WaiverFormId, fields.state);
   const body = waiverBody(fields);
   const amount = fields.amountCents !== null ? formatCents(fields.amountCents) : "";
 

@@ -20,3 +20,11 @@ export function formatBps(bps: number): string {
 export function dollars(n: number): number {
   return Math.round(n * 100);
 }
+
+/** "$1,250.50" → 125050. NaN when the text is not an amount. Negative amounts are allowed. */
+export function parseDollars(raw: FormDataEntryValue | string | null | undefined): number {
+  const s = String(raw ?? "").replace(/[$,\s]/g, "");
+  if (s === "") return NaN;
+  const n = Number(s);
+  return Number.isFinite(n) ? Math.round(n * 100) : NaN;
+}

@@ -15,6 +15,7 @@ const DESCRIPTIONS: Record<(typeof CHECKPOINTS)[number], string> = {
   paid1: "All three approved. Pay App #1 approved and funded by Owner Payment #1 ($200,000). Waivers signed, payments settled.",
   intake: "paid1 + Pay App #2 approved for Ironline and Pacific. Summit's #2 submitted with retainage at 5% instead of 10%.",
   paid2: "intake + Summit corrected and approved. Owner Payment #2 ($125,000, partial) recorded. Three releases await waivers with live clocks.",
+  closeout: "paid2 settled, then a change order, a backcharge and a rebar supplier one hop down. Owner Payment #3 ($175,000) sets off the backcharge and plans the supplier's share; Ironline's release waits on its supplier's waiver; half of Ironline's retainage is certified and waits for the owner.",
 };
 
 export default async function DemoPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
