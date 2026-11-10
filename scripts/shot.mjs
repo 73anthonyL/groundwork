@@ -46,6 +46,12 @@ await new Promise((r) => setTimeout(r, Number(wait)));
 const { result } = await send("Runtime.evaluate", { expression: "document.documentElement.scrollHeight" });
 if (full === "1") await send("Emulation.setDeviceMetricsOverride", { width: Number(width), height: Math.min(result.value, 9000), deviceScaleFactor: 1, mobile: false });
 await new Promise((r) => setTimeout(r, 400));
+// SCROLL_TO=<css selector> captures the viewport with that element at the top instead of the full page.
+if (process.env.SCROLL_TO) {
+  await send("Emulation.setDeviceMetricsOverride", { width: Number(width), height: 900, deviceScaleFactor: 1, mobile: false });
+  await send("Runtime.evaluate", { expression: `document.querySelector(${JSON.stringify(process.env.SCROLL_TO)})?.scrollIntoView({block:"start"})` });
+  await new Promise((r) => setTimeout(r, 900));
+}
 const shot = await send("Page.captureScreenshot", { format: "png" });
 writeFileSync(out, Buffer.from(shot.data, "base64"));
 console.log(out, result.value + "px tall", errors.length ? `\nconsole errors:\n- ${[...new Set(errors)].slice(0, 8).join("\n- ")}` : "· no console errors");

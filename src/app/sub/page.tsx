@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireAuth } from "@/server/auth";
-import { listContracts, listReleasesForOrg } from "@/server/scoped";
+import { listContracts, listProjects, listReleasesForOrg } from "@/server/scoped";
+import { projectFlow } from "@/server/read/project";
+import { MoneyFlow } from "@/components/viz/money-flow";
 import { formatCents, formatCentsCompact } from "@/lib/money";
 import { now } from "@/server/clock";
 import { releaseLabel } from "@/lib/release-label";
@@ -12,6 +14,7 @@ export default async function SubHome() {
   const { org } = await requireAuth("sub");
   const [contracts, releases] = await Promise.all([listContracts(org), listReleasesForOrg(org)]);
   const nowIso = now().toISOString();
+  const flows = (await Promise.all((await listProjects(org)).map(async (p) => ({ project: p, flow: await projectFlow(org, p.id) })))).filter((f) => f.flow && f.flow.events.length > 0);
   const owed = releases.filter((r) => !["paid", "settled", "blocked"].includes(r.status)).reduce((s, r) => s + r.releaseCents, 0);
   const paid = releases.filter((r) => ["paid", "settled"].includes(r.status)).reduce((s, r) => s + r.releaseCents, 0);
   const held = releases.reduce((s, r) => s + r.retainageWithheldCents, 0);
@@ -76,6 +79,16 @@ export default async function SubHome() {
           </ul>
         )}
       </section>
+
+      {flows.map(({ project, flow }) => (
+        <section key={project.id} className="mt-8" aria-label={`Your money on ${project.name}`}>
+          <h2 className="text-lg font-semibold">Your money on {project.name}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">What has landed, what is on its way, what is held, and what you owe your own suppliers.</p>
+          <div className="mt-3 rounded-md border bg-card p-3">
+            <MoneyFlow flow={flow!} height={260} />
+          </div>
+        </section>
+      ))}
 
       <section className="mt-8" aria-labelledby="contracts-heading">
         <h2 id="contracts-heading" className="text-lg font-semibold">

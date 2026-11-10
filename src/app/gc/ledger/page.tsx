@@ -9,6 +9,9 @@ const ACCOUNT: Record<string, string> = {
   sub_payable: "Owed to subs",
   retainage_held: "Retainage held",
   sub_paid: "Paid to subs",
+  backcharge_recovered: "Backcharges recovered",
+  lower_tier_payable: "Lower tier: owed by subs",
+  lower_tier_paid: "Lower tier: paid by subs",
 };
 
 export default async function LedgerPage() {
