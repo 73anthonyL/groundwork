@@ -4,6 +4,7 @@ import { requireAuth } from "@/server/auth";
 import { getProjectBoard } from "@/server/scoped";
 import { formatBps, formatCentsCompact, formatCents } from "@/lib/money";
 import { now } from "@/server/clock";
+import { releaseLabel } from "@/lib/release-label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
@@ -154,7 +155,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                             <Link href={`/gc/releases/${r.id}`} className="font-medium hover:underline">
                               {subName(r.contractId)}
                             </Link>
-                            <div className="text-xs text-muted-foreground">Pay app #{r.payApplication.number}</div>
+                            <div className="text-xs text-muted-foreground">{releaseLabel(r)}</div>
                           </TableCell>
                           <TableCell className="num text-right">{formatCents(r.grossCents)}</TableCell>
                           <TableCell className="num text-right text-hold">−{formatCents(r.retainageWithheldCents)}</TableCell>

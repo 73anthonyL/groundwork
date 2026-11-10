@@ -10,18 +10,21 @@ export async function replayProject(projectId: string) {
   const mismatches: string[] = [];
   let compared = 0;
   for (const ev of events) {
-    const candidates = await loadCandidates(db, projectId, ev.id);
+    // A lower-tier event allocates only across the applications declared on the upstream one it carries.
+    const parent = ev.parentReleaseId ? await db.query.releases.findFirst({ where: eq(schema.releases.id, ev.parentReleaseId) }) : null;
+    const { candidates, retention } = await loadCandidates(db, projectId, { payerContractId: ev.payerContractId, parentPayApplicationId: parent?.payApplicationId ?? null, beforeEventId: ev.id });
     const plan = planWaterfall(
-      { eventId: ev.id, amountCents: ev.amountCents, receivedAt: ev.receivedAt, periodThrough: ev.periodThrough, includesRetention: ev.includesRetention, exclusions: ev.exclusions },
+      { eventId: ev.id, amountCents: ev.amountCents, retentionCents: ev.retentionCents, receivedAt: ev.receivedAt, periodThrough: ev.periodThrough, includesRetention: ev.includesRetention, exclusions: ev.exclusions },
       candidates,
+      retention,
     );
     const stored = await db.query.releases.findMany({ where: eq(schema.releases.eventId, ev.id) });
     for (const r of plan.releases) {
-      const s = stored.find((x) => x.payApplicationId === r.payAppId);
+      const s = stored.find((x) => (r.payAppId ? x.payApplicationId === r.payAppId : x.certificationId === r.certificationId));
       compared++;
-      if (!s) mismatches.push(`${ev.reference}: no stored release for ${r.payAppId}`);
+      if (!s) mismatches.push(`${ev.reference}: no stored release for ${r.payAppId ?? r.certificationId}`);
       else if (s.grossCents !== r.grossCents || s.retainageWithheldCents !== r.retainageWithheldCents || s.releaseCents !== r.releaseCents)
-        mismatches.push(`${ev.reference}/${r.payAppId}: planned ${r.grossCents}/${r.retainageWithheldCents}/${r.releaseCents} vs stored ${s.grossCents}/${s.retainageWithheldCents}/${s.releaseCents}`);
+        mismatches.push(`${ev.reference}/${r.payAppId ?? r.certificationId}: planned ${r.grossCents}/${r.retainageWithheldCents}/${r.releaseCents} vs stored ${s.grossCents}/${s.retainageWithheldCents}/${s.releaseCents}`);
     }
     if (stored.length !== plan.releases.length) mismatches.push(`${ev.reference}: ${stored.length} stored vs ${plan.releases.length} planned`);
   }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { releaseLabel } from "@/lib/release-label";
 import { notFound } from "next/navigation";
 import { requireAuth } from "@/server/auth";
 import { getWaiver } from "@/server/scoped";
@@ -30,7 +31,7 @@ export default async function SignWaiverPage({ params }: { params: Promise<{ id:
         <div className="text-xs text-muted-foreground">Amount of this release</div>
         <div className="text-2xl font-semibold">{amount}</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {waiver.release.contract.project.gc.name} · pay app #{waiver.release.payApplication.number}
+          {waiver.release.contract.project.gc.name} · {releaseLabel(waiver.release, { lower: true })}
           {fields.throughDate ? ` · through ${fields.throughDate}` : ""}
         </div>
       </div>

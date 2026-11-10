@@ -7,6 +7,7 @@ import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { emit, type Actor } from "@/server/events";
 import { now } from "@/server/clock";
 import type { DbLike } from "@/server/db-types";
+import { createDeclaredApplications } from "@/server/actions/lower-tier";
 
 export type SubmitPayAppInput = {
   contractId: string;
@@ -17,6 +18,8 @@ export type SubmitPayAppInput = {
   /** What the sub says it is withholding and billed before (checked, not trusted). */
   retainageBilledCents: number;
   previouslyBilledCents: number;
+  /** What the sub owes each of its lower-tier parties out of this application. */
+  lowerTier?: { contractId: string; amountCents: number }[];
   actor: Actor;
   id?: string;
 };
@@ -74,6 +77,12 @@ export async function submitPayApp(input: SubmitPayAppInput) {
       netDueBilledCents: gross - input.retainageBilledCents,
     };
     const result = runPayAppChecks(app, ctx);
+    const lowerTier = (input.lowerTier ?? []).filter((d) => d.amountCents > 0);
+    if (lowerTier.length) {
+      const children = await tx.query.contracts.findMany({ where: eq(schema.contracts.parentContractId, input.contractId) });
+      if (lowerTier.some((d) => !children.some((c) => c.id === d.contractId))) throw new Error("a declared lower-tier party is not on this contract");
+      if (lowerTier.reduce((s, d) => s + d.amountCents, 0) > gross) throw new Error("lower-tier amounts cannot exceed what this application bills");
+    }
     const id = input.id ?? randomUUID();
     const at = now();
     await tx.insert(schema.payApplications).values({
@@ -90,6 +99,7 @@ export async function submitPayApp(input: SubmitPayAppInput) {
       netDueBilledCents: app.netDueBilledCents,
       checks: result.checks,
       flags: [],
+      lowerTier,
       submittedBy: input.actor.userId,
       submittedAt: at,
     });
@@ -175,6 +185,7 @@ export async function reviewPayApp(input: {
       payload: { corrected: Boolean(input.applyCorrection && onlyRetainage), retainageApprovedCents: retainageApproved, netDueApprovedCents: netApproved, grossCents: result.grossCents },
       correlationId: randomUUID(),
     });
+    await createDeclaredApplications(tx, { id: app.id, contractId: app.contractId, periodThrough: app.periodThrough, lowerTier: app.lowerTier }, input.actor);
     return { status: "approved" as const, retainageApprovedCents: retainageApproved, netDueApprovedCents: netApproved };
   });
 }

@@ -15,7 +15,7 @@ export type ExplainInput = {
   ownerName: string;
   ownerPaymentCents: number;
   ownerReference: string;
-  payAppNumber: number;
+  payAppNumber: number | null;
   math: { label: string; cents: number }[];
   statutes: StatuteId[];
   notes: string[];
@@ -34,7 +34,7 @@ export function deterministicExplanation(i: ExplainInput): { explanation: string
   const awaiting = i.math.find((m) => m.label.startsWith("awaiting"))?.cents ?? 0;
   const parts = [
     `${i.ownerName} paid ${i.gcName} ${formatCents(i.ownerPaymentCents)} (${i.ownerReference}).`,
-    `${formatCents(gross)} of that covers your pay application #${i.payAppNumber}.`,
+    i.payAppNumber === null ? "This release pays out retainage held on your contract." : `${formatCents(gross)} of that covers your pay application #${i.payAppNumber}.`,
     ret ? `Your subcontract lets ${i.gcName} hold ${formatCents(-ret)} as retainage, so ${formatCents(rel)} is released to you.` : `Nothing is withheld, so ${formatCents(rel)} is released to you.`,
     awaiting ? `${formatCents(awaiting)} is still with the owner and will follow when the owner pays the rest.` : "",
     ...i.statutes.map((s) => `${STATUTES[s].cite}: ${STATUTES[s].summary}`),

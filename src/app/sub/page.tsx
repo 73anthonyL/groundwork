@@ -3,6 +3,7 @@ import { requireAuth } from "@/server/auth";
 import { listContracts, listReleasesForOrg } from "@/server/scoped";
 import { formatCents, formatCentsCompact } from "@/lib/money";
 import { now } from "@/server/clock";
+import { releaseLabel } from "@/lib/release-label";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
 import { buttonVariants } from "@/components/ui/button";
@@ -48,7 +49,7 @@ export default async function SubHome() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-xs text-muted-foreground">
-                        {r.contract.project.name} · pay app #{r.payApplication.number}
+                        {r.contract.project.name} · {releaseLabel(r, { lower: true })}
                       </div>
                       <Link href={`/sub/contracts/${r.contractId}`} className="num text-xl font-semibold hover:underline">
                         {formatCents(r.releaseCents)}

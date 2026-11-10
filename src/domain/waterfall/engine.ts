@@ -42,9 +42,23 @@ export type Candidate = {
   overlay: StatutoryOverlay;
 };
 
+/** Retainage a certification has made releasable; paid out when the payer receives retention. */
+export type RetentionCandidate = {
+  certificationId: string;
+  contractId: string;
+  amountCents: number;
+  isFinal: boolean;
+  /** Contract's release period in days after the payer receives retention, if stated. */
+  releaseDays: number | null;
+  offsetCents: number;
+  overlay: StatutoryOverlay;
+};
+
 export type OwnerPayment = {
   eventId: string;
   amountCents: number;
+  /** Portion of `amountCents` that is the payer's own retention coming back, not progress funding. */
+  retentionCents?: number;
   receivedAt: Date;
   periodThrough: string;
   includesRetention: boolean;
@@ -64,6 +78,8 @@ export type Warning = {
     | "partial_funding"
     | "overpayment"
     | "excluded"
+    | "retention_released"
+    | "retention_not_funded"
     | "retainage_rate_missing";
   payAppId?: string;
   contractId?: string;
@@ -79,7 +95,10 @@ export type Basis = {
 };
 
 export type PlannedRelease = {
-  payAppId: string;
+  kind: "progress" | "retention";
+  /** Null for a retention release. */
+  payAppId: string | null;
+  certificationId: string | null;
   contractId: string;
   grossCents: number;
   retainageWithheldCents: number;
@@ -132,7 +151,7 @@ function round(n: number): number {
   return Math.round(n);
 }
 
-export function planWaterfall(payment: OwnerPayment, candidates: Candidate[]): WaterfallPlan {
+export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], retention: RetentionCandidate[] = []): WaterfallPlan {
   const warnings: Warning[] = [];
   const releases: PlannedRelease[] = [];
   const unfunded: WaterfallPlan["unfunded"] = [];
@@ -153,14 +172,17 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[]): W
 
   const remaining = eligible.map((c) => c.grossCents - c.fundedGrossCents);
   const totalRemaining = remaining.reduce((a, b) => a + b, 0);
-  const shares = allocateProRata(payment.amountCents, remaining);
+  // Retention the payer got back is not progress funding; only the rest is allocated to applications.
+  const retentionPortion = Math.min(Math.max(0, payment.retentionCents ?? 0), payment.amountCents);
+  const progressPool = payment.amountCents - retentionPortion;
+  const shares = allocateProRata(progressPool, remaining);
   const allocated = shares.reduce((a, b) => a + b, 0);
-  const unallocatedCents = payment.amountCents - allocated;
+  const unallocatedCents = progressPool - allocated;
 
-  if (payment.amountCents < totalRemaining) {
+  if (progressPool < totalRemaining) {
     warnings.push({
       code: "partial_funding",
-      message: `Owner paid ${payment.amountCents} of ${totalRemaining} cents outstanding; funded pro-rata by remaining gross.`,
+      message: `Owner paid ${progressPool} of ${totalRemaining} cents outstanding; funded pro-rata by remaining gross.`,
       statutes: [],
     });
   }
@@ -257,7 +279,9 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[]): W
     );
 
     releases.push({
+      kind: "progress",
       payAppId: c.payAppId,
+      certificationId: null,
       contractId: c.contractId,
       grossCents: fundedGross,
       retainageWithheldCents: retainage,
@@ -272,7 +296,66 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[]): W
     });
   });
 
+  planRetention(payment, retention, releases, warnings);
+
   return { releases, unfunded, unallocatedCents, warnings };
+}
+
+/**
+ * Certified retainage is paid out when the payer receives retention from upstream. The money comes
+ * from retainage already held (allocation is on gross), so the trigger is the receipt, not its size.
+ * The deadline is the shorter of the contract's release period and the statutory pass-through.
+ */
+function planRetention(payment: OwnerPayment, retention: RetentionCandidate[], releases: PlannedRelease[], warnings: Warning[]) {
+  for (const c of retention) {
+    if (c.amountCents <= 0) continue;
+    if (!payment.includesRetention) {
+      warnings.push({
+        code: "retention_not_funded",
+        contractId: c.contractId,
+        message: `${c.amountCents} cents of retainage is certified for release and waits for the owner's retention payment.`,
+        statutes: [],
+      });
+      continue;
+    }
+    const basis: Basis = { rulePaths: ["retainage.release_condition"], statutes: [], math: [], notes: [] };
+    const statutory = c.overlay.retentionPassThroughDays;
+    const days = statutory !== null && c.releaseDays !== null ? Math.min(statutory, c.releaseDays) : (statutory ?? c.releaseDays);
+    if (c.releaseDays !== null) basis.rulePaths.push("retainage.release_days");
+    if (statutory !== null && (c.releaseDays === null || statutory <= c.releaseDays)) basis.statutes.push("CA_CIV_8814");
+    const dueAt = days === null ? null : addDays(payment.receivedAt, days);
+    const offset = Math.min(c.offsetCents, c.amountCents);
+    if (offset > 0) basis.rulePaths.push("offsets.backcharge_setoff");
+    const release = c.amountCents - offset;
+    basis.math.push(
+      { label: "retainage certified for release", cents: c.amountCents },
+      ...(offset ? [{ label: "offsets / backcharges", cents: -offset }] : []),
+      { label: "release to subcontractor", cents: release },
+    );
+    basis.notes.push(c.isFinal ? "final retention release" : "partial retention release on certification");
+    warnings.push({
+      code: "retention_released",
+      contractId: c.contractId,
+      message: `${c.amountCents} cents of certified retainage released on receipt of retention.`,
+      statutes: basis.statutes,
+    });
+    releases.push({
+      kind: "retention",
+      payAppId: null,
+      certificationId: c.certificationId,
+      contractId: c.contractId,
+      grossCents: 0,
+      retainageWithheldCents: 0,
+      offsetCents: offset,
+      releaseCents: release,
+      awaitingOwnerCents: 0,
+      retentionReleasedCents: c.amountCents,
+      payByAt: dueAt,
+      retentionByAt: dueAt,
+      waiverForm: c.isFinal ? "cf_8136" : "cp_8132",
+      basis,
+    });
+  }
 }
 
 function computeDeadlines(

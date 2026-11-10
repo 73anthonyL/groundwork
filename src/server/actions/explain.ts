@@ -41,7 +41,7 @@ export async function explainRelease(releaseId: string) {
     ownerName: r.contract.project.owner.name,
     ownerPaymentCents: r.event.amountCents,
     ownerReference: r.event.reference,
-    payAppNumber: r.payApplication.number,
+    payAppNumber: r.payApplication?.number ?? null,
     math: basis.math,
     statutes: basis.statutes,
     notes: basis.notes,

@@ -36,7 +36,7 @@ export const payAppStatus = pgEnum("pay_app_status", [
   "funded",
   "closed",
 ]);
-export const paymentEventSource = pgEnum("payment_event_source", ["manual", "webhook"]);
+export const paymentEventSource = pgEnum("payment_event_source", ["manual", "webhook", "cascade"]);
 export const releaseStatus = pgEnum("release_status", [
   "planned",
   "awaiting_waiver",
@@ -55,7 +55,15 @@ export const ledgerAccount = pgEnum("ledger_account", [
   "sub_payable",
   "retainage_held",
   "sub_paid",
+  /** Backcharges the contractor set off against a release (cash it keeps). */
+  "backcharge_recovered",
+  /** One hop down: what a subcontractor owes / has paid its own lower tier. */
+  "lower_tier_payable",
+  "lower_tier_paid",
 ]);
+export const backchargeStatus = pgEnum("backcharge_status", ["open", "void"]);
+export const changeOrderStatus = pgEnum("change_order_status", ["proposed", "approved", "rejected"]);
+export const releaseKind = pgEnum("release_kind", ["progress", "retention"]);
 
 const cents = (name: string) => bigint(name, { mode: "number" });
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
@@ -157,9 +165,17 @@ export const contracts = pgTable(
     /** Set only when a rule set reaches `approved`. No FK to avoid a cycle; enforced in code. */
     activeRuleSetId: uuid("active_rule_set_id"),
     status: contractStatus("status").notNull().default("draft"),
+    /**
+     * Lower tier: set when this is a contract one hop down (a sub-subcontract or supply agreement).
+     * The parent is the upstream contract whose payee is this contract's payer, so `gcOrgId` here is
+     * the upstream subcontractor and `subOrgId` is its sub-subcontractor or supplier.
+     */
+    parentContractId: uuid("parent_contract_id").references((): AnyPgColumn => contracts.id),
+    lowerTierKind: text("lower_tier_kind"),
     createdAt: createdAt(),
   },
   (t) => [
+    index("contracts_parent_idx").on(t.parentContractId),
     index("contracts_project_idx").on(t.projectId),
     index("contracts_gc_idx").on(t.gcOrgId),
     index("contracts_sub_idx").on(t.subOrgId),
@@ -235,6 +251,10 @@ export const payApplications = pgTable(
     reviewedBy: uuid("reviewed_by").references(() => users.id),
     reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
     reviewNote: text("review_note"),
+    /** What the sub says it owes each lower-tier party out of this application. */
+    lowerTier: jsonb("lower_tier").$type<{ contractId: string; amountCents: number }[]>().notNull().default(sql`'[]'::jsonb`),
+    /** Set on a lower-tier application created from an upstream application's declaration. */
+    parentPayApplicationId: uuid("parent_pay_application_id").references((): AnyPgColumn => payApplications.id),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex("pay_apps_contract_number_uq").on(t.contractId, t.number)],
@@ -257,6 +277,74 @@ export const payApplicationLines = pgTable(
   (t) => [uniqueIndex("pay_app_lines_uq").on(t.payApplicationId, t.sovLineId)],
 );
 
+// ─── Adjustments: change orders, backcharges, retention certifications ──────
+
+/** A change to the contract sum. Approved additive orders add a schedule-of-values line. */
+export const changeOrders = pgTable(
+  "change_orders",
+  {
+    id: uuid("id").primaryKey(),
+    contractId: uuid("contract_id")
+      .notNull()
+      .references(() => contracts.id),
+    number: integer("number").notNull(),
+    title: text("title").notNull(),
+    description: text("description"),
+    /** Positive adds scope; negative deducts from `sovLineId`. */
+    amountCents: cents("amount_cents").notNull(),
+    /** Deductive: the line reduced. Additive: the line created on approval. */
+    sovLineId: uuid("sov_line_id").references(() => sovLines.id),
+    status: changeOrderStatus("status").notNull().default("proposed"),
+    requestedBy: uuid("requested_by").references(() => users.id),
+    decidedBy: uuid("decided_by").references(() => users.id),
+    decidedAt: timestamp("decided_at", { withTimezone: true }),
+    decisionNote: text("decision_note"),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("change_orders_contract_number_uq").on(t.contractId, t.number)],
+);
+
+/** A setoff the contractor pins against a contract. Applied amounts are the releases' offsets. */
+export const backcharges = pgTable(
+  "backcharges",
+  {
+    id: uuid("id").primaryKey(),
+    contractId: uuid("contract_id")
+      .notNull()
+      .references(() => contracts.id),
+    amountCents: cents("amount_cents").notNull(),
+    reason: text("reason").notNull(),
+    /** Date written notice was given, when the contract requires notice before setoff. */
+    noticeDate: date("notice_date"),
+    status: backchargeStatus("status").notNull().default("open"),
+    createdBy: uuid("created_by").references(() => users.id),
+    voidedAt: timestamp("voided_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index("backcharges_contract_idx").on(t.contractId)],
+);
+
+/** The controller certifies that a contract's retention release condition has been met. */
+export const retentionCertifications = pgTable(
+  "retention_certifications",
+  {
+    id: uuid("id").primaryKey(),
+    contractId: uuid("contract_id")
+      .notNull()
+      .references(() => contracts.id),
+    /** Share of the retainage held at certification that becomes releasable (10000 = all). */
+    releaseBps: integer("release_bps").notNull(),
+    amountCents: cents("amount_cents").notNull(),
+    /** The approved rule's release condition, copied at certification. */
+    conditionText: text("condition_text"),
+    note: text("note").notNull(),
+    isFinal: boolean("is_final").notNull().default(false),
+    certifiedBy: uuid("certified_by").references(() => users.id),
+    createdAt: createdAt(),
+  },
+  (t) => [index("retention_certs_contract_idx").on(t.contractId)],
+);
+
 // ─── Execution ──────────────────────────────────────────────────────────────
 
 /** ◆ Owner payment events. Idempotent by key. */
@@ -272,6 +360,14 @@ export const ownerPaymentEvents = pgTable(
     periodThrough: date("period_through").notNull(),
     reference: text("reference").notNull(),
     includesRetention: boolean("includes_retention").notNull().default(false),
+    /** Portion of the amount that is the owner's release of retention (not progress funding). */
+    retentionCents: cents("retention_cents").notNull().default(0),
+    /**
+     * One hop down: the upstream contract whose payee received this money, and the upstream release
+     * that carried it. Null for a payment from the project owner.
+     */
+    payerContractId: uuid("payer_contract_id").references(() => contracts.id),
+    parentReleaseId: uuid("parent_release_id").references((): AnyPgColumn => releases.id),
     idempotencyKey: text("idempotency_key").notNull().unique(),
     source: paymentEventSource("source").notNull().default("manual"),
     /** Pay-application ids the GC pinned out of this allocation. */
@@ -289,9 +385,11 @@ export const releases = pgTable(
     eventId: uuid("event_id")
       .notNull()
       .references(() => ownerPaymentEvents.id),
-    payApplicationId: uuid("pay_application_id")
-      .notNull()
-      .references(() => payApplications.id),
+    /** progress: funds a pay application. retention: pays out retainage held, on a certification. */
+    kind: releaseKind("kind").notNull().default("progress"),
+    /** Null for a retention release that is not tied to an application. */
+    payApplicationId: uuid("pay_application_id").references(() => payApplications.id),
+    certificationId: uuid("certification_id").references(() => retentionCertifications.id),
     contractId: uuid("contract_id")
       .notNull()
       .references(() => contracts.id),
@@ -310,6 +408,7 @@ export const releases = pgTable(
   },
   (t) => [
     uniqueIndex("releases_event_payapp_uq").on(t.eventId, t.payApplicationId),
+    uniqueIndex("releases_event_cert_uq").on(t.eventId, t.certificationId),
     index("releases_contract_idx").on(t.contractId),
   ],
 );
@@ -336,6 +435,8 @@ export const lienWaivers = pgTable(
     /** sha256(waiverId ‖ canonical fields ‖ signerName ‖ signedAt). */
     signatureHash: text("signature_hash"),
     supersedesId: uuid("supersedes_id").references((): AnyPgColumn => lienWaivers.id),
+    /** Unguessable token for account-less signing (lower-tier claimants sign from a link). */
+    signToken: text("sign_token").unique(),
     createdAt: createdAt(),
   },
   (t) => [index("lien_waivers_release_idx").on(t.releaseId), index("lien_waivers_contract_idx").on(t.contractId)],
@@ -436,11 +537,32 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
 
 export const contractsRelations = relations(contracts, ({ one, many }) => ({
   project: one(projects, { fields: [contracts.projectId], references: [projects.id] }),
-  sub: one(organizations, { fields: [contracts.subOrgId], references: [organizations.id] }),
+  sub: one(organizations, { fields: [contracts.subOrgId], references: [organizations.id], relationName: "contract_payee" }),
+  /** The party that pays under this contract: the general contractor, or one hop down the upstream sub. */
+  payer: one(organizations, { fields: [contracts.gcOrgId], references: [organizations.id], relationName: "contract_payer" }),
   document: one(documents, { fields: [contracts.documentId], references: [documents.id] }),
   ruleSets: many(ruleSets),
   sovLines: many(sovLines),
   payApplications: many(payApplications),
+  releases: many(releases),
+  changeOrders: many(changeOrders),
+  backcharges: many(backcharges),
+  retentionCertifications: many(retentionCertifications),
+  parent: one(contracts, { fields: [contracts.parentContractId], references: [contracts.id], relationName: "contract_tier" }),
+  children: many(contracts, { relationName: "contract_tier" }),
+}));
+
+export const changeOrdersRelations = relations(changeOrders, ({ one }) => ({
+  contract: one(contracts, { fields: [changeOrders.contractId], references: [contracts.id] }),
+  sovLine: one(sovLines, { fields: [changeOrders.sovLineId], references: [sovLines.id] }),
+}));
+
+export const backchargesRelations = relations(backcharges, ({ one }) => ({
+  contract: one(contracts, { fields: [backcharges.contractId], references: [contracts.id] }),
+}));
+
+export const retentionCertificationsRelations = relations(retentionCertifications, ({ one, many }) => ({
+  contract: one(contracts, { fields: [retentionCertifications.contractId], references: [contracts.id] }),
   releases: many(releases),
 }));
 
@@ -468,11 +590,16 @@ export const payApplicationLinesRelations = relations(payApplicationLines, ({ on
 
 export const ownerPaymentEventsRelations = relations(ownerPaymentEvents, ({ one, many }) => ({
   project: one(projects, { fields: [ownerPaymentEvents.projectId], references: [projects.id] }),
-  releases: many(releases),
+  releases: many(releases, { relationName: "release_event" }),
+  payerContract: one(contracts, { fields: [ownerPaymentEvents.payerContractId], references: [contracts.id] }),
+  parentRelease: one(releases, { fields: [ownerPaymentEvents.parentReleaseId], references: [releases.id], relationName: "release_downstream" }),
 }));
 
 export const releasesRelations = relations(releases, ({ one, many }) => ({
-  event: one(ownerPaymentEvents, { fields: [releases.eventId], references: [ownerPaymentEvents.id] }),
+  event: one(ownerPaymentEvents, { fields: [releases.eventId], references: [ownerPaymentEvents.id], relationName: "release_event" }),
+  /** Funding events one hop down that this release carries. */
+  downstream: many(ownerPaymentEvents, { relationName: "release_downstream" }),
+  certification: one(retentionCertifications, { fields: [releases.certificationId], references: [retentionCertifications.id] }),
   payApplication: one(payApplications, { fields: [releases.payApplicationId], references: [payApplications.id] }),
   contract: one(contracts, { fields: [releases.contractId], references: [contracts.id] }),
   waivers: many(lienWaivers),
@@ -505,3 +632,6 @@ export type LienWaiver = typeof lienWaivers.$inferSelect;
 export type Payment = typeof payments.$inferSelect;
 export type DomainEvent = typeof events.$inferSelect;
 export type LedgerEntry = typeof ledgerEntries.$inferSelect;
+export type ChangeOrder = typeof changeOrders.$inferSelect;
+export type Backcharge = typeof backcharges.$inferSelect;
+export type RetentionCertification = typeof retentionCertifications.$inferSelect;

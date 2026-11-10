@@ -8,6 +8,10 @@ import { emit, post, SYSTEM, type Actor } from "@/server/events";
 import { now } from "@/server/clock";
 import { sha256Hex } from "@/lib/ids";
 import { unconditionalCounterpart, type WaiverFields } from "@/domain/waivers/ca";
+import { effectiveValues, type StoredRules } from "@/server/rules/review";
+import { newSignToken } from "@/server/actions/owner-payment";
+
+const CLEARED = ["waiver_signed", "payment_initiated", "paid", "settled"];
 
 /** Sub types its name; the hash binds waiver id, fields, signer and time. */
 export async function signWaiver(input: { waiverId: string; signerName: string; signerTitle: string; actor: Actor }) {
@@ -35,16 +39,53 @@ export async function signWaiver(input: { waiverId: string; signerName: string; 
     if (conditional && w.release.status === "awaiting_waiver") {
       if (fields.amountCents !== w.release.releaseCents) throw new Error("waiver amount does not match the release");
       await tx.update(schema.releases).set({ status: "waiver_signed" }).where(eq(schema.releases.id, w.releaseId));
-      return { releaseId: w.releaseId, initiate: true, hash };
+      return { releaseId: w.releaseId, initiate: true, hash, upstreamReleaseId: null as string | null };
     }
     if (!conditional && w.release.status === "paid") {
       await tx.update(schema.releases).set({ status: "settled" }).where(eq(schema.releases.id, w.releaseId));
       await emit(tx, { aggregateType: "release", aggregateId: w.releaseId, type: "release.settled", actor: SYSTEM, payload: { waiverId: w.id }, correlationId: w.release.eventId });
     }
-    return { releaseId: w.releaseId, initiate: false, hash };
+    return { releaseId: w.releaseId, initiate: false, hash, upstreamReleaseId: null as string | null };
   });
-  if (result.initiate) await initiatePayment(result.releaseId);
+  if (result.initiate) {
+    const state = await advanceRelease(result.releaseId);
+    // A lower-tier signature may be the last thing the upstream release was waiting for.
+    if (state.upstreamReleaseId) await advanceRelease(state.upstreamReleaseId);
+  }
   return result;
+}
+
+export type AdvanceResult = { initiated: boolean; waitingOn: "status" | "upstream_payment" | "lower_tier_waivers" | null; upstreamReleaseId: string | null };
+
+/**
+ * Send a cleared release to the rail if nothing else gates it. Two gates beyond the claimant's own
+ * waiver: a lower-tier release waits until its payer has actually been paid, and a release under a
+ * contract that requires lower-tier waivers waits until every lower-tier claimant it funds has signed.
+ */
+export async function advanceRelease(releaseId: string): Promise<AdvanceResult> {
+  const db = await getDb();
+  const release = await db.query.releases.findFirst({
+    where: eq(schema.releases.id, releaseId),
+    with: { event: { with: { parentRelease: true } }, contract: true, downstream: { with: { releases: true } } },
+  });
+  if (!release) throw new Error("release not found");
+  const upstreamReleaseId = release.event.parentReleaseId;
+  if (release.status !== "waiver_signed") return { initiated: false, waitingOn: "status", upstreamReleaseId };
+  const upstream = release.event.parentRelease;
+  if (upstream && upstream.status !== "paid" && upstream.status !== "settled") return { initiated: false, waitingOn: "upstream_payment", upstreamReleaseId };
+  if (await lowerTierRequired(release.contract.activeRuleSetId)) {
+    const pending = release.downstream.flatMap((e) => e.releases).filter((r) => r.releaseCents > 0 && !CLEARED.includes(r.status));
+    if (pending.length) return { initiated: false, waitingOn: "lower_tier_waivers", upstreamReleaseId };
+  }
+  await initiatePayment(releaseId);
+  return { initiated: true, waitingOn: null, upstreamReleaseId };
+}
+
+async function lowerTierRequired(ruleSetId: string | null): Promise<boolean> {
+  if (!ruleSetId) return false;
+  const db = await getDb();
+  const rs = await db.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, ruleSetId) });
+  return rs ? effectiveValues(rs.rules as StoredRules).waivers.lower_tier_required === true : false;
 }
 
 /** waiver_signed → create bill → hold → release on the rail → payment_initiated. */
@@ -102,6 +143,25 @@ export async function initiatePayment(releaseId: string) {
 /** Idempotent webhook processing: inbox row first, then settle the payment and its release. */
 export async function handleRailWebhook(railNameIn: string, event: RailWebhookEvent) {
   const db = await getDb();
+  const result = await settleInTx(railNameIn, event);
+  // The payee now has its money: start the lower-tier clocks from the real receipt and pay anyone who has signed.
+  if (result.paidReleaseId) {
+    const downstream = await db.query.ownerPaymentEvents.findMany({ where: eq(schema.ownerPaymentEvents.parentReleaseId, result.paidReleaseId), with: { releases: true } });
+    const at = now();
+    for (const e of downstream) {
+      for (const r of e.releases) {
+        if (r.payByAt && ["awaiting_waiver", "waiver_signed"].includes(r.status)) {
+          await db.update(schema.releases).set({ payByAt: new Date(at.getTime() + (r.payByAt.getTime() - e.receivedAt.getTime())) }).where(eq(schema.releases.id, r.id));
+        }
+        if (r.status === "waiver_signed") await advanceRelease(r.id);
+      }
+    }
+  }
+  return result;
+}
+
+async function settleInTx(railNameIn: string, event: RailWebhookEvent): Promise<{ duplicate: boolean; matched?: boolean; paidReleaseId?: string }> {
+  const db = await getDb();
   return db.transaction(async (tx) => {
     const inserted = await tx
       .insert(schema.webhookInbox)
@@ -136,6 +196,7 @@ export async function handleRailWebhook(railNameIn: string, event: RailWebhookEv
           status: "sent",
           fields: { ...f, form: unconditionalCounterpart(conditional.form) },
           supersedesId: conditional.id,
+          signToken: conditional.signToken ? newSignToken() : null,
         });
       }
       const ev = await emit(tx, {
@@ -146,12 +207,22 @@ export async function handleRailWebhook(railNameIn: string, event: RailWebhookEv
         payload: { paymentId: payment.id, amountCents: payment.amountCents, rail: railNameIn },
         correlationId: release.eventId,
       });
-      const project = await tx.query.contracts.findFirst({ where: eq(schema.contracts.id, release.contractId) });
-      await post(tx, [
-        { projectId: project!.projectId, contractId: release.contractId, account: "sub_payable", deltaCents: -payment.amountCents, eventId: ev, correlationId: release.eventId, memo: `Paid ${release.contract.sub.name}` },
-        { projectId: project!.projectId, contractId: release.contractId, account: "sub_paid", deltaCents: payment.amountCents, eventId: ev, correlationId: release.eventId, memo: `Paid ${release.contract.sub.name}` },
-        { projectId: project!.projectId, contractId: null, account: "gc_cash", deltaCents: -payment.amountCents, eventId: ev, correlationId: release.eventId, memo: `Paid ${release.contract.sub.name} via ${railNameIn}` },
-      ]);
+      const base = { projectId: release.contract.projectId, eventId: ev, correlationId: release.eventId };
+      const name = release.contract.sub.name;
+      if (release.contract.parentContractId) {
+        await post(tx, [
+          { ...base, contractId: release.contractId, account: "lower_tier_payable", deltaCents: -payment.amountCents, memo: `Paid ${name}` },
+          { ...base, contractId: release.contractId, account: "lower_tier_paid", deltaCents: payment.amountCents, memo: `Paid ${name}` },
+        ]);
+      } else {
+        await post(tx, [
+          { ...base, contractId: release.contractId, account: "sub_payable", deltaCents: -payment.amountCents, memo: `Paid ${name}` },
+          { ...base, contractId: release.contractId, account: "sub_paid", deltaCents: payment.amountCents, memo: `Paid ${name}` },
+          { ...base, contractId: null, account: "gc_cash", deltaCents: -payment.amountCents, memo: `Paid ${name} via ${railNameIn}` },
+        ]);
+      }
+      await tx.update(schema.webhookInbox).set({ processedAt: now() }).where(eq(schema.webhookInbox.id, inserted[0].id));
+      return { duplicate: false, matched: true, paidReleaseId: release.id };
     }
     await tx.update(schema.webhookInbox).set({ processedAt: now() }).where(eq(schema.webhookInbox.id, inserted[0].id));
     return { duplicate: false, matched: true };

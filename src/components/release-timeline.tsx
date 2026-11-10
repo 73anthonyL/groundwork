@@ -12,7 +12,8 @@ type ReleaseLike = {
   awaitingOwnerCents: number;
   payByAt: Date | null;
   event: { amountCents: number; receivedAt: Date; reference: string; periodThrough: string };
-  payApplication: { number: number };
+  kind?: string | null;
+  payApplication: { number: number } | null;
   payment: { status: string; rail: string; externalBillId: string | null; updatedAt: Date } | null;
   waivers: Waiver[];
 };
@@ -39,7 +40,7 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r:
       title: "Your share, by the rules",
       detail: (
         <span className="num">
-          {formatCents(r.grossCents)} funded on pay app #{r.payApplication.number} − {formatCents(r.retainageWithheldCents)} retainage ={" "}
+          {r.payApplication ? `${formatCents(r.grossCents)} funded on pay app #${r.payApplication.number} − ${formatCents(r.retainageWithheldCents)} retainage = ` : "Retainage held on this contract, released on certification: "}
           <strong>{formatCents(r.releaseCents)}</strong>
           {r.awaitingOwnerCents ? ` · ${formatCents(r.awaitingOwnerCents)} still with the owner` : ""}
         </span>
