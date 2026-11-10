@@ -12,7 +12,7 @@ import { ease, spring } from "@/lib/motion";
  * The contract's words are set in the serif; everything Groundwork says is in the sans.
  */
 
-const T = { mark: 0.7, gap: 1.05, rule: 0.45, split: 4.1 };
+const T = { mark: 1.1, gap: 1.05, rule: 0.45, split: 4.5 };
 
 function Mark({ n, tone = "read", children, play }: { n: number; tone?: "read" | "flag"; children: React.ReactNode; play: boolean }) {
   const color = tone === "flag" ? "var(--hold-soft)" : "var(--link-soft)";
@@ -56,7 +56,7 @@ export function ContractHero() {
     { label: "Retainage held", cents: "$2,500", width: 10, color: "var(--flow-held)" },
   ];
   return (
-    <div className="grid overflow-hidden rounded-2xl bg-card shadow-card lg:grid-cols-[1.15fr_1fr]">
+    <div className="grid overflow-hidden rounded-2xl bg-card shadow-float lg:grid-cols-[1.15fr_1fr]">
       {/* The contract page. */}
       <figure className="border-b bg-[#fdfdfb] px-6 py-7 sm:px-10 sm:py-9 lg:border-b-0 lg:border-r" style={{ colorScheme: "light", color: "#1c1c1e" }}>
         <figcaption className="flex items-baseline justify-between font-sans text-xs text-[#6a6a6f]">

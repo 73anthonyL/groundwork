@@ -7,7 +7,8 @@ How Groundwork should look and read, why, and where to change it. Written after 
 Groundwork turns a paper contract into moving money. The interface shows both halves and keeps them apart:
 
 - **The contract speaks in the serif.** Any text quoted from a subcontract or a statutory form is set in Newsreader (`type-contract`): the clause behind an extracted term, a flagged passage, the waiver a sub signs, the page in the landing hero.
-- **Groundwork speaks in the sans.** Everything the software says is IBM Plex Sans: labels, figures, buttons, explanations.
+- **Groundwork speaks in the sans.** Everything the software says is Archivo: labels, figures, buttons, explanations. Archivo has a width axis; body text runs at normal width and the two top heading levels are set at 112%, like the lettering in a drawing's title block.
+- **The page is a drawing sheet.** Every screen sits on a faint drafting grid (`drafting-grid`, 24px with a heavier line every fifth). The landing page opens on a blueprint (`blueprint`: white linework on blue) with the contract page laid on top, and its opening pieces rise in one staggered sequence (`reveal`, ordered by `--i`). Grid and blueprint colors are theme variables (`--grid-line`, `--blueprint`), so a theme can turn them off.
 
 That split is the one distinctive move. Everything around it is kept quiet so it reads.
 

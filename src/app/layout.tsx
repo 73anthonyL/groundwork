@@ -1,19 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Sans_Condensed, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import { MotionProvider } from "@/components/viz/motion-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const plex = IBM_Plex_Sans({
-  variable: "--font-plex",
+/**
+ * Archivo: a grotesque with a width axis. Body text runs at normal width; headings are set wider,
+ * like the lettering in a drawing's title block. One family, two widths.
+ */
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const plexCondensed = IBM_Plex_Sans_Condensed({
-  variable: "--font-plex-condensed",
-  subsets: ["latin"],
-  weight: ["500", "600"],
+  axes: ["wdth"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -39,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#eceeeb",
+  themeColor: "#f5f6f8",
   width: "device-width",
   initialScale: 1,
 };
@@ -48,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${plex.variable} ${plexCondensed.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

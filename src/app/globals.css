@@ -10,8 +10,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-plex-condensed), var(--font-plex), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
   --font-heading: var(--font-sans);
   /* Big money figures and editorial headlines. Swappable per type set (see [data-type]). */
@@ -62,6 +62,9 @@
   --color-surface-sunken: var(--surface-sunken);
   --color-link: var(--link);
   --color-link-soft: var(--link-soft);
+  --color-blueprint: var(--blueprint);
+  --color-blueprint-foreground: var(--blueprint-foreground);
+  --color-blueprint-muted: var(--blueprint-muted);
   --color-stage: var(--stage);
   --color-stage-foreground: var(--stage-foreground);
   --color-stage-muted: var(--stage-muted);
@@ -88,8 +91,8 @@
     Color is information here, never decoration: blue is something you can act on, orange is a
     clock running, green has landed, amber is held.
   */
-  --background: #f6f6f4;
-  --foreground: #1c1c1e;
+  --background: #f5f6f8;
+  --foreground: #14171f;
   --card: #ffffff;
   --card-foreground: #1c1c1e;
   --popover: #ffffff;
@@ -112,6 +115,16 @@
   /* Blueprint blue: links and anything you can act on. */
   --link: #1f4ed8;
   --link-soft: #e8eefc;
+
+  /* The drawing sheet. Every page sits on a faint drafting grid; the landing opens on a blueprint. */
+  --grid-line: rgb(31 78 216 / 0.04);
+  --grid-line-major: rgb(31 78 216 / 0.06);
+  --blueprint: #1838a0;
+  --blueprint-deep: #122a7c;
+  --blueprint-line: rgb(255 255 255 / 0.075);
+  --blueprint-line-major: rgb(255 255 255 / 0.14);
+  --blueprint-foreground: #f6f8ff;
+  --blueprint-muted: #c0ccf5;
 
   --money: #d9541a;                /* a clock running, money on its way */
   --money-foreground: #ffffff;
@@ -147,7 +160,7 @@
   --shadow-card-value: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
   --shadow-float-value: 0 12px 40px rgb(0 0 0 / 0.14), 0 2px 6px rgb(0 0 0 / 0.06);
 
-  --numeral-font: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --numeral-font: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
   --sidebar: #ffffff;
   --sidebar-foreground: #1c1c1e;
@@ -161,6 +174,8 @@
 
 /* Concrete: the original look, kept for comparison in the lab. */
 [data-theme="concrete"] {
+  --grid-line: transparent;
+  --grid-line-major: transparent;
   --background: #eceeeb;           /* concrete */
   --foreground: #1b2228;           /* graphite */
   --card: #ffffff;
@@ -216,7 +231,7 @@
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
   --shadow-float-value: 0 8px 32px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
 
-  --numeral-font: var(--font-plex-condensed), var(--font-plex), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-archivo), ui-sans-serif, sans-serif;
 
   --sidebar: #ffffff;
   --sidebar-foreground: #1b2228;
@@ -235,10 +250,14 @@
   Every color in the app reads these variables, so a theme is only this block.
 */
 [data-theme="ink"] {
+  --grid-line: rgb(16 38 28 / 0.04);
+  --grid-line-major: rgb(16 38 28 / 0.07);
+  --blueprint: #14402e;
+  --blueprint-deep: #0e2d20;
   --link: #1f6b4a;
   --link-soft: #e0ede5;
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
-  --numeral-font: var(--font-plex), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-archivo), ui-sans-serif, sans-serif;
   --background: #f3f4f2;
   --foreground: #10261c;
   --card: #ffffff;
@@ -269,6 +288,10 @@
 }
 
 [data-theme="night"] {
+  --grid-line: rgb(143 176 255 / 0.04);
+  --grid-line-major: rgb(143 176 255 / 0.07);
+  --blueprint: #10245f;
+  --blueprint-deep: #0b1840;
   --link: #8fb0ff;
   --link-soft: #1b2540;
   --background: #0c0e10;
@@ -338,6 +361,45 @@
   letter-spacing: -0.02em;
   line-height: 1;
 }
+/* Drafting grid: fine lines every 24px, a heavier one every fifth. */
+@utility drafting-grid {
+  background-image:
+    linear-gradient(var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+}
+/* The blueprint: white linework on blue, lit from the top left like a sheet under a lamp. */
+@utility blueprint {
+  color: var(--blueprint-foreground);
+  background-color: var(--blueprint);
+  background-image:
+    radial-gradient(90% 70% at 12% 0%, rgb(255 255 255 / 0.13), transparent 62%),
+    linear-gradient(to bottom, transparent 55%, var(--blueprint-deep)),
+    linear-gradient(var(--blueprint-line-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-line-major) 1px, transparent 1px),
+    linear-gradient(var(--blueprint-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
+  background-size: auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: 0 0, 0 0, -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+}
+/* The page-load sequence: each piece rises in turn. Set --i for its place in the order. */
+@utility reveal {
+  animation: gw-rise 0.75s cubic-bezier(0.2, 0, 0, 1) both;
+  animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+}
+@keyframes gw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 /* Dotted leader between a label and its figure. */
 @utility leader {
   flex: 1;
@@ -353,10 +415,9 @@
   }
   html {
     @apply font-sans;
-    font-feature-settings: "ss01";
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground drafting-grid;
     text-rendering: optimizeLegibility;
   }
   /* Every currency column and clock uses lining, tabular figures. */
@@ -366,11 +427,13 @@
   }
   h1, h2, h3 {
     font-family: var(--font-sans);
-    letter-spacing: -0.014em;
+    letter-spacing: -0.012em;
     text-wrap: balance;
   }
-  h1 {
-    letter-spacing: -0.022em;
+  /* Title-block lettering: the two top levels are set on the wide end of the family. */
+  h1, h2 {
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
   }
   p {
     text-wrap: pretty;

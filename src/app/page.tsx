@@ -7,7 +7,6 @@ import { ContractHero } from "@/components/landing/contract-hero";
 import { MoneyFlow } from "@/components/viz/money-flow";
 import { AblationChart, DaysGap } from "@/components/viz/charts";
 import { StateGrid } from "@/components/viz/state-grid";
-import { buttonVariants } from "@/components/ui/button";
 import { SAMPLE_FLOW } from "@/lib/sample-flow";
 
 /** The work, in order, and who does each part. It is a sequence, so it is numbered. */
@@ -28,40 +27,40 @@ export default async function Landing() {
   const trust = run?.layers[0];
   return (
     <div className="flex flex-1 flex-col bg-card">
-      <header className="sticky top-0 z-30 border-b border-transparent bg-card/80 backdrop-blur-xl backdrop-saturate-150">
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-5 sm:px-8">
+      {/* The opening: a blueprint, and the contract page laid on top of it. */}
+      <div className="blueprint">
+        <header className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Wordmark />
           <nav className="flex items-center gap-1 text-[13px]">
-            <Link href="/statutes" className="rounded-md px-2.5 py-1 text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="/statutes" className="rounded-md px-2.5 py-1 text-blueprint-muted transition-colors hover:text-white">
               Payment law
             </Link>
-            <Link href="/api/v1" className="hidden rounded-md px-2.5 py-1 text-muted-foreground transition-colors hover:text-foreground sm:inline">
+            <Link href="/api/v1" className="hidden rounded-md px-2.5 py-1 text-blueprint-muted transition-colors hover:text-white sm:inline">
               API
             </Link>
-            <Link href={cta.href} className={buttonVariants({ variant: "outline", size: "sm", className: "ml-2" })}>
+            <Link href={cta.href} className="ml-2 rounded-md border border-white/30 px-3 py-1 font-medium text-white transition-colors hover:bg-white/10">
               {session ? "Workspace" : "Sign in"}
             </Link>
           </nav>
-        </div>
-      </header>
-
-      <section className="mx-auto w-full max-w-6xl px-5 pb-20 pt-14 sm:px-8 sm:pt-20">
-        <h1 className="max-w-4xl text-[2.75rem] font-semibold leading-[1.04] tracking-[-0.03em] sm:text-6xl lg:text-7xl">The contract already says when the sub gets paid.</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-          Groundwork reads the subcontract, turns its payment terms into rules a person approves once, and pays every subcontractor the moment the owner&rsquo;s money lands.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link href={cta.href} className={buttonVariants({ variant: "money", size: "lg", className: "h-11 rounded-full px-6" })}>
-            {cta.label}
-          </Link>
-          <Link href="#how" className="text-[15px] text-link hover:underline">
-            How it works
-          </Link>
-        </div>
-        <div className="mt-14">
-          <ContractHero />
-        </div>
-      </section>
+        </header>
+        <section className="mx-auto w-full max-w-6xl px-5 pb-56 pt-14 sm:px-8 sm:pt-20">
+          <h1 className="reveal max-w-5xl text-[2.6rem] font-bold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-[4.75rem]">The contract already says when the sub gets paid.</h1>
+          <p className="reveal mt-7 max-w-2xl text-lg leading-relaxed text-blueprint-muted sm:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
+            Groundwork reads the subcontract, turns its payment terms into rules a person approves once, and pays every subcontractor the moment the owner&rsquo;s money lands.
+          </p>
+          <div className="reveal mt-9 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ "--i": 2 } as React.CSSProperties}>
+            <Link href={cta.href} className="inline-flex h-11 items-center rounded-full bg-white px-6 text-[15px] font-semibold text-blueprint transition-transform active:scale-[0.97]">
+              {cta.label}
+            </Link>
+            <Link href="#how" className="text-[15px] text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
+              How it works
+            </Link>
+          </div>
+        </section>
+      </div>
+      <div className="reveal mx-auto -mt-44 w-full max-w-6xl px-5 pb-24 sm:px-8" style={{ "--i": 3 } as React.CSSProperties}>
+        <ContractHero />
+      </div>
 
       <section className="bg-background">
         <div className="mx-auto grid max-w-6xl gap-x-16 gap-y-10 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:items-center">
