@@ -15,6 +15,8 @@ import { RevealRow, WaterfallReveal } from "@/components/waterfall-reveal";
 import { ProjectTabs } from "@/components/project-tabs";
 import { MoneyFlow } from "@/components/viz/money-flow";
 import { ProjectSteps, type ProjectStep } from "@/components/project-steps";
+import { PageHero } from "@/components/page-hero";
+import { FileUp } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
 const day = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -78,7 +80,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
       title: "Record the owner's payment",
       body: "Groundwork splits it between the subs, holds retainage and starts each deadline.",
       done: events.length > 0,
-      action: { href: "#payments-heading", label: "Record a payment" },
+      
     },
     {
       title: "Subs sign, money goes out",
@@ -88,51 +90,53 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
     },
   ];
 
-  // Just recorded a payment: play the project's money from the moment before it landed.
-  const flow = highlighted ? await projectFlow(org, id) : null;
-  const landedAt = flow ? flow.events.findIndex((e) => e.id === highlighted) : -1;
+  // The project's money as a picture. After a payment is recorded it replays from the moment before it landed.
+  const flow = events.length > 0 ? await projectFlow(org, id) : null;
+  const landedAt = flow && highlighted ? flow.events.findIndex((e) => e.id === highlighted) : -1;
 
   return (
     <div>
-      <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
-        <div className="min-w-0">
-          <h1 className="text-[2rem] font-semibold leading-tight">{project.name}</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
+      <PageHero
+        kicker={
+          <Link href="/gc" className="text-stage-muted underline decoration-white/30 underline-offset-4 hover:text-white">
+            All projects
+          </Link>
+        }
+        title={project.name}
+        lede={
+          <>
             {project.address}. Owner {project.owner.name}, prime contract <span className="num">{formatCentsCompact(project.primeContractSumCents)}</span>.
-          </p>
-        </div>
-        <ProjectTabs projectId={project.id} active="board" />
-      </header>
-
-      {/* What is owed now, then the three figures that explain it. No boxes: size carries the order. */}
-      <section aria-label="Where the project's money stands" className="mt-10 flex flex-wrap items-end justify-between gap-x-12 gap-y-8 border-b pb-10">
-        <div>
-          <div className="text-sm text-muted-foreground">Owed to subcontractors now</div>
-          <div className="type-numeral mt-2 text-6xl font-semibold tracking-tight">{formatCentsCompact(owedCents)}</div>
-          <p className="mt-3 text-sm">
-            {owedCents === 0 ? (
-              <span className="text-muted-foreground">Every release has been paid.</span>
+          </>
+        }
+        aside={<ProjectTabs projectId={project.id} active="board" />}
+        figure={{
+          label: "Owed to subcontractors now",
+          value: formatCentsCompact(owedCents),
+          note:
+            owedCents === 0 ? (
+              "Every release has been paid."
             ) : (
               <>
-                {open.length} release{open.length === 1 ? "" : "s"} to {openSubs} subcontractor{openSubs === 1 ? "" : "s"}
-                {late > 0 ? <span className="font-medium text-destructive">, {late} past its deadline</span> : nextDue ? <span className="text-muted-foreground">, the first due {day(nextDue)}</span> : null}
+                {open.length} payment{open.length === 1 ? "" : "s"} to {openSubs} subcontractor{openSubs === 1 ? "" : "s"}
+                {late > 0 ? <span className="font-semibold text-signal">, {late} past its deadline</span> : nextDue ? `, the first due ${day(nextDue)}` : null}
               </>
-            )}
-          </p>
-        </div>
-        <dl className="num grid grid-cols-3 gap-x-10 text-sm">
-          {[
-            ["Received from owner", balances.owner_receipts ?? 0],
-            ["Paid to subcontractors", balances.sub_paid ?? 0],
-            ["Retainage held", balances.retainage_held ?? 0],
-          ].map(([label, cents]) => (
-            <div key={label as string}>
-              <dt className="font-sans text-muted-foreground">{label}</dt>
-              <dd className="mt-1 text-xl font-semibold">{formatCentsCompact(cents as number)}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+            ),
+        }}
+        stats={[
+          { label: "Received from owner", value: formatCentsCompact(balances.owner_receipts ?? 0) },
+          { label: "Paid to subcontractors", value: formatCentsCompact(balances.sub_paid ?? 0) },
+          { label: "Retainage held", value: formatCentsCompact(balances.retainage_held ?? 0) },
+        ]}
+        actions={
+          <>
+            <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: "signal", size: "lg" })}>
+              <FileUp aria-hidden />
+              Add a subcontract
+            </Link>
+            <RecordOwnerPayment onStage projectId={project.id} defaults={{ amount: "125,000.00", reference: `ACH BVH-${String(162 + events.length).padStart(4, "0")}`, periodThrough: nextPeriod }} />
+          </>
+        }
+      />
 
       <ProjectSteps steps={steps} />
 
@@ -161,18 +165,21 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         </ul>
       )}
 
-      {flow && landedAt >= 0 && !duplicate && (
-        <section aria-label="The payment that just landed" className="mt-8 rounded-xl bg-card p-6 shadow-card">
+      {flow && (
+        <section aria-labelledby="flow-heading" className="mt-8 rounded-xl bg-card p-6 shadow-card">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-base font-semibold">
-              {formatCentsCompact(flow.events[landedAt].amountCents)} just landed. Here is where it goes.
-            </h2>
+            <div>
+              <h2 id="flow-heading" className="text-xl font-semibold">
+                {landedAt >= 0 && !duplicate ? `${formatCentsCompact(flow.events[landedAt].amountCents)} just landed. Here is where it goes.` : "Where the money is"}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">Owner on the left, subcontractors on the right. Green has been paid, orange is on its way. Press Replay to watch each owner payment arrive.</p>
+            </div>
             <Link href={`/gc/projects/${id}/live`} className="text-sm text-link hover:underline">
               Open the live view
             </Link>
           </div>
           <div className="mt-4">
-            <MoneyFlow flow={flow} height={340} autoPlay playFrom={Math.max(0, landedAt - 1)} />
+            <MoneyFlow flow={flow} height={340} autoPlay={landedAt >= 0 && !duplicate} playFrom={landedAt >= 0 ? Math.max(0, landedAt - 1) : undefined} />
           </div>
         </section>
       )}
@@ -188,7 +195,6 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               {law?.promptPay.days != null ? ` ${law.name} gives you ${law.promptPay.days} days from receipt to pay each subcontractor.` : ""}
             </p>
           </div>
-          <RecordOwnerPayment projectId={project.id} defaults={{ amount: "125,000.00", reference: `ACH BVH-${String(162 + events.length).padStart(4, "0")}`, periodThrough: nextPeriod }} />
         </div>
         {duplicate && (
           <p role="status" className="mt-3 text-sm text-muted-foreground">
@@ -198,7 +204,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         {events.length === 0 ? (
           <div className="mt-6 rounded-xl bg-card px-6 py-10 text-center shadow-card">
             <p className="font-medium">No owner payments yet</p>
-            <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">When the owner&rsquo;s money arrives, record it here. Groundwork splits it across every approved pay application and starts each subcontractor&rsquo;s clock.</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">When the owner&rsquo;s money arrives, press Record owner payment at the top of this page. Groundwork splits it across every approved pay application and starts each subcontractor&rsquo;s clock.</p>
           </div>
         ) : (
           <div className="mt-6 space-y-5">

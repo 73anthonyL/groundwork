@@ -9,9 +9,9 @@ import { signInAs } from "./actions";
 export const metadata: Metadata = { title: "Sign in" };
 
 const GROUPS: { kind: "owner" | "gc" | "sub"; title: string; blurb: string }[] = [
-  { kind: "owner", title: "Owner", blurb: "Pays for the building. Sees where the money went." },
-  { kind: "gc", title: "General contractor", blurb: "Turns subcontracts into payment rules, reviews billing, records the owner's payments." },
-  { kind: "sub", title: "Subcontractors", blurb: "Bill for their work, sign waivers, and watch their money arrive." },
+  { kind: "owner", title: "Owner", blurb: "Pays for the building. Only watches: sees where each payment went." },
+  { kind: "gc", title: "General contractor", blurb: "Does most of the work: uploads subcontracts, approves bills, records the owner's payments." },
+  { kind: "sub", title: "Subcontractors", blurb: "Bill for their work, sign a waiver, and watch their money arrive." },
 ];
 
 /** The seat to start from: the controller sees the whole chain. */
@@ -28,18 +28,27 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
     .from(schema.users)
     .innerJoin(schema.organizations, eq(schema.users.orgId, schema.organizations.id))
     .orderBy(asc(schema.organizations.name), asc(schema.users.name));
+  // Which project each company is on, so a seat says where it sits.
+  const projects = await db.query.projects.findMany({ with: { contracts: { columns: { subOrgId: true, parentContractId: true } } } });
+  const projectOf = (orgId: string) => projects.find((p) => p.ownerOrgId === orgId || p.contracts.some((c) => c.subOrgId === orgId && !c.parentContractId))?.name ?? null;
+  // One seat per company: the contractor's three people see the same screens, so only the controller is offered.
+  const seats = rows.filter((r) => r.org.kind !== "gc" || r.user.name === START);
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="mx-auto w-full max-w-5xl px-6 pt-6">
-        <Wordmark />
-      </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 pb-16 pt-14">
-        <p className="text-sm font-medium text-muted-foreground">Demo sign-in, no password needed</p>
-        <h1 className="mt-2 max-w-2xl text-4xl font-semibold leading-[1.1] sm:text-5xl">Who do you want to be?</h1>
-        <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
+      <div className="stage">
+        <header className="mx-auto w-full max-w-5xl px-6 pt-6">
+          <Wordmark />
+        </header>
+        <div className="mx-auto w-full max-w-5xl px-6 pb-16 pt-14">
+          <p className="text-sm font-medium text-stage-muted">Demo sign-in, no password needed</p>
+        <h1 className="mt-2 max-w-2xl text-4xl font-bold leading-[1.1] sm:text-5xl">Who do you want to be?</h1>
+        <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-stage-muted">
           The owner pays the general contractor, who pays the subcontractors. Click a name to use Groundwork as that person. Start as {START.split(" ")[0]}, the contractor&rsquo;s controller, who does most of the work.
         </p>
+        </div>
+      </div>
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 pb-16">
         {error && (
           <p role="alert" className="mt-4 text-sm text-destructive">
             That person is no longer in the demo. Pick someone else.
@@ -47,7 +56,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         )}
         <div className="mt-12 grid gap-x-10 gap-y-10 md:grid-cols-3">
           {GROUPS.map((g, gi) => {
-            const people = rows.filter((r) => r.org.kind === g.kind);
+            const people = seats.filter((r) => r.org.kind === g.kind);
             return (
               <section key={g.kind} aria-labelledby={`group-${g.kind}`} className="relative">
                 {/* Money flows left to right; the rule and arrowhead say so without a diagram. */}
@@ -74,6 +83,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
                             <span className="block truncate text-[13px] text-muted-foreground">
                               {user.title}, {org.name}
                             </span>
+                            <span className="block truncate text-[13px] text-muted-foreground">{org.kind === "gc" ? "Runs both projects" : (projectOf(org.id) ?? "Not on a project yet")}</span>
                           </span>
                           <span className="shrink-0 text-[13px] font-medium text-link transition-transform duration-150 group-hover:translate-x-1">Sign in</span>
                         </button>

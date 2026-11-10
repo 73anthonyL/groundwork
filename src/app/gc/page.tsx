@@ -4,29 +4,47 @@ import { listProjects } from "@/server/scoped";
 import { projectSummary } from "@/server/read/project";
 import { STATE_LAW } from "@/domain/statutes";
 import { formatCentsCompact } from "@/lib/money";
+import { FileUp } from "lucide-react";
+import { PageHero } from "@/components/page-hero";
+import { buttonVariants } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 /** The contractor's projects, busiest first. A project is a row: its money, and the law it runs under. */
 export default async function GcHome() {
-  const { org } = await requireAuth("gc");
+  const { org, user } = await requireAuth("gc");
   const projects = await listProjects(org);
   const rows = (await Promise.all(projects.map(async (p) => ({ p, t: (await projectSummary(org, p.id))?.totals ?? null })))).sort((a, b) => (b.t?.billedCents ?? 0) - (a.t?.billedCents ?? 0));
   const owed = rows.reduce((s, r) => s + (r.t?.inMotionCents ?? 0), 0);
   return (
     <div>
-      <h1 className="text-[2rem] font-semibold leading-tight">Projects</h1>
-      <p className="mt-1.5 text-sm text-muted-foreground">
-        {rows.length === 0 ? "No projects yet." : owed > 0 ? `${formatCentsCompact(owed)} is owed to subcontractors across ${rows.length} project${rows.length === 1 ? "" : "s"}.` : `Nothing is owed to subcontractors right now.`}
-      </p>
+      <PageHero
+        kicker={`You are ${user.name}, ${(user.title ?? "controller").toLowerCase()} at ${org.name}, the general contractor.`}
+        title="Your projects"
+        lede="You get paid by the owner and pay the subcontractors. Open a project to add a subcontract, review a sub's bill, or record a payment from the owner."
+        figure={{ label: "Owed to subcontractors now", value: formatCentsCompact(owed), note: rows.length === 0 ? "No projects yet." : `Across ${rows.length} project${rows.length === 1 ? "" : "s"}.` }}
+        actions={
+          rows[0] && (
+            <>
+              <Link href={`/gc/projects/${rows[0].p.id}`} className={buttonVariants({ variant: "signal", size: "lg" })}>
+                Open {rows[0].p.name}
+              </Link>
+              <Link href={`/gc/projects/${rows[0].p.id}/subcontracts/new`} className={buttonVariants({ variant: "stage", size: "lg" })}>
+                <FileUp aria-hidden />
+                Add a subcontract
+              </Link>
+            </>
+          )
+        }
+      />
       {rows.length === 0 ? (
-        <div className="mt-8 rounded-xl bg-card px-6 py-10 text-center shadow-card">
+        <div className="rounded-xl bg-card px-6 py-10 text-center shadow-card">
           <p className="font-medium">No projects yet</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Load the demo projects from the <Link href="/demo" className="text-link hover:underline">demo panel</Link>.
           </p>
         </div>
       ) : (
-        <div className="mt-8 overflow-hidden rounded-xl bg-card shadow-card">
+        <div className="overflow-hidden rounded-xl bg-card shadow-card">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">

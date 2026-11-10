@@ -9,11 +9,13 @@ import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
 import { buttonVariants } from "@/components/ui/button";
 import { MoneyFlow } from "@/components/viz/money-flow";
+import { PageHero } from "@/components/page-hero";
+import { PenLine, Receipt } from "lucide-react";
 
 const day = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
 export default async function SubHome() {
-  const { org } = await requireAuth("sub");
+  const { org, user } = await requireAuth("sub");
   const [contracts, releases] = await Promise.all([listContracts(org), listReleasesForOrg(org)]);
   const nowIso = now().toISOString();
   const flows = (await Promise.all((await listProjects(org)).map(async (p) => ({ project: p, flow: await projectFlow(org, p.id) })))).filter((f) => f.flow && f.flow.events.length > 0);
@@ -23,41 +25,51 @@ export default async function SubHome() {
   const paid = releases.filter((r) => done(r.status)).reduce((s, r) => s + r.releaseCents, 0);
   const held = releases.reduce((s, r) => s + r.retainageWithheldCents - ((r.basis as { retentionReleasedCents?: number }).retentionReleasedCents ?? 0), 0);
   const toSign = releases.filter((r) => r.waivers.some((w) => w.status === "sent")).length;
+  const firstWaiver = releases.flatMap((r) => r.waivers).find((w) => w.status === "sent");
+  const billable = contracts.find((c) => c.status === "active");
+  const gcName = contracts[0]?.payer?.name ?? null;
   const nextDue = coming.map((r) => r.payByAt).filter((d): d is Date => d !== null).sort((a, b) => a.getTime() - b.getTime())[0];
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">{org.name}</p>
-      <h1 className="mt-1 text-[1.75rem] font-semibold leading-tight">Where&rsquo;s my money</h1>
+      <PageHero
+        width="narrow"
+        kicker={`You are ${user.name} at ${org.name}, a subcontractor${gcName ? ` working for ${gcName}` : ""}.`}
+        title="Where's my money"
+        lede="You bill for your work, sign a lien waiver when a payment is ready, and watch it arrive."
+        figure={{
+          label: "Coming to you",
+          value: formatCentsCompact(owed),
+          note:
+            owed === 0
+              ? "Nothing is on its way right now. Bill for this period to start the next payment."
+              : toSign > 0
+                ? `${toSign} payment${toSign === 1 ? " is" : "s are"} waiting for your signature.${nextDue ? ` By law the first is due to you ${day(nextDue)}.` : ""}`
+                : `Signed and on its way${nextDue ? `, due to you by ${day(nextDue)}` : ""}.`,
+        }}
+        stats={[
+          { label: "Paid to date", value: formatCentsCompact(paid) },
+          { label: "Held as retainage", value: formatCentsCompact(held) },
+        ]}
+        actions={
+          <>
+            {firstWaiver && (
+              <Link href={`/sub/waivers/${firstWaiver.id}/sign`} className={buttonVariants({ variant: "signal", size: "lg" })}>
+                <PenLine aria-hidden />
+                Sign a waiver to get paid
+              </Link>
+            )}
+            {billable && (
+              <Link href={`/sub/pay-apps/new?contract=${billable.id}`} className={buttonVariants({ variant: firstWaiver ? "stage" : "signal", size: "lg" })}>
+                <Receipt aria-hidden />
+                Bill for this period
+              </Link>
+            )}
+          </>
+        }
+      />
 
-      <section aria-label="What is coming to you" className="mt-8 border-b pb-8">
-        <div className="text-sm text-muted-foreground">Coming to you</div>
-        <div className="type-numeral mt-2 text-5xl font-semibold tracking-tight">{formatCentsCompact(owed)}</div>
-        <p className="mt-3 text-sm">
-          {owed === 0 ? (
-            <span className="text-muted-foreground">Nothing is in motion right now. When the owner pays, your share shows up here with its deadline.</span>
-          ) : toSign > 0 ? (
-            <>
-              {toSign} payment{toSign === 1 ? " is" : "s are"} waiting for your signature.
-              {nextDue ? <span className="text-muted-foreground"> By law the first is due to you {day(nextDue)}.</span> : null}
-            </>
-          ) : (
-            <span className="text-muted-foreground">Signed and on its way{nextDue ? `, due to you by ${day(nextDue)}` : ""}.</span>
-          )}
-        </p>
-        <dl className="num mt-6 flex gap-10 text-sm">
-          <div>
-            <dt className="font-sans text-muted-foreground">Paid to date</dt>
-            <dd className="mt-0.5 text-lg font-semibold">{formatCentsCompact(paid)}</dd>
-          </div>
-          <div>
-            <dt className="font-sans text-muted-foreground">Held as retainage</dt>
-            <dd className="mt-0.5 text-lg font-semibold">{formatCentsCompact(held)}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="mt-8" aria-labelledby="payments-heading">
+      <section aria-labelledby="payments-heading">
         <h2 id="payments-heading" className="text-lg font-semibold">
           Payments
         </h2>

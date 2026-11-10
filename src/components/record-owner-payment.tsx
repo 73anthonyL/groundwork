@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,20 +10,24 @@ import { recordOwnerPaymentAction, type RecordState } from "@/app/gc/projects/[i
 export function RecordOwnerPayment({
   projectId,
   defaults,
+  onStage = false,
 }: {
   projectId: string;
   defaults: { amount: string; reference: string; periodThrough: string };
+  /** The trigger sits on the dark page header. */
+  onStage?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState<RecordState, FormData>(recordOwnerPaymentAction, {});
   return (
     <div>
       {!open ? (
-        <Button onClick={() => setOpen(true)} variant="money">
+        <Button onClick={() => setOpen(true)} variant={onStage ? "stage" : "money"} size={onStage ? "lg" : "default"}>
+          <Landmark aria-hidden />
           Record owner payment
         </Button>
       ) : (
-        <form action={action} className="w-full max-w-md rounded-xl bg-card shadow-card p-4 shadow-sm" aria-label="Record owner payment">
+        <form action={action} className="w-full max-w-md rounded-xl bg-card p-5 text-foreground shadow-float" aria-label="Record owner payment">
           <input type="hidden" name="projectId" value={projectId} />
           <div className="grid gap-3">
             <div className="grid gap-1.5">

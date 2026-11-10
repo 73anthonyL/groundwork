@@ -9,6 +9,9 @@ const buttonVariants = cva(
       variant: {
         /* The primary action. (Named "money" for history; it is the one filled accent button in a region.) */
         money: "bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),white_14%)]",
+        /* On the dark stage: the one loud action, and its quieter neighbour. */
+        signal: "bg-signal text-signal-foreground font-semibold hover:brightness-110 hover:shadow-[0_6px_20px_-6px_var(--signal)]",
+        stage: "border-white/25 bg-white/[0.06] text-white hover:bg-white/15 hover:shadow-none",
         default: "bg-primary text-primary-foreground hover:bg-primary/85",
         outline:
           "border-input bg-card hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",

@@ -3,14 +3,19 @@ import { listProjects } from "@/server/scoped";
 import { AppShell } from "@/components/app-shell";
 import { formatCentsCompact } from "@/lib/money";
 import { ProjectLive } from "@/components/project-live";
+import { PageHero } from "@/components/page-hero";
 
 export default async function OwnerHome() {
   const session = await requireAuth("owner");
   const projects = await listProjects(session.org);
   return (
     <AppShell session={session}>
-      <h1 className="text-3xl font-semibold">Projects you fund</h1>
-      <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+      <PageHero
+        kicker={`You are ${session.user.name} at ${session.org.name}, the owner paying for the building.`}
+        title="Where your money went"
+        lede="You pay the general contractor. This page shows how far each payment has travelled: which subcontractors have been paid, what is on its way, and what is being held back. You only watch here; nothing needs your action."
+      />
+      <ul className="grid gap-4 sm:grid-cols-2">
         {projects.map((p) => (
           <li key={p.id} className="rounded-xl bg-card shadow-card p-5">
             <div className="font-medium">{p.name}</div>

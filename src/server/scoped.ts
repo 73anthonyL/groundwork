@@ -75,7 +75,7 @@ export async function listContracts(org: Organization, projectId?: string) {
   const scope = await scopePredicate(org);
   return db.query.contracts.findMany({
     where: projectId ? and(scope, eq(contracts.projectId, projectId)) : scope,
-    with: { sub: true, project: true },
+    with: { sub: true, payer: true, project: true },
     orderBy: [desc(contracts.contractSumCents)],
   });
 }

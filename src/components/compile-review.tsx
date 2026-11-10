@@ -419,16 +419,32 @@ function defaultOverride(path: RuleFieldPath, v: unknown): string {
   return String(v);
 }
 
+const READING_STEPS = ["Opening the PDF", "Finding the payment terms", "Quoting the clause behind each term", "Checking every quote against the PDF", "Applying the state's payment deadline"];
+
+/** What is happening while the contract is read. The steps advance on a timer; the last one waits for the real answer. */
 function Skeletons() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setStep((s) => Math.min(s + 1, READING_STEPS.length - 1)), 5000);
+    return () => clearInterval(t);
+  }, []);
   return (
-    <ul className="mt-4 space-y-2" aria-label="Reading the contract">
-      {RULE_FIELDS.slice(0, 12).map((p, i) => (
-        <li key={p} className="animate-pulse rounded-xl bg-card p-4 shadow-card" style={{ animationDelay: `${i * 90}ms` }}>
-          <div className="h-2.5 w-24 rounded bg-muted" />
-          <div className="mt-2 h-3.5 w-40 rounded bg-muted" />
-          <div className="mt-2 h-2.5 w-full rounded bg-muted/70" />
-        </li>
-      ))}
-    </ul>
+    <div className="mt-4 overflow-hidden rounded-xl bg-card shadow-card" role="status" aria-label="Reading the contract">
+      <div className="h-1 w-full overflow-hidden bg-muted">
+        <div className="reading-bar h-full w-1/3 bg-signal" />
+      </div>
+      <div className="p-6">
+        <p className="text-lg font-semibold">Claude is reading the contract</p>
+        <p className="mt-1 text-sm text-muted-foreground">This takes about half a minute. You can read the PDF on the left while you wait.</p>
+        <ol className="mt-5 space-y-3">
+          {READING_STEPS.map((label, i) => (
+            <li key={label} className={`flex items-center gap-3 text-sm transition-opacity duration-500 ${i > step ? "opacity-35" : ""}`}>
+              {i < step ? <CheckCircle2 className="h-4 w-4 shrink-0 text-settled" aria-hidden /> : i === step ? <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-signal border-t-transparent" /> : <span aria-hidden className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />}
+              <span className={i === step ? "font-medium" : ""}>{label}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
   );
 }

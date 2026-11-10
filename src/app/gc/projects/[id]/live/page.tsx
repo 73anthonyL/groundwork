@@ -4,6 +4,7 @@ import { requireAuth } from "@/server/auth";
 import { getProject } from "@/server/scoped";
 import { ProjectLive } from "@/components/project-live";
 import { ProjectTabs } from "@/components/project-tabs";
+import { PageHero } from "@/components/page-hero";
 
 export const metadata = { title: "Live view" };
 
@@ -14,14 +15,17 @@ export default async function ProjectLivePage({ params }: { params: Promise<{ id
   if (!project) notFound();
   return (
     <div>
-      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
-        <div className="min-w-0">
-          <h1 className="text-[2rem] font-semibold leading-tight">{project.name}</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">The same project as the board, drawn instead of listed.</p>
-        </div>
-        <ProjectTabs projectId={id} active="live" />
-      </div>
-      <div className="mt-8">
+      <PageHero
+        kicker={
+          <Link href="/gc" className="text-stage-muted underline decoration-white/30 underline-offset-4 hover:text-white">
+            All projects
+          </Link>
+        }
+        title={project.name}
+        lede="The same project as the board, drawn instead of listed."
+        aside={<ProjectTabs projectId={id} active="live" />}
+      />
+      <div>
         <ProjectLive org={org} projectId={id} />
       </div>
       <p className="mt-6 text-xs text-muted-foreground">

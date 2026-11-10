@@ -428,6 +428,18 @@
     transform: none;
   }
 }
+/* The bar that sweeps across while a contract is being read. */
+@utility reading-bar {
+  animation: gw-sweep 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes gw-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
 /* Dotted leader between a label and its figure. */
 @utility leader {
   flex: 1;
@@ -447,6 +459,8 @@
   body {
     @apply bg-background text-foreground drafting-grid;
     text-rendering: optimizeLegibility;
+    /* Full-width bands are sized to the viewport; this keeps the scrollbar's width from adding a sideways scroll. */
+    overflow-x: clip;
   }
   /* Every currency column and clock uses lining, tabular figures. */
   .num,
