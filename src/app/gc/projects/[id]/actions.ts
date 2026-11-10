@@ -77,12 +77,15 @@ export async function addSubcontractAction(_prev: AddSubcontractState, formData:
     if (e instanceof ContractInputError) return { values, error: e.message };
     throw e;
   }
-  revalidatePath(`/gc/projects/${projectId}`);
-  revalidatePath("/gc");
   if (invitationToken) {
+    // No revalidation here: the form may be sitting on the project overview, and refreshing that page
+    // now would replace the form (and this invite link) before the person has copied it. Every page
+    // is rendered per request, so the next navigation shows the new subcontract anyway.
     const h = await headers();
     const origin = h.get("origin") ?? `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host") ?? "localhost:3000"}`;
     return { invited: { contractId, subName: values.subName, email: values.contactEmail, url: `${origin}${invitationPath(invitationToken)}` } };
   }
+  revalidatePath(`/gc/projects/${projectId}`);
+  revalidatePath("/gc");
   redirect(`/gc/contracts/${contractId}?read=1`);
 }

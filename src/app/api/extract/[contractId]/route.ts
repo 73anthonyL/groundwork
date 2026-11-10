@@ -13,6 +13,9 @@ import { stableId } from "@/lib/ids";
 
 export const maxDuration = 300;
 
+/** Reads in progress in this server process, by contract. */
+const reading = new Map<string, Promise<{ status: number; body: unknown }>>();
+
 /**
  * POST /api/extract/:contractId[?source=seed]
  * Compiles the contract's PDF into a rule set. `source=seed` (or DEMO_PRECOMPILED=1, or no API key)
@@ -48,12 +51,22 @@ export async function POST(req: Request, { params }: { params: Promise<{ contrac
     return NextResponse.json({ ruleSetId: created.id, version: created.version, blocking: blockingFields(created.stored), source: "seed", ms: Date.now() - t0 });
   }
 
-  try {
-    const bytes = Buffer.from(doc.bytesB64, "base64");
-    const result = await extractRuleSet(new Uint8Array(bytes));
-    const created = await createRuleSet({ contractId, extracted: result.extracted, pageTexts, model: result.model, promptVersion: result.promptVersion, extractionMs: result.ms, usage: result.usage, actor });
-    return NextResponse.json({ ruleSetId: created.id, version: created.version, blocking: blockingFields(created.stored), source: "model", ms: result.ms });
-  } catch (e) {
-    return NextResponse.json({ error: "extraction_failed", message: (e as Error).message }, { status: 502 });
+  // One read per contract at a time: a second request while Claude is still reading (a refresh, a
+  // second tab) waits for the first and gets its answer, instead of paying for another read.
+  let job = reading.get(contractId);
+  if (!job) {
+    job = (async () => {
+      try {
+        const bytes = Buffer.from(doc.bytesB64, "base64");
+        const result = await extractRuleSet(new Uint8Array(bytes));
+        const created = await createRuleSet({ contractId, extracted: result.extracted, pageTexts, model: result.model, promptVersion: result.promptVersion, extractionMs: result.ms, usage: result.usage, actor });
+        return { status: 200, body: { ruleSetId: created.id, version: created.version, blocking: blockingFields(created.stored), source: "model", ms: result.ms } };
+      } catch (e) {
+        return { status: 502, body: { error: "extraction_failed", message: (e as Error).message } };
+      }
+    })().finally(() => reading.delete(contractId));
+    reading.set(contractId, job);
   }
+  const r = await job;
+  return NextResponse.json(r.body, { status: r.status });
 }
