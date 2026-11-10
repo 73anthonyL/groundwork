@@ -292,6 +292,20 @@ export async function getDownstream(org: Organization, releaseId: string) {
   });
 }
 
+/**
+ * Stand-in for email in the demo: the messages Groundwork would send to lower-tier claimants, each
+ * with its signing link. Only the demo panel reads this.
+ */
+export async function demoOutbox() {
+  const db = await getDb();
+  const rows = await db.query.lienWaivers.findMany({
+    where: and(eq(lienWaivers.status, "sent"), sql`${lienWaivers.signToken} is not null`),
+    with: { release: { with: { contract: { with: { sub: true, payer: true } } } } },
+    orderBy: [desc(lienWaivers.createdAt)],
+  });
+  return rows.map((w) => ({ id: w.id, to: w.release.contract.sub.name, from: w.release.contract.payer.name, cents: w.release.releaseCents, form: w.form, href: `/w/${w.signToken}` }));
+}
+
 /** Account-less access: a waiver by its signing token, with what a claimant needs to see. */
 export async function getWaiverByToken(token: string) {
   if (!/^[\w-]{20,}$/.test(token)) return null;

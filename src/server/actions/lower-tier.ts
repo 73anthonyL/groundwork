@@ -34,7 +34,8 @@ export async function addLowerTierParty(input: {
   if (input.name.trim().length < 2) throw new Error("name the lower-tier party");
   if (!Number.isInteger(input.sumCents) || input.sumCents <= 0) throw new Error("enter the agreement amount");
   const retainageBps = input.retainageBps ?? 0;
-  if (!Number.isInteger(retainageBps) || retainageBps < 0 || retainageBps > 2000) throw new Error("retainage must be between 0% and 20%");
+  // Retainage one hop down has no release path yet (no certification or final application there), so it is not accepted.
+  if (retainageBps !== 0) throw new Error("retainage on lower-tier agreements is not supported yet; enter the agreement without retainage");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const parent = await tx.query.contracts.findFirst({ where: eq(schema.contracts.id, input.parentContractId), with: { sub: true, project: { with: { owner: true } } } });
@@ -102,7 +103,8 @@ export async function listLowerTier(tx: DbLike, parentContractId: string) {
     orderBy: [desc(schema.releases.createdAt)],
   });
   return children.map((c) => {
-    const mine = releases.filter((r) => r.contractId === c.id);
+    // The signing token is the claimant's credential; the party that pays them never receives it.
+    const mine = releases.filter((r) => r.contractId === c.id).map((r) => ({ ...r, waivers: r.waivers.map((w) => ({ ...w, signToken: null })) }));
     const billedCents = c.payApplications.reduce((s, a) => s + a.workThisPeriodCents + a.storedMaterialsCents, 0);
     return {
       ...c,

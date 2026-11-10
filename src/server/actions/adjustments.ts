@@ -4,7 +4,7 @@
  * Each is a recorded human decision; the engine reads them on the next funding event.
  */
 import { randomUUID } from "node:crypto";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { emit, type Actor } from "@/server/events";
@@ -55,7 +55,8 @@ export async function voidBackcharge(input: { backchargeId: string; actor: Actor
     if (b.status === "void") return { id: b.id };
     const { appliedCents, chargedCents } = await backchargeBalance(tx, b.contractId);
     if (chargedCents - b.amountCents < appliedCents) throw new Error("this backcharge has already been recovered from a release and cannot be withdrawn");
-    await tx.update(schema.backcharges).set({ status: "void", voidedAt: now() }).where(eq(schema.backcharges.id, b.id));
+    // Database time, so replay compares it with event insertion times on one clock.
+    await tx.update(schema.backcharges).set({ status: "void", voidedAt: sql`now()` }).where(eq(schema.backcharges.id, b.id));
     await emit(tx, { aggregateType: "contract", aggregateId: b.contractId, type: "backcharge.voided", actor: input.actor, payload: { backchargeId: b.id, amountCents: b.amountCents }, correlationId: randomUUID() });
     return { id: b.id };
   });

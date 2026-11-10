@@ -33,6 +33,14 @@ export const STATES: StateLaw[] = Object.values(STATE_LAW).sort((a, b) => a.name
  * in it so the researched record stays a faithful copy of its sources.
  */
 const BUSINESS_DAYS: Record<string, true> = { KS: true, KY: true };
+/**
+ * Caps that change once the work is 50% complete: the cap on further progress payments, in basis
+ * points (0 = no further retainage). An approximation of statutes worded in different ways (some cap
+ * the total held rather than each later payment); the conditions text carries the exact wording.
+ */
+const CAP_AFTER_HALF_BPS: Record<string, number> = { IL: 500, KY: 500, NE: 500, ND: 0, AL: 0 };
+/** Where the researched ceiling is higher than the default the statute presumes. Kansas: 5% unless a higher rate is specifically justified, never above 10%. */
+const CAP_DEFAULT_BPS: Record<string, number> = { KS: 500 };
 /** Caps that apply only when the owner's prime contract is at least this large (cents). */
 const CAP_MIN_PRIME_CENTS: Record<string, number> = { CO: 150_000_00, NY: 150_000_00, RI: 250_000_00, MA: 3_000_000_00 };
 
@@ -148,6 +156,8 @@ export type StatutoryOverlay = {
   retentionPassThroughDays: number | null;
   /** Cap that applies to this contract (by date and project size), or null. */
   retentionCapBps: number | null;
+  /** Cap on further progress payments once the work is 50% complete, where the state steps it down. */
+  retentionCapAfterHalfBps?: number | null;
   payIfPaidVoid: boolean;
   payIfPaid?: PayIfPaidStatus;
   waiverForms: { conditionalProgress: StatuteId; unconditionalProgress: StatuteId; conditionalFinal: StatuteId; unconditionalFinal: StatuteId } | null;
@@ -168,7 +178,7 @@ export function retentionCapBpsFor(state: string, contractExecutedOn: string, ct
   if (s.retainageCap.appliesFrom && contractExecutedOn < s.retainageCap.appliesFrom) return null;
   const min = CAP_MIN_PRIME_CENTS[state];
   if (min && ctx.primeContractSumCents != null && ctx.primeContractSumCents < min) return null;
-  return s.retainageCap.bps;
+  return CAP_DEFAULT_BPS[state] ?? s.retainageCap.bps;
 }
 
 export function overlayFor(state: string, contractExecutedOn: string, ctx: OverlayContext = {}): StatutoryOverlay {
@@ -191,6 +201,7 @@ export function overlayFor(state: string, contractExecutedOn: string, ctx: Overl
     dayType: BUSINESS_DAYS[state] ? "business" : "calendar",
     retentionPassThroughDays: s.retainageRelease.days,
     retentionCapBps: cap,
+    retentionCapAfterHalfBps: cap !== null && state in CAP_AFTER_HALF_BPS ? CAP_AFTER_HALF_BPS[state] : null,
     payIfPaidVoid: s.payIfPaid.status === "void",
     payIfPaid: s.payIfPaid.status,
     waiverForms: state === "CA" ? { conditionalProgress: "CA_CIV_8132", unconditionalProgress: "CA_CIV_8134", conditionalFinal: "CA_CIV_8136", unconditionalFinal: "CA_CIV_8138" } : null,

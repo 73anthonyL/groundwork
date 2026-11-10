@@ -42,7 +42,7 @@ function Empty({ children }: { children: React.ReactNode }) {
  * the payer decides change orders, records backcharges and certifies retention; the payee requests
  * change orders and manages its own lower tier.
  */
-export function ContractAdjustments({ data, role, actions, signLinkBase }: { data: Data; role: "payer" | "payee"; actions: AdjustmentActions; signLinkBase?: string }) {
+export function ContractAdjustments({ data, role, actions }: { data: Data; role: "payer" | "payee"; actions: AdjustmentActions }) {
   const { contract, changeOrders, backcharge, retention, lowerTier, rules } = data;
   const approvedCo = changeOrders.filter((c) => c.status === "approved").reduce((s, c) => s + c.amountCents, 0);
   const canSetOff = rules?.offsets.backcharge_setoff === true;
@@ -305,17 +305,13 @@ export function ContractAdjustments({ data, role, actions, signLinkBase }: { dat
                 {c.releases.length > 0 && (
                   <ul className="mt-2 space-y-1.5">
                     {c.releases.map((r) => {
-                      const open = r.waivers.find((w) => w.status === "sent" && w.signToken);
+                      const open = r.waivers.some((w) => w.status === "sent");
                       return (
                         <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-muted/50 px-2 py-1.5 text-xs">
                           <span className="num font-medium">{formatCents(r.releaseCents)}</span>
                           <span className="flex items-center gap-2">
                             <StatusPill status={r.status} map={RELEASE} />
-                            {open && signLinkBase && (
-                              <a href={`${signLinkBase}/${open.signToken}`} className="font-medium text-money underline underline-offset-2">
-                                Signing link
-                              </a>
-                            )}
+                            {open && <span className="text-muted-foreground">waiver sent to them</span>}
                           </span>
                         </li>
                       );
@@ -348,14 +344,10 @@ export function ContractAdjustments({ data, role, actions, signLinkBase }: { dat
                 <Label htmlFor="lt-scope">What they provide</Label>
                 <Input id="lt-scope" name="scope" placeholder="Reinforcing steel" />
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="grid gap-1.5">
                   <Label htmlFor="lt-sum">Agreement amount</Label>
                   <Input id="lt-sum" name="sum" inputMode="decimal" required placeholder="60,000.00" className="num" />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="lt-ret">Retainage %</Label>
-                  <Input id="lt-ret" name="retainage" inputMode="decimal" defaultValue="0" className="num" />
                 </div>
                 <div className="grid gap-1.5">
                   <Label htmlFor="lt-days">Pay within (days)</Label>

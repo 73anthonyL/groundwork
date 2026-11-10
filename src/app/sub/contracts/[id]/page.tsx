@@ -85,7 +85,7 @@ export default async function SubContractPage({ params, searchParams }: { params
 
       {adjustments && (
         <div className="mt-8">
-          <ContractAdjustments data={adjustments} role="payee" actions={{ proposeChangeOrder: requestChangeOrderAction, addLowerTier: addLowerTierAction }} signLinkBase="/w" />
+          <ContractAdjustments data={adjustments} role="payee" actions={{ proposeChangeOrder: requestChangeOrderAction, addLowerTier: addLowerTierAction }} />
         </div>
       )}
 

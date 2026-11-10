@@ -38,6 +38,8 @@ export type Candidate = {
   retainageHeldToDateCents: number;
   /** Backcharges / setoffs the contractor has pinned against this application. */
   offsetCents: number;
+  /** Share of the contract sum billed through this application, in basis points. Drives caps that step down at 50%. */
+  completeBps?: number;
   rules: CandidateRules;
   overlay: StatutoryOverlay;
 };
@@ -83,6 +85,7 @@ export type Warning = {
     | "excluded"
     | "retention_released"
     | "retention_not_funded"
+    | "retention_received_nothing_certified"
     | "retainage_rate_missing";
   payAppId?: string;
   contractId?: string;
@@ -182,6 +185,16 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
   const releases: PlannedRelease[] = [];
   const unfunded: WaterfallPlan["unfunded"] = [];
 
+  // Backcharges are owed per contract, not per application: whatever one release cannot absorb
+  // carries to the contract's next release in this event (including a retention release).
+  const setoffLeft = new Map<string, number>();
+  for (const c of [...candidates, ...retention]) setoffLeft.set(c.contractId, (setoffLeft.get(c.contractId) ?? 0) + c.offsetCents);
+  const takeSetoff = (contractId: string, room: number) => {
+    const take = Math.min(setoffLeft.get(contractId) ?? 0, Math.max(0, room));
+    setoffLeft.set(contractId, (setoffLeft.get(contractId) ?? 0) - take);
+    return take;
+  };
+
   const eligible = candidates.filter((c) => {
     if (payment.exclusions.includes(c.payAppId)) {
       warnings.push({
@@ -243,17 +256,26 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
     } else {
       basis.rulePaths.push("retainage.percent_bps");
     }
-    if (overlay.retentionCapBps !== null && rateBps > overlay.retentionCapBps) {
+    // Some states step the cap down once the work is half complete.
+    const halfDone = overlay.retentionCapAfterHalfBps != null && (c.completeBps ?? 0) >= 5_000;
+    const statutoryCap = halfDone ? overlay.retentionCapAfterHalfBps! : overlay.retentionCapBps;
+    if (halfDone) basis.notes.push(`work ${Math.round((c.completeBps ?? 0) / 100)}% billed; the cap after 50% applies`);
+    if (statutoryCap !== null && rateBps > statutoryCap) {
       warnings.push({
         code: "retainage_clamped_by_statute",
         payAppId: c.payAppId,
         contractId: c.contractId,
-        message: overlay.retentionCapBps === 0 ? `${overlay.state} does not allow retainage to be withheld; withholding nothing.` : `Contract retainage ${rateBps / 100}% exceeds the statutory cap of ${overlay.retentionCapBps / 100}%; withholding at the cap.`,
+        message:
+          statutoryCap === 0
+            ? halfDone
+              ? `${overlay.state} allows no further retainage once the work is 50% complete; withholding nothing.`
+              : `${overlay.state} does not allow retainage to be withheld; withholding nothing.`
+            : `Contract retainage ${rateBps / 100}% exceeds the statutory cap of ${statutoryCap / 100}%${halfDone ? " after 50% completion" : ""}; withholding at the cap.`,
         statutes: cite(overlay, "retentionCap"),
       });
       basis.statutes.push(...cite(overlay, "retentionCap"));
-      basis.notes.push(`retainage clamped ${rateBps}→${overlay.retentionCapBps} bps (statutory cap)`);
-      rateBps = overlay.retentionCapBps;
+      basis.notes.push(`retainage clamped ${rateBps}→${statutoryCap} bps (statutory cap)`);
+      rateBps = statutoryCap;
     }
 
     let retainage = c.isFinal ? 0 : round((fundedGross * rateBps) / 10_000);
@@ -274,10 +296,6 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
       }
     }
 
-    // ── Offsets never exceed what is left after retainage.
-    const offset = Math.min(c.offsetCents, Math.max(0, fundedGross - retainage));
-    if (offset > 0) basis.rulePaths.push("offsets.backcharge_setoff");
-
     // ── Final application: pay out retainage held to date (only when the owner released retention).
     let retentionReleased = 0;
     if (c.isFinal) {
@@ -288,6 +306,10 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
         basis.notes.push("final application funded without retention; retainage stays held until the owner releases it");
       }
     }
+
+    // ── Offsets never exceed what this release would otherwise pay.
+    const offset = takeSetoff(c.contractId, fundedGross - retainage + retentionReleased);
+    if (offset > 0) basis.rulePaths.push("offsets.backcharge_setoff");
 
     const release = fundedGross - retainage - offset + retentionReleased;
     const awaitingOwner = remaining[i] - fundedGross;
@@ -323,7 +345,10 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
     });
   });
 
-  planRetention(payment, retention, releases, warnings);
+  planRetention(payment, retention, releases, warnings, takeSetoff);
+  if (retentionPortion > 0 && !releases.some((r) => r.retentionReleasedCents > 0)) {
+    warnings.push({ code: "retention_received_nothing_certified", message: `${retentionPortion} cents of owner retention was received, but no retainage is certified for release. Certify the release condition on each contract to pass it through.`, statutes: [] });
+  }
 
   return { releases, unfunded, unallocatedCents, warnings };
 }
@@ -333,7 +358,7 @@ export function planWaterfall(payment: OwnerPayment, candidates: Candidate[], re
  * from retainage already held (allocation is on gross), so the trigger is the receipt, not its size.
  * The deadline is the shorter of the contract's release period and the statutory pass-through.
  */
-function planRetention(payment: OwnerPayment, retention: RetentionCandidate[], releases: PlannedRelease[], warnings: Warning[]) {
+function planRetention(payment: OwnerPayment, retention: RetentionCandidate[], releases: PlannedRelease[], warnings: Warning[], takeSetoff: (contractId: string, room: number) => number) {
   for (const c of retention) {
     if (c.amountCents <= 0) continue;
     if (!payment.includesRetention) {
@@ -351,7 +376,7 @@ function planRetention(payment: OwnerPayment, retention: RetentionCandidate[], r
     if (c.releaseDays !== null) basis.rulePaths.push("retainage.release_days");
     if (statutory !== null && (c.releaseDays === null || statutory <= c.releaseDays)) basis.statutes.push(...cite(c.overlay, "retentionRelease"));
     const dueAt = days === null ? null : addDays(payment.receivedAt, days);
-    const offset = Math.min(c.offsetCents, c.amountCents);
+    const offset = takeSetoff(c.contractId, c.amountCents);
     if (offset > 0) basis.rulePaths.push("offsets.backcharge_setoff");
     const release = c.amountCents - offset;
     basis.math.push(
@@ -434,6 +459,16 @@ function computeDeadlines(
     basis.rulePaths.push("timing.days");
     payByAt = addDays(new Date(`${c.approvedOn}T00:00:00Z`), days);
     basis.notes.push(`fixed ${days} days from approval ${c.approvedOn}`);
+    // A fixed period does not escape a statutory deadline the contract cannot lengthen.
+    if (overlay.loaded && overlay.progressPaymentDaysDefault !== null && overlay.progressPaymentOverridable === false) {
+      const byStatute = addStatutory(payment.receivedAt, overlay.progressPaymentDaysDefault, overlay);
+      if (byStatute < payByAt) {
+        payByAt = byStatute;
+        const pp = cite(overlay, "promptPay");
+        basis.statutes.push(...pp);
+        warnings.push({ ...common, code: "contract_days_capped_by_statute", message: `The contract's fixed ${days}-day period would run past the ${overlay.progressPaymentDaysDefault}-day deadline ${overlay.state} law sets from receipt of payment, which the contract cannot lengthen.`, statutes: pp });
+      }
+    }
   } else if (overlay.loaded && overlay.progressPaymentDaysDefault !== null) {
     const statutory = overlay.progressPaymentDaysDefault;
     const byStatute = addStatutory(payment.receivedAt, statutory, overlay);

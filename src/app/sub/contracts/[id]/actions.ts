@@ -60,7 +60,6 @@ export async function requestChangeOrderAction(formData: FormData) {
 export async function addLowerTierAction(formData: FormData) {
   const { contract, actor } = await contractGuard(formData);
   const sum = parseDollars(formData.get("sum"));
-  const pct = Number(String(formData.get("retainage") ?? "0").replace("%", "") || 0);
   const daysRaw = String(formData.get("days") ?? "").trim();
   const days = daysRaw === "" ? null : Number(daysRaw);
   await finish(contract.id, contract.projectId, "Added. Declare what you owe them on your next pay application.", () =>
@@ -70,7 +69,6 @@ export async function addLowerTierAction(formData: FormData) {
       kind: formData.get("kind") === "subcontractor" ? "subcontractor" : "supplier",
       scope: String(formData.get("scope") ?? ""),
       sumCents: Number.isNaN(sum) ? 0 : sum,
-      retainageBps: Number.isFinite(pct) ? Math.round(pct * 100) : 0,
       timingDays: days !== null && Number.isInteger(days) && days >= 0 ? days : null,
       actor,
     }),

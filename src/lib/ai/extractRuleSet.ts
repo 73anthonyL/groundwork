@@ -61,7 +61,7 @@ const BOOLEAN_FIELDS: RuleFieldPath[] = [
 function parseValue(path: RuleFieldPath, raw: string): unknown {
   const v = raw.trim();
   if (NUMBER_FIELDS.includes(path)) {
-    const n = Number(v.replace(/,/g, ""));
+    const n = v === "" ? NaN : Number(v.replace(/,/g, ""));
     if (!Number.isFinite(n)) throw new Error(`${path}: "${raw}" is not a number`);
     return n;
   }

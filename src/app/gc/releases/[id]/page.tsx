@@ -12,13 +12,13 @@ import { waiverMeta, type WaiverFields, type WaiverFormId } from "@/domain/waive
 import { ReleaseTimeline } from "@/components/release-timeline";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Button } from "@/components/ui/button";
-import { settleAction } from "./actions";
+import { retryAction, settleAction } from "./actions";
 
 type Basis = { rulePaths: string[]; statutes: StatuteId[]; math: { label: string; cents: number }[]; notes: string[] };
 
-export default async function ReleasePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ settled?: string }> }) {
+export default async function ReleasePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ settled?: string; retried?: string; error?: string }> }) {
   const { id } = await params;
-  const { settled } = await searchParams;
+  const { settled, retried, error } = await searchParams;
   const { org } = await requireAuth("gc");
   const r = await getRelease(org, id);
   if (!r) notFound();
@@ -44,6 +44,26 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
         <p role="status" className="mt-3 text-sm text-settled">
           Settled at the bank. The unconditional release has been sent to {r.contract.sub.name}.
         </p>
+      )}
+
+      {retried && (
+        <p role="status" className="mt-3 text-sm text-settled">
+          Payment sent again.
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="mt-3 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          {decodeURIComponent(error)}
+        </p>
+      )}
+      {r.status === "blocked" && r.payment?.status === "failed" && (
+        <form action={retryAction} className="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm">
+          <input type="hidden" name="releaseId" value={r.id} />
+          <span>The bank did not accept this payment. Nothing was sent.</span>
+          <Button type="submit" size="sm" variant="outline">
+            Send it again
+          </Button>
+        </form>
       )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

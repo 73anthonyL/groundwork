@@ -101,8 +101,12 @@ export async function initiatePayment(releaseId: string) {
   const signed = release.waivers.find((w) => w.status === "signed" && (w.form === "cp_8132" || w.form === "cf_8136"));
   if (!signed || (signed.fields as WaiverFields).amountCents !== release.releaseCents) throw new Error("no matching signed waiver");
 
-  const paymentId = randomUUID();
-  await db.insert(schema.payments).values({ id: paymentId, releaseId, rail: rail.name, status: "created", amountCents: release.releaseCents });
+  // One payment row per release. A failed attempt is reused, so a retry never creates a second payment.
+  const prior = await db.query.payments.findFirst({ where: eq(schema.payments.releaseId, releaseId) });
+  if (prior && prior.status !== "failed") throw new Error(`a payment for this release is already ${prior.status}`);
+  const paymentId = prior?.id ?? randomUUID();
+  if (prior) await db.update(schema.payments).set({ rail: rail.name, status: "created", externalBillId: null, updatedAt: now() }).where(eq(schema.payments.id, paymentId));
+  else await db.insert(schema.payments).values({ id: paymentId, releaseId, rail: rail.name, status: "created", amountCents: release.releaseCents });
   let bill: { externalBillId: string };
   try {
     bill = await rail.createBill({
@@ -140,6 +144,43 @@ export async function initiatePayment(releaseId: string) {
   return { paymentId, externalBillId: bill.externalBillId, rail: rail.name };
 }
 
+/**
+ * A release is blocked when the rail refused or failed its payment. Retrying puts it back in the
+ * queue and sends it again; the gates (upstream paid, lower-tier waivers) still apply.
+ */
+export async function retryRelease(input: { releaseId: string; actor: Actor }): Promise<AdvanceResult> {
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    const release = await tx.query.releases.findFirst({ where: eq(schema.releases.id, input.releaseId), with: { waivers: true, payment: true } });
+    if (!release) throw new Error("release not found");
+    if (release.status !== "blocked") throw new Error(`release is ${release.status}, not blocked`);
+    if (!release.payment || release.payment.status !== "failed") throw new Error("this release has no failed payment to retry");
+    if (!release.waivers.some((w) => w.status === "signed" && w.form.startsWith("c"))) throw new Error("the conditional waiver is not signed");
+    await tx.update(schema.releases).set({ status: "waiver_signed" }).where(eq(schema.releases.id, release.id));
+    await emit(tx, { aggregateType: "release", aggregateId: release.id, type: "payment.retried", actor: input.actor, payload: { paymentId: release.payment.id }, correlationId: release.eventId });
+  });
+  return advanceRelease(input.releaseId);
+}
+
+/**
+ * Advance every release that has cleared its waiver and is only waiting on something that may since
+ * have happened. Safe to run at any time; each release is attempted on its own.
+ */
+export async function sweepReadyReleases(): Promise<{ advanced: string[]; failed: { releaseId: string; error: string }[] }> {
+  const db = await getDb();
+  const ready = await db.query.releases.findMany({ where: eq(schema.releases.status, "waiver_signed") });
+  const advanced: string[] = [];
+  const failed: { releaseId: string; error: string }[] = [];
+  for (const r of ready) {
+    try {
+      if ((await advanceRelease(r.id)).initiated) advanced.push(r.id);
+    } catch (e) {
+      failed.push({ releaseId: r.id, error: (e as Error).message });
+    }
+  }
+  return { advanced, failed };
+}
+
 /** Idempotent webhook processing: inbox row first, then settle the payment and its release. */
 export async function handleRailWebhook(railNameIn: string, event: RailWebhookEvent) {
   const db = await getDb();
@@ -153,9 +194,10 @@ export async function handleRailWebhook(railNameIn: string, event: RailWebhookEv
         if (r.payByAt && ["awaiting_waiver", "waiver_signed"].includes(r.status)) {
           await db.update(schema.releases).set({ payByAt: new Date(at.getTime() + (r.payByAt.getTime() - e.receivedAt.getTime())) }).where(eq(schema.releases.id, r.id));
         }
-        if (r.status === "waiver_signed") await advanceRelease(r.id);
       }
     }
+    // One lower-tier payment failing on the rail must not stop its siblings; the sweep can be re-run.
+    await sweepReadyReleases();
   }
   return result;
 }
@@ -178,6 +220,11 @@ async function settleInTx(railNameIn: string, event: RailWebhookEvent): Promise<
       return { duplicate: false, matched: false };
     }
     const release = payment.release;
+    if (event.type === "bill.failed" && payment.status === "paid") {
+      // A late or out-of-order failure notice for money that has already settled changes nothing.
+      await tx.update(schema.webhookInbox).set({ processedAt: now(), error: "failure reported after settlement; ignored" }).where(eq(schema.webhookInbox.id, inserted[0].id));
+      return { duplicate: false, matched: true };
+    }
     if (event.type === "bill.failed") {
       await tx.update(schema.payments).set({ status: "failed", updatedAt: now(), raw: event.raw as object }).where(eq(schema.payments.id, payment.id));
       await tx.update(schema.releases).set({ status: "blocked" }).where(eq(schema.releases.id, release.id));

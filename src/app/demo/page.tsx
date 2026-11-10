@@ -8,6 +8,8 @@ import { hasApiKey } from "@/lib/ai/client";
 import { railName } from "@/server/rails";
 import { dbDriver } from "@/db/client";
 import { resetAction, settleAllAction } from "./actions";
+import { demoOutbox } from "@/server/scoped";
+import { formatCents } from "@/lib/money";
 
 const DESCRIPTIONS: Record<(typeof CHECKPOINTS)[number], string> = {
   fresh: "Parties, project, three subcontracts with PDFs, schedules of values. Nothing compiled.",
@@ -21,6 +23,7 @@ const DESCRIPTIONS: Record<(typeof CHECKPOINTS)[number], string> = {
 export default async function DemoPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
   const session = await requireAuth("gc");
   const { msg } = await searchParams;
+  const outbox = await demoOutbox();
   return (
     <AppShell session={session} nav={[{ href: "/gc", label: "Projects" }, { href: "/gc/ledger", label: "Ledger" }, { href: "/demo", label: "Demo" }]}>
       <h1 className="text-3xl font-semibold">Demo panel</h1>
@@ -74,6 +77,30 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
           </Button>
           <span className="text-sm text-muted-foreground">Posts a synthetic bill.paid webhook for each payment on the simulated rail.</span>
         </form>
+      </section>
+      <section className="mt-8" aria-labelledby="outbox">
+        <h2 id="outbox" className="text-lg font-semibold">
+          Outbox
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Suppliers and sub-subcontractors have no account. Groundwork would email each one a signing link; this demo lists those messages here instead. The party that pays them never sees the link.
+        </p>
+        {outbox.length === 0 ? (
+          <p className="mt-3 rounded-md border border-dashed bg-card p-4 text-sm text-muted-foreground">No waivers are waiting on a lower-tier signature.</p>
+        ) : (
+          <ul className="mt-3 divide-y rounded-md border bg-card">
+            {outbox.map((m) => (
+              <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+                <span>
+                  To <span className="font-medium">{m.to}</span> · {m.form.startsWith("c") ? "sign to release" : "confirm receipt of"} <span className="num font-medium">{formatCents(m.cents)}</span> from {m.from}
+                </span>
+                <Link href={m.href} className="font-medium text-money underline underline-offset-2">
+                  Open their link
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
       <section className="mt-8" aria-labelledby="personas">
         <h2 id="personas" className="text-lg font-semibold">

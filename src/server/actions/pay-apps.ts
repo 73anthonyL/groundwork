@@ -81,7 +81,8 @@ export async function submitPayApp(input: SubmitPayAppInput) {
     if (lowerTier.length) {
       const children = await tx.query.contracts.findMany({ where: eq(schema.contracts.parentContractId, input.contractId) });
       if (lowerTier.some((d) => !children.some((c) => c.id === d.contractId))) throw new Error("a declared lower-tier party is not on this contract");
-      if (lowerTier.reduce((s, d) => s + d.amountCents, 0) > gross) throw new Error("lower-tier amounts cannot exceed what this application bills");
+      // The lower tier is paid out of what this application nets, so it cannot be owed more than that.
+      if (lowerTier.reduce((s, d) => s + d.amountCents, 0) > gross - input.retainageBilledCents) throw new Error("lower-tier amounts cannot exceed what this application nets after retainage");
     }
     const id = input.id ?? randomUUID();
     const at = now();

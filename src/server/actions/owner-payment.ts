@@ -87,6 +87,13 @@ export async function loadCandidates(tx: DbLike, projectId: string, scope: Fundi
     }
   }
   const before = (d: Date) => (cutoff ? d < cutoff : true);
+  // Replay: change orders approved after the cutoff had not yet moved the contract sum.
+  const laterCo = new Map<string, number>();
+  if (cutoff) {
+    const approvals = await tx.query.events.findMany({ where: and(eq(schema.events.type, "change_order.approved"), inArray(schema.events.aggregateId, contractIds)) });
+    for (const e of approvals) if (e.createdAt >= cutoff) laterCo.set(e.aggregateId, (laterCo.get(e.aggregateId) ?? 0) + ((e.payload as { amountCents?: number }).amountCents ?? 0));
+  }
+  const sumOf = (c: { id: string; contractSumCents: number }) => c.contractSumCents - (laterCo.get(c.id) ?? 0);
   const counted = releases.filter((r) => before(r.event.createdAt));
   const rulesFor = (contractId: string) => {
     const contract = contracts.find((c) => c.id === contractId)!;
@@ -124,7 +131,8 @@ export async function loadCandidates(tx: DbLike, projectId: string, scope: Fundi
       return {
         payAppId: a.id,
         contractId: a.contractId,
-        contractSumCents: contract.contractSumCents,
+        contractSumCents: sumOf(contract),
+        completeBps: sumOf(contract) > 0 ? Math.round((apps.filter((x) => x.contractId === a.contractId && x.number <= a.number).reduce((s, x) => s + x.workThisPeriodCents + x.storedMaterialsCents, 0) * 10_000) / sumOf(contract)) : 0,
         isFinal: a.isFinal,
         approvedOn: isoDate(a.reviewedAt ?? a.submittedAt ?? a.createdAt),
         grossCents: a.workThisPeriodCents + a.storedMaterialsCents,
