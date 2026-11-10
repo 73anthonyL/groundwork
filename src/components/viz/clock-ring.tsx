@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { Clock } from "@/server/read/project";
-import { ease } from "@/lib/motion";
+import { duration, ease } from "@/lib/motion";
 import { formatUsd0 } from "./rolling-number";
 
 const R = 26;
@@ -31,6 +31,7 @@ function leftText(ms: number | null): string {
  * `nowIso` is the server's clock (so a frozen demo clock is respected); the ring keeps ticking from it.
  */
 export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: string; size?: number }) {
+  const reduce = useReducedMotion();
   const [drift, setDrift] = useState(0);
   useEffect(() => {
     const t0 = Date.now();
@@ -49,7 +50,7 @@ export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: 
     <div className="flex items-center gap-3">
       <svg width={size} height={size} viewBox="0 0 64 64" className="shrink-0 -rotate-90" aria-hidden>
         <circle cx="32" cy="32" r={R} fill="none" stroke="var(--border)" strokeWidth="7" />
-        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeDasharray={C} initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: 0.9, ease: ease.trace }} />
+        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeDasharray={C} initial={reduce ? false : { strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: reduce ? 0 : duration.draw, ease: ease.trace }} />
       </svg>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">

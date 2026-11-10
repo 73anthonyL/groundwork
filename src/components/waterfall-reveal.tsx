@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { formatCentsCompact } from "@/lib/money";
+import { duration, ease, spring } from "@/lib/motion";
+
+/** Hover is instant on rows: sweeping the cursor down a table should not leave a trail. */
+const ROW = "border-b border-border/70 last:border-0 hover:bg-muted/40";
 
 /**
  * The one orchestrated moment: when an owner payment has just landed, the amount sweeps down the
@@ -13,13 +17,13 @@ export function WaterfallReveal({ active, children }: { active: boolean; childre
   const reduce = useReducedMotion();
   if (!active || reduce) return <>{children}</>;
   return (
-    <motion.div initial={{ opacity: 0.6, scale: 0.995 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: "easeOut" }} className="relative">
+    <motion.div initial={{ opacity: 0.6 }} animate={{ opacity: 1 }} transition={{ duration: duration.fade, ease: ease.out }} className="relative">
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left rounded bg-link"
         initial={{ scaleX: 0, opacity: 1 }}
         animate={{ scaleX: 1, opacity: 0 }}
-        transition={{ scaleX: { duration: 0.6, ease: "easeInOut" }, opacity: { delay: 0.9, duration: 0.4 } }}
+        transition={{ scaleX: { duration: 0.6, ease: ease.trace }, opacity: { delay: 0.9, duration: duration.fade } }}
       />
       {children}
     </motion.div>
@@ -28,9 +32,9 @@ export function WaterfallReveal({ active, children }: { active: boolean; childre
 
 export function RevealRow({ index, active, children }: { index: number; active: boolean; children: React.ReactNode }) {
   const reduce = useReducedMotion();
-  if (!active || reduce) return <tr className="border-b transition-colors last:border-0 hover:bg-muted/50">{children}</tr>;
+  if (!active || reduce) return <tr className={ROW}>{children}</tr>;
   return (
-    <motion.tr initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 + index * 0.22, duration: 0.4, ease: "easeOut" }}>
+    <motion.tr className={ROW} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ ...spring.ui, delay: 0.3 + Math.min(index, 8) * 0.06 }}>
       {children}
     </motion.tr>
   );

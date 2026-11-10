@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* "dark:" follows the app's own Night theme, never the operating system's setting. */
+@custom-variant dark (&:where([data-theme="night"], [data-theme="night"] *));
+
 /*
   Groundwork palette — construction finance.
   concrete page, graphite ink, rebar grey, surveyor orange only for money in motion
@@ -75,6 +78,12 @@
   --color-flow-idle: var(--flow-idle);
   --shadow-card: var(--shadow-card-value);
   --shadow-float: var(--shadow-float-value);
+  --shadow-lift: var(--shadow-lift-value);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-muted: var(--paper-muted);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-trace: cubic-bezier(0.65, 0, 0.35, 1);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -154,6 +163,16 @@
   --stage-muted: oklch(0.8 0.025 250);
   --stage-line: oklch(1 0 0 / 0.045);
   --stage-line-major: oklch(1 0 0 / 0.085);
+
+  --stage-light: oklch(1 0 0 / 0.09);
+
+  /* The contract page in the landing hero: paper stays paper in every theme. */
+  --paper: oklch(0.992 0.003 95);
+  --paper-ink: oklch(0.21 0.022 250);
+  --paper-muted: oklch(0.5 0.02 250);
+
+  /* What a button gains under the cursor. */
+  --shadow-lift-value: 0 4px 12px -4px oklch(0.21 0.022 250 / 0.35);
 
   /* The drafting grid every page sits on. */
   --grid-line: oklch(0.48 0.11 250 / 0.045);
@@ -360,12 +379,12 @@
   --numeral-font: var(--font-newsreader), ui-serif, Georgia, serif;
 }
 [data-type="serif"] h1 {
-  font-family: var(--font-newsreader), ui-serif, Georgia, serif;
+  font-family: var(--font-serif);
   font-weight: 400;
   letter-spacing: -0.015em;
 }
 
-/* 11px uppercase mono label: tags, axis labels, eyebrow text. */
+/* Small label: tags, axis labels, table notes. */
 @utility type-label {
   font-size: 12px;
   line-height: 16px;
@@ -400,11 +419,13 @@
   from the top left, and the glow of a work light low on the right, where the contract sheet sits.
 */
 @utility stage {
+  /* Focus rings on the dark sheet are light, so they clear 3:1. */
+  --ring: var(--stage-foreground);
   color: var(--stage-foreground);
   background-color: var(--stage);
   background-image:
-    radial-gradient(55% 60% at 78% 104%, oklch(from var(--signal) l c h / 0.34), transparent 70%),
-    radial-gradient(70% 55% at 8% -8%, oklch(1 0 0 / 0.09), transparent 65%),
+    radial-gradient(55% 60% at 78% 104%, oklch(from var(--signal) l c h / 0.12), transparent 70%),
+    radial-gradient(70% 55% at 8% -8%, var(--stage-light), transparent 65%),
     linear-gradient(to bottom, transparent 40%, var(--stage-deep)),
     linear-gradient(var(--stage-line-major) 1px, transparent 1px),
     linear-gradient(90deg, var(--stage-line-major) 1px, transparent 1px),
@@ -415,7 +436,7 @@
 }
 /* The page-load sequence: each piece rises in turn. Set --i for its place in the order. */
 @utility reveal {
-  animation: gw-rise 0.75s cubic-bezier(0.2, 0, 0, 1) both;
+  animation: gw-rise 0.75s var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 110ms + 60ms);
 }
 @keyframes gw-rise {
@@ -428,9 +449,23 @@
     transform: none;
   }
 }
+/* A step finishing: the tick settles in rather than swapping. */
+@utility tick-in {
+  animation: gw-tick 0.15s var(--ease-out) both;
+}
+@keyframes gw-tick {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
 /* The bar that sweeps across while a contract is being read. */
 @utility reading-bar {
-  animation: gw-sweep 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation: gw-sweep 1.4s var(--ease-trace) infinite;
 }
 @keyframes gw-sweep {
   from {
@@ -451,10 +486,16 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
   html {
     @apply font-sans;
+    overflow-x: clip;
+    scrollbar-color: color-mix(in oklch, var(--muted-foreground), transparent 45%) transparent;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--signal), transparent 70%);
+    color: inherit;
   }
   body {
     @apply bg-background text-foreground drafting-grid;
@@ -499,9 +540,32 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/* A wait still has to look alive when motion is reduced: the sweep and the spinner become a slow pulse. */
+@keyframes gw-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-bar,
+  .waiting-ring {
+    animation: gw-pulse 1.6s ease-in-out infinite !important;
+    animation-duration: 1.6s !important;
+    animation-iteration-count: infinite !important;
+    transform: none !important;
+  }
+  .reading-bar {
+    width: 100% !important;
   }
 }

@@ -34,9 +34,8 @@ export default async function SubHome() {
     <div>
       <PageHero
         width="narrow"
-        kicker={`You are ${user.name} at ${org.name}, a subcontractor${gcName ? ` working for ${gcName}` : ""}.`}
         title="Where's my money"
-        lede="You bill for your work, sign a lien waiver when a payment is ready, and watch it arrive."
+        lede={`You are ${user.name} at ${org.name}, a subcontractor${gcName ? ` working for ${gcName}` : ""}. You bill for your work, sign a lien waiver when a payment is ready, and watch it arrive.`}
         figure={{
           label: "Coming to you",
           value: formatCentsCompact(owed),
@@ -111,7 +110,7 @@ export default async function SubHome() {
         <section key={project.id} className="mt-10" aria-label={`Your money on ${project.name}`}>
           <h2 className="text-lg font-semibold">Your money on {project.name}</h2>
           <p className="mt-1 text-sm text-muted-foreground">What has landed, what is on its way, what is held, and what you owe your own suppliers.</p>
-          <div className="mt-3 rounded-xl bg-card p-4 shadow-card">
+          <div className="relative left-1/2 mt-3 w-[min(60rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl bg-card p-4 shadow-card">
             <MoneyFlow flow={flow!} height={260} />
           </div>
         </section>

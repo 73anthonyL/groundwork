@@ -1,18 +1,23 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { ease, spring } from "@/lib/motion";
+import { duration, ease, spring } from "@/lib/motion";
 
 /**
  * The product in one picture: a page of a real demo subcontract (Summit Drywall, Article 5 and 6),
  * the three phrases Groundwork reads out of it, the rules they become, and what those rules do to
  * the next owner payment. One sequence on load: each phrase is marked, its rule appears, then the
- * payment splits. With reduced motion the finished state is shown.
+ * payment splits. With reduced motion the finished state is shown at once.
  *
  * The contract's words are set in the serif; everything Groundwork says is in the sans.
  */
 
 const T = { mark: 1.1, gap: 1.05, rule: 0.45, split: 4.5 };
+/**
+ * Reduced motion: the same starting markup as everyone else (the server cannot know the setting, so
+ * the first render must not depend on it), then straight to the finished state with no travel.
+ */
+const INSTANT = { duration: 0, delay: 0 };
 
 function Mark({ n, tone = "read", children, play }: { n: number; tone?: "read" | "flag"; children: React.ReactNode; play: boolean }) {
   const color = tone === "flag" ? "var(--hold-soft)" : "var(--link-soft)";
@@ -20,9 +25,9 @@ function Mark({ n, tone = "read", children, play }: { n: number; tone?: "read" |
     <motion.mark
       className="rounded-[3px] bg-no-repeat text-inherit [box-decoration-break:clone]"
       style={{ backgroundImage: `linear-gradient(${color}, ${color})`, backgroundColor: "transparent", padding: "1px 0" }}
-      initial={play ? { backgroundSize: "0% 100%" } : false}
+      initial={{ backgroundSize: "0% 100%" }}
       animate={{ backgroundSize: "100% 100%" }}
-      transition={{ duration: 0.7, ease: ease.trace, delay: T.mark + (n - 1) * T.gap }}
+      transition={play ? { duration: duration.mark, ease: ease.trace, delay: T.mark + (n - 1) * T.gap } : INSTANT}
     >
       {children}
       <sup className={`ml-0.5 font-sans text-[10px] font-semibold not-italic ${tone === "flag" ? "text-hold" : "text-link"}`}>{n}</sup>
@@ -34,9 +39,9 @@ function Rule({ n, label, value, note, tone = "read", play }: { n: number; label
   return (
     <motion.li
       className="grid grid-cols-[1.25rem_1fr] gap-x-3 py-4"
-      initial={play ? { opacity: 0, y: 8 } : false}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ ...spring.ui, delay: T.mark + (n - 1) * T.gap + T.rule }}
+      transition={play ? { ...spring.ui, delay: T.mark + (n - 1) * T.gap + T.rule } : INSTANT}
     >
       <span className={`num pt-0.5 text-xs font-semibold ${tone === "flag" ? "text-hold" : "text-link"}`}>{n}</span>
       <div>
@@ -58,8 +63,8 @@ export function ContractHero() {
   return (
     <div className="grid overflow-hidden rounded-2xl bg-card shadow-float lg:grid-cols-[1.15fr_1fr]">
       {/* The contract page. */}
-      <figure className="border-b bg-[#fdfdfb] px-6 py-7 sm:px-10 sm:py-9 lg:border-b-0 lg:border-r" style={{ colorScheme: "light", color: "#1c1c1e" }}>
-        <figcaption className="flex items-baseline justify-between font-sans text-xs text-[#6a6a6f]">
+      <figure className="border-b bg-paper px-6 py-7 text-paper-ink sm:px-10 sm:py-9 lg:border-b-0 lg:border-r" style={{ colorScheme: "light" }}>
+        <figcaption className="flex items-baseline justify-between font-sans text-xs text-paper-muted">
           <span>Subcontract, Summit Drywall</span>
           <span className="num">page 3 of 7</span>
         </figcaption>
@@ -99,16 +104,21 @@ export function ContractHero() {
           <Rule n={3} play={play} label="Retainage" value="Hold back 10% of each payment" note="Quoted from section 6.1. Released when the contract's condition is certified." />
         </ol>
 
-        <motion.div className="mt-auto border-t pt-5" initial={play ? { opacity: 0 } : false} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: T.split }}>
+        <motion.div className="mt-auto border-t pt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={play ? { duration: duration.fade, delay: T.split } : INSTANT}>
           <div className="flex items-baseline justify-between text-[13px]">
             <span className="text-muted-foreground">Then the owner pays for Summit&rsquo;s work</span>
             <span className="num font-semibold">$25,000</span>
           </div>
-          <div className="mt-2 flex h-2.5 gap-0.5 overflow-hidden rounded-full">
-            {parts.map((p, i) => (
-              <motion.span key={p.label} className="h-full" style={{ background: p.color, transformOrigin: "left" }} initial={play ? { width: 0 } : false} animate={{ width: `${p.width}%` }} transition={{ duration: 0.8, ease: ease.trace, delay: T.split + 0.25 + i * 0.25 }} />
+          <motion.div
+            className="mt-2 flex h-2.5 gap-0.5 overflow-hidden rounded-full"
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={play ? { duration: duration.draw, ease: ease.trace, delay: T.split + 0.25 } : INSTANT}
+          >
+            {parts.map((p) => (
+              <span key={p.label} className="h-full" style={{ background: p.color, width: `${p.width}%` }} />
             ))}
-          </div>
+          </motion.div>
           <dl className="num mt-3 flex flex-wrap justify-between gap-x-6 gap-y-1 text-[13px]">
             {parts.map((p) => (
               <div key={p.label} className="flex items-baseline gap-2">

@@ -18,9 +18,8 @@ export default async function GcHome() {
   return (
     <div>
       <PageHero
-        kicker={`You are ${user.name}, ${(user.title ?? "controller").toLowerCase()} at ${org.name}, the general contractor.`}
         title="Your projects"
-        lede="You get paid by the owner and pay the subcontractors. Open a project to add a subcontract, review a sub's bill, or record a payment from the owner."
+        lede={`You are ${user.name}, ${(user.title ?? "controller").toLowerCase()} at ${org.name}, the general contractor. You get paid by the owner and pay the subcontractors. Open a project to add a subcontract, review a sub's bill, or record a payment from the owner.`}
         figure={{ label: "Owed to subcontractors now", value: formatCentsCompact(owed), note: rows.length === 0 ? "No projects yet." : `Across ${rows.length} project${rows.length === 1 ? "" : "s"}.` }}
         actions={
           rows[0] && (
@@ -45,7 +44,7 @@ export default async function GcHome() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl bg-card shadow-card">
-          <Table>
+          <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead>Project</TableHead>
@@ -61,7 +60,7 @@ export default async function GcHome() {
                 return (
                   <TableRow key={p.id}>
                     <TableCell className="py-4">
-                      <Link href={`/gc/projects/${p.id}`} className="text-[15px] font-semibold text-link hover:underline">
+                      <Link href={`/gc/projects/${p.id}`} className="whitespace-nowrap text-[15px] font-semibold text-link hover:underline">
                         {p.name}
                       </Link>
                       <div className="text-[13px] text-muted-foreground">

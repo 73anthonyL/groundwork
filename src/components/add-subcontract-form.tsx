@@ -18,7 +18,7 @@ export function AddSubcontractForm({ projectId, knownSubs }: { projectId: string
     <form action={action} className="grid gap-6">
       <input type="hidden" name="projectId" value={projectId} />
 
-      <div className="grid gap-1.5">
+      <div className="group grid gap-1.5">
         <Label htmlFor="file">The signed subcontract</Label>
         <label
           htmlFor="file"
@@ -26,7 +26,9 @@ export function AddSubcontractForm({ projectId, knownSubs }: { projectId: string
             e.preventDefault();
             setOver(true);
           }}
-          onDragLeave={() => setOver(false)}
+          onDragLeave={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) setOver(false);
+          }}
           onDrop={(e) => {
             e.preventDefault();
             setOver(false);
@@ -36,7 +38,7 @@ export function AddSubcontractForm({ projectId, knownSubs }: { projectId: string
               setFile(f.name);
             }
           }}
-          className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ${over ? "border-link bg-link-soft" : file ? "border-settled/50 bg-settled-soft/50" : "border-input bg-card hover:border-link hover:bg-link-soft/50"}`}
+          className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors duration-150 group-has-[input:focus-visible]:outline-2 group-has-[input:focus-visible]:outline-offset-2 group-has-[input:focus-visible]:outline-ring ${over ? "border-link bg-link-soft" : file ? "border-settled/50 bg-settled-soft/50" : "border-input bg-card hover:border-link hover:bg-link-soft/50"}`}
         >
           {file ? <FileText className="h-7 w-7 text-settled" aria-hidden /> : <Upload className="h-7 w-7 text-muted-foreground" aria-hidden />}
           <span className="text-[15px] font-medium">{file ?? "Drop the PDF here, or click to choose it"}</span>

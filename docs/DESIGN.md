@@ -28,15 +28,19 @@ All in `src/app/globals.css`. A theme is one block of variables; every color in 
 
 | Token | Paper (default) | Use |
 |---|---|---|
-| `--background` | `#f6f6f4` | The page |
-| `--card` | `#ffffff` | Sheets |
-| `--foreground` | `#1c1c1e` | Ink |
-| `--muted-foreground` | `#6a6a6f` | Secondary text |
-| `--border` | black at 9% | Hairlines |
-| `--link` | `#1f4ed8` | Links and the one primary button per region |
-| `--money` | `#d9541a` | A running clock, money on its way |
-| `--settled` | `#1d7a54` | Landed |
-| `--hold` | `#9a6410` | Held, waiting on someone |
+| `--background` | `oklch(0.975 0.004 250)` | The page |
+| `--card` | `oklch(1 0 0)` | Sheets |
+| `--foreground`, `--primary` | `oklch(0.21 0.022 250)` | Ink, and primary buttons in the app |
+| `--muted-foreground` | `oklch(0.5 0.02 250)` | Secondary text |
+| `--border` | ink at 10% | Hairlines |
+| `--link`, `--ring` | `oklch(0.48 0.11 250)` | Links and focus rings (the ring turns light on the stage) |
+| `--signal` | `oklch(0.72 0.185 47)` | The one loud button on a dark header |
+| `--money` | `oklch(0.535 0.16 42)` | A running clock, money on its way (text) |
+| `--settled` | `oklch(0.5 0.115 160)` | Landed |
+| `--hold` | `oklch(0.52 0.1 85)` | Held, waiting on someone |
+| `--stage`, `--stage-deep` | `oklch(0.25 0.035 252)`, `oklch(0.19 0.03 252)` | Dark page headers |
+| `--paper`, `--paper-ink`, `--paper-muted` | fixed in every theme | The contract sheet in the landing hero |
+| `--shadow-lift` | `0 4px 12px -4px` ink at 35% | What a button gains under the cursor |
 | `--radius` | 10px | Sheets 12px, controls 8px, pills only for segmented controls |
 
 Other themes ship for comparison and can be switched in `/lab`: **Concrete** (the original look), **Ink**, **Night**.
@@ -108,3 +112,16 @@ Anthony's feedback: the site was confusing, it was unclear what could be clicked
 - **Law appears only where it changes something:** in the contract review, on a deadline, on a waiver. The statute library, the lab and the demo controls left the main navigation; the library and demo controls are footer links.
 - **The landing page is four parts:** the contract becoming rules, the problem, the four steps, one project's money.
 - **Plain words.** "Compile" became "read".
+
+## Design pass (Nov 10, branch `design-pass`)
+
+A refinement pass from three reviews (Impeccable critique and audit, a Hallmark audit, an animation review). Rules it added:
+
+- **`dark:` means the Night theme**, never the operating system's setting (`@custom-variant dark` in `globals.css`).
+- **Focus is the global 2px outline, instantly, at full color.** On the stage and the navigation bar `--ring` is the light stage color so it clears 3:1.
+- **Hover never moves a control.** Buttons shift background and fade in a pre-painted shadow (`after:` pseudo-element, opacity only); press is `scale: 0.97`. Table rows highlight with no transition.
+- **Nothing animates width or height.** Bars are wiped with `clip-path` or scaled from the left.
+- **Reduced motion** shows end states at once, and waits (reading a contract) pulse instead of freezing.
+- **No line above a title except a link back.** Who you are goes in the sentence under the title.
+- **Wide tables scroll inside their sheet** on a phone (`min-w` on the table) instead of crushing columns.
+- The work-light glow on the stage is kept at 12% so it reads as light on the sheet, not a colored cloud.

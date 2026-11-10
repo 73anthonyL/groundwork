@@ -160,7 +160,8 @@ export function MoneyFlow({
 
   return (
     <figure className="min-w-0">
-      {/* On a phone the diagram keeps a readable width and scrolls sideways. */}
+      {/* On a phone the diagram keeps a readable width and scrolls sideways; the note below says so. */}
+      <p className="mb-2 text-xs text-muted-foreground sm:hidden">Swipe sideways to see the whole diagram.</p>
       <div className="-mx-1 overflow-x-auto px-1">
       <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full min-w-[640px] overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
         <AnimatePresence>
@@ -172,7 +173,7 @@ export function MoneyFlow({
               initial={{ opacity: 0 }}
               animate={{ opacity: dim(r) ? 0.08 : r.kind === "idle" ? 0.25 : 0.42, d: r.d }}
               exit={{ opacity: 0 }}
-              transition={{ opacity: { duration: duration.fade, ease: ease.out }, d: spring.ui }}
+              transition={{ opacity: { duration: hover ? duration.hover : duration.fade, ease: ease.out }, d: reduce ? { duration: 0 } : spring.ui }}
             />
           ))}
         </AnimatePresence>
@@ -192,7 +193,7 @@ export function MoneyFlow({
           const right = n.node.depth >= 2;
           const sink = ["retainage", "backcharge", "unallocated"].includes(n.node.kind);
           return (
-            <motion.g key={n.node.id} initial={{ opacity: 0 }} animate={{ opacity: hover && hover !== n.node.id && !ribbons.some((r) => (r.source === hover && r.target === n.node.id) || (r.target === hover && r.source === n.node.id)) ? 0.35 : 1 }} transition={{ duration: duration.fade }} onMouseEnter={() => setHover(n.node.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.node.id)} onBlur={() => setHover(null)} tabIndex={0} role="img" aria-label={`${n.node.label}, ${formatUsd0(n.value)}`} style={{ cursor: "default", outline: "none" }}>
+            <motion.g key={n.node.id} initial={{ opacity: 0 }} animate={{ opacity: hover && hover !== n.node.id && !ribbons.some((r) => (r.source === hover && r.target === n.node.id) || (r.target === hover && r.source === n.node.id)) ? 0.35 : 1 }} transition={{ duration: duration.hover, ease: ease.out }} onMouseEnter={() => setHover(n.node.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.node.id)} onBlur={() => setHover(null)} tabIndex={0} role="img" aria-label={`${n.node.label}, ${formatUsd0(n.value)}`} style={{ cursor: "default" }}>
               <motion.rect x={n.x} width={NODE_W} rx={2} fill={sink ? COLOR[n.node.kind === "retainage" ? "held" : n.node.kind === "backcharge" ? "setoff" : "idle"] : "var(--foreground)"} animate={{ y: n.y, height: n.h }} transition={spring.ui} />
               <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY - 3 }} transition={spring.ui} className="fill-foreground text-[13px] font-medium" style={HALO}>
                 {n.node.label}
@@ -224,7 +225,7 @@ export function MoneyFlow({
                 if (at >= last) setStep(0);
                 setPlaying((p) => !p);
               }}
-              className="inline-flex h-8 items-center gap-1.5 rounded-full border bg-card px-3 text-xs font-medium transition-transform active:scale-[0.97]"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full border bg-card px-3 text-xs font-medium transition-[background-color,scale] duration-150 ease-out hover:bg-muted active:scale-[0.97]"
               aria-label={playing ? "Pause" : at >= last ? "Replay from the first payment" : "Play"}
             >
               {playing ? <Pause className="h-3.5 w-3.5" /> : at >= last ? <RotateCcw className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
@@ -241,10 +242,10 @@ export function MoneyFlow({
                     }}
                     aria-current={i === at}
                     aria-label={`${e.reference}, ${formatUsd0(e.amountCents)}`}
-                    title={`${e.reference} · ${formatUsd0(e.amountCents)}`}
+                    title={`${e.reference}, ${formatUsd0(e.amountCents)}`}
                     className="group flex h-8 w-5 items-center justify-center"
                   >
-                    <span className={`block rounded-full transition-all ${i === at ? "h-3 w-3 bg-money" : i < at ? "h-2 w-2 bg-foreground/60" : "h-2 w-2 bg-border group-hover:bg-foreground/40"} ${e.tier === 2 ? "ring-1 ring-foreground/30 ring-offset-1 ring-offset-background" : ""}`} />
+                    <span className={`block h-2 w-2 rounded-full transition-[scale,background-color] duration-150 ease-out group-hover:scale-125 ${i === at ? "scale-150 bg-money group-hover:scale-150" : i < at ? "bg-foreground/60" : "bg-border group-hover:bg-foreground/40"} ${e.tier === 2 ? "ring-1 ring-foreground/30 ring-offset-1 ring-offset-background" : ""}`} />
                   </button>
                 </li>
               ))}
@@ -254,7 +255,7 @@ export function MoneyFlow({
       </figcaption>
       <p className="mt-2 text-xs text-muted-foreground" aria-live={playing ? "off" : "polite"}>
         <span className="type-label mr-2">{current.tier === 2 ? "One hop down" : `Payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
-        {current.reference} · <span className="num">{formatUsd0(current.amountCents)}</span> · received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
+        {current.reference}, <span className="num">{formatUsd0(current.amountCents)}</span>, received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
       </p>
     </figure>
   );

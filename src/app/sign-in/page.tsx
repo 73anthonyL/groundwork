@@ -41,10 +41,9 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <Wordmark />
         </header>
         <div className="mx-auto w-full max-w-5xl px-6 pb-16 pt-14">
-          <p className="text-sm font-medium text-stage-muted">Demo sign-in, no password needed</p>
-        <h1 className="mt-2 max-w-2xl text-4xl font-bold leading-[1.1] sm:text-5xl">Who do you want to be?</h1>
+          <h1 className="max-w-2xl text-4xl font-bold leading-[1.1] sm:text-5xl">Who do you want to be?</h1>
         <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-stage-muted">
-          The owner pays the general contractor, who pays the subcontractors. Click a name to use Groundwork as that person. Start as {START.split(" ")[0]}, the contractor&rsquo;s controller, who does most of the work.
+          The owner pays the general contractor, who pays the subcontractors. Click a name to use Groundwork as that person. Start as {START.split(" ")[0]}, the contractor&rsquo;s controller, who does most of the work. This is a demo sign-in, so no password is needed.
         </p>
         </div>
       </div>
@@ -58,7 +57,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           {GROUPS.map((g, gi) => {
             const people = seats.filter((r) => r.org.kind === g.kind);
             return (
-              <section key={g.kind} aria-labelledby={`group-${g.kind}`} className="relative">
+              <section key={g.kind} aria-labelledby={`group-${g.kind}`} className="relative min-w-0">
                 {/* Money flows left to right; the rule and arrowhead say so without a diagram. */}
                 <div aria-hidden className="mb-5 flex items-center gap-2 text-muted-foreground">
                   <span className="num text-xs">{gi + 1}</span>
@@ -80,7 +79,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
                               {user.name}
                               {user.name === START && <span className="ml-2 rounded-full bg-link-soft px-2 py-0.5 text-xs font-medium text-link">Start here</span>}
                             </span>
-                            <span className="block truncate text-[13px] text-muted-foreground">
+                            <span className="block text-[13px] text-muted-foreground">
                               {user.title}, {org.name}
                             </span>
                             <span className="block truncate text-[13px] text-muted-foreground">{org.kind === "gc" ? "Runs both projects" : (projectOf(org.id) ?? "Not on a project yet")}</span>

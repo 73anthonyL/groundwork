@@ -1,6 +1,7 @@
 // Dev tool: real-time screenshots through headless Chrome's DevTools protocol, so animations finish.
 //   node scripts/shot.mjs <out.png> <url> [width=1440] [waitMs=4500] [fullPage=1]
 // Prints console errors from the page. Needs Chrome started with --remote-debugging-port=9333.
+// REDUCE=1 emulates prefers-reduced-motion.
 // PERSONA=priya signs the tab in as that seeded user (dev secret) before loading the page.
 const [out, url, width = "1440", wait = "4500", full = "1"] = process.argv.slice(2);
 import { writeFileSync } from "node:fs";
@@ -38,6 +39,8 @@ if (process.env.PERSONA) {
 if (process.env.THEME || process.env.TYPE) {
   await send("Page.addScriptToEvaluateOnNewDocument", { source: `try{${process.env.THEME ? `localStorage.setItem("gw-theme","${process.env.THEME}");` : ""}${process.env.TYPE ? `localStorage.setItem("gw-type","${process.env.TYPE}");` : ""}}catch(e){}` });
 }
+// REDUCE=1 renders the page as someone with "reduce motion" switched on sees it.
+if (process.env.REDUCE) await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
 await send("Page.navigate", { url });
 await new Promise((r) => setTimeout(r, 1500));
 // Scroll through the page so in-view animations start, then return to the top.

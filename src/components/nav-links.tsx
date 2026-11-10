@@ -14,7 +14,7 @@ export function NavLinks({ nav, className = "" }: { nav: { href: string; label: 
       {nav.map((n, i) => {
         const on = current(n.href, i);
         return (
-          <Link key={n.href} href={n.href} aria-current={on ? "page" : undefined} className={`rounded-md px-2.5 py-1 transition-colors ${on ? "bg-white/10 font-medium text-white" : "text-stage-muted hover:bg-white/5 hover:text-white"}`}>
+          <Link key={n.href} href={n.href} aria-current={on ? "page" : undefined} className={`rounded-md px-2.5 py-1 transition-colors ${on ? "bg-stage-foreground/10 font-medium text-stage-foreground" : "text-stage-muted hover:bg-stage-foreground/5 hover:text-stage-foreground"}`}>
             {n.label}
           </Link>
         );

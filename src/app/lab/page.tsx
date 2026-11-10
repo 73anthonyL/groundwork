@@ -139,7 +139,7 @@ export default async function LabPage() {
               <div>
                 <div className="type-label text-muted-foreground">Body and data</div>
                 <p className="text-sm">The contract already says when the sub gets paid.</p>
-                <p className="num font-mono text-sm">$45,000.00 · sha256 9f2c41ab… · 7d 3h left</p>
+                <p className="num font-mono text-sm">$45,000.00, sha256 9f2c41ab…, 7d 3h left</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <Button variant="money">Record and allocate</Button>

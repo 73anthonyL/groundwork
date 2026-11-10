@@ -17,7 +17,7 @@ export default async function ProjectLivePage({ params }: { params: Promise<{ id
     <div>
       <PageHero
         kicker={
-          <Link href="/gc" className="text-stage-muted underline decoration-white/30 underline-offset-4 hover:text-white">
+          <Link href="/gc" className="text-stage-muted underline decoration-stage-foreground/30 underline-offset-4 hover:text-stage-foreground">
             All projects
           </Link>
         }

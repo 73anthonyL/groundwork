@@ -29,7 +29,7 @@ export function ProjectSteps({ steps }: { steps: ProjectStep[] }) {
             <li key={s.title} aria-current={isCurrent ? "step" : undefined} className={`flex flex-col gap-1.5 px-5 py-4 ${isCurrent ? "bg-link-soft/60" : ""}`}>
               <div className="flex items-center gap-2">
                 <span
-                  className={`num flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${s.done ? "bg-settled text-settled-foreground" : isCurrent ? "bg-link text-white" : "bg-secondary text-muted-foreground"}`}
+                  className={`num flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${s.done ? "bg-settled text-settled-foreground" : isCurrent ? "bg-link text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
                 >
                   {s.done ? <Check className="h-3 w-3" strokeWidth={3} aria-label="Done" /> : i + 1}
                 </span>

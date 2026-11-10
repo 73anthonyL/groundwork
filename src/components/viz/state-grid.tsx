@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { StateLaw } from "@/domain/statutes";
-import { duration, spring } from "@/lib/motion";
+import { duration, ease, spring } from "@/lib/motion";
 
 /** Tile map: one square per jurisdiction, placed roughly where it sits on a map. [column, row]. */
 const TILE: Record<string, [number, number]> = {
@@ -88,9 +88,9 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
       <div className="min-w-0">
         <div role="tablist" aria-label="Rule" className="flex flex-wrap gap-1 rounded-full bg-secondary p-1 text-xs">
           {RULES.map((r) => (
-            <button key={r.id} role="tab" aria-selected={r.id === rule.id} onClick={() => setRuleId(r.id)} className="relative rounded-full px-3 py-1.5 font-medium transition-colors">
+            <button key={r.id} role="tab" aria-selected={r.id === rule.id} onClick={() => setRuleId(r.id)} className="group relative rounded-full px-3 py-1.5 font-medium">
               {r.id === rule.id && <motion.span layoutId="rule-pill" transition={spring.ui} className="absolute inset-0 rounded-full bg-card shadow-card" />}
-              <span className={`relative ${r.id === rule.id ? "text-foreground" : "text-muted-foreground"}`}>{r.label}</span>
+              <span className={`relative transition-colors duration-150 ${r.id === rule.id ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"}`}>{r.label}</span>
             </button>
           ))}
         </div>
@@ -108,10 +108,10 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
                 onClick={() => setPicked(s.state)}
                 aria-label={`${s.name}: ${rule.value(s)}`}
                 aria-pressed={on}
-                title={`${s.name} · ${rule.value(s)}`}
-                className={`absolute flex items-center justify-center rounded-[4px] font-mono text-[10px] font-medium sm:text-[11px] ${on ? "z-10 ring-2 ring-foreground ring-offset-1 ring-offset-background" : ""}`}
+                title={`${s.name}: ${rule.value(s)}`}
+                className={`absolute flex items-center justify-center rounded-[4px] font-mono text-[10px] font-medium transition-[filter] duration-150 ease-out hover:z-10 hover:brightness-110 sm:text-[11px] ${on ? "z-10 ring-2 ring-foreground ring-offset-1 ring-offset-background" : ""}`}
                 style={{ left: `${pos[0] * cell}%`, top: `${pos[1] * 12.5}%`, width: `calc(${cell}% - 3px)`, height: "calc(12.5% - 3px)", opacity: rule.source(s).confidence === "low" ? 0.55 : 1 }}
-                animate={{ backgroundColor: b.color, color: b.ink ?? "#fff" }}
+                animate={{ backgroundColor: b.color, color: b.ink ?? "var(--settled-foreground)" }}
                 transition={{ duration: duration.fade }}
                 whileTap={{ scale: 0.94 }}
               >
@@ -134,9 +134,9 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
       </div>
       {!compact && (
         <aside className="min-w-0 rounded-xl bg-card shadow-card p-4 shadow-card" aria-live="polite">
-          <AnimatePresence mode="wait">
+          <AnimatePresence initial={false}>
             {sel ? (
-              <motion.div key={`${sel.state}-${rule.id}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
+              <motion.div key={`${sel.state}-${rule.id}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: duration.hover, ease: ease.out }}>
                 <div className="type-label text-muted-foreground">{rule.label}</div>
                 <h3 className="mt-1 text-2xl font-semibold">{sel.name}</h3>
                 <p className="mt-2 text-sm">{rule.value(sel)}</p>

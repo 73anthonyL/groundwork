@@ -90,6 +90,9 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
     },
   ];
 
+  const currentStep = steps.findIndex((st) => !st.done);
+  const nextAction = currentStep > 0 ? steps[currentStep].action : undefined;
+
   // The project's money as a picture. After a payment is recorded it replays from the moment before it landed.
   const flow = events.length > 0 ? await projectFlow(org, id) : null;
   const landedAt = flow && highlighted ? flow.events.findIndex((e) => e.id === highlighted) : -1;
@@ -98,7 +101,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
     <div>
       <PageHero
         kicker={
-          <Link href="/gc" className="text-stage-muted underline decoration-white/30 underline-offset-4 hover:text-white">
+          <Link href="/gc" className="text-stage-muted underline decoration-stage-foreground/30 underline-offset-4 hover:text-stage-foreground">
             All projects
           </Link>
         }
@@ -129,35 +132,40 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         ]}
         actions={
           <>
-            <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: "signal", size: "lg" })}>
+            {nextAction && (
+              <Link href={nextAction.href} className={buttonVariants({ variant: "signal", size: "lg" })}>
+                {nextAction.label}
+              </Link>
+            )}
+            <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: nextAction || currentStep === 3 ? "stage" : "signal", size: "lg" })}>
               <FileUp aria-hidden />
               Add a subcontract
             </Link>
-            <RecordOwnerPayment onStage projectId={project.id} defaults={{ amount: "125,000.00", reference: `ACH BVH-${String(162 + events.length).padStart(4, "0")}`, periodThrough: nextPeriod }} />
+            <RecordOwnerPayment onStage emphasis={currentStep === 3} projectId={project.id} defaults={{ amount: "125,000.00", reference: `ACH BVH-${String(162 + events.length).padStart(4, "0")}`, periodThrough: nextPeriod }} />
           </>
         }
       />
 
       <ProjectSteps steps={steps} />
 
-      {(toReview.length > 0 || toCompile.length > 0) && (
+      {toReview.length + toCompile.length > (nextAction && currentStep <= 2 ? 1 : 0) && (
         <ul className="mt-4 space-y-2 text-sm" aria-label="Waiting on you">
-          {toReview.map((p) => (
+          {toReview.filter((p) => `/gc/pay-apps/${p.id}` !== nextAction?.href).map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-4 rounded-lg bg-hold-soft px-4 py-2.5">
               <span>
                 {p.sub} submitted pay application #{p.number}. It is waiting for your review.
               </span>
-              <Link href={`/gc/pay-apps/${p.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })} style={{ background: "var(--card)" }}>
+              <Link href={`/gc/pay-apps/${p.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })}>
                 Review it
               </Link>
             </li>
           ))}
-          {toCompile.map((c) => (
+          {toCompile.filter((c) => `/gc/contracts/${c.id}` !== nextAction?.href).map((c) => (
             <li key={c.id} className="flex items-center justify-between gap-4 rounded-lg bg-hold-soft px-4 py-2.5">
               <span>
                 {c.sub.name}&rsquo;s subcontract {c.status === "draft" ? "has not been read into payment rules yet" : "has payment rules waiting for your approval"}. Nothing can be paid on it until then.
               </span>
-              <Link href={`/gc/contracts/${c.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })} style={{ background: "var(--card)" }}>
+              <Link href={`/gc/contracts/${c.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })}>
                 {c.status === "draft" ? "Read it" : "Review the rules"}
               </Link>
             </li>
@@ -234,7 +242,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                       </h3>
                       <span className="num text-xs text-muted-foreground">{e.reference}</span>
                     </header>
-                    <Table className="table-fixed">
+                    <Table className="min-w-[720px] table-fixed">
                       <colgroup>
                         {COLS.map((w, i) => (
                           <col key={i} className={w} />
@@ -297,12 +305,12 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               {contracts.length} contract{contracts.length === 1 ? "" : "s"} worth <span className="num">{formatCentsCompact(contracts.reduce((s, c) => s + c.contractSumCents, 0))}</span>. Click a subcontractor to see its payment rules.
             </p>
           </div>
-          <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: "outline" })} style={{ background: "var(--card)" }}>
+          <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: "outline" })}>
             Add a subcontract
           </Link>
         </div>
         <div className="mt-5 overflow-hidden rounded-xl bg-card shadow-card">
-          <Table>
+          <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead>Subcontractor</TableHead>
@@ -330,7 +338,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                       <span className="text-muted-foreground">None yet</span>
                     ) : (
                       c.payApplications.map((p) => (
-                        <Link key={p.id} href={`/gc/pay-apps/${p.id}`} className="num mr-3 text-link hover:underline">
+                        <Link key={p.id} href={`/gc/pay-apps/${p.id}`} className="num -mx-1 mr-2 inline-block px-1.5 py-1 text-link hover:underline">
                           #{p.number}
                         </Link>
                       ))

@@ -4,6 +4,7 @@ import { Wordmark } from "@/components/wordmark";
 import { ContractHero } from "@/components/landing/contract-hero";
 import { MoneyFlow } from "@/components/viz/money-flow";
 import { DaysGap } from "@/components/viz/charts";
+import { buttonVariants } from "@/components/ui/button";
 import { SAMPLE_FLOW } from "@/lib/sample-flow";
 
 /** The work, in order, and who does each part. It is a sequence, so it is numbered. */
@@ -25,7 +26,7 @@ export default async function Landing() {
         <header className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Wordmark />
           <nav className="flex items-center gap-1 text-[13px]">
-            <Link href={cta.href} className="ml-2 rounded-md border border-white/30 px-3 py-1 font-medium text-white transition-colors hover:bg-white/10">
+            <Link href={cta.href} className="ml-2 rounded-md border border-stage-foreground/30 px-3 py-1 font-medium text-stage-foreground transition-colors hover:bg-stage-foreground/10">
               {session ? "Workspace" : "Sign in"}
             </Link>
           </nav>
@@ -36,15 +37,16 @@ export default async function Landing() {
             Groundwork reads the subcontract, turns its payment terms into rules a person approves once, and pays every subcontractor the moment the owner&rsquo;s money lands.
           </p>
           <div className="reveal mt-9 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ "--i": 2 } as React.CSSProperties}>
-            <Link href={cta.href} className="inline-flex h-11 items-center rounded-full bg-signal px-6 text-[15px] font-semibold text-signal-foreground transition-[transform,filter] hover:brightness-105 active:scale-[0.97]">
+            <Link href={cta.href} className={buttonVariants({ variant: "signal", size: "lg", className: "h-11 px-6" })}>
               {cta.label}
             </Link>
-            <Link href="#how" className="text-[15px] text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
+            <Link href="#how" className="text-[15px] text-stage-foreground underline decoration-stage-foreground/40 underline-offset-4 hover:decoration-stage-foreground">
               How it works
             </Link>
           </div>
         </section>
       </div>
+      <main>
       <div className="reveal mx-auto -mt-44 w-full max-w-6xl px-5 pb-24 sm:px-8" style={{ "--i": 3 } as React.CSSProperties}>
         <ContractHero />
       </div>
@@ -94,14 +96,16 @@ export default async function Landing() {
         </div>
       </section>
 
+      </main>
+
       <footer className="stage">
         <div className="mx-auto max-w-6xl px-5 pb-10 pt-24 sm:px-8">
           <h2 className="max-w-3xl text-4xl font-bold leading-[1.05] sm:text-5xl">See one owner payment become four.</h2>
           <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-stage-muted">The demo runs a real project from signed subcontract to paid subcontractor. Pick a seat and follow the money.</p>
-          <Link href={cta.href} className="mt-8 inline-flex h-11 items-center rounded-full bg-signal px-6 text-[15px] font-semibold text-signal-foreground transition-[transform,filter] hover:brightness-105 active:scale-[0.97]">
+          <Link href={cta.href} className={buttonVariants({ variant: "signal", size: "lg", className: "mt-8 h-11 px-6" })}>
             {cta.label}
           </Link>
-          <p className="mt-20 border-t border-white/10 pt-6 text-[13px] text-stage-muted">Groundwork, built for the BBS and Ramp hackathon. The demo data is synthetic, and nothing here is legal advice.</p>
+          <p className="mt-20 border-t border-stage-foreground/10 pt-6 text-[13px] text-stage-muted">Groundwork, built for the BBS and Ramp hackathon. The demo data is synthetic, and nothing here is legal advice.</p>
         </div>
       </footer>
     </div>

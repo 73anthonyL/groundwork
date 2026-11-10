@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { spring } from "@/lib/motion";
 import { Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,28 +13,45 @@ export function RecordOwnerPayment({
   projectId,
   defaults,
   onStage = false,
+  emphasis = false,
 }: {
   projectId: string;
   defaults: { amount: string; reference: string; periodThrough: string };
   /** The trigger sits on the dark page header. */
   onStage?: boolean;
+  /** This is the next thing to do on the page, so the trigger is the loud button. */
+  emphasis?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const close = () => {
+    setOpen(false);
+    // Hand focus back to the button that opened the form.
+    requestAnimationFrame(() => trigger.current?.focus());
+  };
   const [state, action, pending] = useActionState<RecordState, FormData>(recordOwnerPaymentAction, {});
   return (
     <div>
       {!open ? (
-        <Button onClick={() => setOpen(true)} variant={onStage ? "stage" : "money"} size={onStage ? "lg" : "default"}>
+        <Button ref={trigger} id="record-owner-payment" onClick={() => setOpen(true)} variant={onStage ? (emphasis ? "signal" : "stage") : "money"} size={onStage ? "lg" : "default"}>
           <Landmark aria-hidden />
           Record owner payment
         </Button>
       ) : (
-        <form action={action} className="w-full max-w-md rounded-xl bg-card p-5 text-foreground shadow-float" aria-label="Record owner payment">
+        <motion.form
+          action={action}
+          initial={{ opacity: 0, scale: 0.97, y: -4 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={spring.snappy}
+          style={{ transformOrigin: "top left" }}
+          className="w-full max-w-md rounded-xl bg-card p-5 text-foreground shadow-float [--ring:var(--link)]"
+          aria-label="Record owner payment"
+        >
           <input type="hidden" name="projectId" value={projectId} />
           <div className="grid gap-3">
             <div className="grid gap-1.5">
               <Label htmlFor="amount">Amount received</Label>
-              <Input id="amount" name="amount" inputMode="decimal" defaultValue={defaults.amount} className="num" required />
+              <Input id="amount" name="amount" inputMode="decimal" defaultValue={defaults.amount} className="num" required autoFocus />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-1.5">
@@ -63,12 +82,12 @@ export function RecordOwnerPayment({
               <Button type="submit" disabled={pending} variant="money">
                 {pending ? "Allocating…" : "Record and allocate"}
               </Button>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              <Button type="button" variant="outline" onClick={close}>
                 Cancel
               </Button>
             </div>
           </div>
-        </form>
+        </motion.form>
       )}
     </div>
   );

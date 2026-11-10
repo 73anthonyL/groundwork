@@ -13,7 +13,7 @@ export function PageHero({
   aside,
   width = "wide",
 }: {
-  /** Small line above the title: where you are, or who you are. */
+  /** A way back up, above the title (a link, never a label). */
   kicker?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;

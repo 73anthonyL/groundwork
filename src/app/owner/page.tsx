@@ -11,9 +11,8 @@ export default async function OwnerHome() {
   return (
     <AppShell session={session}>
       <PageHero
-        kicker={`You are ${session.user.name} at ${session.org.name}, the owner paying for the building.`}
         title="Where your money went"
-        lede="You pay the general contractor. This page shows how far each payment has travelled: which subcontractors have been paid, what is on its way, and what is being held back. You only watch here; nothing needs your action."
+        lede={`You are ${session.user.name} at ${session.org.name}, the owner paying for the building. You pay the general contractor. This page shows how far each payment has travelled: which subcontractors have been paid, what is on its way, and what is being held back. You only watch here; nothing needs your action.`}
       />
       <ul className="grid gap-4 sm:grid-cols-2">
         {projects.map((p) => (

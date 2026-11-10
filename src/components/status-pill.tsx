@@ -4,7 +4,7 @@ type Tone = "neutral" | "hold" | "settled" | "money";
 
 const CONTRACT: Record<string, { label: string; tone: Tone; icon: LucideIcon }> = {
   draft: { label: "Not read yet", tone: "neutral", icon: CircleDashed },
-  compiling: { label: "Compiling", tone: "neutral", icon: Loader2 },
+  compiling: { label: "Reading", tone: "neutral", icon: Loader2 },
   in_review: { label: "Needs review", tone: "hold", icon: FileSearch },
   active: { label: "Rules approved", tone: "settled", icon: CheckCircle2 },
 };

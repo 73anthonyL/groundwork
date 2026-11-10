@@ -45,6 +45,12 @@ export function CompileReview({
   const [compiling, setCompiling] = useState<null | "model" | "seed">(null);
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
+  const pdf = useRef<HTMLElement>(null);
+  // Show the page a quote came from. On a narrow screen the PDF sits above the rules, so bring it back into view.
+  const jump = (n: number) => {
+    setPage(n);
+    if (pdf.current && pdf.current.getBoundingClientRect().bottom < 80) pdf.current.scrollIntoView({ block: "start" });
+  };
 
   async function compile(source: "model" | "seed") {
     setError(null);
@@ -54,7 +60,7 @@ export function CompileReview({
       const body = (await res.json()) as { error?: string; message?: string };
       if (!res.ok) {
         if (body.error === "no_api_key") setError("No Claude API key is configured on this server. You can load the cached extraction for this demo contract instead.");
-        else setError(body.message ?? body.error ?? "Compile failed.");
+        else setError(body.message ?? body.error ?? "Reading failed.");
         return;
       }
       startTransition(() => router.refresh());
@@ -87,9 +93,9 @@ export function CompileReview({
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,560px)]">
-      <section aria-label="Subcontract PDF" className="min-w-0">
+      <section ref={pdf} aria-label="Subcontract PDF" className="min-w-0 scroll-mt-16 lg:sticky lg:top-16 lg:self-start">
         {documentUrl ? (
-          <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[82vh] w-full rounded-xl bg-card shadow-card" />
+          <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[50vh] w-full rounded-xl bg-card shadow-card lg:h-[calc(100vh-6rem)]" />
         ) : (
           <p className="text-sm text-muted-foreground">No subcontract uploaded yet.</p>
         )}
@@ -160,7 +166,7 @@ export function CompileReview({
                 </h3>
                 <ul className="mt-2 divide-y rounded-xl bg-card shadow-card">
                   {g.paths.map((p) => (
-                    <FieldRow key={p} path={p} extracted={stored.extracted} stored={stored} editable={editable} contractId={contractId} ruleSetId={ruleSet.id} onJump={setPage} />
+                    <FieldRow key={p} path={p} extracted={stored.extracted} stored={stored} editable={editable} contractId={contractId} ruleSetId={ruleSet.id} onJump={jump} />
                   ))}
                 </ul>
               </section>
@@ -193,7 +199,7 @@ export function CompileReview({
                                 <input type="hidden" name="contractId" value={contractId} />
                                 <input type="hidden" name="ruleSetId" value={ruleSet.id} />
                                 <input type="hidden" name="index" value={i} />
-                                <Input name="note" placeholder="Note (optional)" className="h-8 text-xs" />
+                                <Input name="note" aria-label="Note" placeholder="Note (optional)" className="h-8 text-xs" />
                                 <Button type="submit" size="sm" variant="outline">
                                   Acknowledge
                                 </Button>
@@ -357,8 +363,8 @@ function FieldRow({
         </div>
       </div>
       {f.evidence && (
-        <button type="button" onClick={() => onJump(pageNo ?? 1)} className="type-contract mt-2 block text-left text-[13.5px] text-muted-foreground transition-colors hover:text-foreground" title="Show this page of the contract">
-          &ldquo;{f.evidence.quote}&rdquo; <span className="whitespace-nowrap font-sans text-xs">page {pageNo}</span>
+        <button type="button" onClick={() => onJump(pageNo ?? 1)} className="group type-contract mt-2 block text-left text-[13.5px] text-muted-foreground transition-colors duration-150 hover:text-foreground" title="Show this page of the contract">
+          &ldquo;{f.evidence.quote}&rdquo; <span className="whitespace-nowrap font-sans text-xs font-medium text-link group-hover:underline">page {pageNo}</span>
           {f.evidence.confidence !== "high" && <span className="ml-2 whitespace-nowrap font-sans text-xs text-hold">the model was {f.evidence.confidence === "low" ? "unsure" : "not certain"}</span>}
         </button>
       )}
@@ -387,8 +393,8 @@ function FieldRow({
               <input type="hidden" name="ruleSetId" value={ruleSetId} />
               <input type="hidden" name="path" value={path} />
               <input type="hidden" name="decision" value={mode} />
-              {mode === "override" && <Input name="value" placeholder={placeholderFor(path)} defaultValue={defaultOverride(path, f.value)} className="h-8 text-sm" required />}
-              <Input name="note" placeholder={mode === "accept" ? "Why this reading is right (optional)" : "Why you changed it"} className="h-8 text-sm" required={mode === "override"} />
+              {mode === "override" && <OverrideInput path={path} value={f.value} />}
+              <Input name="note" aria-label={mode === "accept" ? "Note" : "Reason for the change"} placeholder={mode === "accept" ? "Why this reading is right (optional)" : "Why you changed it"} className="h-8 text-sm" required={mode === "override"} />
               <div className="flex gap-2">
                 <Button type="submit" size="sm" variant="money">
                   {mode === "accept" ? "Accept" : "Save override"}
@@ -405,11 +411,40 @@ function FieldRow({
   );
 }
 
+const TIMING_TYPES = [
+  ["pay_when_paid", "Pay when paid"],
+  ["pay_if_paid", "Pay if paid"],
+  ["fixed_days", "A fixed number of days"],
+  ["silent", "The contract does not say"],
+] as const;
+const isYesNo = (path: RuleFieldPath) => /^(waivers|offsets)\.|agreed_in_writing|stored_materials/.test(path);
+const SELECT = "h-8 w-full rounded-lg border border-input bg-card px-2 text-sm";
+
+/** The corrected value. Terms with a fixed set of answers get a list, so a typo cannot become a payment rule. */
+function OverrideInput({ path, value }: { path: RuleFieldPath; value: unknown }) {
+  if (path === "timing.type")
+    return (
+      <select name="value" aria-label="Corrected value" defaultValue={String(value ?? "silent")} className={SELECT} required>
+        {TIMING_TYPES.map(([v, label]) => (
+          <option key={v} value={v}>
+            {label}
+          </option>
+        ))}
+      </select>
+    );
+  if (isYesNo(path))
+    return (
+      <select name="value" aria-label="Corrected value" defaultValue={value === true ? "true" : "false"} className={SELECT} required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    );
+  return <Input name="value" aria-label="Corrected value" placeholder={placeholderFor(path)} defaultValue={defaultOverride(path, value)} className="h-8 text-sm" required />;
+}
+
 function placeholderFor(path: RuleFieldPath): string {
-  if (path === "timing.type") return "pay_when_paid | pay_if_paid | fixed_days | silent";
   if (path.endsWith("_bps")) return "percent, e.g. 5";
   if (path.endsWith("days")) return "days";
-  if (/^(waivers|offsets)\.|agreed_in_writing|stored_materials/.test(path)) return "true or false";
   return "value";
 }
 
@@ -439,7 +474,7 @@ function Skeletons() {
         <ol className="mt-5 space-y-3">
           {READING_STEPS.map((label, i) => (
             <li key={label} className={`flex items-center gap-3 text-sm transition-opacity duration-500 ${i > step ? "opacity-35" : ""}`}>
-              {i < step ? <CheckCircle2 className="h-4 w-4 shrink-0 text-settled" aria-hidden /> : i === step ? <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-signal border-t-transparent" /> : <span aria-hidden className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />}
+              {i < step ? <CheckCircle2 className="tick-in h-4 w-4 shrink-0 text-settled" aria-hidden /> : i === step ? <span aria-hidden className="waiting-ring h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-signal border-t-transparent" /> : <span aria-hidden className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />}
               <span className={i === step ? "font-medium" : ""}>{label}</span>
             </li>
           ))}

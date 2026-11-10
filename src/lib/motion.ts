@@ -19,7 +19,8 @@ export const ease = {
   out: [0.2, 0, 0, 1],
 } as const;
 
-export const duration = { fade: 0.35, draw: 0.9, count: 1.1, step: 1.8 } as const;
+/** hover: anything answering the cursor. fade: mount and exit. mark: a highlight being drawn. */
+export const duration = { hover: 0.15, fade: 0.35, mark: 0.7, draw: 0.9, count: 1.1, step: 1.8 } as const;
 
 /** List entrance: parent staggers, rows rise 12px. */
 export const list = {

@@ -58,7 +58,7 @@ export function PayAppForm({
 
       <div className="rounded-xl bg-card shadow-card">
         <div className="grid grid-cols-[1fr_auto] gap-2 border-b px-3 py-2 text-xs text-muted-foreground">
-          <span>Line · scheduled value · billed before</span>
+          <span>Line, scheduled value, billed before</span>
           <span>This period</span>
         </div>
         <ul className="divide-y">

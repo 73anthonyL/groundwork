@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ContractSummary, SeriesPoint, TimelineEntry } from "@/server/read/project";
 import type { EvalRun } from "@/server/read/eval";
 import { duration, ease, list, spring } from "@/lib/motion";
@@ -60,7 +60,7 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
         </g>
         <rect x={x(shown)} y={pad.t} width={slot} height={height - pad.t - pad.b} fill="var(--foreground)" opacity={at === null ? 0 : 0.08} />
         {series.map((_, i) => (
-          <rect key={i} x={x(i)} y={0} width={slot} height={height} fill="transparent" tabIndex={0} role="img" aria-label={`${series[i].memo}: ${BANDS.map((b) => `${b.label} ${formatUsd0(series[i].balances[b.key] ?? 0)}`).join(", ")}`} onMouseEnter={() => setAt(i)} onFocus={() => setAt(i)} style={{ outline: "none" }} />
+          <rect key={i} x={x(i)} y={0} width={slot} height={height} fill="transparent" tabIndex={0} role="img" aria-label={`${series[i].memo}: ${BANDS.map((b) => `${b.label} ${formatUsd0(series[i].balances[b.key] ?? 0)}`).join(", ")}`} onMouseEnter={() => setAt(i)} onFocus={() => setAt(i)} />
         ))}
         <line x1={pad.l} x2={W - pad.r} y1={height - pad.b} y2={height - pad.b} stroke="var(--border)" />
       </svg>
@@ -107,7 +107,7 @@ export function ContractBars({ contracts }: { contracts: ContractSummary[] }) {
           </div>
           <div className="mt-1.5 flex h-3 overflow-hidden rounded-full bg-muted" role="img" aria-label={seg(c).filter((s) => s.cents > 0).map((s) => `${s.label} ${formatUsd0(s.cents)}`).join(", ")}>
             {seg(c).map((s) => (
-              <motion.span key={s.label} title={`${s.label} · ${formatUsd0(s.cents)}`} style={{ background: s.color }} initial={{ width: 0 }} animate={{ width: `${c.contractSumCents > 0 ? (s.cents / c.contractSumCents) * 100 : 0}%` }} transition={spring.ui} />
+              <span key={s.label} title={`${s.label}, ${formatUsd0(s.cents)}`} style={{ background: s.color, width: `${c.contractSumCents > 0 ? (s.cents / c.contractSumCents) * 100 : 0}%` }} />
             ))}
           </div>
           {lower(c.id).map((l) => (
@@ -171,7 +171,7 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
               tabIndex={0}
               role="img"
               aria-label={`${e.title}${e.party ? `, ${e.party}` : ""}${e.amountCents !== null ? `, ${formatUsd0(e.amountCents)}` : ""}`}
-              style={{ outline: "none" }}
+             
             />
           );
         })}
@@ -251,6 +251,7 @@ export function EvalHeadline({ run }: { run: EvalRun }) {
  * Bars grow in sequence; the third shows the statutory 7 days from the owner's payment.
  */
 export function DaysGap({ onStage = false }: { onStage?: boolean }) {
+  const reduce = useReducedMotion();
   const rows = [
     { label: "Owner pays the general contractor", days: 17, color: onStage ? "var(--stage-muted)" : "var(--flow-idle)", note: "median" },
     { label: "The subcontractor who did the work is paid", days: 50, color: "var(--money)", note: "median" },
@@ -262,9 +263,9 @@ export function DaysGap({ onStage = false }: { onStage?: boolean }) {
         <li key={r.label}>
           <div className={`text-sm ${onStage ? "text-stage-foreground/80" : "text-muted-foreground"}`}>{r.label}</div>
           <div className="mt-1.5 flex items-center gap-3">
-            <motion.span className="h-3 rounded-full" style={{ background: r.color }} initial={{ width: 0 }} whileInView={{ width: `${(r.days / 50) * 72}%` }} viewport={{ once: true }} transition={{ duration: 1.1, ease: ease.trace, delay: 0.2 + i * 0.5 }} />
-            <motion.span className="type-numeral whitespace-nowrap text-2xl" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: duration.fade, delay: 1.1 + i * 0.5 }}>
-              {r.days} <span className={`font-sans text-xs tracking-normal ${onStage ? "text-stage-muted" : "text-muted-foreground"}`}>days · {r.note}</span>
+            <motion.span className="h-3 origin-left rounded-full" style={{ background: r.color, width: `${(r.days / 50) * 72}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: duration.count, ease: ease.trace, delay: 0.2 + i * 0.5 }} />
+            <motion.span className="type-numeral whitespace-nowrap text-2xl" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: duration.fade, delay: reduce ? 0 : 1.1 + i * 0.5 }}>
+              {r.days} <span className={`font-sans text-xs tracking-normal ${onStage ? "text-stage-muted" : "text-muted-foreground"}`}>days, {r.note}</span>
             </motion.span>
           </div>
         </li>

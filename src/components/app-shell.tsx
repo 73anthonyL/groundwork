@@ -28,19 +28,19 @@ export function AppShell({
   const inner = width === "wide" ? "max-w-6xl" : "max-w-xl";
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-stage/95 text-stage-foreground backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-stage-foreground/10 bg-stage/95 text-stage-foreground backdrop-blur-xl [--ring:var(--stage-foreground)]">
         <div className={`mx-auto flex h-12 items-center justify-between gap-6 px-4 sm:px-6 ${inner}`}>
-          <div className="flex min-w-0 items-center gap-7">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-7">
             <Wordmark href={nav?.[0]?.href ?? "/"} />
-            {nav && nav.length > 1 && <NavLinks nav={nav} className={width === "wide" ? "hidden sm:flex" : "hidden"} />}
+            {nav && nav.length > 1 && <NavLinks nav={nav} className={width === "wide" ? "flex" : "hidden"} />}
           </div>
           <div className="flex shrink-0 items-center gap-3 text-[13px]">
             <span className="hidden text-stage-muted md:inline">
               {session.org.name}, {KIND_LABEL[session.org.kind].toLowerCase()}
             </span>
-            <span className="font-medium">{session.user.name}</span>
+            <span className="hidden font-medium sm:inline">{session.user.name}</span>
             <form action={signOut}>
-              <button type="submit" className="rounded-md px-2 py-1 text-stage-muted transition-colors hover:bg-white/10 hover:text-white">
+              <button type="submit" className="rounded-md px-2 py-1 text-stage-muted transition-colors hover:bg-stage-foreground/10 hover:text-stage-foreground">
                 Sign out
               </button>
             </form>
