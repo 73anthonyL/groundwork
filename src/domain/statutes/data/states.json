@@ -1,0 +1,2512 @@
+[
+ {
+  "state": "AK",
+  "name": "Alaska",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "None for private projects (AS 36.90.200-.290 applies to public construction/public works only)",
+   "url": "https://law.onecle.com/alaska/title-36/36.90.210.html",
+   "confidence": "medium",
+   "notes": "AS 36.90.210 (8 working days after receipt; interest at AS 45.45.010(a) rate) is expressly limited to 'a public construction or public works contract', and AS 36.90.290 defines prime contractor by a contract with the state or a political subdivision (text read on a 2016 mirror). Levelset, Husch Blackwell and Eckert Seamans surveys all list no private prompt-pay statute. Private payment timing is contractual."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "None found for private projects",
+   "url": "https://www.levelset.com/prompt-payment/alaska-prompt-payment-law/",
+   "confidence": "medium",
+   "notes": "No private retainage statute located; AS 36.90.250 retainage rules are public-works only."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "none (contract governs on private work)",
+   "cite": "None for private projects",
+   "url": "https://law.onecle.com/alaska/title-36/36.90.210.html",
+   "confidence": "medium",
+   "notes": "AS 36.90.210(a)(2) (8 working days after final payment) is public-works only."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No controlling authority; cf. Industrial Indem. Co. v. Wick Constr. Co., 680 P.2d 1100 (Alaska 1984)",
+   "url": "https://www.levelset.com/pay-applications/alaska-payment-terms-faqs/",
+   "confidence": "low",
+   "notes": "Secondary surveys say no Alaska court has squarely ruled on pay-if-paid; Wick is cited as suggesting an explicit clause might be enforced. Husch Blackwell lists it as 'permissible'. Not verified in any opinion."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "AS 34.35.117",
+   "url": "https://law.onecle.com/alaska/title-34/34.35.117.html",
+   "confidence": "medium",
+   "notes": "AS 34.35.117(a): a signed written waiver needs no consideration and is binding, but 'may not relate to labor, materials, services, or equipment furnished after the date the waiver is signed' (so prospective/in-contract waivers are ineffective as to future work). (b): waivers by individual laborers described in AS 34.35.120(10) are void. No statutory form or notarization requirement in the section. Text read on a mirror last modified 2016; not re-verified on akleg.gov (site blocked/JS)."
+  }
+ },
+ {
+  "state": "AL",
+  "name": "Alabama",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": true,
+   "lateInterest": "1% per month (12% per annum) on the unpaid balance",
+   "cite": "Ala. Code § 8-29-3(b), (d), (e)",
+   "url": "https://law.onecle.com/alabama/title-8/8-29-3.html",
+   "confidence": "high",
+   "notes": "§ 8-29-3(b): GC pays sub per agreed payment terms, 'but if payment terms are not agreed to, then within seven days of receipt of payment from owner'. § 8-29-3(e) separately says payment of the sub's share of an owner payment 'shall be made not later than the seventh day after the date the contractor receives the owner's payment', with no contract carve-out, so the override in (b) is in tension with (e); treat 7 days as the safe number. Interest per (d); § 8-29-5 bars waiving interest before payment is due. Bona fide dispute: may withhold up to 2x disputed amount with written notice within 5 days (§ 8-29-4). Chapter exempt: residential homebuilders, residential improvements of 16 or fewer units, contracts of $10,000 or less, state/local government contracts (§ 8-29-7). Text read on a non-official mirror (official ALISON site is JS-only, Justia blocked); no 2023-2026 amendment found in searches."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": "2011-09-01",
+   "conditions": "Not more than 10% of estimated work properly done and stored materials; after 50% completion no further retainage may be withheld. Sub's retainage percentage may not exceed the percentage the owner withholds from the GC (§ 8-29-3(f)). Excess retainage bears 1%/month interest. Not applicable to PSC-regulated electric utility projects (§ 8-29-3(m)) or to the § 8-29-7 exemptions (residential <=16 units, contracts <= $10,000, government contracts).",
+   "cite": "Ala. Code § 8-29-3(f), (j)",
+   "url": "https://law.onecle.com/alabama/title-8/8-29-3.html",
+   "confidence": "high",
+   "notes": "Cap text read in statute. The appliesFrom date (contracts executed on/after Sept 1, 2011, from the 2011 amendment) comes from law-firm summaries (Baker Donelson), not from statute text: medium confidence on that date only."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives the retainage payment from owner (by cross-reference; owner must release within 60 days of completion of GC's work or substantial completion, whichever first, with certificates of occupancy issued)",
+   "cite": "Ala. Code § 8-29-3(l)(1), (e)",
+   "url": "https://law.onecle.com/alabama/title-8/8-29-3.html",
+   "confidence": "medium",
+   "notes": "§ 8-29-3(l)(1) fixes 60 days for owner->GC and then says only that 'the contractor shall release and pay retainage to its subcontractors for work completed pursuant to the terms of this chapter'. No separate day count for GC->sub; the 7 days is the general pass-through deadline in (b)/(e) applied to a retainage payment. Interpretive."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Lemoine Co. of Ala., L.L.C. v. HLH Constructors, Inc., 62 So. 3d 1020 (Ala. 2010); see also Federal Ins. Co. v. I. Kruger, Inc., 829 So. 2d 732 (Ala. 2002)",
+   "url": "https://law.justia.com/cases/alabama/supreme-court/2002/1001096-3.html",
+   "confidence": "medium",
+   "notes": "Secondary sources: an explicit condition-precedent clause is enforced (Lemoine); ambiguous 'pay when paid' wording is treated as timing only and does not defeat a bond claim (Kruger). Opinions not read directly."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "Ala. Code § 35-11-210 et seq. (no waiver form); Ala. Code § 8-29-3(n)",
+   "url": "https://www.levelset.com/lien-waivers/alabama-lien-waiver-faqs/",
+   "confidence": "medium",
+   "notes": "No statutory waiver form and no notarization requirement per consistent secondary sources. § 8-29-3(n) (read) lets the payer condition payment on a full lien release 'for the amount of work being paid'. Whether advance/in-contract waivers are void could not be confirmed from a statute or case (secondary sources say not expressly prohibited): left null."
+  }
+ },
+ {
+  "state": "AR",
+  "name": "Arkansas",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "None for private projects (Ark. Code §§ 22-9-201 et seq. and 19-4-1411 are public only)",
+   "url": "https://www.levelset.com/prompt-payment/arkansas-prompt-payment-faqs",
+   "confidence": "medium",
+   "notes": "Consistent secondary sources (Levelset, Husch Blackwell, Siteline): Arkansas has no private-project prompt payment statute; contract governs. Not confirmed against the Arkansas Code itself (official code is on a LexisNexis portal). No 2023-2025 act creating one was found."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "None for private projects (Ark. Code § 22-9-604 is public only)",
+   "url": "https://levelset.com/retainage/arkansas-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "Secondary sources agree there is no private retainage cap."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "none (contract governs on private work)",
+   "cite": "None for private projects",
+   "url": "https://levelset.com/retainage/arkansas-retainage-faqs/",
+   "confidence": "medium",
+   "notes": ""
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Travelers Cas. & Sur. Co. of Am. v. Sweet's Contracting, Inc., 2014 Ark. 484; Brown v. Maryland Cas. Co., 246 Ark. 1074, 442 S.W.2d 187 (1969)",
+   "url": "https://cases.justia.com/arkansas/supreme-court/2014-cv-13-779.pdf",
+   "confidence": "high",
+   "notes": "Opinion read: on a private (Walgreens) project the court affirmed a directed verdict for the GC on a clause making owner payment 'an absolute condition precedent', and held the lien-release-bond surety not liable where the principal was not. The sub's public-policy challenge was not reached (not preserved), so a future public-policy attack is not foreclosed."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statutory waiver provision in Ark. Code § 18-44-101 et seq.",
+   "url": "https://www.siteline.com/lien-waiver/arkansas",
+   "confidence": "low",
+   "notes": "Secondary sources only (Siteline, Levelset, ezel): no statutory form, no notarization, and no statute prohibiting advance/in-contract waivers (case law said to enforce clearly expressed waivers). Not verified in statute text. 2025 Act 479 (HB1271) amended § 18-44-110 lien priority vs construction mortgages, not waivers."
+  }
+ },
+ {
+  "state": "AZ",
+  "name": "Arizona",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month or fraction of a month on the unpaid balance, from the 8th day, or a higher agreed rate",
+   "cite": "A.R.S. § 32-1183(B), (H)",
+   "url": "https://www.azleg.gov/ars/32/01183.htm",
+   "confidence": "high",
+   "notes": "Current section numbers are §§ 32-1181 to -1188 (formerly § 32-1129 et seq.). § 32-1183(B): within seven days of receipt of each progress payment, retention release or final payment; sub must have submitted a billing and must provide a conditional lien waiver. The subsection contains no 'unless otherwise agreed' language (only the interest rate can be raised by agreement), so contractCanOverride is false on the statute text; one secondary guide says otherwise. § 32-1183(G): if the owner withholds for defective work not attributable to the sub, GC must still pay that sub within 21 days after owner payment would otherwise have been due. Applies to private work only (public: Title 34/41)."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No percentage cap. GC may not withhold retention from a sub greater than the actual retention the owner withholds pertaining to that sub's work (§ 32-1183(C)(9), (D)); owner may withhold 'a reasonable amount for retention' (§ 32-1182(D)).",
+   "cite": "A.R.S. § 32-1183(D); § 32-1182(D)",
+   "url": "https://www.azleg.gov/ars/32/01183.htm",
+   "confidence": "high",
+   "notes": "Read in statute text on azleg.gov."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives the retention release from owner",
+   "cite": "A.R.S. § 32-1183(B), (H)",
+   "url": "https://www.azleg.gov/ars/32/01183.htm",
+   "confidence": "high",
+   "notes": "Same seven-day rule expressly covers 'retention release'; 1.5%/month interest from the 8th day."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "L. Harvey Concrete, Inc. v. Agro Constr. & Supply Co., 189 Ariz. 178, 939 P.2d 811 (App. 1997)",
+   "url": "https://www.leagle.com/decision/19971750939p2d81111742",
+   "confidence": "medium",
+   "notes": "Enforced only if the clause clearly makes owner payment a condition precedent; ambiguous clauses are read as timing. Arizona practitioners note the later Prompt Pay Act (§ 32-1183(A), (G)) arguably narrows this on private work and there is no recent appellate decision; opinion not read directly."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "A.R.S. § 33-1008(D)(1)"
+    },
+    {
+     "type": "unconditional_progress",
+     "cite": "A.R.S. § 33-1008(D)(2)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "A.R.S. § 33-1008(D)(3)"
+    },
+    {
+     "type": "unconditional_final",
+     "cite": "A.R.S. § 33-1008(D)(4)"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "A.R.S. § 33-1008(A), (B), (D)",
+   "url": "https://www.azleg.gov/ars/33/01008.htm",
+   "confidence": "high",
+   "notes": "§ 33-1008(D): a waiver 'is unenforceable unless it follows substantially' the four forms. (A): owner/GC cannot waive others' lien rights by contract; consent is unenforceable unless the claimant executes a statutory waiver and release. Conditional releases need evidence of payment. No notarization in § 33-1008, but § 32-1183(B) lets the GC require that conditional waivers be notarized."
+  }
+ },
+ {
+  "state": "CA",
+  "name": "California",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": true,
+   "lateInterest": "Penalty of 2% of the amount due per month, payable to the subcontractor (plus attorney's fees to prevailing party)",
+   "cite": "Cal. Bus. & Prof. Code § 7108.5(a), (b)",
+   "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPC&sectionNum=7108.5",
+   "confidence": "high",
+   "notes": "'not later than seven days after receipt of each progress payment, unless otherwise agreed to in writing'. Good-faith dispute: may withhold up to 150% of the disputed amount. Applies to all private works (§ 7108.5(e)). Text read on california.public.law mirror of leginfo (leginfo blocks automated fetch); section unchanged since 2012. See also Civ. Code § 8800 et seq. for owner->GC progress payments."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "2026-01-01",
+   "conditions": "Retention may not exceed 5% of each payment and total retention may not exceed 5% of the contract price; a sub's retention percentage may not exceed the percentage in the owner-GC contract. Exceptions: (1) sub fails to furnish a performance and payment bond after written notice, at or before bid request, that one is required; (2) residential projects that are not mixed-use and do not exceed four stories. Cannot be waived by contract (§ 8820). Prevailing party gets attorney's fees.",
+   "cite": "Cal. Civ. Code § 8811 (added by SB 61, Stats. 2025, ch. 49)",
+   "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8811",
+   "confidence": "high",
+   "notes": "New: applies only to private-work contracts entered into on or after January 1, 2026. Contracts entered before that date have no statutory cap on private retention."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after GC receives all or part of a retention payment from owner",
+   "cite": "Cal. Civ. Code § 8814(a); § 8818",
+   "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8814",
+   "confidence": "high",
+   "notes": "Owner must pay retention to GC within 45 days after completion (§ 8812). Good-faith dispute: GC may withhold up to 150% of disputed amount (§ 8814(c)). Late penalty 2% per month in place of interest (§ 8818). Non-waivable (§ 8820)."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "Wm. R. Clarke Corp. v. Safeco Ins. Co., 15 Cal. 4th 882, 938 P.2d 372 (1997); Cal. Civ. Code § 8122",
+   "url": "https://scocal.stanford.edu/opinion/wm-r-clarke-corp-v-safeco-ins-co-31795",
+   "confidence": "medium",
+   "notes": "Pay-if-paid clauses are void as an indirect waiver of mechanics lien rights. Pay-when-paid clauses are enforceable only as a reasonable-time provision; Crosno Constr., Inc. v. Travelers Cas. & Sur. Co., 47 Cal. App. 5th 940 (2020) refused to enforce an open-ended one against a bond claim. Holdings taken from consistent secondary sources, opinion not read in full."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "Cal. Civ. Code § 8132"
+    },
+    {
+     "type": "unconditional_progress",
+     "cite": "Cal. Civ. Code § 8134"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "Cal. Civ. Code § 8136"
+    },
+    {
+     "type": "unconditional_final",
+     "cite": "Cal. Civ. Code § 8138"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Cal. Civ. Code §§ 8122, 8124, 8126, 8132-8138",
+   "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=8124",
+   "confidence": "high",
+   "notes": "§ 8124: waiver is effective only if 'in substantially the form provided in this article' and signed; conditional releases also need evidence of payment. § 8122: contract terms waiving another claimant's rights are void unless and until the claimant executes a statutory waiver. § 8126: other statements purporting to waive are void unless payment in full was actually received. Statutory forms carry no notary block; no notarization requirement in the article (§§ 8132 and 8134 read; § 8136/8138 cited from the article's section list)."
+  }
+ },
+ {
+  "state": "CO",
+  "name": "Colorado",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "None for private projects (C.R.S. § 38-46-103(2) expressly leaves payment timing to the contract)",
+   "url": "https://colorado.public.law/statutes/crs_38-46-103",
+   "confidence": "medium",
+   "notes": "C.R.S. art. 38-46 (read) regulates only the amount of retainage and says it does not change 'a provision relating to timing of a payment'. C.R.S. § 24-91-103 prompt pay is public only. No private GC->sub day count found. Note the mechanics' lien trust-fund statute, C.R.S. § 38-22-127, requires funds disbursed to a contractor to be held in trust for subs, but sets no day count."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "2021-09-07",
+   "conditions": "Applies to private contracts of at least $150,000 between owner and contractor, and to every subcontract and supply agreement under such a contract regardless of the subcontract's size. Cap is 5% of the price of the work completed. Excludes a single contract for one single-family dwelling or one multifamily dwelling of four or fewer units, and public-entity contracts.",
+   "cite": "C.R.S. §§ 38-46-102, 38-46-103(1)",
+   "url": "https://colorado.public.law/statutes/crs_38-46-103",
+   "confidence": "high",
+   "notes": "Cap and applicability read in statute. HB21-1167 signed May 17, 2021, effective Sept 7, 2021 (leg.colorado.gov bill page); secondary sources say it applies to contracts made on or after the effective date (applicability clause not read directly)."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "none (contract governs)",
+   "cite": "C.R.S. § 38-46-103(2)(a)",
+   "url": "https://colorado.public.law/statutes/crs_38-46-103",
+   "confidence": "high",
+   "notes": "Statute expressly does not override contract provisions on timing of payment 'including final payment'. § 38-46-104: payee must give an executed lien waiver for amounts actually paid if the contract requires."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Main Elec., Ltd. v. Printz Servs. Corp., 980 P.2d 522 (Colo. 1999); C.R.S. § 38-46-103(2)(d)",
+   "url": "https://law.justia.com/cases/colorado/supreme-court/1999/97sc601-0.html",
+   "confidence": "medium",
+   "notes": "Enforceable only if the clause unequivocally makes owner payment a condition precedent; in Main Electric the clause was held to be pay-when-paid only. § 38-46-103(2)(d) (read) expressly preserves a contractual 'condition precedent' that the contractor 'must actually receive payment from the property owner to be obliged to make payment to a subcontractor'. Case holding from secondary summaries."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "C.R.S. § 38-22-119",
+   "url": "https://colorado.public.law/statutes/crs_38-22-119",
+   "confidence": "high",
+   "notes": "No statutory form. § 38-22-119(1): an agreement to waive liens is binding only 'as between the parties to such contract' (so a GC's in-contract waiver does not bind subs, but a sub's own advance waiver is not void). (2): a waiver must state in substance that debts owed to third parties for the covered goods/services have been or will be timely paid. No notarization requirement in the section."
+  }
+ },
+ {
+  "state": "CT",
+  "name": "Connecticut",
+  "promptPay": {
+   "days": 25,
+   "contractCanOverride": false,
+   "lateInterest": "1% per month, accruing from receipt of the sub's written claim sent by registered or certified mail (liability attaches 10 days after receipt); plus attorney's fees if payment unreasonably withheld and funds not escrowed on demand; 10% damages for bad faith",
+   "cite": "Conn. Gen. Stat. § 42-158j(a)(2), (c)",
+   "url": "https://www.cga.ct.gov/current/pub/chap_742b.htm",
+   "confidence": "high",
+   "notes": "Every construction contract must require the GC to pay subs 'not later than twenty-five days after the date the contractor receives payment from the owner' (reduced from 30 by P.A. 19-141); mandatory, so a longer period cannot be agreed. Excluded: public works, HUD-funded/insured projects, owner-GC contracts of $25,000 or less (and their subcontracts), residential buildings of four or fewer units (§ 42-158i(2)). Chapter 742b does not appear in the 2026 Supplement, i.e. no 2025-session amendment; 2025 HB 5685 (would have banned pay-if-paid and amended § 42-158j) does not appear to have been enacted. 2026-session changes not checked."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "5% of the estimated amount of a progress payment for the life of the project. Same exclusions as § 42-158i(2): public works, HUD-funded projects, contracts of $25,000 or less, residential of four or fewer units. Retainage must be held in escrow (§ 42-158p).",
+   "cite": "Conn. Gen. Stat. § 42-158k",
+   "url": "https://www.cga.ct.gov/current/pub/chap_742b.htm",
+   "confidence": "high",
+   "notes": "Reduced from 7.5% to 5% by P.A. 10-148."
+  },
+  "retainageRelease": {
+   "days": 25,
+   "trigger": "after GC receives payment from owner that encompasses the sub's work (owner must pay all retainage within 30 days after certificate of final completion or equivalent written acceptance)",
+   "cite": "Conn. Gen. Stat. §§ 42-158k, 42-158j(a)(2)",
+   "url": "https://www.cga.ct.gov/current/pub/chap_742b.htm",
+   "confidence": "medium",
+   "notes": "§ 42-158k sets only the owner's 30-day deadline. No retainage-specific GC->sub deadline; the 25 days is the general § 42-158j(a)(2) pass-through rule for 'any amounts due' applied to retainage. Interpretive. § 42-158p(g): owner pays 1.5%/month for failing to release retainage."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Electrical Contractors, Inc. v. 50 Morgan Hospitality Group, LLC, 212 Conn. App. 724 (2022) (AC 44475)",
+   "url": "https://www.grsm.com/insight/connecticut-appellate-court-confirms-that-paid-if-paid-clauses-remain-enforceable/",
+   "confidence": "medium",
+   "notes": "Appellate Court enforced an unambiguous 'condition precedent' pay-if-paid clause; no Connecticut Supreme Court ruling. Secondary sources disagree on reporter volume (211 vs 212 Conn. App. 724): verify before citing. § 42-158l prevents the clause from waiving lien or bond rights. 2025 HB 5685 proposed a statutory ban but was not found in the enacted statutes."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Conn. Gen. Stat. § 42-158l",
+   "url": "https://www.cga.ct.gov/current/pub/chap_742b.htm",
+   "confidence": "high",
+   "notes": "§ 42-158l(a): any contract provision 'or any periodic lien waiver' purporting to waive lien or payment-bond rights 'for services, labor or materials which have not yet been performed and paid for shall be void'. No statutory form. No notarization requirement in chapter 742b (lien waiver practice under ch. 847 not separately checked)."
+  }
+ },
+ {
+  "state": "DC",
+  "name": "District of Columbia",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": null,
+   "lateInterest": "1.5% per month or any part of a month on undisputed amounts not paid on time; costs and attorney's fees to a prevailing sub",
+   "cite": "D.C. Code § 27A-104(a); § 27A-105",
+   "url": "https://code.dccouncil.gov/us/dc/council/code/titles/27A/chapters/1/index.full.html",
+   "confidence": "high",
+   "notes": "Recodified: formerly D.C. Code §§ 27-131 to 27-136, now Title 27A ch. 1. 'shall pay undisputed amounts owed to its subcontractor within 7 days after receipt ... of each payment received for its subcontractors' work or materials'. Unlike the owner->GC rule (§ 27A-102, which defers to contract dates), § 27A-104(a) has no 'unless the contract provides' language, but the statute does not say whether it can be varied: contractCanOverride left null. Amended by D.C. Law 24-293 (eff. Mar. 10, 2023): GC may not withhold a sub's payment to offset other obligations, and cross-contract setoff clauses in contracts executed after March 31, 2023 are void (§ 27A-104(d)). Applies to contracts entered on/after Oct 1, 2013; District agencies are not 'owners'."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "None (no private retainage cap in D.C. Code Title 27A)",
+   "url": "https://code.dccouncil.gov/us/dc/council/code/titles/27A/chapters/1/index.full.html",
+   "confidence": "medium",
+   "notes": "Title 27A ch. 1 read in full; it contains no retainage limit. Other titles not exhaustively searched."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives payment from owner for the sub's work (retainage is included in 'undisputed amount')",
+   "cite": "D.C. Code §§ 27A-101(5), 27A-104(a)",
+   "url": "https://code.dccouncil.gov/us/dc/council/code/titles/27A/chapters/1/index.full.html",
+   "confidence": "medium",
+   "notes": "No retainage-specific section; § 27A-101(5) defines 'undisputed amount' as 'including any retainage withheld', so the 7-day rule covers retainage the GC has been paid. Interpretive."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "D.C. Code § 27A-104(b), (c)",
+   "url": "https://code.dccouncil.gov/us/dc/council/code/titles/27A/chapters/1/index.full.html",
+   "confidence": "high",
+   "notes": "Conditions making sub payment depend on GC's receipt of owner payment are contemplated, but 'may not abrogate or waive the right of the subcontractor to (1) claim a mechanics' lien; or (2) sue on a contractor's bond'; contrary provisions are void. No D.C. appellate decision on pay-if-paid enforceability as between GC and sub was found."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": null,
+   "advanceWaiverVoid": null,
+   "cite": "D.C. Code § 40-303.02(a); § 27A-104(b)",
+   "url": "https://code.dccouncil.gov/us/dc/council/code/sections/40-303.02",
+   "confidence": "low",
+   "notes": "No statutory waiver form found in D.C. Code Title 40 ch. 3 (keyword search of the chapter). § 40-303.02(a): a sub's lien is not subject to owner-GC contract terms relating to the GC's 'right to waive liens on behalf of the parties employed'. No statute found voiding a sub's own advance waiver, and one secondary source says none exists; notarization not addressed. Both left null."
+  }
+ },
+ {
+  "state": "DE",
+  "name": "Delaware",
+  "promptPay": {
+   "days": 15,
+   "contractCanOverride": true,
+   "lateInterest": "Interest penalty at the legal rate (6 Del. C. § 2301) from the day after the required date; unpaid interest is added to principal every 30 days",
+   "cite": "6 Del. C. § 3507(d); § 3506(b), (c)",
+   "url": "https://delcode.delaware.gov/title6/c035/index.html",
+   "confidence": "high",
+   "notes": "Two layers, both read on delcode.delaware.gov. Default: if subcontractor payment terms are not specified, GC pays undisputed amounts 'within 15 days after receipt' of each payment (§ 3507(d)). Outer limit: every contract awarded by a contractor must contain a clause obligating payment to the sub 'within 30 days out of such amounts as are paid to the contractor' (§ 3506(b)(1)). So the parties can override the 15-day default but apparently not beyond 30 days. § 3507 does not apply to public works, to erection of 6 or fewer residential units built simultaneously or alteration/repair of a single residential unit, or to owner-purchased materials. Numeric legal rate under § 2301 not verified here."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No percentage cap; retainage may be withheld 'in accordance with the terms and conditions agreed to by the parties', but GC must give the sub written notice why payment is being withheld within 7 days of the date payment was required (§ 3506(d)).",
+   "cite": "6 Del. C. §§ 3506(d), 3507(d)",
+   "url": "https://delcode.delaware.gov/title6/c035/index.html",
+   "confidence": "high",
+   "notes": "Statute read; it preserves contractual retainage without a limit on private work."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "none specific to retainage (contract governs)",
+   "cite": "6 Del. C. § 3506(d)",
+   "url": "https://delcode.delaware.gov/title6/c035/index.html",
+   "confidence": "medium",
+   "notes": "No retainage-specific release deadline in ch. 35. Once retainage is paid to the GC and due to the sub, the general 15-day default / 30-day mandatory clause arguably applies; not stated expressly."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "6 Del. C. § 3507(e)",
+   "url": "https://delcode.delaware.gov/title6/c035/index.html",
+   "confidence": "high",
+   "notes": "'It shall be against public policy and shall be void and unenforceable for any provision of a construction contract or subcontract agreement to: (1) State that a contractor assumes the risk of nonpayment of the owner' ('contractor' is defined to include subcontractors, § 3501(2)); also voids clauses barring suit until the GC is paid and out-of-state choice of law/forum. Does not apply to public works or the small-residential exclusions in § 3507(f)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "25 Del. C. § 2706(b)",
+   "url": "https://delcode.delaware.gov/title25/c027/sc01/index.html",
+   "confidence": "high",
+   "notes": "§ 2706(b): any contract or agreement waiving the right to file or enforce a mechanics' lien 'shall be void as against public policy', except a written waiver 'executed and delivered ... simultaneously with or after payment'. No statutory form. No notarization requirement in the section (secondary sources agree)."
+  }
+ },
+ {
+  "state": "FL",
+  "name": "Florida",
+  "promptPay": {
+   "days": 14,
+   "contractCanOverride": true,
+   "lateInterest": "Rate under Fla. Stat. § 55.03 plus 12% per annum (or the contract rate if greater), from the 14th day after payment is due",
+   "cite": "Fla. Stat. § 715.12(4), (5)(a), (6); § 713.346(2)",
+   "url": "https://www.flsenate.gov/Laws/Statutes/2024/0715.12",
+   "confidence": "medium",
+   "notes": "No flat 'N days after receipt' rule. § 715.12(4): payment is due when (a) the sub is entitled under the subcontract terms and has requested payment in writing, (b) the GC has been paid for that work, and (c) required affidavits/waivers are furnished; statutory interest starts on the 14th day after that. So 14 days is an interest grace period layered on contract terms, and the contract controls when payment is due. Separately, § 713.346(2): failing to pay undisputed amounts within 30 days after the later of the due date or receipt of payment entitles the sub to an expedited court remedy (accounting, injunction, attachment, fees) and knowing misapplication is a crime. Interest right cannot be waived before payment is due (§ 715.12(6)(d)). Text read on florida.public.law mirror of the 2024 Florida Statutes (current through Fall 2025)."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No cap on private work; parties 'may agree' to withholding a portion of each progress payment until completion (§ 715.12(7)(b)). (Public-project caps in §§ 218.735, 255.078 do not apply.)",
+   "cite": "Fla. Stat. § 715.12(7)",
+   "url": "https://www.flsenate.gov/Laws/Statutes/2024/0715.12",
+   "confidence": "high",
+   "notes": "Sub may substitute securities for retainage (§ 715.12(7)(c))."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "per subcontract; retained amounts bear interest 14 days after they are due under the subcontract and the § 715.12(4) conditions (including GC being paid) are met",
+   "cite": "Fla. Stat. § 715.12(7)(b)",
+   "url": "https://www.flsenate.gov/Laws/Statutes/2024/0715.12",
+   "confidence": "high",
+   "notes": "Owner->GC: within 14 days after substantial completion/certificate of occupancy/possession plus punchlist completion (§ 715.12(7)(a)). No fixed GC->sub day count."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "DEC Elec., Inc. v. Raphael Constr. Corp., 558 So. 2d 427 (Fla. 1990); OBS Co. v. Pace Constr. Corp., 558 So. 2d 404 (Fla. 1990)",
+   "url": "https://www.jimersonfirm.com/blog/2021/01/pay-if-paid-subcontractors/",
+   "confidence": "medium",
+   "notes": "Enforced if the risk-shifting language is clear and unambiguous; ambiguous clauses (or ones contradicted by an incorporated prime contract) are read as fixing a reasonable time. Does not bar lien or ordinary payment-bond claims; a conditional payment bond under § 713.245 is the statutory exception. § 715.12(4)(b) itself conditions the payment duty on the obligor having been paid. Cases from secondary summaries."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Fla. Stat. § 713.20(2), (4)-(8)",
+   "url": "https://www.flsenate.gov/Laws/Statutes/2024/0713.20",
+   "confidence": "high",
+   "notes": "Statutory progress (§ 713.20(4)) and final (§ 713.20(5)) waiver forms exist but are not mandatory: 'A person may not require a lienor to furnish' a different form (§ 713.20(6)), yet a non-conforming waiver 'is enforceable in accordance with [its] terms' (§ 713.20(8)). Only two forms, not four; a waiver given for a check may be conditioned on payment of the check (§ 713.20(7)). § 713.20(2): 'A right to claim a lien may not be waived in advance ... Any waiver of a right to claim a lien that is made in advance is unenforceable.' Forms have no notary block."
+  }
+ },
+ {
+  "state": "GA",
+  "name": "Georgia",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": true,
+   "lateInterest": "1% per month (or pro rata fraction), accruing from the day after the due date; only owed if the payer was notified of the Code section when the payment request was made",
+   "cite": "O.C.G.A. § 13-11-4(b); § 13-11-7(a)-(b)",
+   "url": "https://www.alston.com/-/media/files/insights/publications/2020/04/construction-laws-and-customs-georgia-w0161626.pdf",
+   "confidence": "medium",
+   "notes": "Georgia Prompt Pay Act (O.C.G.A. §§ 13-11-1 to -11) covers private projects; excludes residential property of 12 or fewer units (§ 13-11-10). § 13-11-7(b): parties may agree by contract to different interest rates, payment periods and terms, and the contract controls (statutory rate applies on willful breach of contract payment timing). Official code text (LexisNexis-hosted) could not be fetched; values confirmed from a republished copy of § 13-11-7 and the Alston & Bird/Practical Law Georgia Q&A and Husch Blackwell survey, which agree."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No fixed percentage cap on private work. Retainage must be 'reasonable'; owner may not exceed the percentage stated in the prime contract (§ 13-11-5(a)) and a contractor may not withhold from a sub more than the percentage the owner retains from the contractor for that work (§ 13-11-5(b)).",
+   "cite": "O.C.G.A. § 13-11-5",
+   "url": "https://www.alston.com/-/media/files/insights/publications/2020/04/construction-laws-and-customs-georgia-w0161626.pdf",
+   "confidence": "medium",
+   "notes": "The 10% cap in O.C.G.A. § 13-10-80 is public works only. Software implication: sub retainage % should not exceed the owner-GC retainage %. Not read in official statute text (secondary sources: Alston & Bird Q&A, Levelset)."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after GC receives the periodic/final payment (including retainage) from the owner",
+   "cite": "O.C.G.A. § 13-11-4(b)",
+   "url": "https://www.levelset.com/retainage/georgia-retainage-faqs/",
+   "confidence": "low",
+   "notes": "No retainage-specific release statute confirmed for private work. Alston & Bird says final retainage release is governed only by the general 10-day rule in § 13-11-4; Levelset states a 10-day pass-through after the contractor's receipt of retainage (citing § 13-11-6, with 50%-complete/satisfactory-progress conditions that may actually derive from the public-works statute § 13-10-80). Statute text not read. Contract can override (§ 13-11-7(b))."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "St. Paul Fire & Marine Ins. Co. v. Georgia Interstate Elec. Co., 370 S.E.2d 829 (Ga. Ct. App. 1988)",
+   "url": "https://www.alston.com/-/media/files/insights/publications/2020/04/construction-laws-and-customs-georgia-w0161626.pdf",
+   "confidence": "medium",
+   "notes": "Enforced if the contract contains an express condition clearly showing that intent; see also Associated Mech. Corp. v. Eby Constr. Co., 67 F. Supp. 2d 1375 (M.D. Ga. 1999). Cases cited from Alston & Bird Q&A, not read directly."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "O.C.G.A. § 44-14-366(d) (Interim Waiver and Release of Lien and Payment Bond Rights Upon Interim Payment)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "O.C.G.A. § 44-14-366(e) (Waiver and Release of Lien and Payment Bond Rights Upon Final Payment)"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "O.C.G.A. § 44-14-366(b)-(e), (g)",
+   "url": "https://www.legis.ga.gov/api/legislation/document/20192020/188623",
+   "confidence": "medium",
+   "notes": "Only two statutory forms exist (interim and final); there are no separate unconditional forms. Each form is effectively conditional: amounts are conclusively deemed paid on actual receipt, a written acknowledgment of payment, or 90 days after execution unless the claimant files a claim of lien or an Affidavit of Nonpayment (the affidavit must be notarized). Waiver forms must substantially follow the statutory language, be in at least 12-point font, include the statutory NOTICE, and are signed under seal with a witness line (no notary). Waivers made in advance of furnishing labor/materials are null and void (§ 44-14-366(b)). Text read from SB 315 (2020) as introduced on legis.ga.gov; enacted version effective Jan 1, 2021 (60-day period changed to 90, waiver limited to lien/bond rights) confirmed via Kilpatrick Townsend and Levelset summaries; subsection lettering should be checked against the current official code."
+  }
+ },
+ {
+  "state": "HI",
+  "name": "Hawaii",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": null,
+   "lateInterest": "1.5% per month from the date payment is due (not if delay is due to a bona fide dispute)",
+   "cite": "Haw. Rev. Stat. § 444-25",
+   "url": "https://data.capitol.hawaii.gov/hrscurrent/Vol10_Ch0436-0474/HRS0444/HRS_0444-0025.htm",
+   "confidence": "high",
+   "notes": "10 days run from the LATER of (a) the sub's invoice with required supporting documents and (b) the contractor's receipt of owner payment for the sub's work. Does not apply to public contracts (ch. 103). Statute is silent on contractual variation, so contractCanOverride is null. 2012 amendment (Act 260) does not apply to private contracts entered before July 1, 2012. HB 274 (2025; 30-day/2%-per-week proposal) was carried over and no enactment was found."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/hawaii-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private-project retainage statute (Levelset). HRS § 103-32.1 5% cap is public contracts only."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/hawaii-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage release statute. If retainage is paid by the owner as payment for the sub's work, the general 10-day rule of HRS § 444-25 would arguably apply, but the statute does not mention retainage."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "Haw. Rev. Stat. § 444-25; HC&D, LLC v. DCK Pacific Construction, No. CAAP-17-0000582 (Haw. Ct. App. 2023) (mem. op.)",
+   "url": "https://www.courts.state.hi.us/wp-content/uploads/2023/02/CAAP-17-0000582amop.pdf",
+   "confidence": "low",
+   "notes": "No controlling Hawaii authority squarely upholding or voiding pay-if-paid was found. § 444-25 requires a contractor whose payment is contingent on receipt of escrow/trust funds to say so in its solicitation of bids; Husch Blackwell's survey reads this as 'permissible on private projects if explicitly stated in solicitation of bids'. In HC&D the ICA resolved conflicting payment terms against the pay-if-paid clause on the contract wording (opinion not read in full)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "Haw. Rev. Stat. ch. 507, pt. II (no waiver form provision)",
+   "url": "https://www.levelset.com/lien-waivers/hawaii-lien-waiver-faqs/",
+   "confidence": "medium",
+   "notes": "No statutory form or notarization requirement; no statute expressly voids advance waivers and case law was not confirmed (Levelset), so advanceWaiverVoid is null."
+  }
+ },
+ {
+  "state": "IA",
+  "name": "Iowa",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://www.levelset.com/prompt-payment/iowa-prompt-payment-law/",
+   "confidence": "medium",
+   "notes": "No private commercial prompt-payment statute; Iowa Code ch. 573 is public improvements only (Levelset; Husch Blackwell survey). Iowa Code § 572.30 (contractor must pay subs in full on residential construction) is residential only and was not read. No 2023-2026 private enactment found (2025 SF 574 and 2026 SF 2365 are public works)."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/iowa-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage statute. Public cap (Iowa Code § 573.12) was lowered from 5% to 3% effective July 1, 2025 by SF 574; public only."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/iowa-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage release statute."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "",
+   "url": "https://www.koleyjessen.com/insights/publications/pay-me-now-understanding-contingent-payment-provisions",
+   "confidence": "low",
+   "notes": "No Iowa statute or appellate decision squarely addressing pay-if-paid was located. Secondary sources say such clauses 'appear to be enforceable' because neither courts nor legislature have ruled otherwise (Koley Jessen) and list them as permissible (Husch Blackwell)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "Iowa Code ch. 572 (no waiver form provision)",
+   "url": "https://www.levelset.com/lien-waivers/iowa-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "No statutory form or notarization requirement. Per Levelset, no Iowa statute or decision expressly prohibits advance waivers/no-lien clauses on commercial work, but courts construe waivers narrowly (must be clear and unambiguous; doubts resolved in favor of the lien). Single secondary source; ch. 572 text not read."
+  }
+ },
+ {
+  "state": "ID",
+  "name": "Idaho",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://www.huschblackwell.com/idaho-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private prompt-payment statute for progress payments (Husch Blackwell survey; Levelset). Only retention pass-through is regulated (Idaho Code § 29-115(4))."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "1990-07-01",
+   "conditions": "5% of each payment and 5% of contract price. Cap does not apply if the contractor/sub fails to furnish a requested performance bond, or to owner-occupied residential property of 1-4 units.",
+   "cite": "Idaho Code § 29-115(2)",
+   "url": "https://legislature.idaho.gov/wp-content/uploads/statutesrules/idstat/Title29/T29CH1.pdf",
+   "confidence": "high",
+   "notes": "Applies to private works of improvement; covers both owner->original contractor and original contractor->subcontractor retention. Cannot be waived (§ 29-115(7)). Amended 2025 (S.B. 1006, ch. 34, eff. July 1, 2025) to add § 29-115(6): private Idaho construction contracts are subject to Idaho law and may not require dispute resolution in another state."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after the original contractor receives all or any portion of the retention proceeds from the owner",
+   "cite": "Idaho Code § 29-115(4)-(5)",
+   "url": "https://legislature.idaho.gov/wp-content/uploads/statutesrules/idstat/Title29/T29CH1.pdf",
+   "confidence": "high",
+   "notes": "Contractor may withhold up to 150% of the estimated value of incomplete work or the disputed issue where a bona fide dispute exists with the sub. Owner side: retention reduced within 35 days of substantial completion and released within 35 days of final completion (§ 29-115(3))."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "",
+   "url": "https://www.huschblackwell.com/idaho-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "No Idaho statute or appellate decision was located. Secondary sources (Husch Blackwell survey; Levelset) state pay-if-paid is permissible/enforced when explicit, without citing verifiable authority."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "Idaho Code tit. 45, ch. 5 (no waiver form provision)",
+   "url": "https://www.levelset.com/lien-waivers/idaho-lien-waiver-faqs/",
+   "confidence": "medium",
+   "notes": "No statutory form or notarization requirement. No statute voids advance waivers; Levelset reports Idaho decisions hold advance waivers unenforceable unless supported by consideration (cases not identified), so advanceWaiverVoid is null."
+  }
+ },
+ {
+  "state": "IL",
+  "name": "Illinois",
+  "promptPay": {
+   "days": 15,
+   "contractCanOverride": false,
+   "lateInterest": "10% per annum",
+   "cite": "815 ILCS 603/10(2); 603/15(a)",
+   "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=2941&ChapterID=67",
+   "confidence": "high",
+   "notes": "15 calendar days from the contractor's receipt from the owner of each periodic payment, final payment or retainage. 'All construction contracts shall be deemed to provide' these terms, so they are not waivable. Act excludes contracts requiring expenditure of public funds and residences with 12 or fewer units in a single building (603/5(b)). Unpaid party may suspend work after 7 calendar days' written notice."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": "2019-08-20",
+   "conditions": "Up to 10% of any payment before the contract is 50% complete; at 50% completion retainage held must be reduced to no more than 5%, and no more than 5% of subsequent payments may be withheld.",
+   "cite": "815 ILCS 603/20",
+   "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=2941&ChapterID=67",
+   "confidence": "high",
+   "notes": "Added by P.A. 101-432, eff. Aug. 20, 2019 (appliesFrom is the section's effective date; the Act itself covers contracts entered after Aug. 31, 2007). Applies to contracts and subcontracts."
+  },
+  "retainageRelease": {
+   "days": 15,
+   "trigger": "calendar days after GC receives retainage monies from owner",
+   "cite": "815 ILCS 603/10(2)",
+   "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=2941&ChapterID=67",
+   "confidence": "high",
+   "notes": ""
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "770 ILCS 60/21(e)",
+   "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=2254&ChapterID=63",
+   "confidence": "high",
+   "notes": "A clause conditioning payment to a sub/supplier on receipt of payment from another party is not a defense to a claim under Mechanics Lien Act §§ 21, 22, 23 or 28 (liens, liens on funds, public-funds liens). Otherwise enforceable as a contract matter if clearly worded (Husch Blackwell; Levelset). Section 21 source note: P.A. 103-827, eff. Jan. 1, 2025."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "770 ILCS 60/1(d)",
+   "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=2254&ChapterID=63",
+   "confidence": "high",
+   "notes": "No statutory form. An agreement to waive or subordinate lien rights made in anticipation of and in consideration for the award of a contract/subcontract is against public policy and unenforceable (exceptions: § 35(b) releases; subordination to a construction mortgage after more than 50% of the loan is disbursed). The statute targets pre-award/no-lien agreements; it does not by its terms void every waiver signed before payment for work already performed. Notarization not required by statute (Levelset) though commonly requested in practice."
+  }
+ },
+ {
+  "state": "IN",
+  "name": "Indiana",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://www.levelset.com/prompt-payment/indiana-prompt-payment-faqs/",
+   "confidence": "medium",
+   "notes": "No private prompt-payment statute; Ind. Code 5-17-5 and 5-16-5.5 are public works only (Levelset; Husch Blackwell survey). No 2023-2026 private enactment found."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/indiana-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage statute. 2025 HB 1033 on retainage was narrowed to state/local public works before passage (press reports)."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/indiana-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage release statute."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Ind. Code § 32-28-3-18(c); BMD Contractors, Inc. v. Fidelity & Deposit Co. of Md. (7th Cir. 2012)",
+   "url": "https://codes.findlaw.com/in/title-32-property/in-code-sect-32-28-3-18/",
+   "confidence": "medium",
+   "notes": "Receipt of payment from a third person may not be a condition precedent to, limit, or be a defense to the provider's right to record or foreclose a mechanic's lien. Does not apply to Class 2 structures (1-2 family residential) or certain utility property. Outside lien rights, clearly worded pay-if-paid clauses are enforced (BMD Contractors, per secondary commentary; reporter cite not verified). Statute read via FindLaw copy current as of Jan. 1, 2026, not the official iga.in.gov text."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Ind. Code § 32-28-3-16(b)-(c)",
+   "url": "https://codes.findlaw.com/in/title-32-property/in-code-sect-32-28-3-16/",
+   "confidence": "medium",
+   "notes": "No statutory form. A contract provision requiring waiver of lien or payment-bond rights before the person is paid is void, as is an agreement not to file a notice of intention to hold a lien. Excludes Class 2 structures and utility property (where no-lien contracts remain possible under § 32-28-3-1). Notarization of waivers not required (Levelset)."
+  }
+ },
+ {
+  "state": "KS",
+  "name": "Kansas",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "18% per annum on the undisputed amount, from the 8th business day after the contractor's receipt of payment",
+   "cite": "K.S.A. 16-1803(f)-(g)",
+   "url": "https://ksrevisor.gov/statutes/chapters/ch16/016_018_0003.html",
+   "confidence": "high",
+   "notes": "BUSINESS days: 7 business days after receipt of payment from the owner, if the sub submitted a timely, properly completed, undisputed request for payment. Kansas Fairness in Private Construction Contract Act; excludes single-family and multifamily housing of 4 units or less and public works (K.S.A. 16-1807). § 16-1803(a) makes contract payment terms 'subject to' subsections (f)-(h), so the period is treated as non-waivable; the statute has no express anti-waiver sentence for (f). Same rule applies sub->sub-sub (16-1803(h))."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": null,
+   "conditions": "Default limit is 5% of the contract/subcontract value; may be raised to at most 10% if the owner or contractor determines a higher rate is required to ensure performance. No more than 10% may be withheld from any undisputed payment. Up to 150% of the value of incomplete work may be withheld where the incompletion is the sub's fault. Alternate security may be requested in lieu of retainage.",
+   "cite": "K.S.A. 16-1804(a), (b), (i)",
+   "url": "https://ksrevisor.gov/statutes/chapters/ch16/016_018_0004.html",
+   "confidence": "high",
+   "notes": "bps reflects the absolute statutory ceiling (10%); the presumptive cap is 5% (500 bps). Last amended L. 2010, ch. 128."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "business days after GC receives retainage released by the owner",
+   "cite": "K.S.A. 16-1803(f); 16-1804(c), (j), (k)",
+   "url": "https://ksrevisor.gov/statutes/chapters/ch16/016_018_0003.html",
+   "confidence": "high",
+   "notes": "Owner must release retainage within 30 days after substantial completion (16-1804(c)). Late retainage bears 18% per annum (16-1804(j)). Early release for a completed sub is passed down 'as part of the next contractual payment cycle' (16-1804(k))."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "K.S.A. 16-1803(c)",
+   "url": "https://ksrevisor.gov/statutes/chapters/ch16/016_018_0003.html",
+   "confidence": "high",
+   "notes": "A contingent-payment provision 'is no defense to a claim to enforce a mechanic's lien or bond' under K.S.A. ch. 60, art. 11. Otherwise enforceable as a contract matter if it clearly shifts the risk (Faith Technologies v. MasTec, 10th Cir., per Fleeson Gooing commentary; not read)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "K.S.A. 16-1803(b)(2)",
+   "url": "https://ksrevisor.gov/statutes/chapters/ch16/016_018_0003.html",
+   "confidence": "high",
+   "notes": "Contract provisions waiving mechanic's lien rights are void, except that a waiver/release may be required as a condition of payment 'but only to the extent of the amount of payment received'. No statutory form; notarization not required (Levelset/secondary). Applies to private non-residential (>4 units) contracts under the Act."
+  }
+ },
+ {
+  "state": "KY",
+  "name": "Kentucky",
+  "promptPay": {
+   "days": 15,
+   "contractCanOverride": false,
+   "lateInterest": "12% per annum on the unpaid amount, from the 16th business day after the contractor's receipt of payment",
+   "cite": "KRS 371.405(8)-(10)",
+   "url": "https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=56548",
+   "confidence": "high",
+   "notes": "BUSINESS days: 15 business days after receipt of payment from the contracting entity, for undisputed amounts where the sub submitted a timely, properly completed, undisputed request. Kentucky Fairness in Construction Act (KRS 371.400-.425), contracts entered after June 26, 2007. § 371.405(1) requires payment per the contract 'and as required in this section', so treated as non-waivable; no express anti-waiver sentence for subsection (8). Definitions/exclusions in KRS 371.400 were not read (the Act is commonly described as excluding residential work). § 371.405 was amended effective June 27, 2025 (2025 Ky. Acts ch. 156) to add (2)(c), voiding waivers of the KRS 371.160 retainage-escrow requirement."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": null,
+   "conditions": "10% of any undisputed payment until the project is 50% complete; after 51% completion, retainage held may not exceed 5% of the total contract amount. Applies to contracting entities, contractors and subcontractors.",
+   "cite": "KRS 371.410(1)",
+   "url": "https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=35259",
+   "confidence": "high",
+   "notes": "Separately, KRS 371.160 (amended eff. June 27, 2025; ch. 15 amendments apply to contracts entered on/after that date) requires owner-held retainage on private contracts of $2,000,000 or more to be deposited in a separate escrow account, with interest paid to the contractor; non-waivable under KRS 371.405(2)(c)."
+  },
+  "retainageRelease": {
+   "days": 15,
+   "trigger": "business days after the contracting entity (owner) releases retainage to the contractor",
+   "cite": "KRS 371.410(2)-(3); KRS 371.405(8)",
+   "url": "https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=35259",
+   "confidence": "high",
+   "notes": "Owner/contractor must release retainage within 30 days after substantial completion, less 200% of the estimated cost of uncompleted work. Late retainage bears 12% per annum."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Superior Steel, Inc. v. Ascent at Roebling's Bridge, LLC, 540 S.W.3d 770 (Ky. 2017)",
+   "url": "https://www.stites.com/resources/client-alerts/high-court-enforces-pay-if-pay-clause-protecting-cm/",
+   "confidence": "medium",
+   "notes": "Kentucky Supreme Court held unambiguous pay-if-paid clauses enforceable and not void as against public policy, leaving any prohibition to the legislature (subs still recovered from the owner in unjust enrichment). Confirmed through multiple law-firm summaries; opinion not read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "KRS 371.405(2)(b)",
+   "url": "https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=56548",
+   "confidence": "high",
+   "notes": "A contract provision purporting to waive, release or extinguish KRS ch. 376 lien rights is void, 'with the exception of partial waivers of lien rights provided by the contractor or subcontractor for progress payments'. No statutory form; notarization not required (Levelset)."
+  }
+ },
+ {
+  "state": "LA",
+  "name": "Louisiana",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "Penalty of 1.5% of the unpaid amount per month, accruing from the day after payment is due until payment or judgment (no cap); court costs and reasonable attorney fees to the prevailing party",
+   "cite": "La. R.S. 9:2784(B), (D), (E), (F)",
+   "url": "https://legis.la.gov/Legis/Law.aspx?d=107211",
+   "confidence": "high",
+   "notes": "RECENTLY AMENDED: Acts 2026, No. 822 (HB 638), effective Aug. 1, 2026, rewrote the statute. New rule: payment no later than the 7th day after the contractor receives payment from the owner, absent a good-faith dispute (undisputed portion must still be paid). 'A waiver of a provision of this Section shall be absolutely null' (only exception: owner-contractor timing on single-family residences). PRIOR LAW (before Aug. 1, 2026): 14 consecutive days, penalty 0.5% per day capped at 15%. Whether the Act applies to contracts signed before Aug. 1, 2026 was not determined. Act also adds an owner->contractor deadline of 35 days after a written payment request. Excludes oil/gas/mineral agreements, well/mine services and pipelines; public contracts remain under La. R.S. 38:2191."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/louisiana-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private retainage percentage cap (Levelset; nothing in La. R.S. 9:2784 as amended). Levelset reports an escrow requirement for retainage on private contracts of $50,000 or more (cited there as La. R.S. 9:4857; section number not verified)."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives payment (including retainage) from owner",
+   "cite": "La. R.S. 9:2784(B)(1)",
+   "url": "https://legis.la.gov/Legis/Law.aspx?d=107211",
+   "confidence": "medium",
+   "notes": "No retainage-specific statute; 9:2784(B)(1) applies to 'any payment from the owner' attributable to the sub's work, which on its face includes retainage released by the owner. Effective Aug. 1, 2026 (14 days before)."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Imagine Constr., Inc. v. Centex Landis Constr. Co., 707 So. 2d 500 (La. App. 4 Cir. 1998); cf. Southern States Masonry, Inc. v. J.A. Jones Constr. Co., 507 So. 2d 198 (La. 1987)",
+   "url": "https://leakeandersson.com/contingent-payment-agreements-construction-contracts",
+   "confidence": "medium",
+   "notes": "Louisiana appellate courts enforce clearly worded pay-if-paid clauses as suspensive conditions; the Louisiana Supreme Court has not squarely ruled, and in Southern States Masonry it construed an ambiguous clause as pay-when-paid (reasonable time). Courts read doubtful clauses as timing provisions (Tymeless Flooring v. Rotolo, La. App. 4 Cir. 2015). Cases taken from law-firm summaries, not read. The 2026 amendment to 9:2784 does not address pay-if-paid; its 7-day duty is triggered by receipt of owner payment."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "La. R.S. 9:4801 et seq. (Private Works Act; no waiver form provision)",
+   "url": "https://www.levelset.com/lien-waivers/louisiana-lien-waiver-faqs/",
+   "confidence": "medium",
+   "notes": "No statutory form or notarization requirement. No statute expressly voids advance waivers; Levelset cites a Fifth Circuit decision requiring an existing right for a valid waiver, so advanceWaiverVoid is null."
+  }
+ },
+ {
+  "state": "MA",
+  "name": "Massachusetts",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": false,
+   "lateInterest": null,
+   "cite": "Mass. Gen. Laws ch. 149, § 29E(c), (d), (g)",
+   "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section29E",
+   "confidence": "high",
+   "notes": "days is null because the statute is NOT keyed to the GC's receipt of owner payment. On covered projects (prime contract original price >= $3,000,000; excludes projects of 1-4 dwelling units) contracts must provide reasonable periods not exceeding: 30 days for submission, 15 days after submission for approval/rejection, and 45 days after approval for payment. The approval period for each lower tier may be extended by 7 days more than the tier above. Applications not timely approved/rejected are deemed approved. Provisions purporting to waive or limit § 29E are void (§ 29E(g)), so the contract can shorten but not lengthen the maxima. § 29E contains no interest provision. Private projects under $3M have no statutory prompt-pay deadline."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "2014-11-06",
+   "conditions": "Only on projects where the prime contract with the owner has an original contract price of not less than $3,000,000 and for which a lien may be established under ch. 254 §§ 2 or 4; excludes projects containing 1-4 dwelling units. Cap is 5% of any progress payment. No cap on private projects under $3M.",
+   "cite": "Mass. Gen. Laws ch. 149, § 29F; St. 2014, c. 276, § 2",
+   "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section29F",
+   "confidence": "high",
+   "notes": "5% cap and $3M threshold read in statute. St. 2014 c. 276 (approved Aug 8, 2014) § 2 says § 29F does not apply where the owner's contract was entered into before the act's effective date; the Nov 6, 2014 date itself comes from a secondary source (Nutter alert: 'contracts signed after November 6, 2014'), so treat appliesFrom as medium confidence and note the test is the date of the OWNER's prime contract, not the subcontract."
+  },
+  "retainageRelease": {
+   "days": 30,
+   "trigger": "after submission of a written application for payment of retainage, which may be submitted following the expiration of 60 days after substantial completion; payment period for each lower tier may be extended by 7 days longer than the tier above (i.e., up to 37 days for a first-tier sub)",
+   "cite": "Mass. Gen. Laws ch. 149, § 29F",
+   "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section29F",
+   "confidence": "medium",
+   "notes": "Not keyed to GC's receipt of retainage from owner. Prime contractor must give notice of substantial completion within 14 days after reaching it; owner accepts/rejects within 14 days. Only on >= $3M projects. Anti-waiver clause in § 29F(l). Read via summarizing fetch of statute text; exact subsection letters and permitted withholding (e.g., for incomplete/defective work) not individually verified, hence medium."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Mass. Gen. Laws ch. 149, § 29E(e)",
+   "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section29E",
+   "confidence": "high",
+   "notes": "On covered (>= $3M) private projects, a provision conditioning payment on receipt of payment from a third person is void, except (1) to the extent of non-payment caused by the payee's uncured failure to perform (cure period in contract, or 14 days after written notice) and (2) to the extent the third person is insolvent or becomes insolvent within 90 days after the requisition, and then only if the party enforcing the condition meets lien-filing and collection-pursuit requirements and carries the burden of proof. For covered projects treat as effectively void. On projects under $3M the statute does not apply; secondary sources say Massachusetts courts enforce pay-if-paid only where the condition precedent is clear and unambiguous (see Framingham Heavy Equipment Co. v. John T. Callahan & Sons, Mass. App. Ct. 2004), that point is medium confidence."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "Mass. Gen. Laws ch. 254, § 32 (\"Partial Waiver and Subordination of Lien\")"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Mass. Gen. Laws ch. 254, § 32",
+   "url": "https://malegislature.gov/Laws/GeneralLaws/PartIII/TitleIV/Chapter254/Section32",
+   "confidence": "medium",
+   "notes": "§ 32 makes any covenant or agreement barring the filing of a notice of contract or enforcement of a lien void as against public policy, with listed exceptions. One exception is a partial waiver and subordination by a party that has filed/recorded a notice of contract, which must use the statutory 'Partial Waiver and Subordination of Lien' form 'with no material deviation'. That is the only statutory form (a progress-payment waiver effective upon receipt of the stated payment; carves out retainage, unpaid/pending change orders and disputed claims). There are no statutory unconditional or final-payment forms. Form is 'signed under the penalties of perjury'; no notary block. Mapping this single form onto 'conditional_progress' is my characterization, hence medium."
+  }
+ },
+ {
+  "state": "MD",
+  "name": "Maryland",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "No fixed statutory rate. Court may award interest from the date the amount was due plus reasonable costs; attorney's fees if payer acted in bad faith (Md. Code, Real Prop. § 9-303)",
+   "cite": "Md. Code, Real Prop. § 9-302(b)(3)",
+   "url": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=grp&section=9-302&enactments=false",
+   "confidence": "high",
+   "notes": "Contractor/subcontractor 'shall pay undisputed amounts owed to its subcontractors within 7 days after receipt' of each payment. Subsection (b)(3) contains no 'unless otherwise agreed' language (only the owner->contractor rule in (b)(1) defers to contract payment dates), so contractCanOverride is set false on the statute's face; no case law on waiver was checked. Applies to undisputed amounts only. Contracts enumerated in § 9-305 are excluded (not read)."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No fixed percentage for subcontracts. GC->sub retainage 'may not exceed the percentage of retention proceeds from the owner to the contractor' (§ 9-304(c)(2)). Owner->GC retainage is capped at 5% only if the contractor has furnished 100% performance security and 100% payment security (§ 9-304(c)(1)); in that case the sub cap is effectively 5% (500 bps). Section does not apply to contracts under $100,000 or projects funded through the Dept. of Housing and Community Development. Additional withholding allowed where performance gives reasonable grounds (§ 9-304(d)).",
+   "cite": "Md. Code, Real Prop. § 9-304(b), (c)",
+   "url": "https://mgaleg.maryland.gov/2026RS/Statute_Web/grp/9-304.pdf",
+   "confidence": "high",
+   "notes": "bps left null because the sub-level cap is a pass-through of whatever rate the owner holds from the GC, not a fixed number. Read in the 2026 Regular Session statute PDF. A 2018 fiscal note referenced a $250,000 threshold; current text says $100,000. No 2023-2026 amendment found."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives the retainage payment from owner (general 7-day pass-through in § 9-302(b)(3)); owner must pay undisputed retention within 90 days after substantial completion as defined by the contract (§ 9-304(e))",
+   "cite": "Md. Code, Real Prop. §§ 9-302(b)(3), 9-304(e)",
+   "url": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=grp&section=9-304&enactments=false",
+   "confidence": "medium",
+   "notes": "§ 9-304(e)'s 90-day deadline is written for retention 'retained by an owner'. There is no retainage-specific GC->sub deadline; the 7 days is the general § 9-302(b)(3) rule applied to a retainage payment received by the GC (inference from statute text, hence medium)."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Md. Code, Real Prop. § 9-113(b), (c)",
+   "url": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=grp&section=9-113&enactments=false",
+   "confidence": "high",
+   "notes": "A provision conditioning sub payment on GC's receipt of payment from owner 'may not abrogate or waive' the sub's right to claim a mechanics' lien or sue on a contractor's bond; violating provisions are void. Statute does not void the clause for contract-claim purposes. Maryland case law on how clearly the clause must be worded was not verified."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Md. Code, Real Prop. § 9-113(a), (c)",
+   "url": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=grp&section=9-113&enactments=false",
+   "confidence": "medium",
+   "notes": "§ 9-113(a): an executory contract between contractor and subcontractor may not waive or require the sub to waive the right to claim a mechanics' lien or sue on a bond; void as against public policy (read in statute: high). No statutory form and no notarization requirement per secondary sources (Levelset/Siteline) only: medium."
+  }
+ },
+ {
+  "state": "ME",
+  "name": "Maine",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "Interest from the day after the due date at the rate specified in 14 M.R.S. § 1602-C; plus, if payment is found wrongfully withheld in litigation/arbitration, a penalty of 1% per month and attorney's fees to the substantially prevailing party (10 M.R.S. § 1118)",
+   "cite": "10 M.R.S. § 1114(3)-(4); § 1118",
+   "url": "https://legislature.maine.gov/statutes/10/title10sec1114.html",
+   "confidence": "high",
+   "notes": "'Notwithstanding any contrary agreement', the contractor must pay 7 days after receipt of each progress or final payment or 7 days after receipt of the sub's invoice, whichever is LATER. Contractor must also disclose the owner payment due date before contracting (§ 1114(2)). Chapter 201-A covers public and private owners. Good-faith withholding permitted (§ 1118(1)). The § 1602-C rate was not read (Husch Blackwell describes it as the one-year U.S. Treasury bill rate plus 6%). Text current through Oct. 1, 2026."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "10 M.R.S. § 1116",
+   "url": "https://legislature.maine.gov/statutes/10/title10sec1116.html",
+   "confidence": "high",
+   "notes": "No percentage cap in 10 M.R.S. ch. 201-A (full chapter text checked, current through Oct. 1, 2026; § 1116 unchanged since 1993). One commercial template site claims a 5% private cap; that is not supported by the statute."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives retainage from owner",
+   "cite": "10 M.R.S. § 1116(3)",
+   "url": "https://legislature.maine.gov/statutes/10/title10sec1116.html",
+   "confidence": "high",
+   "notes": "Non-waivable ('notwithstanding any contrary agreement'). Owner must pay retainage within 30 days after final acceptance (§ 1116(1)); if the owner is not withholding retainage for the sub's work, contractor-held retainage is due within 30 days of final acceptance (§ 1116(2))."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "10 M.R.S. § 1114(1), (3)",
+   "url": "https://legislature.maine.gov/statutes/10/title10sec1114.html",
+   "confidence": "low",
+   "notes": "No Maine statute or Law Court decision squarely addressing pay-if-paid was found. § 1114(1) requires payment 'strictly in accordance with the terms' of the subcontract, while § 1114(3)'s non-waivable 7-day duty is triggered only by the contractor's receipt of payment. A secondary study predicts enforcement of a clearly written clause."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "10 M.R.S. § 3251 et seq. (no waiver form provision)",
+   "url": "https://www.levelset.com/lien-waivers/maine-lien-waiver-faqs/",
+   "confidence": "medium",
+   "notes": "No statutory form or notarization requirement. No statute voids advance waivers, though Levelset reports Maine courts disfavor them; advanceWaiverVoid is null."
+  }
+ },
+ {
+  "state": "MI",
+  "name": "Michigan",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://www.levelset.com/construction-contracts/michigan-contracts-faqs/",
+   "confidence": "medium",
+   "notes": "No private prompt-payment statute found; secondary sources (Levelset, Clark Hill, Kerr Russell via search) consistently say timing on private projects is governed by the contract. Bills to create one (HB 6174 of 2022; HB 4837 and SB 451 of 2023-24 'Construction Payments Act') were introduced but no enactment was found; a 2025 article said the bill was awaiting reintroduction. Status of any 2025-2026 bill (e.g., a 2025 HB 5175 that surfaced in search but could not be opened) was NOT verified. The Michigan Builders' Trust Fund Act was not researched."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private projects; contract controls.",
+   "cite": "",
+   "url": "https://www.levelset.com/construction-contracts/michigan-contracts-faqs/",
+   "confidence": "medium",
+   "notes": "Secondary sources only: retainage on private Michigan projects is not regulated by statute."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": null,
+   "cite": "",
+   "url": "",
+   "confidence": "medium",
+   "notes": "No private retainage-release statute found. Note MCL 570.1115(5): retainage payable only on a further event is not 'due' when the improvement is provided (relevant to waiver scope)."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Berkel & Co. Contractors v. Christman Co., 210 Mich. App. 416 (1995)",
+   "url": "https://www.clarkhill.com/news-events/news/potential-change-for-pay-if-paid-and-pay-when-paid-clauses-in-michigan/",
+   "confidence": "medium",
+   "notes": "Court of Appeals decision (some secondary sources mislabel it a Supreme Court case). Enforced if clear and unambiguous; a later Court of Appeals decision (Macomb Mechanical) held the clause did not reach extra work without a change order. HB 4837 (introduced June 22, 2023) would have voided pay-if-paid; no enactment found, and later drafts reportedly dropped the pay-if-paid ban. Opinion itself not read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "MCL 570.1115(9)(b) (partial conditional waiver)"
+    },
+    {
+     "type": "unconditional_progress",
+     "cite": "MCL 570.1115(9)(a) (partial unconditional waiver)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "MCL 570.1115(9)(d) (full conditional waiver)"
+    },
+    {
+     "type": "unconditional_final",
+     "cite": "MCL 570.1115(9)(c) (full unconditional waiver)"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "MCL 570.1115(1), (4), (9)",
+   "url": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-570-1115",
+   "confidence": "high",
+   "notes": "Forms 'shall be used in substantially the following format'. § 1115(1): a person shall not require a waiver as part of a contract for an improvement; such a waiver is contrary to public policy and invalid except to the extent payment was actually made. Conditional waivers are effective upon payment of the amount indicated (§ 1115(4)). No notarization language in the section or forms. Last amended 2007 PA 28."
+  }
+ },
+ {
+  "state": "MN",
+  "name": "Minnesota",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month on undisputed amounts not paid on time; minimum monthly penalty $10 on unpaid balances of $100 or more; prevailing party in action to collect interest awarded costs and attorney fees",
+   "cite": "Minn. Stat. § 337.10, subd. 3",
+   "url": "https://www.revisor.mn.gov/statutes/cite/337.10",
+   "confidence": "high",
+   "notes": "A building and construction contract 'shall be deemed to require' the prime contractor and all subcontractors to pay within ten days of receipt of payment for undisputed services. Subd. 3 has no 'unless the contract provides otherwise' language (contrast subd. 4(a)), so contractCanOverride is set false on the statute's face; no case law checked. Unpaid party may suspend work. No residential exclusion seen in the text. Last amended 2016 c. 133 (contracts executed on/after Aug 1, 2016)."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Retainage on a building and construction contract may not exceed 5%. If owner reduces retainage, contractor must reduce subs' retainage at the same rate. Withholding retainage for warranty work is prohibited. Does not apply to public agencies (Minn. Stat. § 15.71, subd. 3) or professional services contracts (§§ 326.02-326.15).",
+   "cite": "Minn. Stat. § 337.10, subd. 4(b), (f), (g), (h)",
+   "url": "https://www.revisor.mn.gov/statutes/cite/337.10",
+   "confidence": "high",
+   "notes": "5% cap introduced by 2016 c. 133; subd. 4 last amended by 2019 1st Spec. Sess. c. 7, art. 9, § 13. Exact contract-date applicability of the 2019 changes not verified (a 2019 bill version said agreements entered on/after Aug 1, 2019), so appliesFrom is left null. Revisor history shows no 2023-2026 amendment."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after contractor receives payment of retainage (owner must release all retainage no later than 60 days after substantial completion)",
+   "cite": "Minn. Stat. § 337.10, subd. 4(c), (d)",
+   "url": "https://www.revisor.mn.gov/statutes/cite/337.10",
+   "confidence": "high",
+   "notes": "Contractor 'must pay all remaining retainage to its subcontractors no later than ten days after receiving payment of retainage' unless there is a dispute about a sub's work, in which case it pays out non-disputed retainage and gives the affected sub a written statement of amount and reason. After substantial completion owner may withhold only up to 250% of cost to correct/complete known items plus the greater of 1% of contract value or $500 pending final paperwork (subd. 4(e))."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "Mrozik Constr., Inc. v. Lovering Assocs., Inc., 461 N.W.2d 49 (Minn. Ct. App. 1990)",
+   "url": "https://www.leagle.com/decision/1990510461nw2d491510",
+   "confidence": "medium",
+   "notes": "No statute. Mrozik refused to treat 'to the extent the Contractor has been paid' language as a condition precedent absent unequivocal language, implying a clear clause could be enforced, but commentators say no Minnesota appellate court has squarely enforced a true pay-if-paid clause. Opinion not read directly (secondary summaries)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Minn. Stat. § 337.10, subd. 2",
+   "url": "https://www.revisor.mn.gov/statutes/cite/337.10",
+   "confidence": "medium",
+   "notes": "Subd. 2: provisions requiring a contractor, subcontractor or material supplier to waive mechanics lien or payment bond claim rights before being paid are void and unenforceable, but the waiver remains effective as to a third party who detrimentally relies on it (read in statute: high). No statutory form and no notarization per secondary sources; one vendor table conflicts on notarization (medium)."
+  }
+ },
+ {
+  "state": "MO",
+  "name": "Missouri",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": true,
+   "lateInterest": "Court may award interest at up to 1.5% per month from the date payment was due under the contract, plus reasonable attorney fees to the prevailing party",
+   "cite": "Mo. Rev. Stat. § 431.180",
+   "url": "https://revisor.mo.gov/main/OneSection.aspx?section=431.180",
+   "confidence": "high",
+   "notes": "No fixed number of days: persons who contract for private design or construction work 'shall make all scheduled payments pursuant to the terms of the contract'. The contract sets the period. Does not apply to owner-occupied residential property of four units or less."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": null,
+   "conditions": "Owner may withhold retainage not to exceed 10% of each payment (§ 436.303). Contractor may not withhold from a subcontractor retainage 'in excess of the retainage withheld' by the owner from the contractor for that sub's work, unless the sub's performance is not in accordance with the subcontract (§ 436.315). Effective cap on a sub is therefore the lesser of 10% and the owner's rate. Sub may tender substitute security for release of retainage (§ 436.309).",
+   "cite": "Mo. Rev. Stat. §§ 436.303, 436.315",
+   "url": "https://revisor.mo.gov/main/OneSection.aspx?section=436.315",
+   "confidence": "high",
+   "notes": "Missouri private retainage act, §§ 436.300-436.336 (L. 2002 H.B. 1403, eff. Aug 28, 2002). Scope section § 436.300 and any exclusions/anti-waiver section (e.g., residential carve-outs) were not read; verify before applying to small residential work."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives retainage from owner (owner must pay retainage, less 150% of the cost to complete remaining items, within 30 days of the project reaching substantial completion)",
+   "cite": "Mo. Rev. Stat. § 436.324; see also § 436.318",
+   "url": "https://revisor.mo.gov/main/OneSection.aspx?section=436.324",
+   "confidence": "high",
+   "notes": "§ 436.324: contractor shall pay each subcontractor its share of the retainage within seven days of receipt. § 436.318: on release of retainage by owner, contractor pays each sub its ratable share provided subcontract conditions for release are satisfied. Retainage released against sub's substitute security must be paid within five working days of receipt (§ 436.309). § 436.321 allows early release for subs whose work is complete."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Mo. Rev. Stat. § 431.183; A. Zahner Co. v. McGowan Builders, Inc., No. WD78063 (Mo. Ct. App. W.D. May 24, 2016); MECO Sys., Inc. v. Dancing Bear Entm't, Inc., 42 S.W.3d 794 (Mo. Ct. App. 2001)",
+   "url": "https://revisor.mo.gov/main/OneSection.aspx?section=431.183",
+   "confidence": "high",
+   "notes": "Clear and unambiguous pay-if-paid clauses are enforced as a condition precedent (Zahner, citing MECO; cases known through law-firm summaries, medium), but by statute a clause making payment contingent on receipt of payment from another private party 'is no defense to a claim to enforce a mechanic's lien' (§ 431.183, read in statute)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Mo. Rev. Stat. § 429.005",
+   "url": "https://revisor.mo.gov/main/OneSection.aspx?section=429.005",
+   "confidence": "medium",
+   "notes": "§ 429.005: an agreement to waive lien rights 'in anticipation of and in consideration for the awarding of' a contract or subcontract is against public policy and unenforceable; contract provisions requiring lien waivers as a condition for payment are expressly allowed. advanceWaiverVoid=true is limited to that situation; a pre-payment waiver not given to win the work is not clearly void. No statutory form for commercial work. Secondary sources say a statutory form exists only for the unconditional final lien waiver on RESIDENTIAL real property under § 429.016 (not read); Levelset states more broadly that Missouri waivers must follow a statutory form. If the product handles Missouri residential projects, § 429.016 must be reviewed. Notarization not required per secondary sources."
+  }
+ },
+ {
+  "state": "MS",
+  "name": "Mississippi",
+  "promptPay": {
+   "days": 15,
+   "contractCanOverride": null,
+   "lateInterest": "Penalty of 1/2 of 1% per day of the delinquency from expiration of the 15-day period until paid, total not to exceed 15% of the outstanding balance due",
+   "cite": "Miss. Code Ann. § 87-7-5",
+   "url": "https://codes.findlaw.com/ms/title-87-contracts-and-contractual-relations/ms-code-sect-87-7-5/",
+   "confidence": "medium",
+   "notes": "Contractor must pay subs/suppliers 'upon receipt' of owner payment in proportion to work completed; the penalty attaches if, 'without reasonable cause', it fails to pay within fifteen days of receiving payment. Does not apply to single-family dwellings or public construction contracts. No express override/anti-waiver language in the section, so contractCanOverride is null (unclear). Text read on FindLaw (unofficial; official Lexis-hosted code not accessible; Justia returned 403), hence medium."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "2024-07-01",
+   "conditions": "Contracts, subcontracts and sub-subcontracts entered into on or after July 1, 2024. Not more than 5% of the estimated amount of work properly done and materials stored (on site, or suitably stored and insured off site). Excludes: residential homebuilding; residential improvements of 16 or fewer units; contracts of $10,000 or less; public contracts (governed by § 31-5-33). Excess withholding accrues interest at 1% per month; right to that interest cannot be waived by contract. No statutory reduction at 50% completion for private work.",
+   "cite": "Miss. Code Ann. § 87-9-3(2)(b), (7), (10) (S.B. 2762, 2024 Reg. Sess., § 1)",
+   "url": "https://billstatus.ls.state.ms.us/documents/2024/html/SB/2700-2799/SB2762SG.htm",
+   "confidence": "high",
+   "notes": "NEW LAW: S.B. 2762 approved April 19, 2024, effective July 1, 2024. Provisions read in the bill text sent to the Governor on the Legislature's site; the codification number § 87-9-3 is taken from FindLaw (the bill itself does not state it)."
+  },
+  "retainageRelease": {
+   "days": 15,
+   "trigger": "after GC receives the retainage payment from owner, via § 87-7-5 (owner must release retainage no later than 60 days after final completion of the contractor's work, provided all necessary certificates of occupancy have been issued)",
+   "cite": "Miss. Code Ann. § 87-9-3(3); § 87-7-5",
+   "url": "https://billstatus.ls.state.ms.us/documents/2024/html/SB/2700-2799/SB2762SG.htm",
+   "confidence": "medium",
+   "notes": "§ 87-9-3(3) states no day count of its own: contractor 'shall release and pay retainage to its subcontractors' pursuant to the requirements of § 87-7-5. The 15 days is the § 87-7-5 penalty trigger (Butler Snow reads it the same way). Applies only to contracts entered on/after July 1, 2024 and outside the § 87-9-3(7) exclusions."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Miss. Code Ann. § 87-9-3(4)",
+   "url": "https://billstatus.ls.state.ms.us/documents/2024/html/SB/2700-2799/SB2762SG.htm",
+   "confidence": "medium",
+   "notes": "§ 87-9-3(4) (2024): 'the paying party may condition payment on the receipt of payment from the party with whom the paying party contracted' and on a full lien release. Bradley's summary of the act: pay-if-paid provisions remain enforceable. No Mississippi Supreme Court decision on pay-if-paid was located; a federal district case (Lafayette Steel Erectors v. Roy Anderson Corp., 71 F. Supp. 2d 582 (S.D. Miss. 1997)) addresses the issue but its holding was not read. Interaction with lien rights not researched."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "Miss. Code Ann. § 85-7-433(1) (Interim Waiver and Release Upon Payment); required by § 85-7-419(2)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "Miss. Code Ann. § 85-7-433(2) (Waiver and Release Upon Final Payment); required by § 85-7-419(3)"
+    }
+   ],
+   "notarizationRequired": true,
+   "advanceWaiverVoid": true,
+   "cite": "Miss. Code Ann. §§ 85-7-419, 85-7-433",
+   "url": "https://codes.findlaw.com/ms/title-85-debtor-creditor-relationship/ms-code-sect-85-7-419/",
+   "confidence": "medium",
+   "notes": "§ 85-7-419(1): lien/bond rights 'may not be waived in advance of furnishing of labor, services or materials'; such waivers are void. Waivers given for interim or final payment 'shall substantially follow' the two statutory forms. Only two forms exist (no separate unconditional forms): each becomes conclusive once payment is received or 60 days after the stated date ('conclusively deemed to have been paid in full') unless the claimant files an Affidavit of Nonpayment (§ 85-7-433(3)) or a claim of lien within the 60 days. The forms must carry the statutory 60-day notice language or they are unenforceable. Software must therefore track the 60-day window. Forms include a 'sworn to and subscribed before me' notary block, and secondary sources say notarization is required; whether an un-notarized waiver is invalid was not confirmed. Read on FindLaw (unofficial), hence medium."
+  }
+ },
+ {
+  "state": "MT",
+  "name": "Montana",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month (or pro rata fraction) on the unpaid balance when payment to a subcontractor is delayed more than 30 days from the date it was due; acceptance of final payment releases any claim for interest on it",
+   "cite": "Mont. Code Ann. § 28-2-2103(2)(a); § 28-2-2104(2)",
+   "url": "https://mca.legmt.gov/bills/mca/title_0280/chapter_0020/part_0210/section_0030/0280-0020-0210-0030.html",
+   "confidence": "high",
+   "notes": "Contractor shall pay the subcontractor the full amount due within 7 days after receiving a periodic or final payment from the owner (sub must first have submitted a billing statement/invoice). § 28-2-2115 lets the contract set a different billing cycle and later owner approval/payment periods with conspicuous notice, but it addresses the owner->contractor periods only, not the 7-day sub pass-through, so contractCanOverride is false on the statute's face (medium on that sub-point). Part 21 does not apply to residential projects with total cost under $400,000 (§ 28-2-2107). Per commentary on Kratzer Constr. v. Hardy Constr., 2025 MT 140, interest applies only to amounts wrongfully withheld (case not read)."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Maximum retainage on construction contracts subject to Part 21 may not exceed 5%; the percentage the owner withholds from the contractor also caps what the contractor may withhold from a subcontractor (lesser of 5% and owner's rate). Does not apply to residential projects with total cost under $400,000 (§ 28-2-2107).",
+   "cite": "Mont. Code Ann. § 28-2-2110(1), (2)",
+   "url": "https://mca.legmt.gov/bills/mca/title_0280/chapter_0020/part_0210/section_0100/0280-0020-0210-0100.html",
+   "confidence": "high",
+   "notes": "Enacted 2001 (ch. 364), amended 2005 (ch. 244). No recent amendment shown in the history line."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "No fixed day count. Retainage must be released upon final acceptance of each portion of work for which a separate price is stated in the contract (§ 28-2-2110(3)); once the GC receives a final payment from the owner, the general 7-day pass-through in § 28-2-2103(2)(a) applies",
+   "cite": "Mont. Code Ann. § 28-2-2110(3); § 28-2-2103(2)(a)",
+   "url": "https://mca.legmt.gov/bills/mca/title_0280/chapter_0020/part_0210/section_0100/0280-0020-0210-0100.html",
+   "confidence": "medium",
+   "notes": "days is null because the retainage statute sets an event trigger, not a number of days. Applying the 7-day periodic/final payment rule to retainage received by the GC is an inference from the statute text."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No controlling authority; see Mont. Code Ann. §§ 28-2-2102(2), 28-2-2103, 28-2-723",
+   "url": "https://huschblackwell.com/montana-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "No Montana statute or appellate decision on pay-if-paid was found. Husch Blackwell's survey (2020) says pay-if-paid is 'likely not permissible' but no Montana court has addressed it. Single secondary source."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Mont. Code Ann. § 28-2-723",
+   "url": "https://mca.legmt.gov/bills/mca/title_0280/chapter_0020/part_0070/section_0230/0280-0020-0070-0230.html",
+   "confidence": "medium",
+   "notes": "§ 28-2-723 (read in statute): a construction contract may not contain provisions requiring a contractor, subcontractor or material supplier to waive the right to a construction lien or payment bond claim before being paid for the labor/materials furnished. No statutory form and no notarization requirement per secondary sources (Siteline table, ezel survey) only."
+  }
+ },
+ {
+  "state": "NC",
+  "name": "North Carolina",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": null,
+   "lateInterest": "1% per month (or fraction of a month) on the unpaid balance, beginning on the eighth day",
+   "cite": "N.C. Gen. Stat. § 22C-3; § 22C-5",
+   "url": "https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/ByChapter/Chapter_22C.html",
+   "confidence": "high",
+   "notes": "Seven days after the contractor receives each periodic or final payment. contractCanOverride is null: the chapter has no agree-otherwise language and no express anti-waiver clause, and I found no authority either way. Chapter does not apply to residential contractors or improvements of 12 or fewer residential units (§ 22C-6). GC may withhold for listed reasons (§ 22C-4). 2025 H.B. 383 (further sub-payment protections) was NOT enacted (stuck in committee since 2025-03-13)."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No fixed percentage on private work, but a GC's retainage from a sub must be 'a reasonable amount ... not to exceed the initial percentage retained by the owner'.",
+   "cite": "N.C. Gen. Stat. § 22C-4",
+   "url": "https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/ByChapter/Chapter_22C.html",
+   "confidence": "high",
+   "notes": "The 5% cap in G.S. 143-134.1 is public-works only. Software should enforce sub retainage <= owner's retainage percentage."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives final payment (including released retainage) from the owner",
+   "cite": "N.C. Gen. Stat. § 22C-3",
+   "url": "https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/ByChapter/Chapter_22C.html",
+   "confidence": "medium",
+   "notes": "No retainage-specific release statute for private work; this applies the general 7-day rule for 'each periodic or final payment' to retainage funds received. Interpretation, not express text."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "N.C. Gen. Stat. § 22C-2",
+   "url": "https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/ByChapter/Chapter_22C.html",
+   "confidence": "high",
+   "notes": "Statute: owner payment to the contractor is not a condition precedent to paying a subcontractor, and an agreement to the contrary is unenforceable. Subject to the chapter's residential exclusions (§ 22C-6)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "N.C. Gen. Stat. § 44A-12(f); § 22B-5",
+   "url": "https://www.ncleg.gov/EnactedLegislation/Statutes/HTML/BySection/Chapter_44A/GS_44A-12.html",
+   "confidence": "high",
+   "notes": "§ 44A-12(f): agreement to waive lien rights in anticipation of and in consideration for award of a contract is against public policy and unenforceable. § 22B-5 (S.L. 2022-1): provisions requiring a lien/claim waiver as a condition of interim or progress payment are unenforceable unless limited to the specific payment actually received (final-payment waivers and written settlements excepted). Software should limit progress waivers to the amount paid. No statutory form or notarization requirement (Siteline survey). Effective date of S.L. 2022-1 not confirmed."
+  }
+ },
+ {
+  "state": "ND",
+  "name": "North Dakota",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "No private prompt-pay statute (N.D.C.C. ch. 13-01.1 covers public works only)",
+   "url": "https://huschblackwell.com/north-dakota-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "Null because no private prompt-payment statute exists per two consistent secondary sources (Husch Blackwell 2020, Levelset). Payment timing is contractual."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": null,
+   "conditions": "10% of each estimate until the project is 50% complete, then NO further retainage on later estimates. Applies to contracts 'between persons for the performance of work to be done by a contractor' ('contractor' includes subcontractor), except contracts under §§ 40-22-37 or 48-01.2-13 or governed by federal retention rules. Interest earned on invested retainage goes to the contractor at final payment.",
+   "cite": "N.D.C.C. § 43-07-23",
+   "url": "https://ndlegis.gov/cencode/t43c07.pdf",
+   "confidence": "high",
+   "notes": "Read in the official Century Code PDF. Text is written at the owner level; application to GC-sub retention is by the broad 'contracts between persons' wording and the definition of contractor in § 43-07-01."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": null,
+   "cite": "None",
+   "url": "https://ndlegis.gov/cencode/t43c07.pdf",
+   "confidence": "medium",
+   "notes": "Null: § 43-07-23 sets no release deadline and no private prompt-pay statute exists."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No North Dakota statute or appellate decision found",
+   "url": "https://huschblackwell.com/north-dakota-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "Husch Blackwell (2020): 'Unclear. North Dakota has not yet addressed contingent payment clauses.'"
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statute (N.D.C.C. ch. 35-27 silent)",
+   "url": "https://www.levelset.com/lien-waivers/north-dakota-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "Single secondary source (Levelset): no statutory forms, no notarization requirement, lien statute silent on advance waivers and none prohibited. No primary authority located."
+  }
+ },
+ {
+  "state": "NE",
+  "name": "Nebraska",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": null,
+   "lateInterest": "1% per month (or pro rata fraction) on the unpaid balance, starting the day after payment is due; owed only if the party charged has been notified of the statute by the contractor/subcontractor at the time the payment request is made; acceptance of progress or final payment waives interest on that payment",
+   "cite": "Neb. Rev. Stat. § 45-1203(2); § 45-1205",
+   "url": "https://nebraskalegislature.gov/laws/statutes.php?statute=45-1203",
+   "confidence": "high",
+   "notes": "Contractor/subcontractor must pay its subcontractor within ten days after receipt of each periodic or final payment, if the sub has performed per its subcontract. Nebraska Construction Prompt Pay Act (Laws 2010, LB 552; amended Laws 2014, LB 961, operative July 18, 2014). The section neither permits nor prohibits a different contractual period and § 45-1209's list of void provisions does not cover payment timing, so contractCanOverride is null (unclear). Excludes work for the State of Nebraska and certain state-paid federal/state-aid projects; no residential exclusion seen in § 45-1202."
+  },
+  "retainageCap": {
+   "bps": 1000,
+   "appliesFrom": null,
+   "conditions": "Retainage may not exceed the rate specified in the contract, which shall not exceed 10%. Once the scope of work is 50% complete and performed per the contract, no more than 5% of any additional progress payment may be withheld as retainage, provided the contractor/subcontractor provides satisfactory and reasonable assurances of continued performance. After substantial completion, withholding is limited to 125% of the estimated cost to complete remaining work. Applies to owners, contractors and subcontractors.",
+   "cite": "Neb. Rev. Stat. § 45-1204",
+   "url": "https://nebraskalegislature.gov/laws/statutes.php?statute=45-1204",
+   "confidence": "high",
+   "notes": "Added/amended by Laws 2014, LB 961, § 7. Exact applicability date for pre-2014 contracts not verified; appliesFrom left null. Some secondary sources (one Levelset FAQ, Husch Blackwell) wrongly say or imply Nebraska has no private retainage statute."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after GC receives retainage from owner (owner must release retainage within 45 days after the project, or a designated portion, is substantially complete)",
+   "cite": "Neb. Rev. Stat. § 45-1203(3)",
+   "url": "https://nebraskalegislature.gov/laws/statutes.php?statute=45-1203",
+   "confidence": "high",
+   "notes": "Contractor shall pay all retainage due a subcontractor within ten days after receipt of the retainage."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No Nebraska statute or appellate decision found; Neb. Rev. Stat. § 45-1209 (void provisions) does not list contingent-payment clauses",
+   "url": "https://huschblackwell.com/nebraska-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "Secondary sources (Husch Blackwell 2020 survey: 'permissible'; Koley Jessen 2021: 'appear to be enforceable' because neither courts nor legislature have ruled otherwise) treat pay-if-paid as enforceable, but none cites Nebraska authority. Marked unsettled rather than enforceable for that reason."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "Neb. Rev. Stat. § 52-144",
+   "url": "https://nebraskalegislature.gov/laws/statutes.php?statute=52-144",
+   "confidence": "high",
+   "notes": "A written waiver of construction lien rights signed by the claimant 'requires no consideration and is valid and binding, whether signed before or after the materials or services were contracted for or furnished'. Ambiguities construed against the claimant; a waiver waives all lien rights as to the improvement unless specifically limited. No form or notarization in the section. Separately, § 45-1209 voids contract provisions waiving payment/performance BOND claim rights (a waiver may still be required as a condition of payment, to the extent of the payment received)."
+  }
+ },
+ {
+  "state": "NH",
+  "name": "New Hampshire",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/new-hampshire-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private prompt-payment statute. Husch Blackwell's survey (2020) lists owner->prime and prime->sub private rules as N/A, and other secondary sources say NH has no statute governing payment timing on private work; contract terms control. One vendor site cites 'RSA 447:16' for a 30-day rule, which appears to be wrong (that section concerns state work). NH statutes were not searched directly for 2021-2026 enactments; no secondary source mentions one."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private projects; contract controls.",
+   "cite": "",
+   "url": "https://www.bernsteinshur.com/insights-events/two-states-two-approaches-to-payment-disputes-in-construction/",
+   "confidence": "medium",
+   "notes": "Secondary sources only (payment timing, retainage and approval governed by contract and common law)."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": null,
+   "cite": "",
+   "url": "",
+   "confidence": "medium",
+   "notes": "No private retainage-release statute found."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Denron Plumbing & HVAC, LLC v. MacMillin Co., LLC (N.H. Super. Ct., Cheshire Cty. 2021)",
+   "url": "https://www.levelset.com/news/pay-if-paid-clauses-new-hampshire-superior-court/",
+   "confidence": "low",
+   "notes": "Trial-court authority only: the Superior Court said pay-if-paid clauses are enforceable only if they clearly and unambiguously create a condition precedent, and struck the GC's defense because the clause there was ambiguous. No New Hampshire Supreme Court decision or statute on point; docket number and decision date not found. Could reasonably be classified 'unsettled'."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "N.H. Rev. Stat. Ann. ch. 447 (no waiver provision)",
+   "url": "https://www.siteline.com/lien-waiver/new-hampshire",
+   "confidence": "low",
+   "notes": "Secondary sources only (Siteline; a practitioner blog): no statutory form, no notarization requirement, and no statute prohibiting waiver of lien rights in the contract or before payment. RSA 447 text was not read to confirm the absence of a waiver provision."
+  }
+ },
+ {
+  "state": "NJ",
+  "name": "New Jersey",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": true,
+   "lateInterest": "prime rate plus 1%, accruing from the day after the required payment date; prevailing party also recovers reasonable costs and attorney fees",
+   "cite": "N.J.S.A. 2A:30A-2(b), (c), (f)",
+   "url": "https://codes.findlaw.com/nj/title-2a-administration-of-civil-and-criminal-justice/nj-st-sect-2a-30a-2/",
+   "confidence": "high",
+   "notes": "10 CALENDAR days after receipt of each periodic payment, final payment or retainage monies, if the sub performed, the work was accepted, and 'the parties have not otherwise agreed in writing'. Statute text read via FindLaw reproduction (current as of 2024-01-01); official NJ Legislature site not fetchable. No 2024-2026 amendment found in search."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private work; set by contract.",
+   "cite": "No statute (public-only caps at N.J.S.A. 40A:11-16.3, 18A:18A-40.3, 27:7-34)",
+   "url": "https://www.levelset.com/retainage/new-jersey-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "Absence of a private cap is based on a secondary source (Levelset)."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after GC receives retainage monies from the owner (calendar days), unless otherwise agreed in writing",
+   "cite": "N.J.S.A. 2A:30A-2(b)",
+   "url": "https://codes.findlaw.com/nj/title-2a-administration-of-civil-and-criminal-justice/nj-st-sect-2a-30a-2/",
+   "confidence": "high",
+   "notes": "Same subsection as progress payments; expressly lists 'receipt of retainage monies'. Contract can override."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Jersey Precast Corp. v. Tricon Enterprises, Inc. (N.J. Super. Ct. App. Div. Dec. 7, 2022); Fixture Specialists, Inc. v. Global Construction, LLC (D.N.J. 2009)",
+   "url": "https://www.lindabury.com/firm/insights/pay-if-paid-provisions-in-new-jersey.html",
+   "confidence": "medium",
+   "notes": "Enforced if the clause clearly and unambiguously shifts owner-nonpayment risk; may not be enforceable where the GC caused the owner's nonpayment. Rests on one Appellate Division decision (I did not confirm whether it is published/precedential) and federal district decisions; no NJ Supreme Court ruling or statute. Case details from law-firm summaries, opinion not read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "N.J.S.A. 2A:44A-38",
+   "url": "https://codes.findlaw.com/nj/title-2a-administration-of-civil-and-criminal-justice/nj-st-sect-2a-44a-38/",
+   "confidence": "high",
+   "notes": "Statute read: waivers are 'against public policy, unlawful, and void, unless given in consideration for payment', and effective only upon and to the extent payment is actually received. No statutory form or notarization requirement (secondary source: Siteline 50-state survey)."
+  }
+ },
+ {
+  "state": "NM",
+  "name": "New Mexico",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month (or fraction of a month) on the undisputed amount, beginning on the eighth day after payment was due",
+   "cite": "NMSA 1978, § 57-28-5(C) (Prompt Payment Act, formerly Retainage Act)",
+   "url": "https://codes.findlaw.com/nm/chapter-57-trade-practices-and-regulations/nm-st-sect-57-28-5/",
+   "confidence": "high",
+   "notes": "'All construction contracts shall provide' for payment within seven days after receipt of payment from the owner; no agree-otherwise language for the sub tier, so treated as mandatory. Act covers private owners ('owner' = person, local public body or state agency other than DOT). Excludes residential property with four or fewer dwelling units (§ 57-28-3). Text read via FindLaw (current as of 2024-01-01); no later amendment found."
+  },
+  "retainageCap": {
+   "bps": 0,
+   "appliesFrom": null,
+   "conditions": "Retainage is prohibited outright: an owner, contractor or subcontractor 'shall not retain, withhold, hold back or in any other manner not pay amounts owed for work performed'. Excludes residential property with four or fewer dwelling units.",
+   "cite": "NMSA 1978, § 57-28-5(E); § 57-28-3",
+   "url": "https://codes.findlaw.com/nm/chapter-57-trade-practices-and-regulations/nm-st-sect-57-28-5/",
+   "confidence": "high",
+   "notes": "bps=0 means no retainage may be withheld (not 'no cap'). Secondary sources (Snell & Wilmer) confirm retainage is prohibited on private and public projects, with a narrow road-contract exception. Disputed amounts may still be withheld."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after certification of completion: any remaining balance due a contractor or subcontractor must be paid (on presentation of release/voucher, lien release if required, and proof of completion)",
+   "cite": "NMSA 1978, § 57-28-8",
+   "url": "https://codes.findlaw.com/nm/chapter-57-trade-practices-and-regulations/nm-st-sect-57-28-8/",
+   "confidence": "medium",
+   "notes": "Since retainage is prohibited, this is the final-payment deadline rather than a retainage pass-through rule. The 7-day pass-through of § 57-28-5(C) also applies to any payment the GC receives."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No New Mexico statute or appellate decision found",
+   "url": "https://huschblackwell.com/new-mexico-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "Husch Blackwell (2020): 'likely permissible' but no New Mexico court has taken up the issue. The mandatory 7-day pass-through still applies once the GC is paid."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statute (NMSA ch. 48, art. 2 silent)",
+   "url": "https://www.levelset.com/lien-waivers/new-mexico-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "Single secondary source (Levelset): no statutory forms, no notarization requirement, no specific prohibition on advance/contractual waivers. No primary authority located."
+  }
+ },
+ {
+  "state": "NV",
+  "name": "Nevada",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": false,
+   "lateInterest": "Interest from the due date at the rate agreed in the contract or, if higher, the prime rate at the largest bank in Nevada plus 4%, until paid (NRS 624.630)",
+   "cite": "NRS 624.624(1); NRS 624.628(3); NRS 624.630",
+   "url": "https://www.leg.state.nv.us/nrs/nrs-624.html",
+   "confidence": "high",
+   "notes": "Higher-tiered contractor must pay the lower-tiered subcontractor: (a) if the written agreement has a payment schedule, on or before the scheduled due date or within 10 days after the higher-tiered contractor receives payment for the work, whichever is EARLIER; (b) if no schedule or an oral agreement, within 30 days after the sub's payment request or within 10 days after receipt of payment, whichever is earlier. A contract can therefore shorten but not extend the 10 days; provisions requiring a lower-tiered sub to waive rights under NRS 624.624-624.630 or relieving the higher-tiered contractor of those obligations are void (NRS 624.628(3)). Exact wording of the interest-rate formula should be re-read before coding it. Whether any residential/other exclusions apply to 624.624 was not confirmed."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Retention amount authorized by the agreement 'must not exceed 5 percent of the payment' otherwise required. Beyond retention, the higher-tiered contractor may withhold only for work not performed, costs to correct non-conforming work to the extent they exceed 50% of the retention withheld, and amounts under official notices from state agencies/benefit trust funds, and must give the written notice required by 624.624(3).",
+   "cite": "NRS 624.624(2)(a)(1), (5)",
+   "url": "https://www.leg.state.nv.us/nrs/nrs-624.html",
+   "confidence": "high",
+   "notes": "Section last amended in 2015 (Statutes of Nevada 2015, p. 2626). The 5% figure was read in current text; the secondary-source claim that 2015 lowered it from 10% and the contract-date applicability of that change were not verified, so appliesFrom is null."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "No retainage-specific release deadline found in NRS 624.624; the general rule (scheduled due date or 10 days after the higher-tiered contractor receives payment for the work, whichever is earlier) would govern retention received from the owner",
+   "cite": "NRS 624.624(1)",
+   "url": "https://www.leg.state.nv.us/nrs/nrs-624.html",
+   "confidence": "medium",
+   "notes": "Null because the statute text reviewed does not state when retention must be released to a lower-tiered subcontractor. Applying the 10-day rule to retention is an inference. Owner-side sections (NRS 624.609-624.622) were not read in full."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "APCO Constr., Inc. v. Zitting Bros. Constr., Inc., 136 Nev. 569, 473 P.3d 1021 (2020); NRS 624.628(3); Lehrer McGovern Bovis, Inc. v. Bullock Insulation, Inc., 124 Nev. 1102, 197 P.3d 1032 (2008)",
+   "url": "https://law.justia.com/cases/nevada/supreme-court/2020/75197.html",
+   "confidence": "medium",
+   "notes": "Treat as effectively void in practice. Lehrer (2008) said pay-if-paid provisions are generally unenforceable as against public policy; APCO v. Zitting (2020) clarified they are not per se void but are unenforceable whenever they require a sub to waive or limit rights under NRS 624.624-624.630 or relieve the GC of its obligations under those sections (NRS 624.628(3)), and held the clause there void because it limited the right to prompt payment; Helix Elec. v. APCO (Nev. 2022) reached the same result. Commentators say enforceable only in extremely limited circumstances. Classified 'limited' because the Nevada Supreme Court expressly rejected a per se rule; a conservative system should not rely on pay-if-paid in Nevada. Opinions known through summaries, not read in full; reporter citation for Lehrer is from memory of the standard citation and should be verified."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "NRS 108.2457(5)(a)"
+    },
+    {
+     "type": "unconditional_progress",
+     "cite": "NRS 108.2457(5)(b)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "NRS 108.2457(5)(c)"
+    },
+    {
+     "type": "unconditional_final",
+     "cite": "NRS 108.2457(5)(d)"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "NRS 108.2453(2); NRS 108.2457(1), (5)",
+   "url": "https://www.leg.state.nv.us/nrs/nrs-108.html",
+   "confidence": "high",
+   "notes": "Stricter than 'substantially': a waiver or release is 'unenforceable unless it is in the following forms'. Any contract term that attempts to waive or impair lien rights is void (108.2453(2), 108.2457(1)); a waiver is enforceable only if the claimant signs the statutory form and, for conditional waivers, receives the payment. NRS 108.2457(5)(e): a waiver is void if the payment check fails to clear. No notary block in the forms."
+  }
+ },
+ {
+  "state": "NY",
+  "name": "New York",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1% per month (or fraction of a month) on the unpaid balance, or a higher contract rate, 'notwithstanding any contrary agreement'",
+   "cite": "N.Y. Gen. Bus. Law § 756-a(3)(b)(ii); § 756-b(1)(b); § 757(4)",
+   "url": "https://www.nysenate.gov/legislation/laws/GBS/756-A",
+   "confidence": "medium",
+   "notes": "Seven days after receipt of good funds for each interim or final payment, provided contractually required documentation and waivers are received. The 7 days is high-confidence (statute read). Override is the uncertain part: § 756-a says contract terms supersede the article 'except as otherwise provided', but § 757(4) voids payment provisions differing from § 756-a(3), so set to false. Applies only to private contracts with total cost >= $150,000; excludes 1-3 family dwellings, certain residential tracts and small/affordable residential projects (§ 756)."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "2023-11-17",
+   "conditions": "Private construction contracts >= $150,000 (GBL § 756 definition). 5% of the contract sum; a GC/sub may not retain from a sub more than the actual percentage retained by the owner.",
+   "cite": "N.Y. Gen. Bus. Law § 756-c; § 757(5)",
+   "url": "https://www.nysenate.gov/legislation/laws/GBS/756-C",
+   "confidence": "high",
+   "notes": "Cap added by L.2023 (S3539/A4167), effective for contracts entered on/after 2023-11-17. RECENT AMENDMENT: SB 5655 signed 2025-12-19, effective immediately, added § 757(5) making any provision requiring retainage above 5% of the contract sum void (closing the contract-around loophole). Cap and § 757(5) read on nysenate.gov; dates from law-firm alerts (Holland & Knight, Venable, Cozen)."
+  },
+  "retainageRelease": {
+   "days": 30,
+   "trigger": "after final approval of the work (owner must release retainage to the contractor; same section imposes 1%/month interest on an owner, contractor or subcontractor that fails to release retainage as required)",
+   "cite": "N.Y. Gen. Bus. Law § 756-c",
+   "url": "https://www.nysenate.gov/legislation/laws/GBS/756-C",
+   "confidence": "medium",
+   "notes": "The 30-day rule is written as owner-to-contractor; the statute gives no separate number of days for GC-to-sub retainage. The 7-day pass-through of § 756-a(3)(b)(ii) applies to final payment funds received."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "West-Fair Elec. Contractors v. Aetna Cas. & Sur. Co., 87 N.Y.2d 148 (1995) (construing Lien Law § 34)",
+   "url": "https://www.law.cornell.edu/nyctap/087_0148.htm",
+   "confidence": "high",
+   "notes": "Clauses shifting the risk of owner nonpayment to the sub are void as against public policy; pay-when-paid clauses that only fix a reasonable time for payment are allowed. A choice of another state's law could avoid the rule (Welsbach Elec. v. MasTec, 7 N.Y.3d 624 (2006)), but GBL § 757(1) voids out-of-state choice of law in covered contracts. Holding taken from search summaries of the opinion."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "N.Y. Lien Law § 34",
+   "url": "https://www.nysenate.gov/legislation/laws/LIE/34",
+   "confidence": "high",
+   "notes": "Statute read: contractual waiver of the right to file or enforce a lien is void as against public policy; waivers executed simultaneously with or after payment are permitted. No statutory form or notarization requirement (secondary source: Siteline 50-state survey)."
+  }
+ },
+ {
+  "state": "OH",
+  "name": "Ohio",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": false,
+   "lateInterest": "18% per annum on the payment due, beginning on the eleventh day after the contractor receives payment from the owner",
+   "cite": "Ohio Rev. Code § 4113.61(A)(1), (D)",
+   "url": "https://codes.ohio.gov/ohio-revised-code/section-4113.61",
+   "confidence": "high",
+   "notes": "10 CALENDAR days after receipt of payment from the owner, when the sub's pay request was submitted in time to be included in the GC's own pay request. Override false: under (D)(2) the statute prevails over contract terms with longer periods or lower interest, and (D)(1) voids waiver of interest/fees; a shorter contractual period is fine. Version in force is effective 2011-09-29. PENDING: H.B. 288 (136th G.A.) would add an owner-to-GC 30-day duty; reported by House committee but not passed as of this research; predecessor H.B. 203 died in the Senate."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private work; § 4113.61(A)(1) allows the GC to reduce payment 'by any retainage provision contained in the contract'.",
+   "cite": "Ohio Rev. Code § 4113.61(A)(1)",
+   "url": "https://codes.ohio.gov/ohio-revised-code/section-4113.61",
+   "confidence": "medium",
+   "notes": "Absence of a private cap confirmed only by secondary source (Levelset); public-works retainage rules in R.C. ch. 153 do not apply."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after GC receives retainage from the owner (calendar days, or any shorter contract period), for subs whose work the owner has approved",
+   "cite": "Ohio Rev. Code § 4113.61(A)(3)",
+   "url": "https://codes.ohio.gov/ohio-revised-code/section-4113.61",
+   "confidence": "high",
+   "notes": "18% per annum interest applies to late retainage as well."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Transtar Elec., Inc. v. A.E.M. Elec. Servs. Corp., 140 Ohio St.3d 193, 2014-Ohio-3095; Ohio Rev. Code § 4113.62(E)",
+   "url": "https://codes.ohio.gov/ohio-revised-code/section-4113.62",
+   "confidence": "high",
+   "notes": "Ohio Supreme Court enforces clear pay-if-paid clauses ('condition precedent' wording suffices). By statute, a contingent-payment clause cannot bar the sub from filing a lien or bond claim to keep those rights from expiring while payment is pending. Case holding from Court News Ohio/law-firm summaries; § 4113.62(E) read on codes.ohio.gov. Reporter cite 140 Ohio St.3d 193 is from memory, not verified."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statute (R.C. ch. 1311 silent on waiver form); see § 4113.62(E)",
+   "url": "https://www.levelset.com/lien-waivers/ohio-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "Single secondary source (Levelset): no statutory forms, no notarization requirement, advance waivers not prohibited (though disfavored). Exception: a contract with a pay-if-paid clause cannot prevent lien filing (§ 4113.62(E), read)."
+  }
+ },
+ {
+  "state": "OK",
+  "name": "Oklahoma",
+  "promptPay": {
+   "days": 10,
+   "contractCanOverride": true,
+   "lateInterest": null,
+   "cite": "Okla. Stat. tit. 15, § 820",
+   "url": "https://www.levelset.com/prompt-payment/oklahoma-prompt-payment-faqs/",
+   "confidence": "medium",
+   "notes": "Statute text as reproduced by Levelset: 'Subcontractors shall be paid by the prime contractor within ten (10) calendar days of payment from the owner, or as otherwise agreed to by the parties.' Husch Blackwell agrees (10 days, unless otherwise agreed). I could not open the official text (Justia 403, OSCN lookup failed), so the exact subsection letter is unverified; one outlier source (LegalFix) says 7 days. lateInterest null: Levelset FAQ and Husch Blackwell say no statutory interest on private projects, though another Levelset page says 1.5%/month; unresolved. Remedy is suspension of work after 10 days' written notice. Act does not apply to 1-4 family dwellings (§ 821). NOTE: the 'Fair Pay for Construction Act' (61 O.S. §§ 221-227: 5% retainage, 7/10-day rules) is PUBLIC works only."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private work; § 820 lets payments be reduced by retainage as provided in the contract/subcontract.",
+   "cite": "No private statute (61 O.S. § 226's 5% cap is public-only)",
+   "url": "https://www.levelset.com/retainage/oklahoma-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "Confirmed 61 O.S. § 226 is titled public construction by reading enrolled H.B. 1114 (2019). Absence of a private cap per Levelset."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": null,
+   "cite": "None for private work",
+   "url": "https://www.levelset.com/retainage/oklahoma-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "Null: no private retainage release statute. The default 10-day pass-through of 15 O.S. § 820 would apply to funds received absent contrary agreement."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Swanda Bros., Inc. v. Chasco Constructors, Ltd. (W.D. Okla., No. 5:08-cv-00199) (applying Oklahoma law)",
+   "url": "https://docs.justia.com/cases/federal/district-courts/oklahoma/okwdce/5:2008cv00199/68742/96",
+   "confidence": "low",
+   "notes": "Federal courts applying Oklahoma law have enforced clear condition-precedent clauses and noted no Oklahoma statute prohibits them, but there is no Oklahoma appellate decision on point. Opinion not read directly; I did not confirm the full list of void provisions in 15 O.S. § 821."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statute (42 O.S. silent)",
+   "url": "https://www.levelset.com/lien-waivers/oklahoma-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "Single secondary source (Levelset): no statutory forms, no notarization requirement, statutes silent on advance waivers and courts have not definitively ruled."
+  }
+ },
+ {
+  "state": "OR",
+  "name": "Oregon",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month (or fraction of a month) on the unpaid balance, or a higher agreed rate, beginning on the eighth day",
+   "cite": "ORS 701.630(2)(a), (6); ORS 701.625(8)",
+   "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors701.html",
+   "confidence": "high",
+   "notes": "Seven calendar days after the original contractor receives payment from the owner. The 7 days and interest are read from the 2025 ORS edition. Override false at medium confidence: ORS 701.630 has no opt-out and ORS 701.625(8) bars contract changes that alter a subcontractor's right to prompt payment, but there is no general anti-waiver clause. GC may withhold for listed reasons. ORS 701.620-701.640 do not apply to Low-Rise Residential Dwelling Code buildings, public contracts, or certain income-restricted housing (ORS 701.645)."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Owner, contractor or subcontractor may withhold not more than 5% of the contract price of the work completed. Not applicable where the owner is the United States or federal money pays for the work (ORS 701.440). A surety bond may be posted in lieu of retainage (ORS 701.435).",
+   "cite": "ORS 701.420(1)",
+   "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors701.html",
+   "confidence": "high",
+   "notes": "Read in 2025 ORS edition. Last amended by Or. Laws 2024, ch. 2 (HB 4006), which per secondary sources repealed the 2019 interest-bearing escrow requirement for contracts over $500,000 and expanded the retainage-bond alternative. The page notes some ch. 701 sections were touched in the 2026 session; none seen for these sections, but the 2026 A&R table was not checked."
+  },
+  "retainageRelease": {
+   "days": 30,
+   "trigger": "after the contractor/subcontractor has completed and the owner has accepted the work (final payment then accrues 1%/month interest); party notified of completion has 15 days to accept or list remaining work",
+   "cite": "ORS 701.420(2)",
+   "url": "https://www.oregonlegislature.gov/bills_laws/ors/ors701.html",
+   "confidence": "medium",
+   "notes": "This is an interest-accrual trigger, not a pass-through deadline. Separately, ORS 701.630(2)(a) requires the GC to pay subs within 7 days of receiving a progress or final payment from the owner; use 7 days for pass-through of retainage funds actually received."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No Oregon statute or appellate decision found",
+   "url": "https://huschblackwell.com/oregon-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "Husch Blackwell (2020) lists pay-if-paid as permissible in Oregon but cites no authority, and I found no Oregon appellate decision; marked unsettled rather than enforceable."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": false,
+   "cite": "No statute (ORS ch. 87 has no waiver form); ORS 701.630(2)(b)",
+   "url": "https://www.levelset.com/lien-waivers/oregon-lien-waiver-faqs/",
+   "confidence": "low",
+   "notes": "Single secondary source (Levelset): no statutory forms; advance waivers not prohibited. Notarization is not required by law, but ORS 701.630(2)(b) lets a GC or sub require notarized lien waivers by contract."
+  }
+ },
+ {
+  "state": "PA",
+  "name": "Pennsylvania",
+  "promptPay": {
+   "days": 14,
+   "contractCanOverride": false,
+   "lateInterest": "1% per month (or fraction of a month) on the balance due, from the day after the due date; plus a 1% per month penalty on amounts wrongfully withheld and attorney fees if arbitration/litigation is brought",
+   "cite": "73 P.S. § 507(c), (d) (CASPA § 7); § 512 (CASPA § 12); § 503(c) (CASPA § 3(c))",
+   "url": "https://www.palegis.us/statutes/unconsolidated/law-information?sessYr=1994&sessInd=0&actNum=0007.",
+   "confidence": "high",
+   "notes": "14 days after receipt of each progress or final payment OR 14 days after receipt of the sub's invoice, whichever is later. Override false: § 7(c) has no agree-otherwise language and § 3(c) (added by Act 27 of 2018) bars waiver of the act by contract. If the GC fails to disclose the owner's payment due date before the subcontract is signed, it must pay as though the owner paid on time (§ 7(b)). Act does not apply to six or fewer residential units under construction simultaneously. Read in the official consolidated act; 73 P.S. section numbers are the conventional Purdon's mapping of Act sections."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No statutory cap on private work. A sub may post a maintenance bond for 120% of retainage at substantial completion of its scope to obtain early release (§ 9(a.1)).",
+   "cite": "73 P.S. § 509 (CASPA § 9)",
+   "url": "https://www.palegis.us/statutes/unconsolidated/law-information?sessYr=1994&sessInd=0&actNum=0007.",
+   "confidence": "high",
+   "notes": "Full text of the act read; it regulates timing only, not percentage."
+  },
+  "retainageRelease": {
+   "days": 14,
+   "trigger": "after GC receives the retainage from the owner (owner must release within 30 days after final acceptance of the work; if the owner holds no retainage, GC must pay sub retainage within 30 days after final acceptance)",
+   "cite": "73 P.S. § 509(a)-(c) (CASPA § 9)",
+   "url": "https://www.palegis.us/statutes/unconsolidated/law-information?sessYr=1994&sessInd=0&actNum=0007.",
+   "confidence": "high",
+   "notes": "Late retainage accrues 1%/month interest plus § 12 penalty exposure."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Sloan & Co. v. Liberty Mut. Ins. Co., 653 F.3d 175 (3d Cir. 2011)",
+   "url": "https://stradley.com/insights/publications/kingsley-pubs-no-links/construction-law-alert-december-2011",
+   "confidence": "medium",
+   "notes": "Third Circuit (predicting Pennsylvania law) enforces clearly worded pay-if-paid clauses; a Philadelphia trial court followed it (Pencoyd Iron Works). No Pennsylvania Supreme Court decision. Open questions: an E.D. Pa. 2018 decision (Connelly) recognized an exception where the GC caused nonpayment, and whether the 2018 CASPA anti-waiver provision (§ 3(c)) affects such clauses is unresolved."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "49 P.S. § 1401 (Mechanics' Lien Law of 1963 § 401, as amended by Act 52 of 2006)",
+   "url": "https://www.mbm-law.net/insights/no-more-mechanics-lien-waivers-in-pennsylvania-sort-of/",
+   "confidence": "medium",
+   "notes": "Since 2007-01-01 advance lien waivers on non-residential projects are against public policy and void except to the extent payment is actually received. Exceptions: residential projects (contract price under $1,000,000), and subcontractor waivers where the contractor has posted a payment bond. Statute text not read directly; based on consistent law-firm summaries. No statutory form or notarization requirement (Siteline survey)."
+  }
+ },
+ {
+  "state": "RI",
+  "name": "Rhode Island",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "No private prompt-pay statute (R.I. Gen. Laws ch. 42-11.1 covers state-funded work only)",
+   "url": "https://huschblackwell.com/rhode-island-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "Null because Rhode Island does not regulate GC-to-sub payment timing on private projects, per Husch Blackwell, Levelset and a Practical Law/Pierce Atwood guide. One outlier (LegalFix) claims a 10-day private rule under § 37-13, which is the public-works wage chapter; disregarded. P.L. 2024 ch. 229 shortened the sub-payment period to 7 days for STATE contracts only (§ 42-11.1-3(b)). No 2024-2026 private prompt-pay enactment found."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "5% of any progress payment. Applies only to a 'contract for construction' under § 5-65-1: lienable (private) or public projects with an original contract price of at least $250,000; excludes projects of one to four dwelling units. After substantial completion, withholding is further limited (150% of cost to complete/correct, 2.5% for missing deliverables, 0.5% for first-year defects).",
+   "cite": "R.I. Gen. Laws § 37-12-10.1(a); § 5-65-1(6)",
+   "url": "https://webserver.rilegislature.gov/Statutes/TITLE37/37-12/37-12-10.1.htm",
+   "confidence": "high",
+   "notes": "Read on the General Assembly site. Although codified in the public-works bond chapter, it expressly covers private lienable contracts via § 5-65-1. Enacted by P.L. 2018, ch. 170; exact effective date/contract-date applicability not confirmed, so appliesFrom left null. Levelset's summary table wrongly shows 'not regulated'."
+  },
+  "retainageRelease": {
+   "days": 30,
+   "trigger": "after submission of an application for payment of retainage, which may be submitted once 60 days have passed after substantial completion; each lower tier's payment period may be extended 7 days beyond the tier above (so up to 37 days for a first-tier sub)",
+   "cite": "R.I. Gen. Laws § 37-12-10.1(e)",
+   "url": "https://webserver.rilegislature.gov/Statutes/TITLE37/37-12/37-12-10.1.htm",
+   "confidence": "medium",
+   "notes": "Triggered by the retainage application, not by GC's receipt of funds. The exact mechanics of the 7-day tier extension were summarized by the fetch tool, not read verbatim; verify before hard-coding 30 vs 37. Same $250,000 / 1-4 unit limits apply."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "No controlling Rhode Island authority found (issue raised in Petrolex II LLC v. Bailey Group LLC, R.I. 2023, No. 22-10)",
+   "url": "https://law.justia.com/cases/rhode-island/supreme-court/2023/22-10.html",
+   "confidence": "low",
+   "notes": "Husch Blackwell: 'Unclear. Rhode Island has not yet addressed contingent payment clauses.' Practical Law says common law does not ban them. In Petrolex II a party argued the clause was void as against public policy; I could not confirm that the court decided the question."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "R.I. Gen. Laws § 34-28-1(b)",
+   "url": "https://webserver.rilegislature.gov/Statutes/TITLE34/34-28/34-28-1.htm",
+   "confidence": "high",
+   "notes": "Statute read: any covenant purporting to bar filing a notice of intention or enforcing a lien is against public policy, void and unenforceable; written waivers executed simultaneously with or after payment are permitted. No statutory form or notarization requirement (Siteline survey)."
+  }
+ },
+ {
+  "state": "SC",
+  "name": "South Carolina",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": true,
+   "lateInterest": "1% per month",
+   "cite": "S.C. Code Ann. §§ 29-6-30, 29-6-50",
+   "url": "https://www.scstatehouse.gov/code/t29c006.php",
+   "confidence": "high",
+   "notes": "Read on the official code page. Contractor (and each sub) must pay its subs within 7 days of receiving a periodic or final payment; owner has 21 days from receipt of pay request. Interest (§ 29-6-50) accrues only if the payee gave notice of § 29-6-50 when requesting payment. Private contracts may set different payment periods/interest rates ONLY if §§ 29-6-30 and 29-6-50 are specifically waived by section number in conspicuous bold-faced or underlined type."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "S.C. Code Ann. § 29-6-40",
+   "url": "https://www.scstatehouse.gov/code/t29c006.php",
+   "confidence": "medium",
+   "notes": "No percentage cap found for private work. § 29-6-40 permits withholding 'a reasonable amount for retainage'. Absence of a cap confirmed against Chapter 6 text only; not an exhaustive search of the code."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives payment (periodic or final) from owner - general prompt-pay rule, not a retainage-specific provision",
+   "cite": "S.C. Code Ann. § 29-6-30",
+   "url": "https://www.scstatehouse.gov/code/t29c006.php",
+   "confidence": "medium",
+   "notes": "No retainage-specific release deadline found. The 7-day pass-through in § 29-6-30 applies to any periodic or final payment received; treating released retainage as such a payment is an inference, hence medium."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "S.C. Code Ann. § 29-6-230",
+   "url": "https://www.scstatehouse.gov/code/t29c006.php",
+   "confidence": "high",
+   "notes": "Statute: payment by the owner to the contractor is not a condition precedent to payment of a subcontractor; 'Any agreement to the contrary is not enforceable.'"
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "S.C. Code Ann. § 29-7-20",
+   "url": "https://www.scstatehouse.gov/code/t29c007.php",
+   "confidence": "medium",
+   "notes": "§ 29-7-20: an agreement to waive the right to file or claim a lien for labor and materials is against public policy and unenforceable unless payment substantially equal to the amount waived is actually made (statute text seen via search-result excerpt of the official page, not a full read). No statutory form and no notarization requirement per secondary sources (Levelset)."
+  }
+ },
+ {
+  "state": "SD",
+  "name": "South Dakota",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/south-dakota-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private-project prompt-payment statute found. SDCL ch. 5-26 covers public contracts only. Husch Blackwell (2020) lists private deadlines as N/A; Siteline agrees. One Levelset page claims a 45-day default applies to private work - not corroborated and not adopted here."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://levelset.com/retainage/south-dakota-retainage-faqs/",
+   "confidence": "medium",
+   "notes": "No private-project retainage statute per secondary sources; statutory retainage schedule is public-works only."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "",
+   "confidence": "medium",
+   "notes": "No statutory deadline for private projects found."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "",
+   "url": "https://huschblackwell.com/south-dakota-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No statute or reported South Dakota decision located; Husch Blackwell (2020): 'South Dakota has not yet addressed contingent payment clauses.'"
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": null,
+   "cite": "SDCL ch. 44-9A (§§ 44-9A-1 to 44-9A-5)",
+   "url": "https://sdlegislature.gov/Statutes/44-9A",
+   "confidence": "low",
+   "notes": "No fill-in statutory waiver form. Ch. 44-9A provides an optional joint-check waiver method (joint check + separate written waiver agreement + provision on reverse of check); § 44-9A-1 preserves other waiver methods. Only the chapter's section titles were readable on the official site; substance is from a single secondary source (ezel.ai). That source says no statute voids advance waivers, but this was not confirmed against SDCL ch. 44-9 text, so advanceWaiverVoid left null."
+  }
+ },
+ {
+  "state": "TN",
+  "name": "Tennessee",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": "contract rate if stated; otherwise 1.5% per month from due date",
+   "cite": "Tenn. Code Ann. §§ 66-34-302, 66-34-601",
+   "url": "https://codes.findlaw.com/tn/title-66-property/tn-code-sect-66-34-302/",
+   "confidence": "medium",
+   "notes": "days is null because the current statute is NOT keyed to the GC's receipt of owner payment. § 66-34-302(a) (as amended by 2020 Pub. Ch. 749, eff. July 1, 2020 for contracts entered/amended/renewed on or after that date): prime must pay the remote contractor per the contract's payment schedule AND within 30 days after the remote contractor's timely application for payment, 'subject only to any condition precedent for payment clause in the contract' and less amounts withheld under § 66-34-303. Husch Blackwell's 2020 survey states '30 days after prime receives payment from owner' - this conflicts with the statute text read (FindLaw copy current as of Jan 2024; official code is on LexisNexis and was not accessible). Whether the 30-day outer limit can be lengthened by contract is unclear -> null. Act reportedly does not apply to 1-4 unit residential (secondary)."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Applies to all construction contracts on any project in the state, public and private. Separate escrow requirement in § 66-34-104 for certain contracts (threshold not verified here).",
+   "cite": "Tenn. Code Ann. § 66-34-103(a)",
+   "url": "https://codes.findlaw.com/tn/title-66-property/tn-code-sect-66-34-103/",
+   "confidence": "medium",
+   "notes": "Statute text read on FindLaw (current as of Jan 2, 2024): retainage 'may not exceed five percent (5%) of the amount of the contract.' Violation is a Class A misdemeanor, $3,000 fine per day, plus restitution (§ 66-34-103(e)). Medium only because the official LexisNexis-hosted code could not be read directly."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "after prime contractor receives the retainage from the owner (owner must release within 90 days after completion of the work or substantial completion of the project, whichever first)",
+   "cite": "Tenn. Code Ann. § 66-34-103(b)",
+   "url": "https://codes.findlaw.com/tn/title-66-property/tn-code-sect-66-34-103/",
+   "confidence": "medium",
+   "notes": "Same 10-day pass-through applies down each tier. Read on FindLaw copy (Jan 2024)."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Tenn. Code Ann. § 66-34-302(a); Koch v. Construction Technology, Inc., 924 S.W.2d 68 (Tenn. 1996)",
+   "url": "https://codes.findlaw.com/tn/title-66-property/tn-code-sect-66-34-302/",
+   "confidence": "medium",
+   "notes": "§ 66-34-302(a) expressly makes the prime's payment duty 'subject only to any condition precedent for payment clause in the contract'. Koch (opinion not read directly; secondary summaries) treated an ordinary pay-when-paid clause as a timing provision, requiring clear, unequivocal condition-precedent language to shift nonpayment risk."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Tenn. Code Ann. § 66-11-124(b)",
+   "url": "https://codes.findlaw.com/tn/title-66-property/tn-code-sect-66-11-124/",
+   "confidence": "medium",
+   "notes": "§ 66-11-124(b)(1): a contract provision waiving lien rights 'is void and unenforceable as against the public policy of this state'; contractors who solicit such waivers risk license revocation. No statutory form or notarization requirement appears in the section. FindLaw copy current as of Jan 2024."
+  }
+ },
+ {
+  "state": "TX",
+  "name": "Texas",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "1.5% per month, accruing from the day after payment is due",
+   "cite": "Tex. Prop. Code §§ 28.002(b), 28.004, 28.006",
+   "url": "https://texas.public.law/statutes/tex._prop._code_section_28.002",
+   "confidence": "high",
+   "notes": "Contractor must pay each sub 'not later than the seventh day after the date the contractor receives the owner's payment' (owner has 35 days from receipt of payment request). § 28.006(a): attempted waiver of Chapter 28 is void (only exception: owner-contractor single-family residence contracts). Text read on texas.public.law mirror (verified May 2025); the official statutes.capitol.texas.gov page did not render."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "Tex. Prop. Code § 53.101",
+   "url": "https://texas.public.law/statutes/tex._prop._code_section_53.101",
+   "confidence": "medium",
+   "notes": "No statutory cap on retainage a GC may withhold from a sub on private work. § 53.101 instead REQUIRES the owner to reserve 10% of the contract price (or value of work) until 30 days after completion ('reserved funds', as amended by HB 2237 eff. Jan 1, 2022) - an owner obligation, not a cap. 2025 session bills touching § 53.101 (SB 2131/HB 3712, SB 1530) were not confirmed enacted."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives payment from owner - general prompt-pay rule, not a retainage-specific provision",
+   "cite": "Tex. Prop. Code § 28.002(b)",
+   "url": "https://texas.public.law/statutes/tex._prop._code_section_28.002",
+   "confidence": "medium",
+   "notes": "No retainage-specific pass-through statute found; § 28.002(b) 7-day rule covers the portion of any owner payment attributable to the sub's work. Applying it to released retainage is an inference."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Tex. Bus. & Com. Code §§ 56.052, 56.054",
+   "url": "https://texas.public.law/statutes/tex._bus._and_com._code_section_56.052",
+   "confidence": "high",
+   "notes": "Contingent payment clauses are enforceable but limited by Ch. 56: (1) § 56.052 - after the 45th day following its payment request the sub may send written objection; once effective, the clause cannot be enforced for work performed afterward; (2) § 56.054 - clause may not be enforced if unconscionable (safe harbor requires GC diligence on owner's financial viability and collection efforts/assignment). Other Ch. 56 sections (e.g., where nonpayment is due to GC's own breach) not read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "conditional_progress",
+     "cite": "Tex. Prop. Code § 53.284(b)"
+    },
+    {
+     "type": "unconditional_progress",
+     "cite": "Tex. Prop. Code § 53.284(c)"
+    },
+    {
+     "type": "conditional_final",
+     "cite": "Tex. Prop. Code § 53.284(d)"
+    },
+    {
+     "type": "unconditional_final",
+     "cite": "Tex. Prop. Code § 53.284(e)"
+    }
+   ],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Tex. Prop. Code §§ 53.281-53.286",
+   "url": "https://texas.public.law/statutes/tex._prop._code_section_53.284",
+   "confidence": "high",
+   "notes": "§ 53.284(a): waiver unenforceable unless it substantially complies with the applicable form. § 53.281(b): must be signed by claimant; no notarization requirement appears in current text (amended by HB 2237, eff. Jan 1, 2022). § 53.286: any contract purporting to waive lien/claim rights is void as against public policy except as allowed by § 53.282; § 53.282(a)(3) allows pre-work contractual waivers only for single-family house/townhouse/duplex contracts. Unconditional forms require actual payment (§ 53.283, title only read)."
+  }
+ },
+ {
+  "state": "UT",
+  "name": "Utah",
+  "promptPay": {
+   "days": 30,
+   "contractCanOverride": true,
+   "lateInterest": "1% per month of the amount due, plus reasonable collection costs and attorney fees",
+   "cite": "Utah Code § 58-55-603",
+   "url": "https://codes.findlaw.com/ut/title-58-occupations-and-professions/ut-code-sect-58-55-603/",
+   "confidence": "medium",
+   "notes": "Contractor must pay subs/suppliers 'within 30 consecutive days after receiving construction funds from the owner or another contractor' or after the last day payment is due under the billing terms, whichever is later; applies 'unless otherwise agreed by contract' and penalties require failure 'without reasonable cause'. Read on FindLaw (le.utah.gov section page did not render); consistent with Husch Blackwell."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": "1999-07-01",
+   "conditions": "Written NONRESIDENTIAL commercial or industrial construction contracts (private and public; owner-contractor, contractor-sub, sub-sub). Max 5% of each payment and 5% of total construction price. Mixed-use: applies to nonresidential share by square footage. Owner may withhold more to cure default, or up to 2x fair market value of unfinished work after substantial completion. Cannot be waived.",
+   "cite": "Utah Code § 13-8-5(3)",
+   "url": "https://le.utah.gov/xcode/Title13/Chapter8/C13-8-S5_2023022720230227.html",
+   "confidence": "high",
+   "notes": "Read on official le.utah.gov version effective 2/27/2023 (2023 ch. 16). IMPORTANT: that page is marked 'superseded 1/1/2027' - an amended version takes effect Jan 1, 2027; I could not locate the amending bill or the new text, so re-check before 2027."
+  },
+  "retainageRelease": {
+   "days": 10,
+   "trigger": "from the day all or any portion of the retention proceeds is received by the contractor (owner must release within 45 days after the latest of: billing statement, certificate of occupancy/final acceptance, permitted occupancy, or acceptance of final pay quantities)",
+   "cite": "Utah Code § 13-8-5",
+   "url": "https://le.utah.gov/xcode/Title13/Chapter8/C13-8-S5_2023022720230227.html",
+   "confidence": "high",
+   "notes": "Knowing and wrongful withholding of retention: 2% per month charge plus attorney fees. Version superseded 1/1/2027 - see retainageCap note."
+  },
+  "payIfPaid": {
+   "status": "limited",
+   "cite": "Utah Code § 13-8-4(3)",
+   "url": "https://codes.findlaw.com/ut/title-13-commerce-and-trade/ut-code-sect-13-8-4/",
+   "confidence": "medium",
+   "notes": "§ 13-8-4 recognizes 'contingent payment contracts' but provides that one 'is not a defense to a claim to enforce a preconstruction or construction lien' (exception: private residential work of 4 units or fewer); sub may request project-financing information before signing. No reported Utah state appellate decision squarely enforcing pay-if-paid was found; commentators (Parr Brown) predict enforcement if clearly drafted, citing Zions First Nat'l Bank v. Christiansen Bros., 66 F.3d 1560 (10th Cir. 1995). So enforceability outside the lien context is probable but not settled."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Utah Code §§ 38-1a-802, 38-1a-105",
+   "url": "https://codes.findlaw.com/ut/title-38-liens/ut-code-sect-38-1a-802/",
+   "confidence": "medium",
+   "notes": "Forms are a safe harbor, not mandatory: a waiver 'meets the requirements of this section if it is in substantially the form provided' - conditional progress form at § 38-1a-802(4)(b), final payment form at § 38-1a-802(4)(c), restrictive check endorsement at (4)(d). But ANY waiver is enforceable only if the claimant signs a waiver/release (or restrictive endorsement) AND receives the payment; void if the check fails. § 38-1a-105: contract provisions waiving/limiting lien rights are void except in consideration of payment under § 38-1a-802. No notarization in the forms. Read on FindLaw (current as of Jan 1, 2025)."
+  }
+ },
+ {
+  "state": "VA",
+  "name": "Virginia",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "interest penalties 'consistent with § 2.2-4355': prime rate (WSJ base rate on corporate loans) unless the contract provides a different rate, accruing 7 days after payment date",
+   "cite": "Va. Code § 11-4.6(B)(2)",
+   "url": "https://law.lis.virginia.gov/vacode/title11/chapter1/section11-4.6/",
+   "confidence": "high",
+   "notes": "GC must pay sub within the EARLIER of (i) 60 days of receipt of the sub's invoice or (ii) seven days after receipt of amounts paid by the owner for that work. Withholding requires written notice (reason, amount) - summarized by the reader as within 50 days. 'Any provision in a contract contrary to this section shall be unenforceable.' Private prompt-pay provisions date from 2022 (cc. 726, 727), amended 2023 (cc. 675, 676). The section may contain project-type/size limits for some provisions (fetch summary mentioned non-single-family projects over $500,000 for flow-down and wage liability) - check full text. 2026 c. 1040 (HB 238) amended the section's wage-liability provisions (GC jointly liable for sub's employees' wages on contracts entered on/after July 1, 2026); it did not appear to change the payment deadlines."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "Va. Code § 11-4.6(B)",
+   "url": "https://law.lis.virginia.gov/vacode/title11/chapter1/section11-4.6/",
+   "confidence": "high",
+   "notes": "No private cap: § 11-4.6 says its payment provisions do not 'prohibit the inclusion of any retainage provisions in a construction contract.' The 5% cap in § 2.2-4333 is public-works only. NEW 2026: SB 165 (2026 Acts c. 485, approved Apr 8, 2026) adds § 11-4.7 allowing a contractor/sub to tender a retainage bond in lieu of retainage on owner-GC and GC-sub contracts; text and effective date not read (presumably July 1, 2026) - medium/low on that detail."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after GC receives payment from owner for the sub's work (or 60 days after the sub's invoice, if earlier) - general prompt-pay rule, not a retainage-specific provision",
+   "cite": "Va. Code § 11-4.6(B)(2)",
+   "url": "https://law.lis.virginia.gov/vacode/title11/chapter1/section11-4.6/",
+   "confidence": "medium",
+   "notes": "No retainage-specific release deadline; applying the general 7-day rule to released retainage is an inference."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "Va. Code § 11-4.6(B)(2)",
+   "url": "https://law.lis.virginia.gov/vacode/title11/chapter1/section11-4.6/",
+   "confidence": "high",
+   "notes": "'Payment by the party contracting with the contractor shall not be a condition precedent to payment to any subcontractor' - exception: 'unless the party contracting with the contractor is insolvent or a debtor in bankruptcy as defined in § 50-73.79.' Contrary provisions unenforceable. Applies to contracts under the 2022/2023 amendments (older contracts may be governed by prior law)."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Va. Code § 43-3(C)",
+   "url": "https://law.lis.virginia.gov/vacode/title43/chapter1/section43-3/",
+   "confidence": "high",
+   "notes": "Lien rights may be waived at any time, EXCEPT a general contractor, subcontractor, lower-tier subcontractor, or material supplier 'may not waive or diminish his lien rights in a contract in advance of furnishing any labor, services, or materials'; such a provision 'is null and void'. No statutory form or notarization requirement in the subsection."
+  }
+ },
+ {
+  "state": "VT",
+  "name": "Vermont",
+  "promptPay": {
+   "days": 7,
+   "contractCanOverride": false,
+   "lateInterest": "interest at the rate set by 12 V.S.A. § 2903(b) from the day after the due date; plus penalty of 1% per month on amounts wrongfully withheld (9 V.S.A. § 4007(b))",
+   "cite": "9 V.S.A. § 4003(c), (d)",
+   "url": "https://legislature.vermont.gov/statutes/section/09/102/04003",
+   "confidence": "high",
+   "notes": "'Notwithstanding any contrary agreement', contractor must pay sub 7 days after receipt of each progress or final payment or 7 days after receipt of the sub's invoice, whichever is later. The numeric rate in 12 V.S.A. § 2903(b) was not read (commonly cited as 12% per year - unverified here). Contractor must also disclose owner's payment due dates to subs (§ 4003(b)). § 4008: federal-aid contracts may vary the chapter."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "No retainage may be held on materials delivered by a materialman and accepted by the contractor that carry a manufacturer's warranty and/or meet industry grading standards (9 V.S.A. § 4005(e)).",
+   "cite": "9 V.S.A. § 4005",
+   "url": "https://legislature.vermont.gov/statutes/section/09/102/04005",
+   "confidence": "high",
+   "notes": "§ 4005 regulates timing but states no percentage cap. Section amended by 2017, No. 179 (Adj. Sess.), § 3."
+  },
+  "retainageRelease": {
+   "days": 7,
+   "trigger": "after contractor receives the retainage (owner must pay retainage within 30 days after final acceptance of the work)",
+   "cite": "9 V.S.A. § 4005(a), (c)",
+   "url": "https://legislature.vermont.gov/statutes/section/09/102/04005",
+   "confidence": "high",
+   "notes": "'Notwithstanding any contrary agreement.' If the owner is not withholding retainage, retainage the contractor holds from a sub is due within 30 days after final acceptance (§ 4005(b))."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "9 V.S.A. § 4003",
+   "url": "https://legislature.vermont.gov/statutes/section/09/102/04003",
+   "confidence": "low",
+   "notes": "No Vermont statute or appellate decision squarely addressing pay-if-paid was found (Husch Blackwell 2020: 'Unclear'). § 4003(a) entitles a performing sub to payment from the party it contracts with, and § 4003(b) makes a contractor that fails to disclose the owner's due dates pay as if the owner had paid on time, which may undercut such clauses, but no court ruling confirmed."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": null,
+   "advanceWaiverVoid": null,
+   "cite": "",
+   "url": "",
+   "confidence": "low",
+   "notes": "No statutory lien waiver form or advance-waiver provision located for Vermont (9 V.S.A. ch. 51 lien statutes not read); searches returned nothing on point. Treat as 'no mandated form' with low confidence; notarization and advance-waiver validity unconfirmed."
+  }
+ },
+ {
+  "state": "WA",
+  "name": "Washington",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/washington-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private-project prompt-payment statute setting a GC-to-sub deadline found (Husch Blackwell 2020: N/A; RCW 39.76/39.04.250 are public). RCW 60.30.010 (2023) only addresses retainage and interest on final payment."
+  },
+  "retainageCap": {
+   "bps": 500,
+   "appliesFrom": null,
+   "conditions": "Private construction projects only (RCW 60.30.030). Does not apply to single-family residential construction of fewer than 12 units. Applies to owners, contractors, subcontractors and (since June 6, 2024) suppliers. Party may tender a retainage bond in lieu (RCW 60.30.020).",
+   "cite": "RCW 60.30.010(1)",
+   "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=60.30.010",
+   "confidence": "high",
+   "notes": "'not more than five percent of the contract price of the work completed.' Enacted by Laws 2023 c 373 (SSB 5528), effective July 23, 2023; the act contains no clause limiting it to contracts entered after that date, so appliesFrom is null (statute simply effective 2023-07-23). Amended by Laws 2024 c 101 (SSB 6108), effective June 6, 2024, adding suppliers."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "No hard deadline. Interest at 1% per month on the final payment starts 30 days after work is completed and accepted (or 30 days after a 15-day response window following notice of completion lapses). A contractor's interest obligation to a sub does not begin until the contractor has been paid that retainage, provided it submitted the request upstream within 30 days of receiving it.",
+   "cite": "RCW 60.30.010(2)-(4)",
+   "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=60.30.010",
+   "confidence": "high",
+   "notes": "Statute sets when interest begins rather than a fixed pass-through deadline; days left null. On posting of a retainage bond, withheld funds must be released within 30 days (RCW 60.30.020)."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "Amelco Electric v. Donald M. Drake Co., 20 Wn. App. 899 (1978) (pay-when-paid construed as timing only)",
+   "url": "https://www.aheadofschedulelaw.com/2018/04/articles/construction/contracts/construction-contract-interpretation/can-a-contingent-payment-provision-affect-a-construction-lien-claim-in-washington/",
+   "confidence": "low",
+   "notes": "No statute; no controlling published decision squarely enforcing or voiding a true pay-if-paid clause was confirmed. Secondary sources split: Husch Blackwell (2020) lists pay-if-paid as permissible; others say unclear. Amelco citation reporter details are from memory of secondary sources and were not verified against the opinion. A 2024 Div. II opinion (Pease & Sons v. Turner Constr., No. 58748-3-II, apparently unpublished) discussed such clauses but could not be read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": null,
+   "advanceWaiverVoid": false,
+   "cite": "RCW ch. 60.04",
+   "url": "https://www.stoel.com/legal-insights/article/advance-contractual-lien-releases-in-washington-%E2%80%93",
+   "confidence": "low",
+   "notes": "No statutory waiver form in ch. 60.04 RCW per secondary sources. Ch. 60.04 has no express ban on advance/prospective waivers and commentary (Stoel Rives, Levelset) says common law permits them, so advanceWaiverVoid=false at low confidence - statute text not read. Notarization not confirmed either way."
+  }
+ },
+ {
+  "state": "WI",
+  "name": "Wisconsin",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/wisconsin-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private-project prompt-payment statute setting a GC-to-sub deadline found (Husch Blackwell 2020: N/A). Wis. Stat. § 779.135(3) allows clauses that delay payment until the prime is paid (pay-when-paid) but not ones making it a condition precedent."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://huschblackwell.com/wisconsin-state-by-state-summary-of-prompt-payment",
+   "confidence": "low",
+   "notes": "No private-project retainage cap located; searches and the Husch survey are silent. Not confirmed against a Wisconsin-specific retainage source."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "",
+   "confidence": "low",
+   "notes": "No statutory deadline for private projects found."
+  },
+  "payIfPaid": {
+   "status": "void",
+   "cite": "Wis. Stat. § 779.135(3)",
+   "url": "https://docs.legis.wisconsin.gov/statutes/statutes/779/i/135",
+   "confidence": "high",
+   "notes": "Void: 'Provisions making a payment to a prime contractor from any person who does not have a contractual agreement with the subcontractor, supplier, or service provider a condition precedent to a prime contractor's payment'. Pay-when-paid (delay only) is expressly permitted."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": false,
+   "advanceWaiverVoid": true,
+   "cite": "Wis. Stat. §§ 779.05(1), 779.135(1)",
+   "url": "https://docs.legis.wisconsin.gov/statutes/statutes/779/i/05",
+   "confidence": "high",
+   "notes": "No statutory form or notarization: any signed document purporting to waive lien rights is valid (§ 779.05(1)). NUANCE on advanceWaiverVoid: CONTRACT PROVISIONS requiring a lien claimant to waive lien/bond rights before being paid are void (§ 779.135(1)); but a separately signed waiver document is valid 'whether ... signed before or after' the work is performed, and unless expressly limited it waives ALL lien rights for work done or to be done (§ 779.05(1)). Claimant may refuse to give a waiver unless paid in full for the work it covers."
+  }
+ },
+ {
+  "state": "WV",
+  "name": "West Virginia",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/west-virginia-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private-project prompt-payment statute found (Husch Blackwell 2020: N/A; Levelset agrees). A 2025 Prompt Payment Act (HB 2152) surfaced in search but reportedly concerns state-agency contracting only; not read."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/retainage/west-virginia-retainage-faqs",
+   "confidence": "medium",
+   "notes": "No private-project retainage statute per secondary sources."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "",
+   "confidence": "medium",
+   "notes": "No statutory deadline for private projects found."
+  },
+  "payIfPaid": {
+   "status": "enforceable",
+   "cite": "Wellington Power Corp. v. CNA Surety Corp., 217 W. Va. 33, 614 S.E.2d 680 (2005)",
+   "url": "https://www.courtswv.gov/sites/default/pubfilesmnt/2023-11/31869.pdf",
+   "confidence": "medium",
+   "notes": "W. Va. Supreme Court upheld an explicit pay-if-paid condition precedent clause (public project / payment bond context; held not contrary to public policy of W. Va. Code § 38-2-39). Ziegenfuss Drilling v. Frontier-Kemper (S.D. W. Va. 2009) reads Wellington as upholding unambiguous pay-if-paid clauses generally. No private-project-specific appellate ruling found; reporter citation from memory/secondary sources, opinion itself not read."
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": false,
+   "forms": [],
+   "notarizationRequired": null,
+   "advanceWaiverVoid": null,
+   "cite": "W. Va. Code ch. 38, art. 2",
+   "url": "https://ezel.ai/surveys/mechanics-lien-waiver-rules/west-virginia",
+   "confidence": "low",
+   "notes": "Single secondary source: Article 2 prescribes no waiver form, no notarization requirement for waivers, and neither voids nor authorizes advance no-lien clauses. Statute text not read; notarization and advance-waiver validity left null."
+  }
+ },
+ {
+  "state": "WY",
+  "name": "Wyoming",
+  "promptPay": {
+   "days": null,
+   "contractCanOverride": null,
+   "lateInterest": null,
+   "cite": "",
+   "url": "https://huschblackwell.com/wyoming-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No private-project prompt-payment statute found (Husch Blackwell 2020: N/A; Levelset agrees). Wyo. Stat. §§ 16-6-601, -602 are public works only."
+  },
+  "retainageCap": {
+   "bps": null,
+   "appliesFrom": null,
+   "conditions": "",
+   "cite": "",
+   "url": "https://www.levelset.com/prompt-payment/wyoming-prompt-payment-faqs/",
+   "confidence": "medium",
+   "notes": "No private-project retainage statute per secondary sources."
+  },
+  "retainageRelease": {
+   "days": null,
+   "trigger": "",
+   "cite": "",
+   "url": "",
+   "confidence": "medium",
+   "notes": "No statutory deadline for private projects found."
+  },
+  "payIfPaid": {
+   "status": "unsettled",
+   "cite": "",
+   "url": "https://huschblackwell.com/wyoming-state-by-state-summary-of-prompt-payment",
+   "confidence": "medium",
+   "notes": "No statute or Wyoming decision located; Husch Blackwell (2020): 'Wyoming has not yet addressed contingent payment clauses.'"
+  },
+  "lienWaiver": {
+   "statutoryFormRequired": true,
+   "forms": [
+    {
+     "type": "single_statutory_form",
+     "cite": "Wyo. Stat. § 29-10-101(b)"
+    }
+   ],
+   "notarizationRequired": true,
+   "advanceWaiverVoid": null,
+   "cite": "Wyo. Stat. § 29-10-101(b)",
+   "url": "https://codes.findlaw.com/wy/title-29-liens/wy-st-sect-29-10-101/",
+   "confidence": "medium",
+   "notes": "§ 29-10-101(b): the lien waiver 'shall be completed in substantially the following form'. Wyoming has ONE statutory form, not the four standard types: a waiver 'in consideration of the PAYMENT received to date' that reserves lien rights for retainage, and does not apply if the owner's payment is dishonored or revoked (closest analogue: progress waiver for payments received). The form includes a notary acknowledgment block, so notarizationRequired=true by inference from the form (the text does not separately say 'must be notarized'). Advance/contract waivers: secondary sources conflict (NCS says not waivable by contract; Levelset/Siteline/ezel say no express ban) -> null. Read on FindLaw copy, not wyoleg.gov."
+  }
+ }
+]

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getField, RULE_FIELDS, type ExtractedRuleSet, type RuleFieldPath } from "@/domain/rules/schema";
 import { FIELD_GROUPS, RULE_IDS, formatRuleValue } from "@/domain/rules/format";
-import { STATUTES } from "@/domain/statutes/ca";
+import { STATUTES } from "@/domain/statutes";
 import type { StoredRules } from "@/server/rules/review";
 import { fieldLabel } from "@/server/rules/review";
 import { acknowledgeAnomalyAction, approveRuleSetAction, resolveFieldAction } from "@/app/gc/contracts/[id]/actions";

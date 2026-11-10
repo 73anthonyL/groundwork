@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { addDays, allocateProRata, planWaterfall, type Candidate, type OwnerPayment } from "./engine";
-import { overlayFor } from "../statutes/ca";
+import { overlayFor } from "../statutes";
 
 const $ = (d: number) => Math.round(d * 100);
 const received = new Date("2026-11-03T18:00:00Z");
@@ -177,26 +177,66 @@ describe("planWaterfall — edge cases", () => {
     expect(plan.warnings.some((w) => w.code === "timing_silent_default")).toBe(true);
   });
 
-  it("outside a loaded state, uses contract days or no deadline, and warns", () => {
-    const tx = candidate({
-      payAppId: "tx",
-      contractId: "tx",
-      overlay: overlayFor("TX", "2026-02-01"),
-      rules: { timingType: "pay_when_paid", timingDays: 30, agreedInWriting: true, retainageBps: 1000, capBps: null },
-    });
-    const silent = candidate({
-      payAppId: "tx2",
-      contractId: "tx2",
-      overlay: overlayFor("TX", "2026-02-01"),
-      rules: { timingType: "silent", timingDays: null, agreedInWriting: null, retainageBps: 1000, capBps: null },
-    });
-    const plan = planWaterfall(payment({ amountCents: $(200_000) }), [tx, silent]);
+  it("for a state with no researched record, uses contract days or no deadline, and warns", () => {
+    const rules = { timingType: "pay_when_paid" as const, timingDays: 30, agreedInWriting: true, retainageBps: 1000, capBps: null };
+    const known = candidate({ payAppId: "zz", contractId: "zz", overlay: overlayFor("ZZ", "2026-02-01"), rules });
+    const silent = candidate({ payAppId: "zz2", contractId: "zz2", overlay: overlayFor("ZZ", "2026-02-01"), rules: { ...rules, timingType: "silent", timingDays: null, agreedInWriting: null } });
+    const plan = planWaterfall(payment({ amountCents: $(200_000) }), [known, silent]);
     expect(plan.releases[0].payByAt).toEqual(addDays(received, 30));
     expect(plan.releases[1].payByAt).toBeNull();
-    expect(plan.releases[0].retainageWithheldCents).toBe($(10_000)); // no cap outside CA
+    expect(plan.releases[0].retainageWithheldCents).toBe($(10_000));
     expect(plan.warnings.filter((w) => w.code === "no_statute_loaded").length).toBe(2);
   });
+});
 
+describe("planWaterfall — other states", () => {
+  const rules = { timingType: "pay_when_paid" as const, timingDays: 30, agreedInWriting: true, retainageBps: 1000, capBps: null };
+  const one = (state: string, over: Partial<Candidate> = {}, executedOn = "2026-02-01", prime?: number) =>
+    planWaterfall(payment({ amountCents: $(100_000) }), [candidate({ payAppId: state, contractId: state, overlay: overlayFor(state, executedOn, { primeContractSumCents: prime }), rules, ...over })]);
+
+  it("Texas: the 7-day rule cannot be lengthened by contract, and there is no private retainage cap", () => {
+    const plan = one("TX");
+    expect(plan.releases[0].payByAt).toEqual(addDays(received, 7));
+    expect(plan.releases[0].retainageWithheldCents).toBe($(10_000));
+    expect(plan.warnings.map((w) => w.code)).toContain("contract_days_capped_by_statute");
+    expect(plan.releases[0].basis.statutes).toContain("TX_PROMPT_PAY");
+  });
+
+  it("Texas: pay-if-paid is honored but flagged, because the statute limits it", () => {
+    const plan = one("TX", { rules: { ...rules, timingType: "pay_if_paid" } });
+    expect(plan.warnings.map((w) => w.code)).toContain("pay_if_paid_uncertain");
+  });
+
+  it("New York: pay-if-paid is void, and the 5% cap applies only to prime contracts of $150,000 or more", () => {
+    const big = one("NY", { rules: { ...rules, timingType: "pay_if_paid" } }, "2024-06-01", $(4_000_000));
+    expect(big.releases[0].retainageWithheldCents).toBe($(5_000));
+    expect(big.warnings.map((w) => w.code)).toEqual(expect.arrayContaining(["retainage_clamped_by_statute", "pay_if_paid_void_in_state"]));
+    expect(one("NY", {}, "2024-06-01", $(120_000)).releases[0].retainageWithheldCents).toBe($(10_000));
+    // Contracts entered before the cap took effect keep their rate.
+    expect(one("NY", {}, "2023-01-15", $(4_000_000)).releases[0].retainageWithheldCents).toBe($(10_000));
+  });
+
+  it("New Mexico: retainage is prohibited, so nothing is withheld", () => {
+    const plan = one("NM");
+    expect(plan.releases[0].retainageWithheldCents).toBe(0);
+    expect(plan.releases[0].releaseCents).toBe($(100_000));
+  });
+
+  it("Kentucky: the statutory period runs in business days", () => {
+    // Received Tue 2026-11-03; 15 business days later is Tue 2026-11-24.
+    const plan = one("KY", { rules: { ...rules, timingType: "silent", timingDays: null, agreedInWriting: null } });
+    expect(plan.releases[0].payByAt).toEqual(new Date("2026-11-24T18:00:00Z"));
+  });
+
+  it("Washington: no private prompt-pay deadline, so the contract's days apply, but retainage is capped at 5%", () => {
+    const plan = one("WA");
+    expect(plan.releases[0].payByAt).toEqual(addDays(received, 30));
+    expect(plan.releases[0].retainageWithheldCents).toBe($(5_000));
+    expect(plan.warnings.map((w) => w.code)).toContain("no_prompt_pay_statute");
+  });
+});
+
+describe("planWaterfall — remaining edge cases", () => {
   it("skips applications already fully funded and leaves overpayment unallocated", () => {
     const done = candidate({ payAppId: "done", contractId: "d", grossCents: $(50_000), fundedGrossCents: $(50_000) });
     const open = candidate({ payAppId: "open", contractId: "o", grossCents: $(50_000) });

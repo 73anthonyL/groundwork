@@ -6,7 +6,7 @@
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { anthropic, hasApiKey, MODEL } from "./client";
-import { STATUTES, type StatuteId } from "@/domain/statutes/ca";
+import { STATUTES, type StatuteId } from "@/domain/statutes";
 import { formatCents } from "@/lib/money";
 
 export type ExplainInput = {

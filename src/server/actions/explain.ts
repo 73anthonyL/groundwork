@@ -6,7 +6,7 @@ import { explainPayment, type ExplainInput } from "@/lib/ai/explainPayment";
 import { emit, SYSTEM } from "@/server/events";
 import { getField, type ExtractedRuleSet, type RuleFieldPath } from "@/domain/rules/schema";
 import { fieldLabel, type StoredRules } from "@/server/rules/review";
-import type { StatuteId } from "@/domain/statutes/ca";
+import type { StatuteId } from "@/domain/statutes";
 
 export async function latestExplanation(releaseId: string) {
   const db = await getDb();

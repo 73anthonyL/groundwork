@@ -12,7 +12,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { and, asc, eq, inArray, isNull, lte } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { planWaterfall, type Candidate, type RetentionCandidate, type WaterfallPlan } from "@/domain/waterfall/engine";
-import { overlayFor } from "@/domain/statutes/ca";
+import { overlayFor } from "@/domain/statutes";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { emit, post, type Actor } from "@/server/events";
 import { sha256Hex } from "@/lib/ids";
@@ -140,7 +140,7 @@ export async function loadCandidates(tx: DbLike, projectId: string, scope: Fundi
           retainageBps: v.retainage.percent_bps,
           capBps: v.retainage.cap_bps,
         },
-        overlay: overlayFor(v.governing_law_state ?? project.state, contract.executedOn),
+        overlay: overlayFor(v.governing_law_state ?? project.state, contract.executedOn, { primeContractSumCents: project.primeContractSumCents }),
       };
     })
     .filter((c) => c.grossCents - c.fundedGrossCents > 0);
@@ -156,7 +156,7 @@ export async function loadCandidates(tx: DbLike, projectId: string, scope: Fundi
       isFinal: c.isFinal,
       releaseDays: v.retainage.release_days,
       offsetCents: takeOffset(c.contractId),
-      overlay: overlayFor(v.governing_law_state ?? project.state, contract.executedOn),
+      overlay: overlayFor(v.governing_law_state ?? project.state, contract.executedOn, { primeContractSumCents: project.primeContractSumCents }),
     };
   });
   return { candidates, retention };
@@ -252,6 +252,7 @@ async function planEvent(tx: Tx, e: EventInput): Promise<WaterfallPlan> {
     // Draft the conditional waiver for this release and send it to the claimant.
     const fields: WaiverFields = {
       form: r.waiverForm,
+      state: r.state,
       claimant: contract.sub.name,
       customer: contract.payer.name,
       jobLocation: project.address ?? project.name,

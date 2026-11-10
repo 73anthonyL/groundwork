@@ -4,7 +4,7 @@ import { requireAuth } from "@/server/auth";
 import { getRelease } from "@/server/scoped";
 import { formatCents } from "@/lib/money";
 import { now } from "@/server/clock";
-import { STATUTES, type StatuteId } from "@/domain/statutes/ca";
+import { STATUTES, type StatuteId } from "@/domain/statutes";
 import { fieldLabel } from "@/server/rules/review";
 import type { RuleFieldPath } from "@/domain/rules/schema";
 import { WAIVER_TITLES, type WaiverFormId } from "@/domain/waivers/ca";

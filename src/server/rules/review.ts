@@ -20,7 +20,7 @@ import {
   type RuleValues,
   type Verification,
 } from "@/domain/rules/schema";
-import { overlayFor, type StatutoryOverlay } from "@/domain/statutes/ca";
+import { overlayFor, type StatutoryOverlay } from "@/domain/statutes";
 import { verifyQuote } from "@/lib/verify/quote";
 
 export type FieldAnnotation = { verification: Verification; review: Review };
@@ -74,6 +74,12 @@ export function annotate(extracted: ExtractedRuleSet, pageTexts: string[], state
     }
     if (path === "retainage.percent_bps" && typeof f.value === "number" && overlay.retentionCapBps !== null && f.value > overlay.retentionCapBps) {
       escalate(`Exceeds the statutory retention cap of ${overlay.retentionCapBps / 100}%; the engine withholds at the cap.`);
+    }
+    if (path === "timing.type" && f.value === "pay_if_paid" && (overlay.payIfPaid === "limited" || overlay.payIfPaid === "unsettled")) {
+      flag(`Pay-if-paid is ${overlay.payIfPaid} in ${overlay.state}; confirm the clause can be relied on.`);
+    }
+    if (path === "timing.days" && typeof f.value === "number" && overlay.progressPaymentOverridable === false && overlay.progressPaymentDaysDefault !== null && overlay.dayType !== "business" && f.value > overlay.progressPaymentDaysDefault) {
+      flag(`${overlay.state} law requires payment within ${overlay.progressPaymentDaysDefault} days and the contract cannot lengthen that; the engine uses the statutory deadline.`);
     }
     annotations[path] = { verification, review: { state, reasons, override: null } };
   }

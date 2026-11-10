@@ -11,7 +11,7 @@ import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { RULE_FIELDS, getField, type RuleFieldPath, type TimingType } from "@/domain/rules/schema";
 import { manualRuleSet } from "@/domain/rules/manual";
-import { overlayFor } from "@/domain/statutes/ca";
+import { overlayFor } from "@/domain/statutes";
 import { approvedHash, type FieldAnnotation, type StoredRules } from "@/server/rules/review";
 import { emit, type Actor } from "@/server/events";
 import { now, isoDate } from "@/server/clock";
