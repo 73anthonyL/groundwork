@@ -30,14 +30,16 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
 
   return (
     <div>
-      <div className="text-sm text-muted-foreground">
-        <Link href={`/gc/projects/${project.id}`} className="hover:underline">
-          {project.name}
-        </Link>{" "}
-        / <Link href={`/gc/contracts/${r.contractId}`} className="hover:underline">{r.contract.sub.name}</Link> / {releaseLabel(r, { lower: true })}
-      </div>
+      <Link href={`/gc/projects/${project.id}`} className="text-sm text-muted-foreground hover:text-link">
+        {project.name}
+      </Link>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="num text-3xl font-semibold">{formatCents(r.releaseCents)}</h1>
+        <div>
+          <h1 className="num text-[2.5rem] font-semibold leading-tight tracking-tight">{formatCents(r.releaseCents)}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            to {r.contract.sub.name}, {releaseLabel(r, { lower: true })}
+          </p>
+        </div>
         <StatusPill status={r.status} map={RELEASE} />
       </div>
       {settled && (
@@ -71,30 +73,24 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
           <h2 id="basis-heading" className="text-lg font-semibold">
             Why these numbers
           </h2>
-          <p className="mt-1 text-xs text-muted-foreground">Computed by the deterministic engine from the approved rules. No model touched the arithmetic.</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">Worked out by the engine from the approved rules and the law. No model touched the arithmetic.</p>
           <dl className="num mt-4 divide-y text-sm">
             {basis.math.map((m, i) => (
               <div key={i} className="flex items-center justify-between py-2">
-                <dt className="text-muted-foreground">{m.label}</dt>
-                <dd className={`font-medium ${m.cents < 0 ? "text-hold" : ""}`}>{m.cents < 0 ? `−${formatCents(-m.cents)}` : formatCents(m.cents)}</dd>
+                <dt className="font-sans text-muted-foreground">{m.label.charAt(0).toUpperCase() + m.label.slice(1)}</dt>
+                <dd className={i === basis.math.length - 1 || /^release/.test(m.label) ? "font-semibold" : ""}>{m.cents < 0 ? `−${formatCents(-m.cents)}` : formatCents(m.cents)}</dd>
               </div>
             ))}
           </dl>
           <h3 className="mt-5 text-sm font-semibold">Rules applied</h3>
-          <ul className="mt-2 flex flex-wrap gap-1.5">
-            {[...new Set(basis.rulePaths)].map((p) => (
-              <li key={p} className="rounded-sm bg-muted px-2 py-0.5 text-xs">
-                {fieldLabel(p as RuleFieldPath)}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-1.5 text-sm text-muted-foreground">{[...new Set(basis.rulePaths)].map((p) => fieldLabel(p as RuleFieldPath)).join(", ")}.</p>
           {basis.statutes.length > 0 && (
             <>
               <h3 className="mt-5 text-sm font-semibold">Statutes applied</h3>
               <ul className="mt-2 space-y-2 text-sm">
                 {[...new Set(basis.statutes)].map((s) => (
                   <li key={s}>
-                    <span className="font-medium">{statute(s).cite}</span> · {statute(s).title}. <span className="text-muted-foreground">{statute(s).summary}</span>
+                    <span className="font-medium">{statute(s).cite}.</span> <span className="text-muted-foreground">{statute(s).summary}</span>
                   </li>
                 ))}
               </ul>
@@ -114,7 +110,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
             Where it is
           </h2>
           <div className="mt-4">
-            <ReleaseTimeline r={r} ownerName={project.owner.name} gcName={project.gc.name} nowIso={nowIso} />
+            <ReleaseTimeline r={r} ownerName={project.owner.name} gcName={project.gc.name} nowIso={nowIso} payee={r.contract.sub.name} />
           </div>
           {r.payment && r.payment.status === "released" && (
             <form action={settleAction} className="mt-5">

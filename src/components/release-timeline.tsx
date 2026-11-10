@@ -8,6 +8,7 @@ type ReleaseLike = {
   status: string;
   grossCents: number;
   retainageWithheldCents: number;
+  offsetCents?: number;
   releaseCents: number;
   awaitingOwnerCents: number;
   payByAt: Date | null;
@@ -25,7 +26,7 @@ function fmt(d: Date) {
 }
 
 /** Owner paid → allocated to you → waiver → payment sent → paid. The sub's "where is my money". */
-export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r: ReleaseLike; ownerName: string; gcName: string; nowIso: string; signHref?: (waiverId: string) => string }) {
+export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref, payee }: { r: ReleaseLike; ownerName: string; gcName: string; nowIso: string; signHref?: (waiverId: string) => string; /** Set when someone other than the payee is looking. */ payee?: string }) {
   const stage = r.status === "blocked" ? -1 : ORDER.indexOf(r.status);
   const conditional = r.waivers.find((w) => w.form === "cp_8132" || w.form === "cf_8136");
   const unconditional = r.waivers.find((w) => w.form === "up_8134" || w.form === "uf_8138");
@@ -37,10 +38,10 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r:
       active: false,
     },
     {
-      title: "Your share, by the rules",
+      title: payee ? `${payee}'s share, by the rules` : "Your share, by the rules",
       detail: (
         <span className="num">
-          {r.payApplication ? `${formatCents(r.grossCents)} funded on pay app #${r.payApplication.number} − ${formatCents(r.retainageWithheldCents)} retainage = ` : "Retainage held on this contract, released on certification: "}
+          {r.payApplication ? `${formatCents(r.grossCents)} funded on pay app #${r.payApplication.number} − ${formatCents(r.retainageWithheldCents)} retainage${r.offsetCents ? ` − ${formatCents(r.offsetCents)} backcharge` : ""} = ` : "Retainage held on this contract, released on certification: "}
           <strong>{formatCents(r.releaseCents)}</strong>
           {r.awaitingOwnerCents ? ` · ${formatCents(r.awaitingOwnerCents)} still with the owner` : ""}
         </span>
@@ -59,7 +60,7 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r:
                   Sign to release {formatCents(r.releaseCents)}
                 </a>
               )
-            : "Waiting for the subcontractor's signature",
+            : payee ? `Waiting for ${payee} to sign` : "Waiting for your signature",
       done: stage >= 1,
       active: stage === 0,
       tone: "hold",

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { requireAuth } from "@/server/auth";
 import { getPayApp } from "@/server/scoped";
-import { formatCents, formatBps } from "@/lib/money";
+import { formatCents, formatCentsCompact, formatBps } from "@/lib/money";
 import type { Check } from "@/domain/payapp/checks";
 import type { PayAppFlag } from "@/lib/ai/flagPayApp";
 import { fieldLabel } from "@/server/rules/review";
@@ -34,18 +34,27 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
     return { ...s, prev, thisP, stored, total, pct: s.scheduledValueCents ? Math.round((total / s.scheduledValueCents) * 1000) / 10 : 0, balance: s.scheduledValueCents - total };
   });
 
+  const anyStored = lines.some((l) => l.stored > 0);
+  const through = new Date(`${app.periodThrough}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const passing = checks.filter((c) => c.status === "pass");
+  const attention = checks.filter((c) => c.status !== "pass");
+
   return (
     <div>
-      <div className="text-sm text-muted-foreground">
-        <Link href={`/gc/projects/${app.contract.projectId}`} className="hover:underline">
-          {app.contract.project.name}
-        </Link>{" "}
-        / <Link href={`/gc/contracts/${app.contractId}`} className="hover:underline">{app.contract.sub.name}</Link> / pay application #{app.number}
-      </div>
-      <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-3xl font-semibold">
-          Pay application #{app.number} <span className="text-muted-foreground">· through {app.periodThrough}</span>
-        </h1>
+      <Link href={`/gc/projects/${app.contract.projectId}`} className="text-sm text-muted-foreground hover:text-link">
+        {app.contract.project.name}
+      </Link>
+      <div className="mt-1 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-[2rem] font-semibold leading-tight">Pay application #{app.number}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            From{" "}
+            <Link href={`/gc/contracts/${app.contractId}`} className="hover:text-link">
+              {app.contract.sub.name}
+            </Link>
+            , for work through {through}
+          </p>
+        </div>
         <StatusPill status={app.status} map={PAY_APP} />
       </div>
       {error && (
@@ -59,44 +68,44 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
         </p>
       )}
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_400px]">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section aria-labelledby="lines-heading" className="min-w-0">
           <h2 id="lines-heading" className="text-lg font-semibold">
-            Continuation sheet
+            What was billed
           </h2>
-          <div className="mt-3 overflow-x-auto rounded-xl bg-card shadow-card">
+          <div className="mt-3 overflow-hidden rounded-xl bg-card shadow-card">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-8">#</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead>Line</TableHead>
                   <TableHead className="text-right">Scheduled</TableHead>
-                  <TableHead className="text-right">Previous</TableHead>
-                  <TableHead className="text-right">This period</TableHead>
-                  <TableHead className="text-right">Stored</TableHead>
-                  <TableHead className="text-right">To date</TableHead>
-                  <TableHead className="text-right">%</TableHead>
-                  <TableHead className="text-right">Balance</TableHead>
+                  <TableHead className="text-right">Billed Before</TableHead>
+                  <TableHead className="text-right">This Period</TableHead>
+                  {anyStored && <TableHead className="text-right">Stored</TableHead>}
+                  <TableHead className="text-right">Left to Bill</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {lines.map((l) => (
                   <TableRow key={l.id} className={l.thisP || l.stored ? "" : "text-muted-foreground"}>
-                    <TableCell className="num">{l.lineNo}</TableCell>
-                    <TableCell>{l.description}</TableCell>
-                    <TableCell className="num text-right">{formatCents(l.scheduledValueCents)}</TableCell>
-                    <TableCell className="num text-right">{formatCents(l.prev)}</TableCell>
-                    <TableCell className="num text-right font-medium">{formatCents(l.thisP)}</TableCell>
-                    <TableCell className="num text-right">{formatCents(l.stored)}</TableCell>
-                    <TableCell className="num text-right">{formatCents(l.total)}</TableCell>
-                    <TableCell className="num text-right">{l.pct}%</TableCell>
-                    <TableCell className="num text-right">{formatCents(l.balance)}</TableCell>
+                    <TableCell>
+                      <span className="num mr-2 text-muted-foreground">{l.lineNo}</span>
+                      {l.description}
+                      <div className="mt-1 h-1 w-full max-w-40 overflow-hidden rounded-full bg-muted" title={`${l.pct}% billed`}>
+                        <div className="h-full rounded-full bg-foreground/50" style={{ width: `${Math.min(100, l.pct)}%` }} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="num text-right">{formatCentsCompact(l.scheduledValueCents)}</TableCell>
+                    <TableCell className="num text-right">{l.prev ? formatCentsCompact(l.prev) : ""}</TableCell>
+                    <TableCell className="num text-right font-semibold">{l.thisP ? formatCentsCompact(l.thisP) : ""}</TableCell>
+                    {anyStored && <TableCell className="num text-right">{l.stored ? formatCentsCompact(l.stored) : ""}</TableCell>}
+                    <TableCell className="num text-right">{formatCentsCompact(l.balance)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-          <dl className="num mt-4 grid grid-cols-2 gap-x-6 gap-y-2 rounded-xl bg-card shadow-card p-4 text-sm sm:grid-cols-4">
+          <dl className="num mt-6 grid grid-cols-2 gap-x-8 gap-y-4 text-sm sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">Previously billed</dt>
               <dd className="font-medium">{formatCents(app.previouslyBilledCents)}</dd>
@@ -111,12 +120,12 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
                 {formatCents(app.retainageBilledCents)}
               </dd>
               {app.retainageApprovedCents !== null && app.retainageApprovedCents !== app.retainageBilledCents && (
-                <dd className="font-medium text-settled">{formatCents(app.retainageApprovedCents)} corrected</dd>
+                <dd className="font-medium">{formatCents(app.retainageApprovedCents)} after correction</dd>
               )}
             </div>
             <div>
               <dt className="text-muted-foreground">Net due</dt>
-              <dd className="font-semibold">{formatCents(app.netDueApprovedCents ?? app.netDueBilledCents)}</dd>
+              <dd className="text-lg font-semibold">{formatCents(app.netDueApprovedCents ?? app.netDueBilledCents)}</dd>
             </div>
           </dl>
         </section>
@@ -125,29 +134,40 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           <h2 id="checks-heading" className="text-lg font-semibold">
             Checks
           </h2>
-          <p className="mt-1 text-xs text-muted-foreground">Deterministic. Each one names the rule or figure it relied on.</p>
-          <ul className="mt-3 space-y-2">
-            {checks.map((c) => {
-              const Icon = c.status === "pass" ? CheckCircle2 : c.status === "fail" ? XCircle : AlertTriangle;
-              const tone = c.status === "pass" ? "text-settled" : c.status === "fail" ? "text-destructive" : "text-hold";
-              return (
-                <li key={c.id} className={`rounded-xl bg-card shadow-card p-3 ${c.status === "fail" ? "border-destructive/40" : ""}`}>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            {attention.length === 0 ? `All ${checks.length} passed.` : `${attention.length} of ${checks.length} need${attention.length === 1 ? "s" : ""} a look.`} Plain arithmetic against the approved rules, no model involved.
+          </p>
+          {attention.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {attention.map((c) => (
+                <li key={c.id} className={`rounded-xl p-3.5 ${c.status === "fail" ? "bg-destructive/[0.06]" : "bg-hold-soft"}`}>
                   <div className="flex items-start gap-2">
-                    <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${tone}`} aria-hidden />
+                    {c.status === "fail" ? <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden /> : <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-hold" aria-hidden />}
                     <div className="min-w-0">
                       <div className="text-sm font-medium">{c.label}</div>
-                      <div className="mt-0.5 text-xs text-muted-foreground">{humanize(c)}</div>
-                      {c.rulePath && <div className="mt-1 inline-block rounded-sm bg-muted px-1.5 py-0.5 text-[11px]">Rule: {fieldLabel(c.rulePath as RuleFieldPath)}</div>}
+                      <div className="mt-0.5 text-[13px] text-muted-foreground">{humanize(c)}</div>
+                      {c.rulePath && <div className="mt-1 text-xs text-muted-foreground">From the approved rule: {fieldLabel(c.rulePath as RuleFieldPath).toLowerCase()}</div>}
                     </div>
                   </div>
                 </li>
-              );
-            })}
+              ))}
+            </ul>
+          )}
+          <ul className="mt-3 divide-y overflow-hidden rounded-xl bg-card shadow-card">
+            {passing.map((c) => (
+              <li key={c.id} className="flex items-start gap-2 px-3.5 py-2.5">
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-settled" aria-hidden />
+                <div className="min-w-0">
+                  <div className="text-[13px]">{c.label}</div>
+                  <div className="text-xs text-muted-foreground">{humanize(c)}</div>
+                </div>
+              </li>
+            ))}
           </ul>
 
           {flags.length > 0 && (
             <div className="mt-5 rounded-lg bg-link-soft p-3">
-              <div className="text-xs font-medium text-muted-foreground">Proposed by Claude</div>
+              <div className="text-xs font-medium text-muted-foreground">Claude&rsquo;s note on the checks above</div>
               <ul className="mt-2 space-y-2 text-sm">
                 {flags.map((f, i) => (
                   <li key={i}>
@@ -160,7 +180,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           )}
 
           {reviewable && (
-            <form action={reviewPayAppAction} className="mt-5 space-y-3 rounded-xl bg-card shadow-card p-4">
+            <form action={reviewPayAppAction} className="mt-5 space-y-3 rounded-xl bg-card p-4 shadow-card">
               <input type="hidden" name="payAppId" value={app.id} />
               <label className="block text-sm">
                 <span className="text-muted-foreground">Note to {app.contract.sub.name} (optional)</span>
