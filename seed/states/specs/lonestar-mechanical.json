@@ -1,0 +1,20 @@
+{
+  "slug": "lonestar-mechanical",
+  "contractKey": "lonestar",
+  "file": "lonestar-mechanical.pdf",
+  "category": "demo",
+  "executedOn": "2026-03-16",
+  "notes": "Private commercial tenant improvement in Austin, Texas. Contractor: Meridian Builders, Inc., an Oakland, California contractor registered to do business in Texas. Subcontractor: Lone Star Mechanical, LLC of Round Rock, Texas (HVAC and plumbing). Owner: Brazos Property Partners, LP. Project: Congress Avenue Office TI, 800 Congress Avenue, Austin, Texas 78701. The Subcontract Sum is exactly $360,000.00. The Schedule of Values has exactly these five lines: Mobilization and submittals $18,000.00; Ductwork and air distribution $120,000.00; Rooftop units and controls $110,000.00; Plumbing rough-in and fixtures $82,000.00; Testing, balancing and closeout $30,000.00.",
+  "brief": "This is a private (not public) project governed by Texas law. Payment clause: Contractor's receipt of payment from Owner is an express condition precedent to Contractor's obligation to pay Subcontractor, and Subcontractor assumes the risk of Owner's nonpayment (a pay-if-paid clause); when Contractor is paid, it pays Subcontractor within thirty (30) days after receipt. Retainage is ten percent (10%). Lien waivers must be in the forms prescribed by Texas Property Code Section 53.284.",
+  "expected": {
+    "parties": { "contractor": "Meridian Builders, Inc.", "subcontractor": "Lone Star Mechanical, LLC", "owner": "Brazos Property Partners, LP", "project": "Congress Avenue Office TI" },
+    "governing_law_state": "TX",
+    "timing": { "type": "pay_if_paid", "days": 30, "agreed_in_writing": true },
+    "retainage": { "percent_bps": 1000, "cap_bps": null, "reduction_trigger": null, "release_condition": "Final Completion of the Subcontract Work and Contractor's receipt of retainage from Owner", "release_days": 30 },
+    "waivers": { "conditional_before_progress": true, "unconditional_after_payment": true, "lower_tier_required": true, "statutory_form_required": true },
+    "offsets": { "joint_check": null, "backcharge_setoff": true, "withhold_defective": true },
+    "stored_materials": null
+  },
+  "anchors": {},
+  "anomalies": [{ "field": "timing.type", "description": "Owner payment is a condition precedent to any payment to Subcontractor (pay-if-paid).", "anchor": null }]
+}

@@ -15,9 +15,9 @@ beforeAll(async () => {
 });
 
 describe("org scoping", () => {
-  it("GC sees every contract on its project", async () => {
+  it("GC sees every contract on its projects, in both states", async () => {
     const rows = await listContracts(orgs["meridian-builders"]);
-    expect(rows.map((r) => r.id).sort()).toEqual(Object.values(ID.contract).sort());
+    expect(rows.map((r) => r.id).sort()).toEqual([...Object.values(ID.contract), ID.texas.lonestar].sort());
   });
 
   it("a sub sees only its own contract", async () => {

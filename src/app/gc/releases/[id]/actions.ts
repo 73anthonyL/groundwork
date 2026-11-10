@@ -24,7 +24,8 @@ export async function retryAction(formData: FormData) {
   if (!release) redirect("/gc");
   let msg = "retried=1";
   try {
-    await retryRelease({ releaseId, actor: { userId: session.user.id, label: session.user.name } });
+    const r = await retryRelease({ releaseId, actor: { userId: session.user.id, label: session.user.name } });
+    if (!r.initiated) msg = `error=${encodeURIComponent(r.waitingOn === "lower_tier_waivers" ? "Queued again. It goes out when the lower-tier waivers are signed." : "Queued again. It goes out when its payer has been paid.")}`;
   } catch (e) {
     msg = `error=${encodeURIComponent((e as Error).message)}`;
   }

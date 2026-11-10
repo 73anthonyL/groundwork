@@ -38,7 +38,7 @@ function layout(flow: ProjectFlow, upTo: number, height: number) {
     if (m) m.cents += l.cents;
     else merged.set(key, { source: l.source, target: l.target, kind: l.kind, cents: l.cents });
   }
-  const links = [...merged.entries()].map(([key, v]) => ({ key, ...v }));
+  const links = [...merged.entries()].map(([key, v]) => ({ key, ...v })).filter((l) => l.cents > 0);
   const used = new Set(links.flatMap((l) => [l.source, l.target]));
   const nodes = flow.nodes.filter((n) => used.has(n.id));
   const inflow = (id: string) => links.filter((l) => l.target === id).reduce((s, l) => s + l.cents, 0);
@@ -100,8 +100,21 @@ function layout(flow: ProjectFlow, upTo: number, height: number) {
 export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls = true, initialStep }: { flow: ProjectFlow; height?: number; autoPlay?: boolean; showControls?: boolean; initialStep?: number }) {
   const reduce = useReducedMotion();
   const last = flow.events.length - 1;
-  const [step, setStep] = useState(initialStep ?? (autoPlay && !reduce ? 0 : last));
-  const [playing, setPlaying] = useState(autoPlay && !reduce);
+  // The server cannot know the viewer's motion setting, so the first render never depends on it;
+  // autoplay starts after mount, and only when motion is allowed.
+  const [step, setStep] = useState(initialStep ?? last);
+  const [playing, setPlaying] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setMounted(true);
+      if (autoPlay && !reduce) {
+        setStep(0);
+        setPlaying(true);
+      }
+    }, 0);
+    return () => clearTimeout(t);
+  }, [autoPlay, reduce]);
   const [hover, setHover] = useState<string | null>(null);
   const at = Math.min(Math.max(step, 0), Math.max(last, 0));
 
@@ -115,19 +128,23 @@ export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls =
     return () => clearTimeout(id);
   }, [playing, at, last]);
 
-  const { laid, ribbons } = useMemo(() => layout(flow, at, height), [flow, at, height]);
+  // Every party needs room for its two-line label, however many there are.
+  const tallest = Math.max(1, ...[0, 1, 2, 3].map((d) => flow.nodes.filter((n) => n.depth === d).length));
+  const h = Math.max(height, 2 * PAD_Y + tallest * 40);
+  const { laid, ribbons } = useMemo(() => layout(flow, at, h), [flow, at, h]);
   if (!flow.events.length) {
     return <div className="rounded-md border border-dashed bg-card p-8 text-center text-sm text-muted-foreground">No money has moved on this project yet. Record an owner payment to see it flow.</div>;
   }
   const current = flow.events[at];
   const totals = (["paid", "moving", "held", "setoff", "idle"] as const)
-    .map((k) => ({ k, cents: ribbons.filter((r) => r.kind === k && r.source !== "owner").reduce((s, r) => s + r.cents, 0) }))
+    // The contractor's ribbons only: money a sub passes down is already counted in what the sub received.
+    .map((k) => ({ k, cents: ribbons.filter((r) => r.kind === k && r.source === "gc").reduce((s, r) => s + r.cents, 0) }))
     .filter((t) => t.cents > 0);
   const dim = (r: Ribbon) => hover !== null && r.source !== hover && r.target !== hover;
 
   return (
     <figure className="min-w-0">
-      <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
+      <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
         <AnimatePresence>
           {ribbons.map((r) => (
             <motion.path
@@ -142,7 +159,8 @@ export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls =
           ))}
         </AnimatePresence>
         {/* Particles ride the ribbons that are still on their way. */}
-        {!reduce &&
+        {mounted &&
+          !reduce &&
           ribbons
             .filter((r) => r.kind === "moving" && !dim(r))
             .flatMap((r) =>
@@ -156,7 +174,7 @@ export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls =
           const right = n.node.depth >= 2;
           const sink = ["retainage", "backcharge", "unallocated"].includes(n.node.kind);
           return (
-            <motion.g key={n.node.id} initial={{ opacity: 0 }} animate={{ opacity: hover && hover !== n.node.id && !ribbons.some((r) => (r.source === hover && r.target === n.node.id) || (r.target === hover && r.source === n.node.id)) ? 0.35 : 1 }} transition={{ duration: duration.fade }} onMouseEnter={() => setHover(n.node.id)} onMouseLeave={() => setHover(null)} style={{ cursor: "default" }}>
+            <motion.g key={n.node.id} initial={{ opacity: 0 }} animate={{ opacity: hover && hover !== n.node.id && !ribbons.some((r) => (r.source === hover && r.target === n.node.id) || (r.target === hover && r.source === n.node.id)) ? 0.35 : 1 }} transition={{ duration: duration.fade }} onMouseEnter={() => setHover(n.node.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.node.id)} onBlur={() => setHover(null)} tabIndex={0} role="img" aria-label={`${n.node.label}, ${formatUsd0(n.value)}`} style={{ cursor: "default", outline: "none" }}>
               <motion.rect x={n.x} width={NODE_W} rx={2} fill={sink ? COLOR[n.node.kind === "retainage" ? "held" : n.node.kind === "backcharge" ? "setoff" : "idle"] : "var(--foreground)"} animate={{ y: n.y, height: n.h }} transition={spring.ui} />
               <motion.text x={right ? n.x + NODE_W + 8 : n.x - 8} textAnchor={right ? "start" : "end"} animate={{ y: n.labelY - 3 }} transition={spring.ui} className="fill-foreground text-[13px] font-medium" style={HALO}>
                 {n.node.label}
@@ -215,9 +233,9 @@ export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls =
           </div>
         )}
       </figcaption>
-      <p className="mt-2 text-xs text-muted-foreground" aria-live="polite">
+      <p className="mt-2 text-xs text-muted-foreground" aria-live={playing ? "off" : "polite"}>
         <span className="type-label mr-2">{current.tier === 2 ? "One hop down" : `Payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
-        {current.reference} · <span className="num">{formatUsd0(current.amountCents)}</span> · received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+        {current.reference} · <span className="num">{formatUsd0(current.amountCents)}</span> · received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
       </p>
     </figure>
   );

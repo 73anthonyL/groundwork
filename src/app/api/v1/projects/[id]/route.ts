@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const { id } = await params;
   const asked = new URL(req.url).searchParams.get("include")?.split(",").map((v) => v.trim()).filter(Boolean);
   const names = (asked?.length ? asked : Object.keys(VIEWS)) as (keyof typeof VIEWS)[];
-  const unknown = names.filter((n) => !(n in VIEWS));
+  const unknown = names.filter((n) => !Object.hasOwn(VIEWS, n));
   if (unknown.length) return fail(400, "unknown_view", `Unknown view: ${unknown.join(", ")}. Use ${Object.keys(VIEWS).join(", ")}.`);
   const out: Record<string, unknown> = {};
   for (const n of names) {

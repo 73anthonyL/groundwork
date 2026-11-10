@@ -8,7 +8,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const s = await apiSession();
   if (s instanceof Response) return s;
   const { id, view } = await params;
-  if (!(view in VIEWS)) return fail(404, "unknown_view", `Unknown view "${view}". Use ${Object.keys(VIEWS).join(", ")}.`);
+  if (!Object.hasOwn(VIEWS, view)) return fail(404, "unknown_view", `Unknown view "${view}". Use ${Object.keys(VIEWS).join(", ")}.`);
   const data = await VIEWS[view as keyof typeof VIEWS](s.org, id);
   return data === null ? fail(404, "not_found", "No such project in your organization.") : json(data);
 }

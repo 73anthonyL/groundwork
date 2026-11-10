@@ -6,7 +6,7 @@
  * see: a general contractor or owner sees the whole project, a subcontractor sees its own contracts
  * and the lower tier beneath them.
  */
-import { and, asc, eq, inArray, or } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, or } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import type { Organization } from "@/db/schema";
 import { getProject, scopePredicate } from "@/server/scoped";
@@ -17,6 +17,12 @@ import { releaseLabel } from "@/lib/release-label";
 const { contracts, releases, ownerPaymentEvents, payApplications, ledgerEntries, events } = schema;
 
 export type Party = { id: string; name: string; role: "owner" | "gc" | "sub" | "lower" };
+
+/**
+ * Money still owed on a release. A blocked release with an amount is one whose bank payment failed:
+ * it is still owed and its clock is still running, so it stays visible everywhere.
+ */
+const owed = (r: { status: string; releaseCents: number }) => r.status !== "paid" && r.status !== "settled" && !(r.status === "blocked" && r.releaseCents === 0);
 
 async function scope(org: Organization, projectId: string) {
   const project = await getProject(org, projectId);
@@ -73,7 +79,10 @@ export async function projectSummary(org: Organization, projectId: string): Prom
   const paid = (st: string) => st === "paid" || st === "settled";
   const list: ContractSummary[] = s.contracts.map((c) => {
     const mine = rels.filter((r) => r.contractId === c.id);
-    const billed = apps.filter((a) => a.contractId === c.id).reduce((x, a) => x + a.workThisPeriodCents + a.storedMaterialsCents, 0);
+    const gross = (a: (typeof apps)[number]) => a.workThisPeriodCents + a.storedMaterialsCents;
+    const billed = apps.filter((a) => a.contractId === c.id).reduce((x, a) => x + gross(a), 0);
+    // Only billing the contractor has approved is waiting on the owner; a submitted application is waiting on review.
+    const approved = apps.filter((a) => a.contractId === c.id && a.status !== "submitted").reduce((x, a) => x + gross(a), 0);
     const funded = mine.reduce((x, r) => x + r.grossCents, 0);
     return {
       id: c.id,
@@ -87,15 +96,15 @@ export async function projectSummary(org: Organization, projectId: string): Prom
       billedCents: billed,
       fundedCents: funded,
       paidCents: mine.filter((r) => paid(r.status)).reduce((x, r) => x + r.releaseCents, 0),
-      inMotionCents: mine.filter((r) => !paid(r.status) && r.status !== "blocked").reduce((x, r) => x + r.releaseCents, 0),
+      inMotionCents: mine.filter(owed).reduce((x, r) => x + r.releaseCents, 0),
       retainageHeldCents: mine.reduce((x, r) => x + r.retainageWithheldCents - ((r.basis as { retentionReleasedCents?: number }).retentionReleasedCents ?? 0), 0),
       backchargedCents: mine.reduce((x, r) => x + r.offsetCents, 0),
-      awaitingOwnerCents: Math.max(0, billed - funded),
+      awaitingOwnerCents: Math.max(0, approved - funded),
       percentBilled: c.contractSumCents ? Math.round((billed / c.contractSumCents) * 1000) / 10 : 0,
     };
   });
   const t1 = list.filter((c) => c.tier === 1);
-  const open = rels.filter((r) => !paid(r.status) && r.status !== "blocked");
+  const open = rels.filter(owed);
   return {
     project: { id: project.id, name: project.name, address: project.address, state: project.state, owner: project.owner.name, gc: project.gc.name, primeContractSumCents: project.primeContractSumCents },
     balances,
@@ -172,14 +181,28 @@ export async function projectFlow(org: Organization, projectId: string): Promise
       if (r.releaseCents > 0) {
         links.push({ source: payerNode, target: node, cents: r.releaseCents, kind: paid(r.status) ? "paid" : "moving", eventId: e.id, releaseId: r.id, status: r.status, label: releaseLabel(r), payByAt: r.payByAt?.toISOString() ?? null });
       }
-      if (r.retainageWithheldCents > 0) links.push({ source: payerNode, target: add({ id: "retainage", kind: "retainage", label: "Retainage held", depth: 2 }), cents: r.retainageWithheldCents, kind: "held", eventId: e.id, releaseId: r.id, label: c.sub.name });
+      // Retainage paid out later comes off what the sink holds, so the node always equals retainage still held.
+      const heldDelta = r.retainageWithheldCents - ((r.basis as { retentionReleasedCents?: number }).retentionReleasedCents ?? 0);
+      if (heldDelta !== 0 && top) links.push({ source: payerNode, target: add({ id: "retainage", kind: "retainage", label: "Retainage held", depth: 2 }), cents: heldDelta, kind: "held", eventId: e.id, releaseId: r.id, label: c.sub.name });
       if (r.offsetCents > 0) links.push({ source: payerNode, target: add({ id: "backcharge", kind: "backcharge", label: "Backcharges", depth: 2 }), cents: r.offsetCents, kind: "setoff", eventId: e.id, releaseId: r.id, label: c.sub.name });
     }
     if (top && s.whole) {
       const idle = e.amountCents - e.retentionCents - fundedGross;
       if (idle > 0) links.push({ source: GC, target: add({ id: "unallocated", kind: "unallocated", label: "Not yet allocated", depth: 2 }), cents: idle, kind: "idle", eventId: e.id });
     }
-    out.push({ id: e.id, reference: e.reference, receivedAt: e.receivedAt.toISOString(), amountCents: e.amountCents, retentionCents: e.retentionCents, periodThrough: e.periodThrough, tier: top ? 1 : 2, parentReleaseId: e.parentReleaseId, links });
+    // A subcontractor sees its own share of a payment, never the size of the owner's payment or its bank reference.
+    const mine = links.reduce((x, l) => x + Math.max(0, l.cents), 0);
+    out.push({
+      id: e.id,
+      reference: s.whole ? e.reference : top ? "Owner payment" : "Your lower tier",
+      receivedAt: e.receivedAt.toISOString(),
+      amountCents: s.whole ? e.amountCents : mine,
+      retentionCents: s.whole ? e.retentionCents : 0,
+      periodThrough: e.periodThrough,
+      tier: top ? 1 : 2,
+      parentReleaseId: e.parentReleaseId,
+      links,
+    });
   }
   return { nodes: [...nodes.values()], links: out.flatMap((e) => e.links), events: out, totalInCents: out.filter((e) => e.tier === 1).reduce((x, e) => x + e.amountCents, 0) };
 }
@@ -225,6 +248,8 @@ const TITLES: Record<string, { lane: TimelineEntry["lane"]; title: string }> = {
   "backcharge.voided": { lane: "adjustment", title: "Backcharge withdrawn" },
   "retention.certified": { lane: "adjustment", title: "Retention release certified" },
   "lower_tier.added": { lane: "adjustment", title: "Lower-tier party added" },
+  "payment.retried": { lane: "money", title: "Payment sent again" },
+  "document.attached": { lane: "contract", title: "Subcontract uploaded" },
 };
 
 /** Everything that happened on the project, oldest first, from the append-only event log. */
@@ -237,7 +262,8 @@ export async function projectTimeline(org: Organization, projectId: string, limi
   const contractOf = new Map<string, string>([...s.ids.map((id) => [id, id] as const), ...apps.map((a) => [a.id, a.contractId] as const), ...rels.map((r) => [r.id, r.contractId] as const)]);
   const aggregateIds = [...contractOf.keys(), ...(s.whole ? [projectId] : [])];
   if (!aggregateIds.length) return [];
-  const rows = await db.query.events.findMany({ where: or(inArray(events.aggregateId, aggregateIds)), orderBy: [asc(events.createdAt)], limit });
+  // Newest `limit` events, returned oldest first.
+  const rows = (await db.query.events.findMany({ where: or(inArray(events.aggregateId, aggregateIds)), orderBy: [desc(events.createdAt)], limit })).reverse();
   const name = (contractId: string | null) => (contractId ? (s.contracts.find((c) => c.id === contractId)?.sub.name ?? null) : null);
   return rows
     .filter((e) => e.type !== "release.explained")
@@ -248,7 +274,8 @@ export async function projectTimeline(org: Organization, projectId: string, limi
       const cents = ["amountCents", "releaseCents", "grossCents", "sumCents"].map((k) => p[k]).find((v): v is number => typeof v === "number") ?? null;
       const detail =
         typeof p.reference === "string" ? p.reference : typeof p.title === "string" ? p.title : typeof p.reason === "string" ? p.reason : typeof p.note === "string" ? p.note : typeof p.name === "string" ? p.name : typeof p.form === "string" ? (p.form.startsWith("c") ? "Conditional" : "Unconditional") : null;
-      return { id: e.id, at: e.createdAt.toISOString(), type: e.type, lane: meta.lane, title: meta.title, detail, actor: e.actorLabel, amountCents: cents, contractId, party: name(contractId), correlationId: e.correlationId };
+      const internal = !s.whole && e.type.startsWith("rules.");
+      return { id: e.id, at: e.createdAt.toISOString(), type: e.type, lane: meta.lane, title: meta.title, detail: internal ? null : detail, actor: e.actorLabel, amountCents: cents, contractId, party: name(contractId), correlationId: e.correlationId };
     });
 }
 
@@ -301,7 +328,7 @@ export async function projectClocks(org: Organization, projectId: string): Promi
   const rows = await s.db.query.releases.findMany({ where: inArray(releases.contractId, s.ids), with: { event: true, payApplication: true } });
   const at = now().getTime();
   return rows
-    .filter((r) => !["paid", "settled", "blocked"].includes(r.status))
+    .filter(owed)
     .map((r) => {
       const c = s.contracts.find((x) => x.id === r.contractId)!;
       const start = r.event.receivedAt.getTime();
@@ -318,7 +345,8 @@ export async function projectClocks(org: Organization, projectId: string): Promi
         startedAt: r.event.receivedAt.toISOString(),
         payByAt: r.payByAt?.toISOString() ?? null,
         msLeft: due === null ? null : due - at,
-        elapsed: due === null || due === start ? null : Math.max(0, (at - start) / (due - start)),
+        // A deadline at or before the start (a fixed period that had already run) is simply late once passed.
+        elapsed: due === null ? null : due <= start ? (at > due ? 2 : 0) : Math.max(0, (at - start) / (due - start)),
         citations: [...new Set((r.basis as { statutes?: string[] }).statutes ?? [])].map((id) => ({ id, cite: statute(id).cite, title: statute(id).title })),
       };
     })

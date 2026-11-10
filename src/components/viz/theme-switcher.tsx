@@ -54,12 +54,12 @@ export function ThemeSwitcher() {
   const type = useSyncExternalStore(subscribe, read("type"), () => "");
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-      <label className="flex items-center gap-2 text-xs text-muted-foreground">
-        Theme <Segmented name="theme" options={THEMES} value={theme} onChange={(v) => set("theme", v)} />
-      </label>
-      <label className="flex items-center gap-2 text-xs text-muted-foreground">
-        Type <Segmented name="type" options={TYPES} value={type} onChange={(v) => set("type", v)} />
-      </label>
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span aria-hidden>Theme</span> <Segmented name="theme" options={THEMES} value={theme} onChange={(v) => set("theme", v)} />
+      </div>
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span aria-hidden>Type</span> <Segmented name="type" options={TYPES} value={type} onChange={(v) => set("type", v)} />
+      </div>
     </div>
   );
 }

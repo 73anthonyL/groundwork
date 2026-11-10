@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getField, RULE_FIELDS, type ExtractedRuleSet, type RuleFieldPath } from "@/domain/rules/schema";
 import { FIELD_GROUPS, RULE_IDS, formatRuleValue } from "@/domain/rules/format";
-import { STATUTES } from "@/domain/statutes";
+import { statute } from "@/domain/statutes";
 import type { StoredRules } from "@/server/rules/review";
 import { fieldLabel } from "@/server/rules/review";
 import { acknowledgeAnomalyAction, approveRuleSetAction, resolveFieldAction } from "@/app/gc/contracts/[id]/actions";
@@ -217,19 +217,59 @@ function fieldLabelSafe(path: string): string {
 
 function Overlay({ stored }: { stored: StoredRules }) {
   const o = stored.overlay;
+  // Rule sets stored before other states were supported carry no citation ids; those are California's.
+  const cite = (rule: "promptPay" | "retentionCap" | "retentionRelease" | "payIfPaid", legacy: string) => {
+    const id = o.cites?.[rule] ?? (o.state === "CA" ? legacy : undefined);
+    return id ? statute(id).cite : null;
+  };
+  const days = (n: number) => `${n} ${o.dayType === "business" ? "business " : ""}days`;
+  const pif = o.payIfPaid ?? (o.payIfPaidVoid ? "void" : "enforceable");
+  const rows: { label: string; value: string; cite: string | null }[] = [
+    {
+      label: "Pay the sub within",
+      value: o.progressPaymentDaysDefault === null ? "no private deadline; contract terms apply" : `${days(o.progressPaymentDaysDefault)}${o.progressPaymentOverridable === false ? "; the contract cannot lengthen it" : o.progressPaymentOverridable ? ", unless agreed otherwise in writing" : ""}`,
+      cite: cite("promptPay", "CA_BPC_7108_5"),
+    },
+    { label: "Pass retainage down within", value: o.retentionPassThroughDays === null ? "no private deadline" : `${o.retentionPassThroughDays} days`, cite: cite("retentionRelease", "CA_CIV_8814") },
+    {
+      label: "Retainage cap",
+      value: o.retentionCapBps === null ? "none that applies to this contract" : o.retentionCapBps === 0 ? "retainage may not be withheld" : `${o.retentionCapBps / 100}%${o.retentionCapAfterHalfBps != null ? `, then ${o.retentionCapAfterHalfBps === 0 ? "none" : `${o.retentionCapAfterHalfBps / 100}%`} after 50% completion` : ""}`,
+      cite: o.retentionCapBps === null ? null : cite("retentionCap", "CA_CIV_8811"),
+    },
+    { label: "Pay-if-paid", value: { void: "void: read as pay-when-paid", limited: "limited by statute", enforceable: "enforceable when clearly worded", unsettled: "unsettled" }[pif], cite: cite("payIfPaid", "CA_CLARKE_V_SAFECO") },
+  ];
   return (
     <div className="rounded-md border bg-surface-sunken/60 p-3 text-xs">
-      <div className="font-medium">Statutory overlay · {o.state}{o.loaded ? "" : " (none loaded)"}</div>
+      <div className="font-medium">
+        Statutory overlay · {o.state}
+        {o.loaded ? "" : " (no record)"}
+      </div>
       <div className="mt-1 text-muted-foreground">Applied by code from the governing state, never by the model.</div>
       {o.loaded ? (
-        <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
-          <li>Default pay clock: {o.progressPaymentDaysDefault} days ({STATUTES.CA_BPC_7108_5.cite})</li>
-          <li>Retention pass-through: {o.retentionPassThroughDays} days ({STATUTES.CA_CIV_8814.cite})</li>
-          <li>Retention cap: {o.retentionCapBps === null ? "none (contract predates §8811)" : `${o.retentionCapBps / 100}% (${STATUTES.CA_CIV_8811.cite})`}</li>
-          <li>Pay-if-paid: {o.payIfPaidVoid ? "void (Clarke v. Safeco)" : "enforceable"}</li>
-        </ul>
+        <>
+          <dl className="mt-2 grid gap-x-4 gap-y-1.5 sm:grid-cols-2">
+            {rows.map((r) => (
+              <div key={r.label}>
+                <dt className="text-muted-foreground">{r.label}</dt>
+                <dd>
+                  {r.value}
+                  {r.cite && <span className="text-muted-foreground"> · {r.cite}</span>}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          {(o.caveats?.length ?? 0) > 0 && (
+            <ul className="mt-3 space-y-1 border-t pt-2 text-hold">
+              {o.caveats!.map((c, i) => (
+                <li key={i} className="line-clamp-3">
+                  {c}
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       ) : (
-        <div className="mt-2 text-hold">No statute table for this state. Contract terms apply; deadlines may be missing.</div>
+        <div className="mt-2 text-hold">No statute record for this state. Contract terms apply; deadlines may be missing.</div>
       )}
     </div>
   );

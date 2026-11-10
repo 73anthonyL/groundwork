@@ -52,6 +52,8 @@ Pay App #1 ($200,000 across the three) is funded in full by Owner Payment #1. Su
 
 The `closeout` checkpoint continues: a $20,000 change order on Ironline, a $1,500 backcharge against Summit, and Bay Rebar Supply added under Ironline. Owner Payment #3 ($175,000) sets off the backcharge, plans the supplier's $12,000 in the same transaction, and leaves Ironline's release waiting on its supplier's waiver. Half of Ironline's retainage is certified and waits for the owner's retention.
 
+A second project, **Congress Avenue Office TI** in Austin, shows the same compiler under another state's law. Lone Star Mechanical's subcontract says pay-if-paid, 30 days, 10% retainage. Compiled by the model and reviewed under Texas law, the 30 days is flagged because Texas requires 7 and the contract cannot lengthen it, pay-if-paid is flagged as limited by statute, and the reviewer is told Texas prescribes its own waiver forms.
+
 ## Run it
 
 ```bash
@@ -82,7 +84,7 @@ Where to look:
 ## Verify it
 
 ```bash
-pnpm test        # 107 tests
+pnpm test        # 117 tests
 pnpm eval        # extraction eval against the answer keys (cached extractions; --fresh calls the model)
 pnpm typecheck && pnpm lint
 ```
@@ -90,7 +92,8 @@ pnpm typecheck && pnpm lint
 - **Golden cases** reproduce every number in the demo, split odd cents without creating or losing any, clamp retainage to statutory caps, honor or cap contract periods per state, and run the pay-if-paid conversion.
 - **Replay** re-runs the planner over every funding event on both tiers from scratch and asserts it reproduces the stored releases, including after change orders.
 - **Closeout flow** runs a backcharge, a change order, a supplier one hop down and a retention release through the real actions and checks the ledger reconciles.
-- **Authorization** tests prove a sub reading another sub's contract gets nothing, and that a payer never receives its claimant's signing token.
+- **Authorization** tests prove a sub reading another sub's contract gets nothing, that a payer never receives its claimant's signing token, and that through the read API a sub never learns another sub's amounts or the size of the owner's payments.
+- **Read model** tests assert the summary equals the ledger and every owner payment's ribbons add up to the payment.
 - **Statute data** tests assert all 51 jurisdictions are present, no number lacks a citation, and California matches the rules the engine was built on.
 
 ### Extraction eval

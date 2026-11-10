@@ -8,6 +8,7 @@ import { replayProject } from "@/server/engine/replay";
 import { getContractAdjustments, getProjectBoard } from "@/server/scoped";
 import { advanceRelease } from "@/server/actions/payments";
 import { dollars } from "@/lib/money";
+import type { StoredRules } from "@/server/rules/review";
 
 describe("closeout checkpoint", () => {
   beforeAll(async () => {
@@ -43,6 +44,21 @@ describe("closeout checkpoint", () => {
     expect(pacific.changeOrders.map((c) => c.status)).toEqual(["proposed"]);
     const summit = (await getContractAdjustments(await meridian(), ID.contract.summit))!;
     expect(summit.backcharge).toMatchObject({ chargedCents: dollars(1_500), appliedCents: dollars(1_500), outstandingCents: 0 });
+  });
+
+  it("compiles the Texas subcontract under Texas law and leaves it for review", async () => {
+    const db = await getDb();
+    const rs = (await db.query.ruleSets.findFirst({ where: eq(schema.ruleSets.contractId, ID.texas.lonestar) }))!;
+    expect(rs.status).toBe("in_review");
+    const stored = rs.rules as StoredRules;
+    expect(stored.overlay).toMatchObject({ state: "TX", progressPaymentDaysDefault: 7, progressPaymentOverridable: false, payIfPaid: "limited", statutoryWaiverForm: true });
+    expect(stored.extracted.timing.days.value).toBe(30);
+    // The contract's 30 days cannot stand against the statute's 7, and pay-if-paid is limited in Texas.
+    expect(stored.annotations["timing.days"].review.reasons.join(" ")).toMatch(/within 7 days/);
+    expect(stored.annotations["timing.type"].review.reasons.join(" ")).toMatch(/limited in TX/);
+    expect(stored.overlay.caveats?.join(" ")).toMatch(/statutory lien waiver forms/);
+    // Every quote the model gave for this contract is in the PDF.
+    expect(Object.values(stored.annotations).filter((a) => a.verification.status === "unverified")).toEqual([]);
   });
 
   it("replays cleanly", async () => {

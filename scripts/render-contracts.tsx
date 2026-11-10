@@ -1,5 +1,6 @@
 /**
- * seed/contracts/*.md → seed/contracts/*.pdf, then extracts per-page text with unpdf and reports pages/words.
+ * seed/contracts/*.md and seed/states/contracts/*.md → *.pdf beside them, then extracts per-page text
+ * with unpdf and reports pages/words.
  * Usage: pnpm render:contracts
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -9,9 +10,11 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { extractText, getDocumentProxy } from "unpdf";
 import { ContractDocument, parseContractMarkdown } from "../src/lib/pdf/contract-doc";
 
-const dir = path.resolve("seed/contracts");
-
 async function main() {
+  for (const dir of ["seed/contracts", "seed/states/contracts"].map((d) => path.resolve(d))) await renderDir(dir);
+}
+
+async function renderDir(dir: string) {
   const files = readdirSync(dir).filter((f) => f.endsWith(".md"));
   for (const f of files) {
     const src = readFileSync(path.join(dir, f), "utf8");

@@ -1,0 +1,350 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Meridian Builders, Inc.",
+        "evidence": {
+          "quote": "by and between Meridian Builders, Inc., a California corporation registered to do business in the State",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Meridian Builders, Inc. as Contractor."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Lone Star Mechanical, LLC",
+        "evidence": {
+          "quote": "and Lone Star Mechanical, LLC, a Texas limited liability company with its principal office at 2100 Sundance",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Lone Star Mechanical, LLC as Subcontractor."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Brazos Property Partners, LP",
+        "evidence": {
+          "quote": "Partners, LP, a Texas limited partnership (\"Owner\")",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital names Brazos Property Partners, LP as Owner."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Congress Avenue Office TI, 800 Congress Avenue, Austin, Texas 78701",
+        "evidence": {
+          "quote": "as Congress Avenue Office TI, located at 800 Congress Avenue, Austin, Texas 78701 (the \"Project\")",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital defines the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "TX",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of Texas, without regard to",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Section 14.1 selects Texas law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_if_paid",
+        "evidence": {
+          "quote": "SUBCONTRACTOR EXPRESSLY ASSUMES THE RISK OF OWNER'S NONPAYMENT,",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.2 makes Owner payment an express condition precedent to any payment and states the Subcontractor assumes the risk of Owner nonpayment; it labels itself a pay-if-paid clause."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 30,
+        "evidence": {
+          "quote": "pay Subcontractor within thirty (30) days after Contractor's receipt of that payment",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.4 sets payment within 30 days after Contractor receives Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "pay Subcontractor within thirty (30) days after Contractor's receipt of that payment",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific 30-day period is written in Section 5.4; Section 5.3 also states the pay-if-paid clause was agreed to in writing."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 1000,
+        "evidence": {
+          "quote": "Contractor will retain ten percent (10%) of each progress payment otherwise due to Subcontractor",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.1 sets retainage at 10% = 1000 bps."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "Final Completion of the Subcontract Work, and Contractor's receipt from Owner of the retainage attributable to the Subcontract Work; plus delivery of final payment submittals under Section 6.3",
+        "evidence": {
+          "quote": "Retainage becomes due upon two events: Final Completion of the Subcontract Work,",
+          "page": 4,
+          "confidence": "medium",
+          "rationale": "Section 6.2 states two triggering events (Final Completion and Owner's release of retainage); Section 6.3 adds required closeout submittals before release, so the condition combines clauses."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 30,
+        "evidence": {
+          "quote": "the retainage within thirty (30) days after both events have occurred.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.2 sets release within 30 days after both events."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "deliver, with its application for payment, a Conditional Waiver and Release on Progress Payment covering the",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.2 requires a conditional waiver with each application as a condition of payment."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "payment, Subcontractor will deliver an Unconditional Waiver and Release on Progress Payment covering the",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.3 requires an unconditional waiver within 10 days after each progress payment; Section 5.1 also requires unconditional waivers for the preceding payment."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor will obtain lien waivers from each of its lower-tier subcontractors and",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.5 requires lower-tier waivers on the same forms and schedule."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "applicable form prescribed by Texas Property Code Section 53.284.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.1 requires Texas statutory waiver forms and states non-statutory waivers will be rejected."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "off any back-charge, and any other amount Subcontractor owes Contractor, against any sum otherwise due",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 8.1 permits backcharges and setoff after written notice and documentation."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount sufficient to cover",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 8.2 permits withholding for defective or nonconforming work; Section 8.3 adds other grounds including lower-tier claims."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": null,
+      "evidence": null,
+      "not_found": true
+    },
+    "anomalies": [
+      {
+        "field": "timing.type",
+        "description": "Pay-if-paid: Owner payment is an express condition precedent to every payment, including progress payments, retainage and final payment; Subcontractor assumes the risk of Owner nonpayment including Owner insolvency.",
+        "evidence": {
+          "quote": "INCLUDING EVERY PROGRESS PAYMENT, RETAINAGE AND FINAL PAYMENT.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Pay-if-paid: Owner payment is an express condition precedent to every payment, including progress payments, retainage and final payment; Subcontractor assumes the risk of Owner nonpayment including Owner insolvency."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Exception to pay-if-paid: Contractor will not invoke Section 5.2 where Owner nonpayment results from Contractor's own failure under the Prime Contract (unless caused by Subcontractor). Controller should track cause of any Owner nonpayment.",
+        "evidence": {
+          "quote": "Contractor will not invoke Section 5.2 to the extent Owner's nonpayment results",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Exception to pay-if-paid: Contractor will not invoke Section 5.2 where Owner nonpayment results from Contractor's own failure under the Prime Contract (unless caused by Subcontractor). Controller should track cause of any Owner nonpayment."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retainage release is conditioned on Contractor's receipt of retainage from Owner, and on Final Completion, which by definition requires closeout deliverables accepted by Contractor and Architect acceptance (discretionary acceptance triggers).",
+        "evidence": {
+          "quote": "Contractor's receipt of retainage from Owner",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retainage release is conditioned on Contractor's receipt of retainage from Owner, and on Final Completion, which by definition requires closeout deliverables accepted by Contractor and Architect acceptance (discretionary acceptance triggers)."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Final Completion definition includes acceptance by Contractor and the Architect, a discretionary element of the retainage release trigger.",
+        "evidence": {
+          "quote": "all closeout deliverables required by Article 2 have been accepted by Contractor, and the",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Final Completion definition includes acceptance by Contractor and the Architect, a discretionary element of the retainage release trigger."
+        }
+      },
+      {
+        "field": "retainage.cap_bps",
+        "description": "No retainage cap or step-down is stated; 10% is withheld from each progress payment for the duration of the job.",
+        "evidence": null
+      },
+      {
+        "field": "waivers.unconditional_after_payment",
+        "description": "Contractor may withhold the next progress payment until the unconditional waiver for the prior payment is received.",
+        "evidence": {
+          "quote": "Contractor may withhold the next progress payment until it receives that unconditional waiver.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may withhold the next progress payment until the unconditional waiver for the prior payment is received."
+        }
+      },
+      {
+        "field": "waivers.statutory_form_required",
+        "description": "Contractor will reject any waiver not on the applicable Texas statutory form; Contractor is a California corporation, but the required forms are Texas forms, not California Civil Code forms.",
+        "evidence": {
+          "quote": "Contractor will reject any waiver that is",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor will reject any waiver not on the applicable Texas statutory form; Contractor is a California corporation, but the required forms are Texas forms, not California Civil Code forms."
+        }
+      },
+      {
+        "field": "waivers.lower_tier_required",
+        "description": "Contractor may withhold payment for any portion of work for which a lower-tier waiver has not been delivered.",
+        "evidence": {
+          "quote": "Contractor may withhold payment",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may withhold payment for any portion of work for which a lower-tier waiver has not been delivered."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Setoff right extends beyond backcharges to any other amount Subcontractor owes Contractor.",
+        "evidence": {
+          "quote": "off any back-charge, and any other amount Subcontractor owes Contractor, against any sum otherwise due",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Setoff right extends beyond backcharges to any other amount Subcontractor owes Contractor."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Release of withheld amounts remains subject to the pay-if-paid clause.",
+        "evidence": {
+          "quote": "That release remains subject to Section 5.2.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Release of withheld amounts remains subject to the pay-if-paid clause."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Contractor may withhold on reasonable evidence that the work cannot be completed for the unpaid balance, a judgment-based ground.",
+        "evidence": {
+          "quote": "(c) reasonable evidence that the Subcontract Work cannot be completed for the unpaid balance of the Subcontract",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Contractor may withhold on reasonable evidence that the work cannot be completed for the unpaid balance, a judgment-based ground."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Termination-for-convenience payments are also subject to the pay-if-paid clause.",
+        "evidence": {
+          "quote": "Any such payment remains subject to",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "Termination-for-convenience payments are also subject to the pay-if-paid clause."
+        }
+      },
+      {
+        "field": "timing.days",
+        "description": "Applications are due on or before the 20th of each month but must cover work performed through the end of that month, requiring projected billing.",
+        "evidence": {
+          "quote": "Each application must cover Subcontract Work performed",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Applications are due on or before the 20th of each month but must cover work performed through the end of that month, requiring projected billing."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Acceptance of final payment waives all claims except those previously made in writing and unsettled.",
+        "evidence": {
+          "quote": "Subcontractor's acceptance of final payment waives all claims by Subcontractor except",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Acceptance of final payment waives all claims except those previously made in writing and unsettled."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Contract is silent on payment for stored materials (on or off site).",
+        "evidence": null
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "promptVersion": "extract-v2",
+  "ms": 54535,
+  "at": "2026-11-10T11:59:59.079Z"
+}

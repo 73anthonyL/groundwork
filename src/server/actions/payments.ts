@@ -105,8 +105,10 @@ export async function initiatePayment(releaseId: string) {
   const prior = await db.query.payments.findFirst({ where: eq(schema.payments.releaseId, releaseId) });
   if (prior && prior.status !== "failed") throw new Error(`a payment for this release is already ${prior.status}`);
   const paymentId = prior?.id ?? randomUUID();
-  if (prior) await db.update(schema.payments).set({ rail: rail.name, status: "created", externalBillId: null, updatedAt: now() }).where(eq(schema.payments.id, paymentId));
-  else await db.insert(schema.payments).values({ id: paymentId, releaseId, rail: rail.name, status: "created", amountCents: release.releaseCents });
+  if (prior) {
+    const claimed = await db.update(schema.payments).set({ rail: rail.name, status: "created", externalBillId: null, updatedAt: now() }).where(and(eq(schema.payments.id, paymentId), eq(schema.payments.status, "failed"))).returning({ id: schema.payments.id });
+    if (!claimed.length) throw new Error("this payment is already being sent again");
+  } else await db.insert(schema.payments).values({ id: paymentId, releaseId, rail: rail.name, status: "created", amountCents: release.releaseCents });
   let bill: { externalBillId: string };
   try {
     bill = await rail.createBill({
@@ -190,6 +192,8 @@ export async function handleRailWebhook(railNameIn: string, event: RailWebhookEv
     const downstream = await db.query.ownerPaymentEvents.findMany({ where: eq(schema.ownerPaymentEvents.parentReleaseId, result.paidReleaseId), with: { releases: true } });
     const at = now();
     for (const e of downstream) {
+      // The event recorded an estimate of when the payer would have the money; now it is known.
+      await db.update(schema.ownerPaymentEvents).set({ receivedAt: at }).where(eq(schema.ownerPaymentEvents.id, e.id));
       for (const r of e.releases) {
         if (r.payByAt && ["awaiting_waiver", "waiver_signed"].includes(r.status)) {
           await db.update(schema.releases).set({ payByAt: new Date(at.getTime() + (r.payByAt.getTime() - e.receivedAt.getTime())) }).where(eq(schema.releases.id, r.id));

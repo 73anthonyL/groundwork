@@ -13,11 +13,12 @@
  *             supplier's waiver, and half of Ironline's retainage certified and waiting on the owner
  * Runs inside the app process so the embedded PGlite database is never opened by two processes at once.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { and, eq } from "drizzle-orm";
 import { getDb, schema, type Db } from "@/db/client";
-import { ID, SEED, seedBaseline, truncateAll } from "@/db/seed";
+import { ID, SEED, TEXAS, seedBaseline, truncateAll } from "@/db/seed";
+import type { ExtractedRuleSet } from "@/domain/rules/schema";
 import { ruleSetFromSpec, type ContractSpec } from "@/domain/rules/from-spec";
 import { stableId } from "@/lib/ids";
 import { dollars } from "@/lib/money";
@@ -200,6 +201,17 @@ async function settleEvent(db: Db, eventId: string) {
   }
 }
 
+/**
+ * The Texas subcontract, compiled by the model ahead of time and replayed from its cached extraction.
+ * It is left in review: the reviewer sees what Texas law does to a contract written for another state.
+ */
+async function applyTexasCompiled(db: Db) {
+  const file = path.resolve(TEXAS.contract.cache);
+  if (!existsSync(file)) return;
+  const cached = JSON.parse(readFileSync(file, "utf8")) as { extracted: ExtractedRuleSet; model: string; promptVersion: string; ms: number };
+  await createRuleSet({ contractId: TEXAS.contract.id, extracted: cached.extracted, pageTexts: await pageTexts(db, TEXAS.contract.id), model: `${cached.model} (cached)`, promptVersion: cached.promptVersion, extractionMs: cached.ms, actor: ELENA, id: stableId("ruleset:lonestar:1") });
+}
+
 async function applyCloseout(db: Db) {
   await settleEvent(db, stableId("owner-payment:2"));
   // Change orders: one approved (raises Ironline's sum to $420,000), one waiting on the controller.
@@ -246,6 +258,7 @@ export async function resetTo(checkpoint: Checkpoint): Promise<{ checkpoint: Che
   if (order >= 3) await applyIntake();
   if (order >= 4) await applyPaid2();
   if (order >= 5) await applyCloseout(db);
+  if (order >= 1) await applyTexasCompiled(db);
   return { checkpoint, ms: Date.now() - t0 };
 }
 

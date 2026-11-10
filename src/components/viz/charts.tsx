@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion } from "motion/react";
 import type { ContractSummary, SeriesPoint, TimelineEntry } from "@/server/read/project";
 import type { EvalRun } from "@/server/read/eval";
@@ -22,6 +22,7 @@ const BANDS = [
  */
 export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; height?: number }) {
   const [at, setAt] = useState<number | null>(null);
+  const clip = useId();
   if (series.length < 2) return <p className="text-sm text-muted-foreground">The ledger needs at least two postings to draw.</p>;
   const W = 720;
   const pad = { l: 8, r: 8, t: 10, b: 22 };
@@ -48,18 +49,18 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
     <figure>
       <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full" role="img" aria-label="Where the owner's money sits after each ledger posting" onMouseLeave={() => setAt(null)}>
         <defs>
-          <clipPath id="balance-wipe">
+          <clipPath id={clip}>
             <motion.rect x="0" y="0" height={height} initial={{ width: 0 }} animate={{ width: W }} transition={{ duration: duration.draw, ease: ease.trace }} />
           </clipPath>
         </defs>
-        <g clipPath="url(#balance-wipe)">
+        <g clipPath={`url(#${clip})`}>
           {BANDS.map((b, i) => (
             <path key={b.key} d={area(i)} fill={b.color} opacity={0.78} />
           ))}
         </g>
         <rect x={x(shown)} y={pad.t} width={slot} height={height - pad.t - pad.b} fill="var(--foreground)" opacity={at === null ? 0 : 0.08} />
         {series.map((_, i) => (
-          <rect key={i} x={x(i)} y={0} width={slot} height={height} fill="transparent" onMouseEnter={() => setAt(i)} />
+          <rect key={i} x={x(i)} y={0} width={slot} height={height} fill="transparent" tabIndex={0} role="img" aria-label={`${series[i].memo}: ${BANDS.map((b) => `${b.label} ${formatUsd0(series[i].balances[b.key] ?? 0)}`).join(", ")}`} onMouseEnter={() => setAt(i)} onFocus={() => setAt(i)} style={{ outline: "none" }} />
         ))}
         <line x1={pad.l} x2={W - pad.r} y1={height - pad.b} y2={height - pad.b} stroke="var(--border)" />
       </svg>
@@ -106,7 +107,7 @@ export function ContractBars({ contracts }: { contracts: ContractSummary[] }) {
           </div>
           <div className="mt-1.5 flex h-3 overflow-hidden rounded-full bg-muted" role="img" aria-label={seg(c).filter((s) => s.cents > 0).map((s) => `${s.label} ${formatUsd0(s.cents)}`).join(", ")}>
             {seg(c).map((s) => (
-              <motion.span key={s.label} title={`${s.label} · ${formatUsd0(s.cents)}`} style={{ background: s.color }} initial={{ width: 0 }} animate={{ width: `${(s.cents / c.contractSumCents) * 100}%` }} transition={spring.ui} />
+              <motion.span key={s.label} title={`${s.label} · ${formatUsd0(s.cents)}`} style={{ background: s.color }} initial={{ width: 0 }} animate={{ width: `${c.contractSumCents > 0 ? (s.cents / c.contractSumCents) * 100 : 0}%` }} transition={spring.ui} />
             ))}
           </div>
           {lower(c.id).map((l) => (
@@ -166,6 +167,11 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
               animate={{ r: at === i ? 6 : big ? 4.5 : 3 }}
               transition={{ ...spring.pop, delay: at === null ? Math.min(1.2, i * 0.012) : 0 }}
               onMouseEnter={() => setAt(i)}
+              onFocus={() => setAt(i)}
+              tabIndex={0}
+              role="img"
+              aria-label={`${e.title}${e.party ? `, ${e.party}` : ""}${e.amountCents !== null ? `, ${formatUsd0(e.amountCents)}` : ""}`}
+              style={{ outline: "none" }}
             />
           );
         })}
