@@ -22,7 +22,6 @@ export default async function ProjectLivePage({ params }: { params: Promise<{ id
       <PageBody>
         <Section
           title="Charts"
-          description="The same figures as the overview, drawn: where the money is, which deadlines are running, and what has happened."
           actions={
             <Link href={`/gc/projects/${id}`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
               Back to overview

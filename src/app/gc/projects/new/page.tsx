@@ -20,7 +20,7 @@ export default async function NewProjectPage() {
   await requireAuth("gc");
   return (
     <>
-      <PageHeader width="form" breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: "Create project" }]} title="Create project" description="A project is one job for one owner. Subcontracts, pay apps and owner payments all belong to it." />
+      <PageHeader width="form" breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: "Create project" }]} title="Create project" />
       <PageBody width="form">
         <NewProjectForm states={STATE_OPTIONS} />
       </PageBody>

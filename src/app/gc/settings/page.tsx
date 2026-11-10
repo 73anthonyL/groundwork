@@ -44,9 +44,8 @@ export default async function SettingsPage() {
             <div className="flex flex-col gap-2 text-sm leading-5">
               <p className="font-medium">Test mode: no real money moves.</p>
               <p className="text-muted-foreground">
-                Payments run on a simulated rail. When a waiver is signed Groundwork creates the payment and marks it sent, exactly as it would with a bank, but nothing leaves an account. A sent payment becomes paid when you confirm it on the payment&rsquo;s page, which stands in for the bank&rsquo;s confirmation.
+                No real money moves. Payments are created and marked sent, but no bank transfer is made.
               </p>
-              <p className="text-muted-foreground">Amounts, retainage, waivers and deadlines are computed the same way in test mode as they would be with a bank connected.</p>
             </div>
           ) : (
             <p className="text-sm leading-5 text-muted-foreground">Payments are sent as bills through Ramp, and a payment is marked paid when Ramp confirms it.</p>

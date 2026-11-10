@@ -109,7 +109,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
             )}
             {failed && !error && (
               <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive-soft px-4 py-3">
-                The bank did not accept this payment, so nothing was sent. The deadline is still running. Send it again when the bank details are right.
+                The bank did not accept this payment. The deadline is still running.
               </p>
             )}
             {waitingOnLowerTier && (
@@ -122,7 +122,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
 
         <div className="grid gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
           <div className="flex min-w-0 flex-col gap-8">
-            <Section title="How the amount was worked out" description="Arithmetic on the approved payment rules and the state's law. No model touched these numbers.">
+            <Section title="How the amount was worked out" description="Computed from the approved rules. No model involved.">
               <Table>
                 <TableBody>
                   {math.map((m, i) => (
@@ -206,7 +206,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
           </Section>
         </div>
 
-        <Section title="Lien waivers" description={`What ${sub} signs in exchange for this payment: a conditional waiver before it goes out, an unconditional one once it has arrived.`}>
+        <Section title="Lien waivers" description={`Signed in exchange for this payment.`}>
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>

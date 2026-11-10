@@ -38,7 +38,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
       <PageHeader
         breadcrumbs={[{ label: "Home", href: home }, { label: "Sample workspace" }]}
         title="Sample workspace"
-        description="Seeded sample data that anyone can explore and change. Reset it here to a known point; real accounts are never touched."
+        description="Sample data anyone can change. Reset it here."
       />
       <PageBody>
         {msg && (
@@ -47,7 +47,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
           </p>
         )}
 
-        <Section title="Reset to a point" description="Each point is rebuilt by running the real steps in order, so every payment has its full history. A reset replaces the sample data for everyone using it.">
+        <Section title="Reset to a point" description="A reset replaces the sample data for everyone.">
           <Table>
             <TableHeader>
               <TableRow>
@@ -81,7 +81,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
 
         <Panel
           title="Test payments"
-          description="Test mode: no real money moves. This marks every sent payment in the sample workspace as paid, as the bank would."
+          description="Marks every sent sample payment as paid."
           actions={
             <form action={settleAllAction}>
               <Button type="submit" variant="secondary" size="sm">
@@ -92,7 +92,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
           padded={false}
         />
 
-        <Section title="Waiver links for lower-tier parties" description="Suppliers and sub-subcontractors have no account; they sign from a link. Email sending is not connected, so the links are listed here. The company that pays them never sees the link.">
+        <Section title="Waiver links for lower-tier parties" description="Signing links for parties without an account.">
           <Table>
             <TableHeader>
               <TableRow>

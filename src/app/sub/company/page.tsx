@@ -76,7 +76,7 @@ export default async function SubCompanyPage() {
 
         {sample ? (
           <Notice tone="hold" title="You cannot invite teammates in the sample workspace">
-            <p>The sample workspace is rebuilt whenever it is reset, so an account made here would be erased. In your own company&rsquo;s account, this is where you add the people who bill and sign for you.</p>
+            <p>Invitations are off in the sample workspace.</p>
           </Notice>
         ) : (
           <Panel title="Invite a teammate" description={`They join ${org.name} and can bill, sign waivers and see payments.`}>
@@ -85,7 +85,7 @@ export default async function SubCompanyPage() {
         )}
 
         {!sample && (
-          <Section title="Pending invitations" description="Email sending is not connected. Copy a link and send it yourself; it works once, for 14 days.">
+          <Section title="Pending invitations" description="Email isn't connected: copy the link. Single use, 14 days.">
             {pending.length === 0 ? (
               <p className="rounded-lg border border-dashed border-input px-4 py-4 text-sm text-muted-foreground">No invitations are waiting. Create one above and its link appears here.</p>
             ) : (

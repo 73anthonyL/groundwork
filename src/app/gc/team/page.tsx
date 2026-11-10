@@ -57,16 +57,16 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
         {sample ? (
           <Panel title="Invitations are turned off in the sample workspace">
             <p className="max-w-2xl text-sm leading-5 text-muted-foreground">
-              The sample workspace is rebuilt whenever it is reset, so accounts made here would be erased. In your own account you invite teammates and each subcontractor&rsquo;s contact from this page, and copy the link to send them.
+              Invitations are off in the sample workspace.
             </p>
           </Panel>
         ) : (
           <>
-            <Panel title="Invite someone" description="A teammate joins your company. A subcontractor's contact joins theirs, to bill and sign lien waivers.">
+            <Panel title="Invite someone" description="Teammates join your company. A subcontractor's contact joins theirs.">
               <InviteForm own={{ id: org.id, name: org.name }} subs={subs} preselect={invite} />
             </Panel>
 
-            <Section title="Invitations" description="Email sending is not connected. Copy a link and send it yourself; it works once and expires 14 days after it was created.">
+            <Section title="Invitations" description="Email isn't connected: copy the link. Single use, 14 days.">
               <Table className="min-w-[860px]">
                 <TableHeader>
                   <TableRow>

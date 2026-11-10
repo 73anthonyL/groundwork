@@ -123,15 +123,15 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               Project created. {lawLine}
             </p>
           )}
-          <Section title="Upload the first subcontract" description="Groundwork reads when and how this subcontractor is paid, shows each term beside the clause it came from, and waits for your approval." className="max-w-[640px]">
+          <Section title="Upload the first subcontract" description="Groundwork reads its payment terms. You approve them." className="max-w-[640px]">
             <div className="rounded-lg border bg-card p-5">
               <AddSubcontractForm projectId={id} knownSubs={known} isSample={sample} />
             </div>
           </Section>
           <div className="grid gap-4 md:grid-cols-3">
-            <EmptyState align="start" title="Waiting on you" description="Payment rules to approve and pay apps to review are listed here, each with its one action. The first appears as soon as a subcontract is uploaded." />
-            <EmptyState align="start" title="Owed to subcontractors" description="What you owe right now and the nearest deadline on it. It appears when the first owner payment is recorded against approved pay apps." />
-            <EmptyState align="start" title="Money flow" description="Each owner payment drawn from owner to subcontractors, with retainage held. It appears with the first owner payment." />
+            <EmptyState align="start" title="Waiting on you" description="Appears once a subcontract is uploaded." />
+            <EmptyState align="start" title="Owed to subcontractors" description="Appears with the first owner payment." />
+            <EmptyState align="start" title="Money flow" description="Appears with the first owner payment." />
           </div>
         </PageBody>
       </>
@@ -200,7 +200,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           <EmptyState
             align="start"
             title="No owner payments yet"
-            description={`When the owner pays you, press Record owner payment. Groundwork splits it between approved pay apps, holds retainage and starts each deadline. ${lawLine ?? ""}`}
+            description={`Record an owner payment and Groundwork splits it.`}
           />
         )}
 

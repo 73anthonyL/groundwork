@@ -15,8 +15,8 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
 
   if (!invitation) {
     return (
-      <AuthFrame title="This invitation link doesn't work" description="The link may have been cut short when it was copied, or the invitation was replaced by a newer one.">
-        <p className="text-muted-foreground">Ask the person who invited you to copy the link again and send it whole. If you already set a password, you can sign in.</p>
+      <AuthFrame title="This invitation link doesn't work" description="The link is incomplete or was replaced.">
+        <p className="text-muted-foreground">Ask for a new link, or sign in if you already set a password.</p>
         <Next />
       </AuthFrame>
     );

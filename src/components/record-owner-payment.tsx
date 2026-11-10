@@ -46,7 +46,7 @@ export function RecordOwnerPayment({
         <form action={action} noValidate>
           <div className="border-b px-5 py-4 pr-12">
             <DialogTitle className="text-base leading-6 font-semibold">Record owner payment</DialogTitle>
-            <DialogDescription className="type-meta mt-0.5">Groundwork splits it between approved pay apps, holds retainage, requests lien waivers and starts each deadline.</DialogDescription>
+            <DialogDescription className="type-meta mt-0.5">Groundwork splits it and starts each deadline.</DialogDescription>
           </div>
           <input type="hidden" name="projectId" value={projectId} />
           <div className="flex flex-col gap-4 px-5 py-4">

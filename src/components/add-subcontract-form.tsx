@@ -39,7 +39,7 @@ export function AddSubcontractForm({ projectId, knownSubs, isSample = false, can
             <span className="font-medium">{subName}&rsquo;s subcontract is uploaded,</span> and an invitation was created for <span className="type-mono">{email}</span>.
           </span>
         </p>
-        <CopyField label="Invite link" value={url} help="Email sending is not connected; copy this link and send it yourself. It works once and expires in 14 days. You can copy it again from Team." />
+        <CopyField label="Invite link" value={url} help="Email isn't connected: copy the link. Single use, 14 days." />
         <FormActions>
           <Link href={`/gc/contracts/${contractId}?read=1`} className={buttonVariants({ variant: "primary" })}>
             Review payment rules

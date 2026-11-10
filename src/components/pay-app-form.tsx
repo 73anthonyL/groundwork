@@ -313,7 +313,7 @@ export function PayAppForm({
               title="Owed to your lower tier"
               description="What you owe each supplier or sub-subcontractor out of this pay app."
               padded={false}
-              footer={<p className="type-meta text-muted-foreground">When you are paid, Groundwork works out their share and sends each one a waiver to sign from a link. They need no account.</p>}
+              footer={<p className="type-meta text-muted-foreground">They are paid from your payment and sign by link. No account needed.</p>}
             >
               <fieldset>
                 <legend className="sr-only">Owed to your suppliers and sub-subcontractors out of this pay app</legend>

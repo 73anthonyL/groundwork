@@ -13,7 +13,6 @@ export default async function ProjectsPage() {
     <>
       <PageHeader
         title="Projects"
-        description="Each project runs under the payment law of its state. Open one to add subcontracts, review pay apps and record owner payments."
         actions={
           <Link href="/gc/projects/new" className={buttonVariants({ variant: "primary" })}>
             Create project

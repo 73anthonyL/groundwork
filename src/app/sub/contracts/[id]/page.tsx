@@ -109,7 +109,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             <EmptyState
               align="start"
               title="The payment rules are not approved yet"
-              description={`${gc} is checking the payment terms Groundwork read from this subcontract. Once they approve, the rules appear here in plain words (when you are paid, what is held, what you sign) and you can bill your first period.`}
+              description={`${gc} is reviewing the payment terms. They appear here once approved.`}
             />
           )}
         </Section>
@@ -213,7 +213,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             <EmptyState
               align="start"
               title="No payments yet"
-              description={`A payment appears here when the owner pays ${gc} for a pay app you submitted. You will see each step it goes through and the date it is legally due.`}
+              description={`Payments appear here once the owner pays ${gc}.`}
             />
           )}
           {releases.map((r) => {

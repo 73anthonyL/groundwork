@@ -235,7 +235,7 @@ function Welcome({ firstName, orgName, contracts }: { firstName: string; orgName
           }
         >
           <p className="text-sm leading-5 text-muted-foreground">
-            This is where you bill for each period, sign a lien waiver when a payment is ready, and see exactly where your money is and the date it is legally due.
+            Bill for each period, sign waivers, and track every payment to its due date.
           </p>
           <Checklist
             className="mt-4"

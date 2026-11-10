@@ -20,7 +20,6 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     <>
       <PageHeader
         title="Payments"
-        description="What you owe and have paid your subcontractors. Each payment is split from an owner payment by that subcontract's approved rules."
         actions={
           <Link href="/gc/ledger" className={buttonVariants({ variant: "secondary" })}>
             Ledger entries

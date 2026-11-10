@@ -33,7 +33,7 @@ export default async function LedgerPage() {
       <PageHeader
         breadcrumbs={[{ label: "Payments", href: "/gc/payments" }, { label: "Ledger entries" }]}
         title="Ledger entries"
-        description="Every movement of money Groundwork has recorded, newest first. Entries are only ever added, never edited, and each balance is the sum of its entries."
+        description="Every recorded movement of money, newest first."
       />
       <PageBody>
         <Section title="Balances">

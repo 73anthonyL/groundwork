@@ -144,7 +144,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
           </Section>
 
           {contract.status !== "active" && contract.documentId && (
-            <Section title="Use a different PDF" description="Replaces the subcontract shown above. Read it again afterwards to propose new payment rules.">
+            <Section title="Use a different PDF" description="Replaces the PDF above.">
               {upload("Replacement PDF")}
             </Section>
           )}

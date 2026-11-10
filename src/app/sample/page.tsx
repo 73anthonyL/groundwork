@@ -27,7 +27,7 @@ export default async function SamplePage({ searchParams }: { searchParams: Promi
     <AuthFrame
       width="list"
       title="Sample workspace"
-      description="This is seeded sample data on two projects, not anyone's real account. Anyone can explore it as one of the people below, change things, and reset it."
+      description="Sample data on two projects. Pick a person to explore as."
     >
       {error && (
         <p role="alert" className="mb-6 rounded-md border border-destructive/30 bg-destructive-soft px-3 py-2 text-destructive">

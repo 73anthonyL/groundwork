@@ -17,7 +17,6 @@ export default async function PayAppsPage({ searchParams }: { searchParams: Prom
     <>
       <PageHeader
         title="Pay apps"
-        description="What your subcontractors have billed. Each one is checked against its subcontract's payment rules before you approve it."
         tabs={<Tabs label="Pay apps by status" current={href(filter)} items={(Object.keys(PAY_APP_FILTERS) as PayAppFilter[]).map((f) => ({ href: href(f), label: PAY_APP_FILTERS[f].label, count: all.filter(PAY_APP_FILTERS[f].match).length }))} />}
       />
       <PageBody>

@@ -32,11 +32,11 @@ export default async function OwnerHome() {
         badge={
           <Badge icon={<Eye aria-hidden />}>Read-only</Badge>
         }
-        description={`${org.name} pays the general contractor. This view shows where that money has gone: what each subcontractor has been paid, what is on its way and what is held as retainage. It is read-only; nothing here needs your action.`}
+        description={`Where each of your payments has gone. Read-only.`}
       />
       <PageBody>
         {projects.length === 0 ? (
-          <EmptyState title="No projects yet" description="A project appears here when your general contractor creates it on Groundwork and names your company as the owner." />
+          <EmptyState title="No projects yet" description="Projects appear when your contractor adds you as the owner." />
         ) : (
           <Table>
             <TableHeader>

@@ -199,7 +199,7 @@ export function CompileReview({
           <EmptyState
             align="start"
             title="This subcontract has not been read yet"
-            description="Claude reads it once and proposes payment rules, each with the clause it came from. Groundwork checks every quote against the PDF, applies the state's payment law, and brings anything doubtful to you. You approve once."
+            description="Claude reads the payment terms and quotes the clause behind each. You approve once."
             action={
               canCompile ? (
                 <Button onClick={() => compile("model")}>Read the contract</Button>
@@ -219,10 +219,10 @@ export function CompileReview({
                   {blocking.length + loose.length > 0 ? <Badge tone="hold">{blocking.length + loose.length} waiting</Badge> : <Badge tone="settled">Nothing waiting</Badge>}
                 </div>
                 {blocking.length + loose.length === 0 ? (
-                  <p className="type-meta text-muted-foreground">Every term is either found in the PDF word for word or settled by you. Check the list below against the contract, then approve.</p>
+                  <p className="type-meta text-muted-foreground">Every term is verified or settled. Approve when ready.</p>
                 ) : (
                   <>
-                    <p className="type-meta text-muted-foreground">Groundwork holds back any term Claude was unsure of, any quote it could not find in the PDF, and anything the state&rsquo;s law overrides. Nothing is paid on this subcontract until these are settled.</p>
+                    <p className="type-meta text-muted-foreground">Terms Claude was unsure of, quotes not found in the PDF, and anything state law overrides.</p>
                     {nudge && (
                       <p role="alert" className="type-meta font-medium text-destructive">
                         Settle {waiting} below before approving.

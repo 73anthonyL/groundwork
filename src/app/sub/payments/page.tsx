@@ -18,7 +18,7 @@ export default async function SubPaymentsPage() {
 
   return (
     <>
-      <PageHeader title="Payments" description="Every payment to your company, with its status and the date it is due. Open one to see each step it has been through." />
+      <PageHeader title="Payments" />
       <PageBody>
         {releases.length > 0 && (
           <StatGroup>

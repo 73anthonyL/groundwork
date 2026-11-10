@@ -35,7 +35,7 @@ export default async function GcHome() {
                 Pay every subcontractor what the contract says, by the day the law allows
               </h2>
               <p className="mt-2 text-sm leading-5 text-muted-foreground">
-                Groundwork reads each signed subcontract into payment rules you approve once, then splits every owner payment between your subcontractors, holds retainage, requests lien waivers and tracks each legal deadline.
+                Upload a subcontract, approve its payment rules once, and every owner payment splits itself.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
                 <Link href="/gc/projects/new" className={buttonVariants({ variant: "primary" })}>
@@ -80,7 +80,7 @@ export default async function GcHome() {
           </details>
         )}
 
-        <Section title="Needs your attention" description="Pay apps to review, payment rules to approve, and payments that failed or are close to their deadline.">
+        <Section title="Needs your attention">
           <AttentionTable items={items} nowIso={now().toISOString()} showProject />
         </Section>
 

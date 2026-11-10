@@ -84,7 +84,7 @@ export default async function SignWaiverPage({ params, searchParams }: { params:
           </>
         )}
 
-        {!isSigned && !open && <Notice tone="info" title="This waiver is no longer open for signature">A newer waiver replaced it, or the payment it belonged to was withdrawn. Check Home for anything waiting on you.</Notice>}
+        {!isSigned && !open && <Notice tone="info" title="This waiver is no longer open for signature">It was replaced or withdrawn. Check Home.</Notice>}
 
         <WaiverFacts fields={fields} payerName={payerName} projectName={contract.project.name} conditional={meta.conditional} />
 
