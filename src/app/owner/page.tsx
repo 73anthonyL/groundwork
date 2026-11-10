@@ -1,6 +1,7 @@
 import { requireAuth } from "@/server/auth";
 import { listProjects } from "@/server/scoped";
 import { AppShell } from "@/components/app-shell";
+import { OWNER_NAV } from "@/components/gc-nav";
 import { formatCentsCompact } from "@/lib/money";
 import { ProjectLive } from "@/components/project-live";
 import { PageHero } from "@/components/page-hero";
@@ -9,7 +10,7 @@ export default async function OwnerHome() {
   const session = await requireAuth("owner");
   const projects = await listProjects(session.org);
   return (
-    <AppShell session={session}>
+    <AppShell session={session} nav={OWNER_NAV}>
       <PageHero
         title="Where your money went"
         lede={`You are ${session.user.name} at ${session.org.name}, the owner paying for the building. You pay the general contractor. This page shows how far each payment has travelled: which subcontractors have been paid, what is on its way, and what is being held back. You only watch here; nothing needs your action.`}

@@ -1,18 +1,29 @@
-import Link from "next/link";
+/**
+ * ProjectTabs: the five sections of a contractor's project. Put it in <PageHeader tabs={…}>.
+ * Props: `projectId`; `counts?` ({ subcontracts?, payApps?, payments? }) to show a number beside a tab.
+ * The current tab follows the address. (`active` is ignored; it is accepted so older pages compile.)
+ */
+import { Tabs } from "@/components/ui/tabs";
 
-/** Board (the working table) and Live view (the same project as pictures). */
-export function ProjectTabs({ projectId, active }: { projectId: string; active: "board" | "live" }) {
-  const tabs = [
-    { id: "board", label: "Board", href: `/gc/projects/${projectId}` },
-    { id: "live", label: "Live view", href: `/gc/projects/${projectId}/live` },
-  ] as const;
-  return (
-    <nav aria-label="Project views" className="inline-flex gap-0.5 rounded-full bg-stage-foreground/10 p-0.5 text-[13px]">
-      {tabs.map((t) => (
-        <Link key={t.id} href={t.href} aria-current={t.id === active ? "page" : undefined} className={`rounded-full px-3.5 py-1 font-medium transition-colors ${t.id === active ? "bg-stage-foreground text-stage" : "text-stage-muted hover:text-stage-foreground"}`}>
-          {t.label}
-        </Link>
-      ))}
-    </nav>
-  );
+export function projectTabItems(projectId: string, counts: { subcontracts?: number; payApps?: number; payments?: number } = {}) {
+  const base = `/gc/projects/${projectId}`;
+  return [
+    { href: base, label: "Overview" },
+    { href: `${base}/subcontracts`, label: "Subcontracts", count: counts.subcontracts },
+    { href: `${base}/pay-apps`, label: "Pay apps", count: counts.payApps },
+    { href: `${base}/payments`, label: "Payments", count: counts.payments },
+    { href: `${base}/activity`, label: "Activity" },
+  ];
+}
+
+export function ProjectTabs({
+  projectId,
+  counts,
+}: {
+  projectId: string;
+  counts?: { subcontracts?: number; payApps?: number; payments?: number };
+  /** @deprecated ignored */
+  active?: string;
+}) {
+  return <Tabs label="Project sections" items={projectTabItems(projectId, counts)} />;
 }

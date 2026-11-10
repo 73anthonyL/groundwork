@@ -1,8 +1,11 @@
 /**
- * The dark band at the top of a page: who or what this page is about, its one big figure, and the
- * things you can do. It runs edge to edge and joins the navigation bar above it, so every main page
- * opens the same way the landing page does.
+ * PageHero: the old page opener, kept so pages written against it still compile. It now renders the
+ * light <PageHeader>, with its figure, stats and actions set plainly under the title. New pages use
+ * PageHeader (and <Stat size="lg"> for the one money figure) directly.
  */
+import { PageHeader } from "./page-header";
+import { Stat, StatGroup } from "@/components/ui/stat";
+
 export function PageHero({
   kicker,
   title,
@@ -13,54 +16,37 @@ export function PageHero({
   aside,
   width = "wide",
 }: {
-  /** A way back up, above the title (a link, never a label). */
+  /** A way back up, above the title. */
   kicker?: React.ReactNode;
   title: React.ReactNode;
   lede?: React.ReactNode;
-  /** The one number the page is about. */
   figure?: { label: string; value: React.ReactNode; note?: React.ReactNode };
   stats?: { label: string; value: React.ReactNode }[];
-  /** Buttons: the things this person can do from here. */
   actions?: React.ReactNode;
+  /** Shown where the tabs go. */
   aside?: React.ReactNode;
   width?: "wide" | "narrow";
 }) {
+  const extra = figure || stats || actions;
   return (
-    <section className="stage relative left-1/2 -mt-8 mb-10 w-screen -translate-x-1/2 sm:-mt-10">
-      <div className={`mx-auto px-4 pb-12 pt-10 sm:px-6 sm:pb-14 sm:pt-12 ${width === "wide" ? "max-w-6xl" : "max-w-xl"}`}>
-        <div className="flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
-          <div className="min-w-0">
-            {kicker && <div className="text-sm text-stage-muted">{kicker}</div>}
-            <h1 className={`font-bold leading-[1.05] ${kicker ? "mt-2" : ""} ${width === "wide" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"}`}>{title}</h1>
-            {lede && <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-stage-muted">{lede}</p>}
-          </div>
-          {aside}
+    <PageHeader title={title} breadcrumbs={kicker} description={lede} tabs={aside} width={width === "narrow" ? "form" : "default"}>
+      {extra && (
+        <div className="flex flex-col gap-4">
+          {figure && (
+            <dl>
+              <Stat size="lg" label={figure.label} value={figure.value} hint={figure.note} />
+            </dl>
+          )}
+          {stats && stats.length > 0 && (
+            <StatGroup>
+              {stats.map((s) => (
+                <Stat key={s.label} label={s.label} value={s.value} />
+              ))}
+            </StatGroup>
+          )}
+          {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </div>
-
-        {(figure || stats) && (
-          <div className="mt-10 flex flex-wrap items-end justify-between gap-x-12 gap-y-8">
-            {figure && (
-              <div>
-                <div className="text-sm text-stage-muted">{figure.label}</div>
-                <div className={`type-numeral mt-2 font-bold tracking-tight ${width === "wide" ? "text-6xl sm:text-7xl lg:text-8xl" : "text-6xl"}`}>{figure.value}</div>
-                {figure.note && <p className="mt-4 text-[15px] text-stage-muted">{figure.note}</p>}
-              </div>
-            )}
-            {stats && (
-              <dl className="num flex flex-wrap gap-x-10 gap-y-4 text-sm">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <dt className="font-sans text-stage-muted">{s.label}</dt>
-                    <dd className="mt-1 text-2xl font-semibold">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </div>
-        )}
-
-        {actions && <div className="mt-9 flex flex-wrap items-start gap-3">{actions}</div>}
-      </div>
-    </section>
+      )}
+    </PageHeader>
   );
 }

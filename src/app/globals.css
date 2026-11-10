@@ -6,18 +6,17 @@
 @custom-variant dark (&:where([data-theme="night"], [data-theme="night"] *));
 
 /*
-  Groundwork palette — construction finance.
-  concrete page, graphite ink, rebar grey, surveyor orange only for money in motion
-  and statutory clocks, poured green for settled, hold amber for gated.
+  Groundwork: a flat near-white page, white panels, 1px borders, ink buttons.
+  Color carries state only: orange = money on its way or a clock running, green = paid,
+  amber = waiting or held, red = failed or blocked, blue = links and focus.
 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-host), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-host), ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
   --font-heading: var(--font-sans);
-  /* Big money figures and editorial headlines. Swappable per type set (see [data-type]). */
   --font-numeral: var(--numeral-font);
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
   --color-ring: var(--ring);
@@ -25,6 +24,7 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-soft: var(--destructive-soft);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -51,7 +51,7 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Domain tokens */
+  /* State colors: each has a text color and a "-soft" tint for badge and row backgrounds. */
   --color-money: var(--money);
   --color-money-foreground: var(--money-foreground);
   --color-money-soft: var(--money-soft);
@@ -82,64 +82,63 @@
   --color-paper: var(--paper);
   --color-paper-ink: var(--paper-ink);
   --color-paper-muted: var(--paper-muted);
-  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-trace: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Radii: 4 badges, 6 controls, 8 panels. Nothing in the app is rounder than a panel. */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
+  --radius-4xl: 12px;
 }
 
 :root {
   /*
-    Paper, the default theme. The palette is built, not picked: every color is an OKLCH value on
-    one of six hue anchors, so lightness and strength are comparable across hues.
+    The default theme. Every color is an OKLCH value on one of six hue anchors:
 
-      steel   250   every neutral, the page, the ink, the dark stage
-      signal   45   safety orange: money on its way, a clock running, the one loud color
+      steel   255   every neutral: page, panels, ink, borders
+      blue    258   links and focus, nothing else
+      signal   45   orange: money on its way, a clock running
       landed  160   green: paid
-      held     82   amber: held, or waiting on someone
+      held     85   amber: waiting on someone, or held
       stop     27   red: failed, blocked
-      setoff  305   violet: backcharges (charts only)
 
-    Rules the values follow, checked by `node scripts/contrast.mjs`:
-      - text colors sit at L 0.48 to 0.56, which clears 4.5:1 on white and on their own tint
-      - tints sit at L 0.955 with a trace of chroma, so a tinted row never looks like a fill
-      - neutrals carry a little steel (C 0.004 to 0.03), so greys and the dark stage are one family
-      - signal orange and steel are near-complements; nothing else competes with the orange
+    Checked by `node scripts/contrast.mjs`: text colors clear 4.5:1 on white, on the page and on
+    their own tint; chart marks clear 3:1.
   */
-  --background: oklch(0.975 0.004 250);
-  --foreground: oklch(0.21 0.022 250);
+  --background: oklch(0.985 0.002 255);
+  --foreground: oklch(0.21 0.02 255);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.022 250);
+  --card-foreground: oklch(0.21 0.02 255);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.022 250);
-  --primary: oklch(0.21 0.022 250);
+  --popover-foreground: oklch(0.21 0.02 255);
+  --primary: oklch(0.21 0.02 255);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.935 0.007 250);
-  --secondary-foreground: oklch(0.21 0.022 250);
-  --muted: oklch(0.955 0.005 250);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.935 0.007 250);
-  --accent-foreground: oklch(0.21 0.022 250);
+  --secondary: oklch(0.945 0.005 255);
+  --secondary-foreground: oklch(0.21 0.02 255);
+  --muted: oklch(0.962 0.004 255);
+  --muted-foreground: oklch(0.5 0.018 255);
+  --accent: oklch(0.945 0.005 255);
+  --accent-foreground: oklch(0.21 0.02 255);
   --destructive: oklch(0.53 0.2 27);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.21 0.022 250 / 0.1);
-  --input: oklch(0.21 0.022 250 / 0.24);
-  --ring: oklch(0.48 0.11 250);
-  --surface-sunken: oklch(0.96 0.005 250);
+  --destructive-soft: oklch(0.96 0.02 27);
+  --border: oklch(0.21 0.02 255 / 0.1);
+  --input: oklch(0.21 0.02 255 / 0.2);
+  --ring: oklch(0.5 0.17 258);
+  --surface-sunken: oklch(0.962 0.004 255);
 
-  /* Links: steel with the chroma turned up. Quiet enough to sit in a table, clearly not body ink. */
-  --link: oklch(0.48 0.11 250);
-  --link-soft: oklch(0.955 0.02 250);
+  /* Blue: links and the focus outline. */
+  --link: oklch(0.5 0.17 258);
+  --link-soft: oklch(0.955 0.02 258);
 
-  /* Signal orange twice: a bright fill that carries dark lettering, and a deeper one for text. */
+  /* Orange twice: a bright mark for dots and chart fills, and a deeper one for text. */
   --signal: oklch(0.72 0.185 47);
-  --signal-foreground: oklch(0.21 0.022 250);
+  --signal-foreground: oklch(0.21 0.02 255);
   --money: oklch(0.535 0.16 42);
   --money-foreground: oklch(1 0 0);
   --money-soft: oklch(0.96 0.022 55);
@@ -156,48 +155,39 @@
   --chart-4: var(--foreground);
   --chart-5: var(--muted-foreground);
 
-  /* The stage: steel at night. The landing page opens and closes on it. */
-  --stage: oklch(0.25 0.035 252);
-  --stage-deep: oklch(0.19 0.03 252);
-  --stage-foreground: oklch(0.975 0.004 250);
-  --stage-muted: oklch(0.8 0.025 250);
-  --stage-line: oklch(1 0 0 / 0.045);
-  --stage-line-major: oklch(1 0 0 / 0.085);
+  /* The one dark surface, for a single section of the landing page. Plain: no grid, no glow. */
+  --stage: oklch(0.21 0.02 255);
+  --stage-deep: oklch(0.17 0.018 255);
+  --stage-foreground: oklch(0.985 0.002 255);
+  --stage-muted: oklch(0.78 0.015 255);
 
-  --stage-light: oklch(1 0 0 / 0.09);
-
-  /* The contract page in the landing hero: paper stays paper in every theme. */
+  /* A page of the contract: paper stays paper in every theme. */
   --paper: oklch(0.992 0.003 95);
-  --paper-ink: oklch(0.21 0.022 250);
-  --paper-muted: oklch(0.5 0.02 250);
-
-  /* What a button gains under the cursor. */
-  --shadow-lift-value: 0 4px 12px -4px oklch(0.21 0.022 250 / 0.35);
-
-  /* The drafting grid every page sits on. */
-  --grid-line: oklch(0.48 0.11 250 / 0.045);
-  --grid-line-major: oklch(0.48 0.11 250 / 0.07);
+  --paper-ink: oklch(0.21 0.02 255);
+  --paper-muted: oklch(0.5 0.018 255);
 
   /* One meaning per color, shared by every chart: where the money is. Marks are a step brighter than text. */
   --flow-paid: oklch(0.6 0.13 160);
   --flow-moving: oklch(0.68 0.185 45);
   --flow-held: oklch(0.67 0.13 82);
   --flow-setoff: oklch(0.55 0.11 305);
-  --flow-idle: oklch(0.8 0.012 250);
+  --flow-idle: oklch(0.8 0.012 255);
 
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 
-  /* Elevation is rare: sheets sit on the page with a hairline; only floating things cast a shadow. */
-  --shadow-card-value: 0 0 0 1px oklch(0.21 0.022 250 / 0.07), 0 1px 2px oklch(0.21 0.022 250 / 0.04);
-  --shadow-float-value: 0 24px 60px -12px oklch(0.19 0.03 252 / 0.45), 0 0 0 1px oklch(0.21 0.022 250 / 0.06);
+  /* Panels are outlined, not lifted: "shadow-card" is a 1px border. Only floating things cast a shadow. */
+  --shadow-card-value: 0 0 0 1px var(--border);
+  --shadow-float-value: 0 0 0 1px oklch(0.21 0.02 255 / 0.08), 0 4px 8px -2px oklch(0.21 0.02 255 / 0.08), 0 16px 32px -8px oklch(0.21 0.02 255 / 0.16);
+  --shadow-lift-value: 0 0 0 0 transparent;
 
-  --numeral-font: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --numeral-font: var(--font-host), ui-sans-serif, system-ui, sans-serif;
 
-  --sidebar: var(--card);
+  /* The sidebar sits one step below the page. */
+  --sidebar: oklch(0.968 0.004 255);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: var(--muted);
+  --sidebar-accent: oklch(0.935 0.006 255);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
@@ -205,8 +195,6 @@
 
 /* Concrete: the original look, kept for comparison in the lab. */
 [data-theme="concrete"] {
-  --grid-line: transparent;
-  --grid-line-major: transparent;
   --stage-deep: #0f1418;
   --flow-paid: var(--settled);
   --flow-moving: var(--money);
@@ -268,7 +256,7 @@
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
   --shadow-float-value: 0 8px 32px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
 
-  --numeral-font: var(--font-archivo), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-host), ui-sans-serif, sans-serif;
 
   --sidebar: #ffffff;
   --sidebar-foreground: #1b2228;
@@ -287,8 +275,6 @@
   Every color in the app reads these variables, so a theme is only this block.
 */
 [data-theme="ink"] {
-  --grid-line: rgb(16 38 28 / 0.04);
-  --grid-line-major: rgb(16 38 28 / 0.07);
   --stage-deep: #0a1c14;
   --flow-paid: var(--settled);
   --flow-moving: var(--money);
@@ -296,7 +282,7 @@
   --link: #1f6b4a;
   --link-soft: #e0ede5;
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
-  --numeral-font: var(--font-archivo), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-host), ui-sans-serif, sans-serif;
   --background: #f3f4f2;
   --foreground: #10261c;
   --card: #ffffff;
@@ -327,8 +313,6 @@
 }
 
 [data-theme="night"] {
-  --grid-line: rgb(143 176 255 / 0.04);
-  --grid-line-major: rgb(143 176 255 / 0.07);
   --stage-deep: #040506;
   --flow-paid: var(--settled);
   --flow-moving: var(--money);
@@ -370,79 +354,100 @@
   --flow-idle: #5c656c;
   --shadow-card-value: 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-float-value: 0 0 0 1px rgb(255 255 255 / 0.10), 0 12px 40px rgb(0 0 0 / 0.5);
-  --sidebar: #16191c;
+  --sidebar: #101214;
+  --sidebar-accent: #22262a;
+  --destructive-soft: #3a1b18;
+  --shadow-card-value: 0 0 0 1px rgb(255 255 255 / 0.10);
   color-scheme: dark;
 }
 
-/* Type sets. "serif" gives big figures and editorial headlines a light serif. */
+/* Type sets. "serif" gives big figures a light serif (lab only). */
 [data-type="serif"] {
   --numeral-font: var(--font-newsreader), ui-serif, Georgia, serif;
 }
-[data-type="serif"] h1 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-}
 
-/* Small label: tags, axis labels, table notes. */
+/*
+  The app type scale. One utility per step; weights are 400, 500 and 600 only.
+    type-caption  12/16  captions, breadcrumbs
+    type-meta     13/18  secondary text, table metadata, help text
+    type-body     14/20  body, cells, labels, buttons
+    type-section  16/24  section titles
+    type-title    20/28  page titles
+    type-figure   28/36  the single money figure on a page
+*/
+@utility type-caption {
+  font-size: 12px;
+  line-height: 16px;
+}
+@utility type-meta {
+  font-size: 13px;
+  line-height: 18px;
+}
+@utility type-body {
+  font-size: 14px;
+  line-height: 20px;
+}
+@utility type-section {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+}
+@utility type-title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+@utility type-figure {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+/* Small label: tags, axis labels, column notes. */
 @utility type-label {
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
   letter-spacing: 0;
 }
-/* The contract's own words: quoted clauses, waiver text. Serif, like the paper it came from. */
+/* Figures: amounts in tables, IDs, hashes, clause references. Plex Mono, tabular, a touch smaller so it sits level with the sans. */
+@utility type-mono {
+  font-family: var(--font-mono);
+  font-size: 0.9286em;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.01em;
+}
+/* The contract's own words: quoted clauses, waiver and statute text. Serif, like the paper it came from. */
 @utility type-contract {
   font-family: var(--font-serif);
-  font-size: 1.02em;
+  font-size: 1.07em;
   line-height: 1.5;
 }
-/* The one big figure in a card or hero. */
+/* Legacy name for a large figure; new pages use type-figure. */
 @utility type-numeral {
   font-family: var(--font-numeral);
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 1.1;
 }
-/* Drafting grid: fine lines every 24px, a heavier one every fifth. */
-@utility drafting-grid {
-  background-image:
-    linear-gradient(var(--grid-line-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px),
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  background-position: -1px -1px;
-}
-/*
-  The stage: the dark steel sheet the landing page opens on. Drafting lines in white, a cool light
-  from the top left, and the glow of a work light low on the right, where the contract sheet sits.
-*/
+/* A single dark section, for the landing page only. Flat ink; light focus ring so it clears 3:1. */
 @utility stage {
-  /* Focus rings on the dark sheet are light, so they clear 3:1. */
   --ring: var(--stage-foreground);
   color: var(--stage-foreground);
   background-color: var(--stage);
-  background-image:
-    radial-gradient(55% 60% at 78% 104%, oklch(from var(--signal) l c h / 0.12), transparent 70%),
-    radial-gradient(70% 55% at 8% -8%, var(--stage-light), transparent 65%),
-    linear-gradient(to bottom, transparent 40%, var(--stage-deep)),
-    linear-gradient(var(--stage-line-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--stage-line-major) 1px, transparent 1px),
-    linear-gradient(var(--stage-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--stage-line) 1px, transparent 1px);
-  background-size: auto, auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  background-position: 0 0, 0 0, 0 0, -1px -1px, -1px -1px, -1px -1px, -1px -1px;
 }
-/* The page-load sequence: each piece rises in turn. Set --i for its place in the order. */
+/* The page-load sequence on the landing page: each piece rises in turn. Set --i for its place in the order. */
 @utility reveal {
-  animation: gw-rise 0.75s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+  animation: gw-rise 0.3s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 @keyframes gw-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -494,13 +499,12 @@
     scrollbar-color: color-mix(in oklch, var(--muted-foreground), transparent 45%) transparent;
   }
   ::selection {
-    background: color-mix(in oklch, var(--signal), transparent 70%);
+    background: color-mix(in oklch, var(--link), transparent 78%);
     color: inherit;
   }
   body {
-    @apply bg-background text-foreground drafting-grid;
+    @apply bg-background text-foreground;
     text-rendering: optimizeLegibility;
-    /* Full-width bands are sized to the viewport; this keeps the scrollbar's width from adding a sideways scroll. */
     overflow-x: clip;
   }
   /* Every currency column and clock uses lining, tabular figures. */
@@ -513,26 +517,21 @@
     letter-spacing: -0.012em;
     text-wrap: balance;
   }
-  /* Title-block lettering: the two top levels are set on the wide end of the family. */
-  h1, h2 {
-    font-stretch: 112%;
-    letter-spacing: -0.02em;
-  }
   p {
     text-wrap: pretty;
   }
+  /* Focus is a 2px outline that appears at once: no transition, on every theme. */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-ring;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    transition-property: none;
   }
-  /* Anything you can click says so: a pointer, and it moves a little under the cursor. */
-  a, button:not(:disabled), summary, label[for], [role="button"], [role="tab"], select, input[type="file"] {
+  /* Anything you can click says so. */
+  a, button:not(:disabled), summary, label[for], [role="button"], [role="tab"], select, input[type="file"], input[type="checkbox"], input[type="radio"] {
     cursor: pointer;
   }
   button:disabled {
     cursor: not-allowed;
-  }
-  summary {
-    transition: color 0.15s ease-out;
   }
   summary:hover {
     color: var(--link);

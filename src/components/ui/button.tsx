@@ -1,62 +1,77 @@
+/**
+ * Button. One primary per page.
+ *
+ *   <Button variant="primary" size="md" loading={pending}>Approve payment rules</Button>
+ *   <Link href="/x" className={buttonVariants({ variant: "secondary" })}>Cancel</Link>
+ *
+ * variant: "primary" (ink fill, the default) | "secondary" (white, 1px border) | "tertiary" (no
+ *   border) | "destructive" (red text and border) | "link" (inline blue text).
+ *   Old names still work: money / default / signal = primary, outline / stage = secondary, ghost = tertiary.
+ * size: "sm" 28px (table rows) | "md" 32px (default; "default" is the same) | "lg" 40px (sign-in,
+ *   landing page) | "icon" 32 | "icon-sm" 28 | "icon-xs" 24 | "icon-lg" 40 | "xs" 24.
+ * loading: keeps the label, adds a spinner, sets aria-busy and ignores clicks. Never pre-disable a submit.
+ * Everything else is a normal <button> prop (Base UI Button, so `render` works too).
+ */
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
+import { Spinner } from "./spinner"
+
+const primary = "border-transparent bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--primary-foreground)_18%)]"
+const secondary = "border-input bg-card text-foreground hover:bg-muted aria-expanded:bg-muted"
+const tertiary = "border-transparent text-foreground hover:bg-secondary aria-expanded:bg-secondary"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap relative transition-[background-color,color,border-color,opacity,scale,filter] duration-150 ease-out select-none after:pointer-events-none after:absolute after:-inset-px after:rounded-[inherit] after:opacity-0 after:shadow-lift after:transition-opacity after:duration-150 after:ease-out hover:after:opacity-100 active:not-aria-[haspopup]:scale-[0.97] active:duration-100 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center rounded-md border font-medium whitespace-nowrap select-none transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-busy:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        /* The primary action. (Named "money" for history; it is the one filled accent button in a region.) */
-        money: "bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--primary-foreground)_14%)]",
-        /* On the dark stage: the one loud action, and its quieter neighbour. */
-        signal: "bg-signal text-signal-foreground font-semibold hover:brightness-110 after:shadow-[0_6px_20px_-6px_var(--signal)]",
-        stage: "border-stage-foreground/25! bg-stage-foreground/[0.06] text-stage-foreground hover:bg-stage-foreground/15 hover:after:opacity-0",
-        default: "bg-primary text-primary-foreground hover:bg-primary/85",
-        outline:
-          "border-foreground/20! bg-card hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:after:opacity-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-link underline-offset-4 hover:underline hover:after:opacity-0",
+        primary,
+        secondary,
+        tertiary,
+        destructive: "border-destructive/40 bg-card text-destructive hover:bg-destructive-soft",
+        link: "h-auto! border-transparent rounded-sm px-0! font-normal text-link underline-offset-4 hover:underline active:scale-100",
+        /* Aliases kept so older pages compile. */
+        default: primary,
+        money: primary,
+        signal: primary,
+        outline: secondary,
+        stage: secondary,
+        ghost: tertiary,
       },
       size: {
-        default:
-          "h-8 gap-1.5 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-10 gap-1.5 px-4 text-[0.9375rem] has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        xs: "h-6 gap-1 px-2 text-xs [&_svg:not([class*='size-'])]:size-3.5",
+        sm: "h-7 gap-1.5 px-2.5 text-[13px] leading-[18px] [&_svg:not([class*='size-'])]:size-3.5",
+        md: "h-8 gap-1.5 px-3 text-sm",
+        default: "h-8 gap-1.5 px-3 text-sm",
+        lg: "h-10 gap-2 px-4 text-sm",
         icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
+        "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-7",
+        "icon-lg": "size-10",
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "primary",
+      size: "md",
     },
   }
 )
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+type ButtonProps = ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & { loading?: boolean }
+
+function Button({ className, variant = "primary", size = "md", loading = false, children, ...props }: ButtonProps) {
   return (
     <ButtonPrimitive
       data-slot="button"
+      aria-busy={loading || undefined}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {loading && <Spinner decorative />}
+      {children}
+    </ButtonPrimitive>
   )
 }
 
-export { Button, buttonVariants }
+export { Button, buttonVariants, type ButtonProps }

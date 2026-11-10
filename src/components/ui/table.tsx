@@ -1,75 +1,67 @@
-"use client"
-
+/**
+ * Table: full container width, sits on the page inside a 1px frame.
+ *
+ *   <Table>                                   // density="compact" for 32px line-item rows; bare to drop the frame (inside a Panel)
+ *     <TableHeader><TableRow>
+ *       <TableHead>Subcontractor</TableHead><TableHead numeric>Paid</TableHead>
+ *     </TableRow></TableHeader>
+ *     <TableBody>
+ *       <TableRow>
+ *         <TableCell><TableLink href="/gc/…">Apex Electric</TableLink></TableCell>
+ *         <TableCell numeric>$12,400.00</TableCell>          // right-aligned Plex Mono, tabular
+ *       </TableRow>
+ *       <TableEmpty colSpan={2} action={<Button size="sm">Add subcontract</Button>}>No subcontracts yet.</TableEmpty>
+ *     </TableBody>
+ *     <TableFoot><TableRow><TableCell>Total</TableCell><TableCell numeric>$12,400.00</TableCell></TableRow></TableFoot>
+ *   </Table>
+ *
+ * Rows are 40px, cells 14/400, headers 13/500 muted, cell padding 16px. Row hover changes the
+ * background with no transition. An empty table keeps its headers and shows one TableEmpty row.
+ * TableCell / TableHead take `numeric` (money, counts) and `muted` (cell only: 13px secondary text).
+ * TableChevron is an optional last cell for rows that open a page. TableFooter is an alias of TableFoot.
+ */
 import * as React from "react"
+import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import { cn } from "cn"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+function Table({
+  className,
+  density = "default",
+  bare = false,
+  ...props
+}: React.ComponentProps<"table"> & { density?: "default" | "compact"; bare?: boolean }) {
   return (
-    <div
-      data-slot="table-container"
-      className="relative w-full overflow-x-auto"
-    >
-      <table
-        data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
-        {...props}
-      />
+    <div data-slot="table-container" className={cn("relative w-full overflow-x-auto", !bare && "rounded-lg border bg-card")}>
+      <table data-slot="table" data-density={density} className={cn("group/table w-full caption-bottom border-collapse text-sm leading-5", className)} {...props} />
     </div>
   )
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return (
-    <thead
-      data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
-      {...props}
-    />
-  )
+  return <thead data-slot="table-header" className={cn("[&_tr]:border-b [&_tr]:hover:bg-transparent", className)} {...props} />
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
-  return (
-    <tbody
-      data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
-      {...props}
-    />
-  )
+  return <tbody data-slot="table-body" className={cn("[&_tr:last-child]:border-0", className)} {...props} />
 }
 
-function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
-  return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn(
-        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-        className
-      )}
-      {...props}
-    />
-  )
+function TableFoot({ className, ...props }: React.ComponentProps<"tfoot">) {
+  return <tfoot data-slot="table-foot" className={cn("border-t bg-muted/60 font-medium [&_tr]:border-0 [&_tr]:hover:bg-transparent", className)} {...props} />
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return (
-    <tr
-      data-slot="table-row"
-      className={cn(
-        "border-b border-border/70 hover:bg-muted/40 data-[state=selected]:bg-muted",
-        className
-      )}
-      {...props}
-    />
-  )
+  return <tr data-slot="table-row" className={cn("border-b hover:bg-muted/60 data-[state=selected]:bg-muted", className)} {...props} />
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ className, numeric, ...props }: React.ComponentProps<"th"> & { numeric?: boolean }) {
   return (
     <th
       data-slot="table-head"
+      scope="col"
       className={cn(
-        "h-9 px-3 text-left align-middle text-xs font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4",
+        "h-9 px-4 text-left align-middle text-[13px] leading-[18px] font-medium whitespace-nowrap text-muted-foreground group-data-[density=compact]/table:h-8",
+        numeric && "text-right",
         className
       )}
       {...props}
@@ -77,12 +69,14 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   )
 }
 
-function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+function TableCell({ className, numeric, muted, ...props }: React.ComponentProps<"td"> & { numeric?: boolean; muted?: boolean }) {
   return (
     <td
       data-slot="table-cell"
       className={cn(
-        "px-3 py-2.5 align-middle first:pl-4 last:pr-4",
+        "h-10 px-4 py-2 align-middle group-data-[density=compact]/table:h-8 group-data-[density=compact]/table:py-1",
+        numeric && "type-mono text-right whitespace-nowrap",
+        muted && "text-[13px] leading-[18px] text-muted-foreground",
         className
       )}
       {...props}
@@ -90,26 +84,36 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   )
 }
 
-function TableCaption({
-  className,
-  ...props
-}: React.ComponentProps<"caption">) {
+/** The name cell's link: the way into the row's page. */
+function TableLink({ className, ...props }: React.ComponentProps<typeof Link>) {
+  return <Link data-slot="table-link" className={cn("rounded-sm font-medium text-foreground underline-offset-4 hover:underline", className)} {...props} />
+}
+
+/** Optional trailing cell: a chevron for rows that open a page. */
+function TableChevron({ className }: { className?: string }) {
   return (
-    <caption
-      data-slot="table-caption"
-      className={cn("mt-4 text-sm text-muted-foreground", className)}
-      {...props}
-    />
+    <td data-slot="table-chevron" className={cn("w-8 pr-3 text-muted-foreground", className)} aria-hidden>
+      <ChevronRight className="ml-auto size-4" />
+    </td>
   )
 }
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
+/** The single row of an empty table: "No X yet." and the action that adds the first one. */
+function TableEmpty({ colSpan, action, children, className }: { colSpan: number; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
+  return (
+    <tr data-slot="table-empty">
+      <td colSpan={colSpan} className={cn("px-4 py-6 text-muted-foreground", className)}>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <span>{children}</span>
+          {action}
+        </div>
+      </td>
+    </tr>
+  )
 }
+
+function TableCaption({ className, ...props }: React.ComponentProps<"caption">) {
+  return <caption data-slot="table-caption" className={cn("type-meta px-4 py-3 text-left text-muted-foreground", className)} {...props} />
+}
+
+export { Table, TableHeader, TableBody, TableFoot, TableFoot as TableFooter, TableHead, TableRow, TableCell, TableLink, TableChevron, TableEmpty, TableCaption }

@@ -1,25 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Host_Grotesk, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import { MotionProvider } from "@/components/viz/motion-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-/**
- * Archivo: a grotesque with a width axis. Body text runs at normal width; headings are set wider,
- * like the lettering in a drawing's title block. One family, two widths.
- */
-const archivo = Archivo({
-  variable: "--font-archivo",
+/** Host Grotesk: the one sans, for interface and display. Weights 400, 500 and 600 are the ones in use. */
+const host = Host_Grotesk({
+  variable: "--font-host",
   subsets: ["latin"],
-  axes: ["wdth"],
 });
 
+/** IBM Plex Mono: amounts in tables, IDs, hashes, clause references. */
 const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
 });
 
+/** Newsreader: only for words quoted from a contract or a statutory form. */
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
@@ -37,7 +35,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#152332",
+  themeColor: "#fafbfc",
   width: "device-width",
   initialScale: 1,
 };
@@ -46,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${host.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

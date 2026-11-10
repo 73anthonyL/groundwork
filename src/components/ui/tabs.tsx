@@ -1,81 +1,58 @@
 "use client"
 
-import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
-import { cva, type VariantProps } from "class-variance-authority"
+/**
+ * Tabs: links, not buttons. The address decides which tab is current, so a tab can be opened in a
+ * new window, shared and reloaded.
+ *
+ *   <Tabs label="Project sections" items={[
+ *     { href: `/gc/projects/${id}`, label: "Overview" },
+ *     { href: `/gc/projects/${id}/pay-apps`, label: "Pay apps", count: 3 },
+ *   ]} />
+ *
+ * Props: `items` ({ href, label, count? }[]), `label` (names the nav for screen readers),
+ * `current?` (an href, to override the address match), `className?`.
+ * The current tab is the item whose href is the longest prefix of the path; it gets aria-current="page".
+ */
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { cn } from "cn"
 
-function Tabs({
-  className,
-  orientation = "horizontal",
-  ...props
-}: TabsPrimitive.Root.Props) {
-  return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      data-orientation={orientation}
-      className={cn(
-        "group/tabs flex gap-2 data-horizontal:flex-col",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+export type TabItem = { href: string; label: string; count?: number }
 
-const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none",
-  {
-    variants: {
-      variant: {
-        default: "bg-muted",
-        line: "gap-1 bg-transparent",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
+/** The href from `hrefs` that best matches `path`: exact, or the longest one that is a path prefix. */
+export function matchHref(path: string, hrefs: string[]): string | undefined {
+  let best: string | undefined
+  for (const h of hrefs) {
+    const clean = h.split(/[?#]/)[0]
+    if (path === clean || path.startsWith(`${clean}/`)) if (!best || clean.length > best.split(/[?#]/)[0].length) best = h
   }
-)
+  return best
+}
 
-function TabsList({
-  className,
-  variant = "default",
-  ...props
-}: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
+function Tabs({ items, label = "Sections", current, className }: { items: TabItem[]; label?: string; current?: string; className?: string }) {
+  const path = usePathname()
+  const active = current ?? matchHref(path, items.map((t) => t.href))
   return (
-    <TabsPrimitive.List
-      data-slot="tabs-list"
-      data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
-      {...props}
-    />
+    <nav data-slot="tabs" aria-label={label} className={cn("flex gap-4 overflow-x-auto border-b [scrollbar-width:none]", className)}>
+      {items.map((t) => {
+        const on = t.href === active
+        return (
+          <Link
+            key={t.href}
+            href={t.href}
+            aria-current={on ? "page" : undefined}
+            className={cn(
+              "-mb-px flex h-9 shrink-0 items-center gap-1.5 border-b-2 text-sm leading-5 whitespace-nowrap -outline-offset-2",
+              on ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:border-input hover:text-foreground"
+            )}
+          >
+            {t.label}
+            {t.count !== undefined && <span className="num rounded-sm bg-secondary px-1 text-xs leading-4 font-medium text-muted-foreground">{t.count}</span>}
+          </Link>
+        )
+      })}
+    </nav>
   )
 }
 
-function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
-  return (
-    <TabsPrimitive.Tab
-      data-slot="tabs-trigger"
-      className={cn(
-        "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-[color,background-color,box-shadow] group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-        "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground",
-        "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
-  return (
-    <TabsPrimitive.Panel
-      data-slot="tabs-content"
-      className={cn("flex-1 text-sm outline-none", className)}
-      {...props}
-    />
-  )
-}
-
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }
+export { Tabs }
