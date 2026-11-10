@@ -14,7 +14,6 @@ export function RollingNumber({ value, format = "usd", className = "", seconds =
   useEffect(() => {
     if (reduce) {
       from.current = value;
-      setShown(value);
       return;
     }
     const start = performance.now();
@@ -31,7 +30,9 @@ export function RollingNumber({ value, format = "usd", className = "", seconds =
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [value, reduce, seconds]);
-  const text = format === "usd" ? usd0.format(Math.round(shown) / 100) : format === "pct1" ? `${shown.toFixed(1)}%` : Math.round(shown).toLocaleString("en-US");
+  // With reduced motion the figure simply shows its value.
+  const n = reduce ? value : shown;
+  const text = format === "usd" ? usd0.format(Math.round(n) / 100) : format === "pct1" ? `${n.toFixed(1)}%` : Math.round(n).toLocaleString("en-US");
   return (
     <span className={`num ${className}`} suppressHydrationWarning>
       {text}
