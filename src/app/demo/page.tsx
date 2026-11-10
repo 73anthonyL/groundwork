@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAuth } from "@/server/auth";
 import { AppShell } from "@/components/app-shell";
+import { GC_NAV } from "@/components/gc-nav";
 import { Button } from "@/components/ui/button";
 import { CHECKPOINTS } from "@/server/demo/reset";
 import { now } from "@/server/clock";
@@ -25,7 +26,7 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
   const { msg } = await searchParams;
   const outbox = await demoOutbox();
   return (
-    <AppShell session={session} nav={[{ href: "/gc", label: "Projects" }, { href: "/gc/ledger", label: "Ledger" }, { href: "/demo", label: "Demo" }]}>
+    <AppShell session={session} nav={GC_NAV}>
       <h1 className="text-3xl font-semibold">Demo panel</h1>
       <p className="mt-1 text-sm text-muted-foreground">Every checkpoint is rebuilt by running the real actions in order, so every row has a real history.</p>
       {msg && (

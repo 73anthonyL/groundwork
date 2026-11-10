@@ -5,6 +5,7 @@ import { projectOverview } from "@/server/read/project";
 import { latestEval } from "@/server/read/eval";
 import { STATES } from "@/domain/statutes";
 import { AppShell } from "@/components/app-shell";
+import { GC_NAV } from "@/components/gc-nav";
 import { ThemeSwitcher } from "@/components/viz/theme-switcher";
 import { MoneyFlow } from "@/components/viz/money-flow";
 import { ClockBoard } from "@/components/viz/clock-ring";
@@ -44,7 +45,7 @@ export default async function LabPage() {
   const [project] = await listProjects(session.org);
   const o = project ? await projectOverview(session.org, project.id) : null;
   const run = latestEval();
-  const nav = session.org.kind === "gc" ? [{ href: "/gc", label: "Projects" }, { href: "/gc/ledger", label: "Ledger" }, { href: "/statutes", label: "Statutes" }, { href: "/lab", label: "Lab" }, { href: "/demo", label: "Demo" }] : [{ href: "/", label: "Home" }, { href: "/lab", label: "Lab" }];
+  const nav = session.org.kind === "gc" ? GC_NAV : [{ href: "/", label: "Home" }, { href: "/lab", label: "Lab" }];
   const index = [
     ["flow", "Money flow"], ["flow-story", "Money flow, autoplay"], ["clocks", "Clock rings"], ["bars", "Contract bars"], ["balance", "Balance chart"], ["timeline", "Event timeline"], ["states", "State map"], ["eval", "Eval"], ["gap", "Days gap"], ["type", "Type and color"],
   ];

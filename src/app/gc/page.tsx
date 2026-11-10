@@ -4,77 +4,68 @@ import { listProjects } from "@/server/scoped";
 import { projectSummary } from "@/server/read/project";
 import { STATE_LAW } from "@/domain/statutes";
 import { formatCentsCompact } from "@/lib/money";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+/** The contractor's projects, busiest first. A project is a row: its money, and the law it runs under. */
 export default async function GcHome() {
   const { org } = await requireAuth("gc");
   const projects = await listProjects(org);
-  const summaries = await Promise.all(projects.map((p) => projectSummary(org, p.id)));
+  const rows = (await Promise.all(projects.map(async (p) => ({ p, t: (await projectSummary(org, p.id))?.totals ?? null })))).sort((a, b) => (b.t?.billedCents ?? 0) - (a.t?.billedCents ?? 0));
+  const owed = rows.reduce((s, r) => s + (r.t?.inMotionCents ?? 0), 0);
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Projects</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Each project runs under the payment law of its own state.</p>
-      {projects.length === 0 ? (
-        <p className="mt-4 text-muted-foreground">No projects yet. Run the demo reset to seed them.</p>
+      <h1 className="text-[2rem] font-semibold leading-tight">Projects</h1>
+      <p className="mt-1.5 text-sm text-muted-foreground">
+        {rows.length === 0 ? "No projects yet." : owed > 0 ? `${formatCentsCompact(owed)} is owed to subcontractors across ${rows.length} project${rows.length === 1 ? "" : "s"}.` : `Nothing is owed to subcontractors right now.`}
+      </p>
+      {rows.length === 0 ? (
+        <div className="mt-8 rounded-xl bg-card px-6 py-10 text-center shadow-card">
+          <p className="font-medium">No projects yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Load the demo projects from the <Link href="/demo" className="text-link hover:underline">demo panel</Link>.
+          </p>
+        </div>
       ) : (
-        <ul className="mt-6 grid gap-4 lg:grid-cols-2">
-          {projects.map((p, i) => {
-            const t = summaries[i]?.totals;
-            const law = STATE_LAW[p.state];
-            return (
-              <li key={p.id} className="rounded-xl bg-card p-6 shadow-card">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="type-label text-muted-foreground">{law?.name ?? p.state}</div>
-                    <Link href={`/gc/projects/${p.id}`} className="mt-1 block text-xl font-semibold hover:underline">
-                      {p.name}
-                    </Link>
-                    <div className="mt-0.5 truncate text-sm text-muted-foreground">
-                      {p.owner.name} · {p.address}
-                    </div>
-                  </div>
-                  <div className="num shrink-0 text-right text-sm text-muted-foreground">
-                    prime <span className="font-medium text-foreground">{formatCentsCompact(p.primeContractSumCents)}</span>
-                  </div>
-                </div>
-                {t && (
-                  <dl className="num mt-4 grid grid-cols-3 gap-3 border-t pt-3 text-sm">
-                    <div>
-                      <dt className="text-xs text-muted-foreground">Paid to subs</dt>
-                      <dd className="font-semibold text-settled">{formatCentsCompact(t.paidCents)}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs text-muted-foreground">On its way</dt>
-                      <dd className="font-semibold text-money">{formatCentsCompact(t.inMotionCents)}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs text-muted-foreground">Retainage held</dt>
-                      <dd className="font-semibold text-hold">{formatCentsCompact(t.retainageHeldCents)}</dd>
-                    </div>
-                  </dl>
-                )}
-                {law && (
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    {law.promptPay.days === null ? "No private prompt-pay deadline" : `Subs paid within ${law.promptPay.days} days of the owner's payment`}
-                    {law.promptPay.contractCanOverride === false ? ", and the contract cannot lengthen it" : ""}
-                    {" · "}pay-if-paid {law.payIfPaid.status}
-                    {" · "}
-                    <Link href="/statutes" className="underline underline-offset-2">
-                      {law.promptPay.cite || "statute library"}
-                    </Link>
-                  </p>
-                )}
-                <div className="mt-4 flex gap-4 text-sm">
-                  <Link href={`/gc/projects/${p.id}`} className="font-medium underline underline-offset-2">
-                    Board
-                  </Link>
-                  <Link href={`/gc/projects/${p.id}/live`} className="font-medium underline underline-offset-2">
-                    Live view
-                  </Link>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="mt-8 overflow-hidden rounded-xl bg-card shadow-card">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Project</TableHead>
+                <TableHead>Payment Law</TableHead>
+                <TableHead className="text-right">Owed Now</TableHead>
+                <TableHead className="text-right">Paid to Subs</TableHead>
+                <TableHead className="text-right">Retainage Held</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map(({ p, t }) => {
+                const law = STATE_LAW[p.state];
+                return (
+                  <TableRow key={p.id}>
+                    <TableCell className="py-4">
+                      <Link href={`/gc/projects/${p.id}`} className="text-[15px] font-semibold hover:text-link">
+                        {p.name}
+                      </Link>
+                      <div className="text-[13px] text-muted-foreground">
+                        {p.owner.name}, <span className="num">{formatCentsCompact(p.primeContractSumCents)}</span> prime contract
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div>{law?.name ?? p.state}</div>
+                      <div className="text-[13px] text-muted-foreground">
+                        {law?.promptPay.days == null ? "No statutory deadline" : `Pay subs within ${law.promptPay.days} days`}
+                        {law?.promptPay.contractCanOverride === false ? ", fixed by statute" : ""}
+                      </div>
+                    </TableCell>
+                    <TableCell className="num py-4 text-right text-[15px] font-semibold">{t && t.inMotionCents > 0 ? formatCentsCompact(t.inMotionCents) : <span className="font-normal text-muted-foreground">none</span>}</TableCell>
+                    <TableCell className="num py-4 text-right">{formatCentsCompact(t?.paidCents ?? 0)}</TableCell>
+                    <TableCell className="num py-4 text-right">{formatCentsCompact(t?.retainageHeldCents ?? 0)}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   );
