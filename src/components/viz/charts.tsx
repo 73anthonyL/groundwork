@@ -198,9 +198,9 @@ export function AblationChart({ run }: { run: EvalRun }) {
     <figure>
       <motion.ol variants={list.parent} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-40px" }} className="space-y-3">
         {run.layers.map((l, i) => (
-          <motion.li key={l.id} variants={list.row} className="grid grid-cols-[minmax(0,13rem)_1fr_auto] items-center gap-3 text-sm">
+          <motion.li key={l.id} variants={list.row} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 text-sm sm:grid-cols-[minmax(0,13rem)_1fr_auto]">
             <span className={i === run.layers.length - 1 ? "font-medium" : "text-muted-foreground"}>{l.label}</span>
-            <span className="h-6 overflow-hidden rounded-sm bg-muted">
+            <span className="order-last col-span-2 h-6 overflow-hidden rounded-sm bg-muted sm:order-none sm:col-span-1">
               <motion.span className="block h-full rounded-sm" style={{ background: i === run.layers.length - 1 ? "var(--flow-paid)" : "var(--destructive)", opacity: i === run.layers.length - 1 ? 1 : 0.75 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(1.5, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.15 + i * 0.12 }} />
             </span>
             <span className="num w-28 text-right">

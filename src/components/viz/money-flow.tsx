@@ -159,7 +159,9 @@ export function MoneyFlow({
 
   return (
     <figure className="min-w-0">
-      <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
+      {/* On a phone the diagram keeps a readable width and scrolls sideways. */}
+      <div className="-mx-1 overflow-x-auto px-1">
+      <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full min-w-[640px] overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
         <AnimatePresence>
           {ribbons.map((r) => (
             <motion.path
@@ -201,6 +203,7 @@ export function MoneyFlow({
           );
         })}
       </svg>
+      </div>
 
       <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <ul className="flex flex-wrap gap-x-5 gap-y-1 text-xs">
