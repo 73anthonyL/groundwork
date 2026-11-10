@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { Wordmark } from "./wordmark";
+import { NavLinks } from "./nav-links";
 import { signOut } from "@/app/sign-in/actions";
 import type { Session } from "@/server/auth";
-import { Button } from "@/components/ui/button";
 
 const KIND_LABEL: Record<Session["org"]["kind"], string> = {
   gc: "General contractor",
@@ -10,6 +9,10 @@ const KIND_LABEL: Record<Session["org"]["kind"], string> = {
   owner: "Owner",
 };
 
+/**
+ * The frame every signed-in page sits in: a thin bar that stays put and stays quiet, so the page's
+ * own content is the first thing read. The bar is the only translucent surface in the app.
+ */
 export function AppShell({
   session,
   nav,
@@ -21,45 +24,29 @@ export function AppShell({
   children: React.ReactNode;
   width?: "wide" | "narrow";
 }) {
+  const inner = width === "wide" ? "max-w-6xl" : "max-w-xl";
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="border-b border-border bg-card">
-        <div
-          className={`mx-auto flex h-14 items-center justify-between gap-6 px-4 sm:px-6 ${
-            width === "wide" ? "max-w-7xl" : "max-w-xl"
-          }`}
-        >
-          <div className="flex items-center gap-8">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl backdrop-saturate-150">
+        <div className={`mx-auto flex h-12 items-center justify-between gap-6 px-4 sm:px-6 ${inner}`}>
+          <div className="flex min-w-0 items-center gap-7">
             <Wordmark href={nav?.[0]?.href ?? "/"} />
-            {nav && (
-              <nav className={`items-center gap-5 text-sm text-muted-foreground ${width === "wide" ? "hidden sm:flex" : "hidden"}`} aria-label="Primary">
-                {nav.map((n) => (
-                  <Link key={n.href} href={n.href} className="hover:text-foreground">
-                    {n.label}
-                  </Link>
-                ))}
-              </nav>
-            )}
+            {nav && nav.length > 1 && <NavLinks nav={nav} className={width === "wide" ? "hidden sm:flex" : "hidden"} />}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right leading-tight">
-              <div className="text-sm font-medium">{session.user.name}</div>
-              <div className="hidden text-xs text-muted-foreground sm:block">
-                {session.org.name} · {KIND_LABEL[session.org.kind]}
-              </div>
-              <div className="text-xs text-muted-foreground sm:hidden">{session.org.name}</div>
-            </div>
+          <div className="flex shrink-0 items-center gap-3 text-[13px]">
+            <span className="hidden text-muted-foreground md:inline">
+              {session.org.name}, {KIND_LABEL[session.org.kind].toLowerCase()}
+            </span>
+            <span className="font-medium">{session.user.name}</span>
             <form action={signOut}>
-              <Button type="submit" variant="outline" size="sm">
+              <button type="submit" className="rounded-md px-2 py-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                 Sign out
-              </Button>
+              </button>
             </form>
           </div>
         </div>
       </header>
-      <main className={`mx-auto w-full flex-1 px-4 py-6 sm:px-6 sm:py-8 ${width === "wide" ? "max-w-7xl" : "max-w-xl"}`}>
-        {children}
-      </main>
+      <main className={`mx-auto w-full flex-1 px-4 py-8 sm:px-6 sm:py-10 ${inner}`}>{children}</main>
     </div>
   );
 }

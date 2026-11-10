@@ -34,7 +34,7 @@ export default async function LedgerPage() {
           </div>
         ))}
       </dl>
-      <div className="mt-6 overflow-hidden rounded-md border bg-card">
+      <div className="mt-6 overflow-hidden rounded-xl bg-card shadow-card">
         <Table>
           <TableHeader>
             <TableRow>

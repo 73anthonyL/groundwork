@@ -69,7 +69,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
         </form>
       )}
       {msg && (
-        <p role="status" className="mt-3 rounded-md border bg-card px-3 py-2 text-sm">
+        <p role="status" className="mt-3 rounded-xl bg-card shadow-card px-3 py-2 text-sm">
           {decodeURIComponent(msg)}
         </p>
       )}
@@ -92,7 +92,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
         <h2 id="sov-heading" className="text-lg font-semibold">
           Schedule of values
         </h2>
-        <div className="mt-3 max-w-xl overflow-hidden rounded-md border bg-card">
+        <div className="mt-3 max-w-xl overflow-hidden rounded-xl bg-card shadow-card">
           <Table>
             <TableHeader>
               <TableRow>

@@ -29,7 +29,7 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
       <h1 className="text-3xl font-semibold">Demo panel</h1>
       <p className="mt-1 text-sm text-muted-foreground">Every checkpoint is rebuilt by running the real actions in order, so every row has a real history.</p>
       {msg && (
-        <p role="status" className="mt-3 rounded-md border bg-card px-3 py-2 text-sm">
+        <p role="status" className="mt-3 rounded-xl bg-card shadow-card px-3 py-2 text-sm">
           {decodeURIComponent(msg)}
         </p>
       )}
@@ -52,7 +52,7 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
         </h2>
         <ul className="mt-3 grid gap-3 sm:grid-cols-2">
           {CHECKPOINTS.map((c) => (
-            <li key={c} className="flex items-start justify-between gap-3 rounded-md border bg-card p-4">
+            <li key={c} className="flex items-start justify-between gap-3 rounded-xl bg-card shadow-card p-4">
               <div>
                 <div className="font-mono text-sm font-semibold">{c}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{DESCRIPTIONS[c]}</div>
@@ -71,7 +71,7 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
         <h2 id="ops" className="text-lg font-semibold">
           Bank
         </h2>
-        <form action={settleAllAction} className="mt-3 flex items-center gap-3 rounded-md border bg-card p-4">
+        <form action={settleAllAction} className="mt-3 flex items-center gap-3 rounded-xl bg-card shadow-card p-4">
           <Button type="submit" variant="outline" size="sm">
             Settle every released payment
           </Button>
@@ -86,15 +86,15 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
           Suppliers and sub-subcontractors have no account. Groundwork would email each one a signing link; this demo lists those messages here instead. The party that pays them never sees the link.
         </p>
         {outbox.length === 0 ? (
-          <p className="mt-3 rounded-md border border-dashed bg-card p-4 text-sm text-muted-foreground">No waivers are waiting on a lower-tier signature.</p>
+          <p className="mt-3 rounded-xl border border-dashed bg-transparent p-4 text-sm text-muted-foreground">No waivers are waiting on a lower-tier signature.</p>
         ) : (
-          <ul className="mt-3 divide-y rounded-md border bg-card">
+          <ul className="mt-3 divide-y rounded-xl bg-card shadow-card">
             {outbox.map((m) => (
               <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
                 <span>
                   To <span className="font-medium">{m.to}</span> · {m.form.startsWith("c") ? "sign to release" : "confirm receipt of"} <span className="num font-medium">{formatCents(m.cents)}</span> from {m.from}
                 </span>
-                <Link href={m.href} className="font-medium text-money underline underline-offset-2">
+                <Link href={m.href} className="font-medium text-link hover:underline">
                   Open their link
                 </Link>
               </li>

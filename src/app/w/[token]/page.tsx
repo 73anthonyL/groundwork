@@ -63,7 +63,7 @@ export default async function TokenWaiverPage({ params, searchParams }: { params
         <p className="mt-1 text-sm text-muted-foreground">
           {meta.cite} · {meta.conditional ? "takes effect only when the payment clears" : "confirms payment received"}
         </p>
-        <article className="mt-4 rounded-md border bg-card p-4 font-mono text-[13px] leading-relaxed" aria-label="Waiver text">
+        <article className="mt-4 rounded-xl bg-card shadow-card p-4 font-mono text-[13px] leading-relaxed" aria-label="Waiver text">
           {waiverBody(fields).map((line, i) => (line === "" ? <div key={i} className="h-3" /> : <p key={i} className={/^[A-Z ()0-9.§:·']+$/.test(line) && line.length < 90 ? "font-semibold" : ""}>{line}</p>))}
         </article>
 

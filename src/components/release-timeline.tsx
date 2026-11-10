@@ -55,7 +55,7 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r:
           ? `Signed by ${conditional.signerName} · ${conditional.signedAt ? fmt(conditional.signedAt) : ""}`
           : conditional && signHref
             ? (
-                <a href={signHref(conditional.id)} className="font-medium text-money underline underline-offset-2">
+                <a href={signHref(conditional.id)} className="font-medium text-link hover:underline">
                   Sign to release {formatCents(r.releaseCents)}
                 </a>
               )
@@ -100,7 +100,7 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref }: { r:
       ))}
       {unconditional && unconditional.status !== "signed" && signHref && (
         <li className="relative">
-          <a href={signHref(unconditional.id)} className="text-sm font-medium text-money underline underline-offset-2">
+          <a href={signHref(unconditional.id)} className="text-sm font-medium text-link hover:underline">
             Sign the unconditional release
           </a>
         </li>

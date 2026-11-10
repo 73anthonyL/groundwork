@@ -7,7 +7,7 @@ import { RollingNumber } from "@/components/viz/rolling-number";
 
 export function Panel({ id, title, hint, children, className = "" }: { id: string; title: string; hint?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section aria-labelledby={id} className={`rounded-lg border bg-card p-5 shadow-card ${className}`}>
+    <section aria-labelledby={id} className={`rounded-xl bg-card p-6 shadow-card ${className}`}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 id={id} className="text-base font-semibold">
           {title}

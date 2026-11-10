@@ -27,7 +27,7 @@ export default async function SignWaiverPage({ params }: { params: Promise<{ id:
         {meta.cite} · {meta.conditional ? "takes effect only when the payment clears" : "confirms payment received"}
       </p>
 
-      <div className="num mt-4 rounded-md border bg-card p-4">
+      <div className="num mt-4 rounded-xl bg-card shadow-card p-4">
         <div className="text-xs text-muted-foreground">Amount of this release</div>
         <div className="text-2xl font-semibold">{amount}</div>
         <div className="mt-1 text-xs text-muted-foreground">
@@ -36,7 +36,7 @@ export default async function SignWaiverPage({ params }: { params: Promise<{ id:
         </div>
       </div>
 
-      <article className="mt-4 rounded-md border bg-card p-4 font-mono text-[13px] leading-relaxed" aria-label="Statutory form text">
+      <article className="mt-4 rounded-xl bg-card shadow-card p-4 font-mono text-[13px] leading-relaxed" aria-label="Statutory form text">
         {body.map((line, i) =>
           line === "" ? <div key={i} className="h-3" /> : <p key={i} className={/^[A-Z ()0-9.§]+$/.test(line) && line.length < 80 ? "font-semibold" : ""}>{line}</p>,
         )}

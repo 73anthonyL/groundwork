@@ -133,7 +133,7 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
         </ul>
       </div>
       {!compact && (
-        <aside className="min-w-0 rounded-md border bg-card p-4 shadow-card" aria-live="polite">
+        <aside className="min-w-0 rounded-xl bg-card shadow-card p-4 shadow-card" aria-live="polite">
           <AnimatePresence mode="wait">
             {sel ? (
               <motion.div key={`${sel.state}-${rule.id}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>

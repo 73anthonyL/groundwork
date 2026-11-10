@@ -191,26 +191,34 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
 
 // ─── What each review layer buys ────────────────────────────────────────────
 
-/** The eval ablation: wrong values that would reach the engine unflagged, layer by layer. */
+/** The eval ablation as a small table: under each review policy, how many wrong values slip through and how much a person must read. */
 export function AblationChart({ run }: { run: EvalRun }) {
   const max = Math.max(...run.layers.map((l) => l.silentErrors), 1);
+  const last = run.layers.length - 1;
+  const NAMES = ["Trust the model", "Add the model's own confidence", "Add checking each quote against the PDF", "Add state law and anomaly checks"];
   return (
     <figure>
-      <motion.ol variants={list.parent} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-40px" }} className="space-y-3">
+      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-x-6 text-sm sm:grid-cols-[minmax(0,17rem)_1fr_auto_auto]">
+        <div className="pb-2 text-xs text-muted-foreground">Review policy</div>
+        <div className="hidden pb-2 sm:block" />
+        <div className="pb-2 text-right text-xs text-muted-foreground">Wrong terms unflagged</div>
+        <div className="pb-2 text-right text-xs text-muted-foreground">Terms a person reviews</div>
         {run.layers.map((l, i) => (
-          <motion.li key={l.id} variants={list.row} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 text-sm sm:grid-cols-[minmax(0,13rem)_1fr_auto]">
-            <span className={i === run.layers.length - 1 ? "font-medium" : "text-muted-foreground"}>{l.label}</span>
-            <span className="order-last col-span-2 h-6 overflow-hidden rounded-sm bg-muted sm:order-none sm:col-span-1">
-              <motion.span className="block h-full rounded-sm" style={{ background: i === run.layers.length - 1 ? "var(--flow-paid)" : "var(--destructive)", opacity: i === run.layers.length - 1 ? 1 : 0.75 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(1.5, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.15 + i * 0.12 }} />
-            </span>
-            <span className="num w-28 text-right">
-              <span className="font-semibold">{l.silentErrors}</span> <span className="text-muted-foreground">silent · {l.burden === null ? "0" : Math.round(l.burden * 100)}% reviewed</span>
-            </span>
-          </motion.li>
+          <div key={l.id} className="col-span-full grid grid-cols-subgrid items-center border-t py-3">
+            <div className={i === last ? "font-medium" : ""}>
+              {NAMES[i] ?? l.label}
+              {i === last && <span className="ml-2 text-xs font-normal text-muted-foreground">what Groundwork runs</span>}
+            </div>
+            <div className="hidden h-2.5 overflow-hidden rounded-full bg-muted sm:block">
+              <motion.div className="h-full rounded-full" style={{ background: i === last ? "var(--settled)" : "var(--foreground)", opacity: i === last ? 1 : 0.55 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(2, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.1 + i * 0.08 }} />
+            </div>
+            <div className="num text-right text-base font-semibold">{l.silentErrors}</div>
+            <div className="num text-right text-muted-foreground">{l.burden === null ? "0" : Math.round(l.burden * 100)}%</div>
+          </div>
         ))}
-      </motion.ol>
-      <figcaption className="mt-3 text-xs text-muted-foreground">
-        {run.metrics.contracts} contracts, {run.metrics.fields} fields. A silent error is a wrong value no layer asked a person to look at. The last column is the share of fields a person must review.
+      </div>
+      <figcaption className="mt-3 border-t pt-3 text-xs text-muted-foreground">
+        {run.metrics.contracts} subcontracts, {run.metrics.fields} payment terms, run on Claude Opus 5.5. Each policy adds one check to the one above it.
       </figcaption>
     </figure>
   );

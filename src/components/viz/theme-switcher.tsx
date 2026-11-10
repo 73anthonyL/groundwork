@@ -5,12 +5,13 @@ import { motion } from "motion/react";
 import { spring } from "@/lib/motion";
 
 const THEMES = [
-  { id: "", label: "Concrete", note: "The current look: concrete page, graphite ink, surveyor orange." },
+  { id: "", label: "Paper", note: "The default: white sheets, true ink, blue for actions, color only where it means something." },
+  { id: "concrete", label: "Concrete", note: "The original look: concrete page, graphite ink, surveyor orange." },
   { id: "ink", label: "Ink", note: "Deep green ink on cool off-white, softer corners." },
   { id: "night", label: "Night", note: "Dark surfaces, hairline edges instead of shadows." },
 ];
 const TYPES = [
-  { id: "", label: "Plex", note: "IBM Plex throughout; condensed for headings and figures." },
+  { id: "", label: "Sans", note: "IBM Plex Sans throughout; the serif is reserved for the contract's own words." },
   { id: "serif", label: "Serif figures", note: "A light serif for the page title and the big numbers." },
 ];
 

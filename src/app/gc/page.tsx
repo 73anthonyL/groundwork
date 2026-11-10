@@ -21,7 +21,7 @@ export default async function GcHome() {
             const t = summaries[i]?.totals;
             const law = STATE_LAW[p.state];
             return (
-              <li key={p.id} className="rounded-lg border bg-card p-5 shadow-card">
+              <li key={p.id} className="rounded-xl bg-card p-6 shadow-card">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="type-label text-muted-foreground">{law?.name ?? p.state}</div>

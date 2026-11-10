@@ -22,7 +22,8 @@ const GAP = 14;
 const COLOR: Record<FlowLink["kind"], string> = { paid: "var(--flow-paid)", moving: "var(--flow-moving)", held: "var(--flow-held)", setoff: "var(--flow-setoff)", idle: "var(--flow-idle)" };
 const KIND_LABEL: Record<FlowLink["kind"], string> = { paid: "Paid", moving: "On its way", held: "Retainage held", setoff: "Backcharge kept", idle: "Not yet allocated" };
 /** Text sits on a stroke of the card color, so it stays readable over a ribbon. */
-const HALO = { paintOrder: "stroke", stroke: "var(--card)", strokeWidth: 4, strokeLinejoin: "round" } as const;
+/** The halo takes the color of whatever the chart sits on: set --flow-surface on a parent that is not a card. */
+const HALO = { paintOrder: "stroke", stroke: "var(--flow-surface, var(--card))", strokeWidth: 4, strokeLinejoin: "round" } as const;
 const ORDER: FlowNode["kind"][] = ["owner", "gc", "sub", "lower", "retainage", "backcharge", "unallocated"];
 
 type Laid = { node: FlowNode; x: number; y: number; h: number; value: number };
@@ -148,7 +149,7 @@ export function MoneyFlow({
   const h = Math.max(height, 2 * PAD_Y + tallest * 40);
   const { laid, ribbons } = useMemo(() => layout(flow, at, h), [flow, at, h]);
   if (!flow.events.length) {
-    return <div className="rounded-md border border-dashed bg-card p-8 text-center text-sm text-muted-foreground">No money has moved on this project yet. Record an owner payment to see it flow.</div>;
+    return <div className="rounded-xl border border-dashed bg-transparent p-8 text-center text-sm text-muted-foreground">No money has moved on this project yet. Record an owner payment to see it flow.</div>;
   }
   const current = flow.events[at];
   const totals = (["paid", "moving", "held", "setoff", "idle"] as const)

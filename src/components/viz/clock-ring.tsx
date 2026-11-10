@@ -71,7 +71,7 @@ export function ClockBoard({ clocks, nowIso, empty = "Nothing is on a clock righ
   return (
     <motion.ul variants={list.parent} initial="hidden" animate="show" className="grid gap-3 sm:grid-cols-2">
       {clocks.map((c) => (
-        <motion.li key={c.releaseId} variants={list.row} className="rounded-md border bg-card p-3 shadow-card">
+        <motion.li key={c.releaseId} variants={list.row} className="rounded-xl bg-card shadow-card p-3 shadow-card">
           <ClockRing clock={c} nowIso={nowIso} />
         </motion.li>
       ))}

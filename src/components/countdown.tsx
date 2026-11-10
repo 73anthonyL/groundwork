@@ -34,9 +34,8 @@ export function Countdown({
   const dueText = new Date(due).toLocaleDateString("en-US", { month: "short", day: "numeric" });
   if (settled) {
     return (
-      <span suppressHydrationWarning className="inline-flex items-center gap-1.5 text-xs text-settled">
-        <span aria-hidden className="h-2 w-2 rounded-full bg-settled" />
-        Paid before {dueText}
+      <span suppressHydrationWarning className="text-[13px] text-muted-foreground">
+        Paid ahead of {dueText}
       </span>
     );
   }
@@ -44,9 +43,9 @@ export function Countdown({
     const daysLate = Math.ceil(-ms / 86_400_000);
     const penalty = Math.round((amountCents * 0.02 * daysLate) / 30);
     return (
-      <span suppressHydrationWarning className="inline-flex items-center gap-1.5 text-xs font-medium text-destructive">
-        <span aria-hidden className="h-2 w-2 rounded-full bg-destructive" />
-        {daysLate}d overdue · penalty accruing ≈ ${(penalty / 100).toFixed(2)}
+      <span suppressHydrationWarning className="inline-flex items-center gap-1.5 text-[13px] font-medium text-destructive">
+        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-destructive" />
+        {daysLate}d late, about ${(penalty / 100).toFixed(2)} in penalties so far
       </span>
     );
   }
@@ -55,10 +54,11 @@ export function Countdown({
   const m = Math.floor((ms % 3_600_000) / 60_000);
   const urgent = ms < 48 * 3_600_000;
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${urgent ? "text-hold" : "text-money"}`}>
-      <span aria-hidden className={`h-2 w-2 rounded-full ${urgent ? "bg-hold" : "bg-money"}`} />
+    <span className="inline-flex items-center gap-1.5 text-[13px]">
+      {urgent && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-money" />}
       <span className="num" suppressHydrationWarning>
-        {label} {dueText} · {d > 0 ? `${d}d ${h}h` : `${h}h ${m}m`} left
+        <span className="text-muted-foreground">{label} {dueText}</span>
+        <span className={urgent ? "ml-2 font-medium text-money" : "ml-2"}>{d > 0 ? `${d}d ${h}h` : `${h}h ${m}m`} left</span>
       </span>
     </span>
   );

@@ -60,6 +60,8 @@
   --color-hold-soft: var(--hold-soft);
   --color-ink-muted: var(--muted-foreground);
   --color-surface-sunken: var(--surface-sunken);
+  --color-link: var(--link);
+  --color-link-soft: var(--link-soft);
   --color-stage: var(--stage);
   --color-stage-foreground: var(--stage-foreground);
   --color-stage-muted: var(--stage-muted);
@@ -81,6 +83,84 @@
 }
 
 :root {
+  /*
+    Paper: the default. White sheets on a quiet page, true ink, hairlines instead of boxes.
+    Color is information here, never decoration: blue is something you can act on, orange is a
+    clock running, green has landed, amber is held.
+  */
+  --background: #f6f6f4;
+  --foreground: #1c1c1e;
+  --card: #ffffff;
+  --card-foreground: #1c1c1e;
+  --popover: #ffffff;
+  --popover-foreground: #1c1c1e;
+  --primary: #1c1c1e;
+  --primary-foreground: #ffffff;
+  --secondary: #ececea;
+  --secondary-foreground: #1c1c1e;
+  --muted: #f0f0ee;
+  --muted-foreground: #6a6a6f;
+  --accent: #ececea;
+  --accent-foreground: #1c1c1e;
+  --destructive: #c0271d;
+  --destructive-foreground: #ffffff;
+  --border: rgb(0 0 0 / 0.09);
+  --input: rgb(0 0 0 / 0.2);
+  --ring: #1f4ed8;
+  --surface-sunken: #f1f1ef;
+
+  /* Blueprint blue: links and anything you can act on. */
+  --link: #1f4ed8;
+  --link-soft: #e8eefc;
+
+  --money: #d9541a;                /* a clock running, money on its way */
+  --money-foreground: #ffffff;
+  --money-soft: #fbeade;
+  --settled: #1d7a54;              /* landed */
+  --settled-foreground: #ffffff;
+  --settled-soft: #e2f1e9;
+  --hold: #9a6410;                 /* held or waiting on someone */
+  --hold-foreground: #ffffff;
+  --hold-soft: #f6ecd6;
+
+  --chart-1: #d9541a;
+  --chart-2: #1d7a54;
+  --chart-3: #9a6410;
+  --chart-4: #1c1c1e;
+  --chart-5: #6a6a6f;
+
+  --radius: 0.625rem;
+
+  /* Dark "stage" for full-bleed visual moments. */
+  --stage: #17181a;
+  --stage-foreground: #f4f3ee;
+  --stage-muted: #a1a3a8;
+
+  /* One meaning per color, shared by every chart: where the money is. */
+  --flow-paid: var(--settled);
+  --flow-moving: var(--money);
+  --flow-held: var(--hold);
+  --flow-setoff: #76598c;
+  --flow-idle: #b3b5ba;
+
+  /* Elevation is rare: sheets sit on the page with a hairline; only floating things cast a shadow. */
+  --shadow-card-value: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-float-value: 0 12px 40px rgb(0 0 0 / 0.14), 0 2px 6px rgb(0 0 0 / 0.06);
+
+  --numeral-font: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1c1c1e;
+  --sidebar-primary: #1c1c1e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f0ee;
+  --sidebar-accent-foreground: #1c1c1e;
+  --sidebar-border: rgb(0 0 0 / 0.09);
+  --sidebar-ring: #1f4ed8;
+}
+
+/* Concrete: the original look, kept for comparison in the lab. */
+[data-theme="concrete"] {
   --background: #eceeeb;           /* concrete */
   --foreground: #1b2228;           /* graphite */
   --card: #ffffff;
@@ -146,6 +226,8 @@
   --sidebar-accent-foreground: #1b2228;
   --sidebar-border: #d3d8d2;
   --sidebar-ring: #1b2228;
+  --link: #1b2228;
+  --link-soft: #e1e4df;
 }
 
 /*
@@ -153,6 +235,10 @@
   Every color in the app reads these variables, so a theme is only this block.
 */
 [data-theme="ink"] {
+  --link: #1f6b4a;
+  --link-soft: #e0ede5;
+  --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
+  --numeral-font: var(--font-plex), ui-sans-serif, sans-serif;
   --background: #f3f4f2;
   --foreground: #10261c;
   --card: #ffffff;
@@ -183,6 +269,8 @@
 }
 
 [data-theme="night"] {
+  --link: #8fb0ff;
+  --link-soft: #1b2540;
   --background: #0c0e10;
   --foreground: #eceeeb;
   --card: #16191c;
@@ -232,12 +320,16 @@
 
 /* 11px uppercase mono label: tags, axis labels, eyebrow text. */
 @utility type-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 14px;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  line-height: 16px;
   font-weight: 500;
-  text-transform: uppercase;
+  letter-spacing: 0;
+}
+/* The contract's own words: quoted clauses, waiver text. Serif, like the paper it came from. */
+@utility type-contract {
+  font-family: var(--font-serif);
+  font-size: 1.02em;
+  line-height: 1.5;
 }
 /* The one big figure in a card or hero. */
 @utility type-numeral {
@@ -273,7 +365,15 @@
     font-variant-numeric: lining-nums tabular-nums;
   }
   h1, h2, h3 {
-    @apply font-display tracking-tight;
+    font-family: var(--font-sans);
+    letter-spacing: -0.014em;
+    text-wrap: balance;
+  }
+  h1 {
+    letter-spacing: -0.022em;
+  }
+  p {
+    text-wrap: pretty;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;

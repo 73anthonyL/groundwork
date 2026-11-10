@@ -56,7 +56,7 @@ export function PayAppForm({
         </div>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <div className="rounded-xl bg-card shadow-card">
         <div className="grid grid-cols-[1fr_auto] gap-2 border-b px-3 py-2 text-xs text-muted-foreground">
           <span>Line · scheduled value · billed before</span>
           <span>This period</span>
@@ -87,7 +87,7 @@ export function PayAppForm({
         </ul>
       </div>
 
-      <dl className="num grid gap-2 rounded-md border bg-card p-3 text-sm">
+      <dl className="num grid gap-2 rounded-xl bg-card shadow-card p-3 text-sm">
         <div className="flex justify-between">
           <dt className="text-muted-foreground">Gross this period</dt>
           <dd className="font-medium">{usd(gross)}</dd>
@@ -96,7 +96,7 @@ export function PayAppForm({
           <dt className="text-muted-foreground">
             Retainage withheld
             {expectedRetainage !== null && (
-              <button type="button" onClick={suggestRetainage} className="ml-2 text-xs text-money underline underline-offset-2">
+              <button type="button" onClick={suggestRetainage} className="ml-2 text-xs text-link hover:underline">
                 use contract rate ({retainageBps! / 100}%)
               </button>
             )}
@@ -112,7 +112,7 @@ export function PayAppForm({
       </dl>
 
       {lowerTier.length > 0 && (
-        <fieldset className="rounded-md border bg-card">
+        <fieldset className="rounded-xl bg-card shadow-card">
           <legend className="sr-only">Lower tier</legend>
           <div className="border-b px-3 py-2 text-xs text-muted-foreground">Owed to your suppliers and sub-subcontractors out of this application</div>
           <ul className="divide-y">

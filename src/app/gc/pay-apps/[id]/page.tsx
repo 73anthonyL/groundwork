@@ -64,7 +64,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           <h2 id="lines-heading" className="text-lg font-semibold">
             Continuation sheet
           </h2>
-          <div className="mt-3 overflow-x-auto rounded-md border bg-card">
+          <div className="mt-3 overflow-x-auto rounded-xl bg-card shadow-card">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -96,7 +96,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
               </TableBody>
             </Table>
           </div>
-          <dl className="num mt-4 grid grid-cols-2 gap-x-6 gap-y-2 rounded-md border bg-card p-4 text-sm sm:grid-cols-4">
+          <dl className="num mt-4 grid grid-cols-2 gap-x-6 gap-y-2 rounded-xl bg-card shadow-card p-4 text-sm sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">Previously billed</dt>
               <dd className="font-medium">{formatCents(app.previouslyBilledCents)}</dd>
@@ -131,7 +131,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
               const Icon = c.status === "pass" ? CheckCircle2 : c.status === "fail" ? XCircle : AlertTriangle;
               const tone = c.status === "pass" ? "text-settled" : c.status === "fail" ? "text-destructive" : "text-hold";
               return (
-                <li key={c.id} className={`rounded-md border bg-card p-3 ${c.status === "fail" ? "border-destructive/40" : ""}`}>
+                <li key={c.id} className={`rounded-xl bg-card shadow-card p-3 ${c.status === "fail" ? "border-destructive/40" : ""}`}>
                   <div className="flex items-start gap-2">
                     <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${tone}`} aria-hidden />
                     <div className="min-w-0">
@@ -146,8 +146,8 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           </ul>
 
           {flags.length > 0 && (
-            <div className="mt-5 rounded-md border border-money/30 bg-money-soft/40 p-3">
-              <div className="text-xs font-medium text-money">Proposed by Claude</div>
+            <div className="mt-5 rounded-lg bg-link-soft p-3">
+              <div className="text-xs font-medium text-muted-foreground">Proposed by Claude</div>
               <ul className="mt-2 space-y-2 text-sm">
                 {flags.map((f, i) => (
                   <li key={i}>
@@ -160,7 +160,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           )}
 
           {reviewable && (
-            <form action={reviewPayAppAction} className="mt-5 space-y-3 rounded-md border bg-card p-4">
+            <form action={reviewPayAppAction} className="mt-5 space-y-3 rounded-xl bg-card shadow-card p-4">
               <input type="hidden" name="payAppId" value={app.id} />
               <label className="block text-sm">
                 <span className="text-muted-foreground">Note to {app.contract.sub.name} (optional)</span>

@@ -22,7 +22,7 @@ export function RecordOwnerPayment({
           Record owner payment
         </Button>
       ) : (
-        <form action={action} className="w-full max-w-md rounded-md border bg-card p-4 shadow-sm" aria-label="Record owner payment">
+        <form action={action} className="w-full max-w-md rounded-xl bg-card shadow-card p-4 shadow-sm" aria-label="Record owner payment">
           <input type="hidden" name="projectId" value={projectId} />
           <div className="grid gap-3">
             <div className="grid gap-1.5">

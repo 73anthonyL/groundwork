@@ -72,7 +72,7 @@ export function CompileReview({
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,560px)]">
       <section aria-label="Subcontract PDF" className="min-w-0">
         {documentUrl ? (
-          <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[82vh] w-full rounded-md border bg-card" />
+          <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[82vh] w-full rounded-xl bg-card shadow-card" />
         ) : (
           <p className="text-sm text-muted-foreground">No subcontract uploaded yet.</p>
         )}
@@ -113,7 +113,7 @@ export function CompileReview({
         {compiling === "model" && <Skeletons />}
 
         {!stored && compiling === null && (
-          <div className="mt-4 rounded-md border border-dashed bg-card p-6 text-sm text-muted-foreground">
+          <div className="mt-4 rounded-xl border border-dashed bg-transparent p-6 text-sm text-muted-foreground">
             Claude reads the subcontract once and proposes typed rules with the clause behind each one. Our code verifies every quote against the PDF, applies the statute, and sends anything doubtful to you. Approve once; the engine does the rest.
           </div>
         )}
@@ -138,7 +138,7 @@ export function CompileReview({
                 <h3 id={`g-${g.title}`} className="text-sm font-semibold">
                   {g.title}
                 </h3>
-                <ul className="mt-2 divide-y rounded-md border bg-card">
+                <ul className="mt-2 divide-y rounded-xl bg-card shadow-card">
                   {g.paths.map((p) => (
                     <FieldRow key={p} path={p} extracted={stored.extracted} stored={stored} editable={editable} contractId={contractId} ruleSetId={ruleSet.id} onJump={setPage} />
                   ))}
@@ -155,7 +155,7 @@ export function CompileReview({
                   {stored.extracted.anomalies.map((a, i) => {
                     const ack = stored.anomalyAcks[i];
                     return (
-                      <li key={i} className={`rounded-md border bg-card p-3 text-sm ${ack ? "" : "border-hold/50"}`}>
+                      <li key={i} className={`rounded-xl bg-card shadow-card p-3 text-sm ${ack ? "" : "border-hold/50"}`}>
                         <div className="flex items-start gap-2">
                           <AlertTriangle className={`mt-0.5 h-4 w-4 shrink-0 ${ack ? "text-muted-foreground" : "text-hold"}`} aria-hidden />
                           <div className="min-w-0">
@@ -189,7 +189,7 @@ export function CompileReview({
             )}
 
             {editable && (
-              <form action={approveRuleSetAction} className="sticky bottom-4 rounded-md border bg-card p-3 shadow-md">
+              <form action={approveRuleSetAction} className="sticky bottom-4 rounded-xl bg-card shadow-card p-3 shadow-md">
                 <input type="hidden" name="contractId" value={contractId} />
                 <input type="hidden" name="ruleSetId" value={ruleSet.id} />
                 <div className="flex items-center justify-between gap-3">
@@ -415,7 +415,7 @@ function Skeletons() {
   return (
     <ul className="mt-4 space-y-2" aria-label="Reading the contract">
       {RULE_FIELDS.slice(0, 12).map((p, i) => (
-        <li key={p} className="animate-pulse rounded-md border bg-card p-3" style={{ animationDelay: `${i * 90}ms` }}>
+        <li key={p} className="animate-pulse rounded-xl bg-card shadow-card p-3" style={{ animationDelay: `${i * 90}ms` }}>
           <div className="h-2.5 w-24 rounded bg-muted" />
           <div className="mt-2 h-3.5 w-40 rounded bg-muted" />
           <div className="mt-2 h-2.5 w-full rounded bg-muted/70" />

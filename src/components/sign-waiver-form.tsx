@@ -11,7 +11,7 @@ type SignAction = (prev: SignState, formData: FormData) => Promise<SignState>;
 export function SignWaiverForm({ waiverId, defaultName, defaultTitle, amountLabel, action: signAction = signWaiverAction, token }: { waiverId: string; defaultName: string; defaultTitle: string; amountLabel: string; action?: SignAction; token?: string }) {
   const [state, action, pending] = useActionState<SignState, FormData>(signAction, {});
   return (
-    <form action={action} className="mt-6 grid gap-3 rounded-md border bg-card p-4">
+    <form action={action} className="mt-6 grid gap-3 rounded-xl bg-card shadow-card p-4">
       <input type="hidden" name="waiverId" value={waiverId} />
       {token && <input type="hidden" name="token" value={token} />}
       <div className="grid gap-1.5">

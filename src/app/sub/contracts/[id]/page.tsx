@@ -39,7 +39,7 @@ export default async function SubContractPage({ params, searchParams }: { params
       )}
 
       {msg && (
-        <p role="status" className="mt-4 rounded-md border bg-card px-3 py-2 text-sm">
+        <p role="status" className="mt-4 rounded-xl bg-card shadow-card px-3 py-2 text-sm">
           {decodeURIComponent(msg)}
         </p>
       )}
@@ -53,12 +53,12 @@ export default async function SubContractPage({ params, searchParams }: { params
           const ex = explanations[r.id];
           const stale = ex && ex.status !== r.status;
           return (
-            <article key={r.id} id={`release-${r.id}`} className="rounded-md border bg-card p-4">
+            <article key={r.id} id={`release-${r.id}`} className="rounded-xl bg-card shadow-card p-4">
               <ReleaseTimeline r={r} ownerName={contract.project.owner.name} gcName={contract.project.gc.name} nowIso={nowIso} signHref={(wid) => `/sub/waivers/${wid}/sign`} />
               <div className="mt-4 border-t pt-3">
                 {ex && !stale ? (
                   <div className="text-sm">
-                    <div className="text-xs font-medium text-money">{ex.model === "deterministic" ? "Explained from the ledger" : "Explained by Claude from the ledger"}</div>
+                    <div className="text-xs font-medium text-muted-foreground">{ex.model === "deterministic" ? "Explained from the ledger" : "Explained by Claude from the ledger"}</div>
                     <p className="mt-1">{ex.explanation}</p>
                     <p className="mt-1 text-muted-foreground">{ex.nextStep}</p>
                   </div>
@@ -98,7 +98,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             Submit pay app
           </Link>
         </div>
-        <ul className="mt-3 divide-y rounded-md border bg-card">
+        <ul className="mt-3 divide-y rounded-xl bg-card shadow-card">
           {contract.payApplications.map((p) => (
             <li key={p.id} className="flex items-center justify-between px-4 py-3 text-sm">
               <div>

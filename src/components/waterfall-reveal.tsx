@@ -16,7 +16,7 @@ export function WaterfallReveal({ active, children }: { active: boolean; childre
     <motion.div initial={{ opacity: 0.6, scale: 0.995 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35, ease: "easeOut" }} className="relative">
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left rounded bg-money"
+        className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left rounded bg-link"
         initial={{ scaleX: 0, opacity: 1 }}
         animate={{ scaleX: 1, opacity: 0 }}
         transition={{ scaleX: { duration: 0.6, ease: "easeInOut" }, opacity: { delay: 0.9, duration: 0.4 } }}

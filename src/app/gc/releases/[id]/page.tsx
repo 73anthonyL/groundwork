@@ -67,7 +67,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
       )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-md border bg-card p-5" aria-labelledby="basis-heading">
+        <section className="rounded-xl bg-card shadow-card p-5" aria-labelledby="basis-heading">
           <h2 id="basis-heading" className="text-lg font-semibold">
             Why these numbers
           </h2>
@@ -109,7 +109,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
           )}
         </section>
 
-        <section className="rounded-md border bg-card p-5" aria-labelledby="timeline-heading">
+        <section className="rounded-xl bg-card shadow-card p-5" aria-labelledby="timeline-heading">
           <h2 id="timeline-heading" className="text-lg font-semibold">
             Where it is
           </h2>

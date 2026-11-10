@@ -19,7 +19,7 @@ export const metadata = { title: "Lab" };
 
 function Specimen({ id, name, file, data, children, note }: { id: string; name: string; file: string; data: string; note?: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-20 rounded-lg border bg-card p-5 shadow-card">
+    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-20 rounded-xl bg-card p-6 shadow-card">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b pb-3">
         <h2 id={`${id}-h`} className="text-lg font-semibold">
           {name}

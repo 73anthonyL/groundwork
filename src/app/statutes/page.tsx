@@ -56,7 +56,7 @@ export default function StatutesPage() {
           <h2 id="table-heading" className="text-xl font-semibold">
             All jurisdictions
           </h2>
-          <div className="mt-4 overflow-x-auto rounded-lg border bg-card shadow-card">
+          <div className="mt-4 overflow-x-auto rounded-xl bg-card shadow-card">
             <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="border-b text-xs text-muted-foreground">
                 <tr>

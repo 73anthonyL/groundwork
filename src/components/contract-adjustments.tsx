@@ -21,7 +21,7 @@ const CO_TONE: Record<string, string> = { proposed: "bg-hold-soft text-hold", ap
 
 function Card({ id, title, aside, children }: { id: string; title: string; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={id} className="rounded-md border bg-card">
+    <section aria-labelledby={id} className="rounded-xl bg-card shadow-card">
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-4 py-3">
         <h2 id={id} className="text-base font-semibold">
           {title}
