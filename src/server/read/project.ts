@@ -225,6 +225,7 @@ export type TimelineEntry = {
 };
 
 const TITLES: Record<string, { lane: TimelineEntry["lane"]; title: string }> = {
+  "project.created": { lane: "contract", title: "Project created" },
   "rules.extracted": { lane: "contract", title: "Subcontract read" },
   "rules.field_accepted": { lane: "contract", title: "Flagged field accepted" },
   "rules.field_overridden": { lane: "contract", title: "Field overridden" },

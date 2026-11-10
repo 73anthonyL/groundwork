@@ -2,6 +2,9 @@
  * Baseline seed: parties, the Bayview Clinic TI project, three subcontracts and their schedules of values.
  * Ids are deterministic (uuid v5) so demo URLs survive resets. Idempotent: re-running inserts nothing new.
  * Later demo checkpoints (compiled, intake, paid1, paid2) layer on top via scripts/demo-reset.ts.
+ *
+ * Everything seeded here is the sample workspace: its organizations carry `isDemo`, and so does every
+ * organization later created from inside it. `deleteSampleData` removes exactly that and nothing else.
  */
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -206,7 +209,7 @@ async function seedTexas(db: Db) {
 }
 
 export async function seedBaseline(db: Db) {
-  await db.insert(schema.organizations).values([...SEED.organizations]).onConflictDoNothing();
+  await db.insert(schema.organizations).values(SEED.organizations.map((o) => ({ ...o, isDemo: true }))).onConflictDoNothing();
   await db.insert(schema.users).values([...SEED.users]).onConflictDoNothing();
   await db.insert(schema.projects).values(SEED.project).onConflictDoNothing();
   for (const c of SEED.contracts) {
@@ -270,30 +273,63 @@ export async function attachSeedDocuments(db: Db) {
   }
 }
 
-/** Wipe every table (demo reset). Order does not matter with CASCADE. */
-export async function truncateAll(db: Db) {
-  const tables = [
-    "webhook_inbox",
-    "ledger_entries",
-    "events",
-    "payments",
-    "lien_waivers",
-    "releases",
-    "retention_certifications",
-    "backcharges",
-    "change_orders",
-    "owner_payment_events",
-    "pay_application_lines",
-    "pay_applications",
-    "sov_lines",
-    "rule_sets",
-    "contracts",
-    "documents",
-    "projects",
-    "users",
-    "organizations",
+/**
+ * Remove the sample workspace (demo reset): every organization marked `is_demo` and everything that
+ * hangs off one. Rows that belong to real organizations are never touched.
+ *
+ * What "hangs off" means, table by table:
+ *   projects               its general contractor or its owner is a sample organization
+ *   contracts              on a sample project, or either party is a sample organization
+ *   rule sets, schedule lines, pay applications and their lines, change orders, backcharges,
+ *   retention certifications, releases, lien waivers, payments
+ *                          belong to a sample contract
+ *   owner payment events   on a sample project, or paid under a sample contract
+ *   ledger entries         on a sample project or a sample contract
+ *   events (audit trail)   about a sample organization, project, contract, pay application or release
+ *   documents              uploaded by a sample organization
+ *   invitations, users     into / in a sample organization
+ *   webhook inbox          only deliveries that settled a sample payment; anything else is kept
+ *
+ * Real and sample data never reference each other (a real contractor cannot attach to a sample
+ * organization: see addSubcontract and createProject), so nothing real can dangle. The whole removal
+ * is one transaction: if a foreign key from a real row to a sample row ever did exist, it fails and
+ * leaves the database exactly as it was rather than deleting anything real.
+ */
+export async function deleteSampleData(db: Db) {
+  const ORGS = `SELECT id FROM organizations WHERE is_demo`;
+  const PROJECTS = `SELECT id FROM projects WHERE gc_org_id IN (${ORGS}) OR owner_org_id IN (${ORGS})`;
+  const CONTRACTS = `SELECT id FROM contracts WHERE project_id IN (${PROJECTS}) OR gc_org_id IN (${ORGS}) OR sub_org_id IN (${ORGS})`;
+  const PAY_APPS = `SELECT id FROM pay_applications WHERE contract_id IN (${CONTRACTS})`;
+  const RELEASES = `SELECT id FROM releases WHERE contract_id IN (${CONTRACTS})`;
+  const USERS = `SELECT id FROM users WHERE org_id IN (${ORGS})`;
+  // Children before parents; every statement re-reads the sets above, so they must still exist when it runs.
+  const statements = [
+    `DELETE FROM ledger_entries WHERE project_id IN (${PROJECTS}) OR contract_id IN (${CONTRACTS})`,
+    `DELETE FROM events WHERE aggregate_id IN (${ORGS}) OR aggregate_id IN (${PROJECTS}) OR aggregate_id IN (${CONTRACTS}) OR aggregate_id IN (${PAY_APPS}) OR aggregate_id IN (${RELEASES})`,
+    `DELETE FROM webhook_inbox w USING payments p WHERE p.release_id IN (${RELEASES}) AND (w.external_event_id = 'sim-evt-' || p.id::text OR w.payload->>'paymentId' = p.id::text OR (w.rail = p.rail AND w.payload#>>'{object,id}' = p.external_bill_id))`,
+    `DELETE FROM payments WHERE release_id IN (${RELEASES})`,
+    `DELETE FROM lien_waivers WHERE contract_id IN (${CONTRACTS}) OR release_id IN (${RELEASES})`,
+    // Releases and funding events point at each other one hop down; cut that link first.
+    `UPDATE owner_payment_events SET parent_release_id = NULL WHERE parent_release_id IN (${RELEASES})`,
+    `DELETE FROM releases WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM owner_payment_events WHERE project_id IN (${PROJECTS}) OR payer_contract_id IN (${CONTRACTS})`,
+    `DELETE FROM retention_certifications WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM backcharges WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM change_orders WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM pay_application_lines WHERE pay_application_id IN (${PAY_APPS})`,
+    `DELETE FROM pay_applications WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM sov_lines WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM rule_sets WHERE contract_id IN (${CONTRACTS})`,
+    `DELETE FROM contracts WHERE id IN (${CONTRACTS})`,
+    `DELETE FROM documents WHERE org_id IN (${ORGS})`,
+    `DELETE FROM projects WHERE id IN (${PROJECTS})`,
+    `DELETE FROM invitations WHERE org_id IN (${ORGS}) OR invited_by_user_id IN (${USERS})`,
+    `DELETE FROM users WHERE org_id IN (${ORGS})`,
+    `DELETE FROM organizations WHERE is_demo`,
   ];
-  await db.execute(sql.raw(`TRUNCATE TABLE ${tables.map((t) => `"${t}"`).join(", ")} CASCADE`));
+  await db.transaction(async (tx) => {
+    for (const s of statements) await tx.execute(sql.raw(s));
+  });
 }
 
 if (process.argv[1]?.endsWith("seed.ts")) {

@@ -8,10 +8,11 @@
  */
 import { and, desc, eq, inArray, isNull, sql, type SQL } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
-import type { Organization } from "@/db/schema";
+import type { Organization, PublicUser } from "@/db/schema";
 import { backchargeBalance, retentionPosition } from "@/server/actions/adjustments";
 import { listLowerTier } from "@/server/actions/lower-tier";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
+import { invitationPath, invitationStatus, type InvitationStatus } from "@/server/actions/invitations";
 
 const { contracts, projects, documents, lienWaivers, ruleSets, sovLines, payApplications, releases } = schema;
 
@@ -298,12 +299,74 @@ export async function getDownstream(org: Organization, releaseId: string) {
  */
 export async function demoOutbox() {
   const db = await getDb();
+  // Sample workspace only: a real claimant's signing link is theirs alone.
+  const sample = db
+    .select({ id: contracts.id })
+    .from(contracts)
+    .innerJoin(schema.organizations, eq(contracts.gcOrgId, schema.organizations.id))
+    .where(eq(schema.organizations.isDemo, true));
   const rows = await db.query.lienWaivers.findMany({
-    where: and(eq(lienWaivers.status, "sent"), sql`${lienWaivers.signToken} is not null`),
+    where: and(eq(lienWaivers.status, "sent"), sql`${lienWaivers.signToken} is not null`, inArray(lienWaivers.contractId, sample)),
     with: { release: { with: { contract: { with: { sub: true, payer: true } } } } },
     orderBy: [desc(lienWaivers.createdAt)],
   });
   return rows.map((w) => ({ id: w.id, to: w.release.contract.sub.name, from: w.release.contract.payer.name, cents: w.release.releaseCents, form: w.form, href: `/w/${w.signToken}` }));
+}
+
+// ─── People and invitations ─────────────────────────────────────────────────
+
+/** The people in the caller's own company, oldest first. `hasPassword` is false for a placeholder who has not accepted an invitation. */
+export async function listMembers(org: Organization): Promise<(PublicUser & { hasPassword: boolean })[]> {
+  const db = await getDb();
+  const rows = await db.query.users.findMany({ where: eq(schema.users.orgId, org.id), orderBy: [schema.users.createdAt, schema.users.name] });
+  return rows.map(({ passwordHash, ...u }) => ({ ...u, hasPassword: passwordHash !== null }));
+}
+
+export type InvitationRow = {
+  id: string;
+  email: string;
+  name: string | null;
+  role: PublicUser["role"];
+  status: InvitationStatus;
+  /** The company the invitee joins: the caller's own, one of its subcontractors, or one of its owners. */
+  org: { id: string; name: string; kind: Organization["kind"] };
+  invitedBy: { id: string; name: string };
+  createdAt: Date;
+  expiresAt: Date;
+  acceptedAt: Date | null;
+  /** Path of the accept page, to turn into a link and copy. Null once the invitation is used or expired. */
+  path: string | null;
+};
+
+/**
+ * Invitations sent by people in the caller's company, newest first, with the link for each one that
+ * is still open. There is no email service, so this list is how an invitation is delivered: the
+ * inviter copies the link. Invitations another company sent are not listed, even into this company.
+ */
+export async function listInvitations(org: Organization): Promise<InvitationRow[]> {
+  const db = await getDb();
+  const senders = db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.orgId, org.id));
+  const rows = await db.query.invitations.findMany({
+    where: inArray(schema.invitations.invitedByUserId, senders),
+    with: { org: true, invitedBy: { columns: { id: true, name: true } } },
+    orderBy: [desc(schema.invitations.createdAt)],
+  });
+  return rows.map((i) => {
+    const status = invitationStatus(i);
+    return {
+      id: i.id,
+      email: i.email,
+      name: i.name,
+      role: i.role,
+      status,
+      org: { id: i.org.id, name: i.org.name, kind: i.org.kind },
+      invitedBy: i.invitedBy,
+      createdAt: i.createdAt,
+      expiresAt: i.expiresAt,
+      acceptedAt: i.acceptedAt,
+      path: status === "pending" ? invitationPath(i.token) : null,
+    };
+  });
 }
 
 /** Account-less access: a waiver by its signing token, with what a claimant needs to see. */

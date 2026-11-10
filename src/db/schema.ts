@@ -77,6 +77,8 @@ export const organizations = pgTable("organizations", {
   slug: text("slug").notNull().unique(),
   licenseNo: text("license_no"),
   city: text("city"),
+  /** True for the seeded sample workspace and everything created inside it. Demo reset removes only these. */
+  isDemo: boolean("is_demo").notNull().default(false),
   createdAt: createdAt(),
 });
 
@@ -91,9 +93,39 @@ export const users = pgTable(
     email: text("email").notNull().unique(),
     title: text("title"),
     role: userRole("role").notNull().default("viewer"),
+    /**
+     * Self-describing scrypt hash (see src/server/passwords.ts). Null for seeded sample personas and
+     * placeholder billing contacts, who cannot sign in with a password. Never select this into anything
+     * that leaves the server: `auth()` strips it, and pages should use `PublicUser`.
+     */
+    passwordHash: text("password_hash"),
     createdAt: createdAt(),
   },
   (t) => [index("users_org_idx").on(t.orgId)],
+);
+
+/** An invitation to join an organization. The token is the credential; it works once and expires. */
+export const invitations = pgTable(
+  "invitations",
+  {
+    id: uuid("id").primaryKey(),
+    /** Unguessable (256 random bits, base64url). Kept readable so the inviter can copy the link; there is no email service. */
+    token: text("token").notNull().unique(),
+    /** The organization the invitee joins. */
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    email: text("email").notNull(),
+    name: text("name"),
+    role: userRole("role").notNull().default("admin"),
+    invitedByUserId: uuid("invited_by_user_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: createdAt(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+  },
+  (t) => [index("invitations_org_idx").on(t.orgId), index("invitations_invited_by_idx").on(t.invitedByUserId)],
 );
 
 // ─── Projects & contracts ───────────────────────────────────────────────────
@@ -524,6 +556,11 @@ export const usersRelations = relations(users, ({ one }) => ({
   org: one(organizations, { fields: [users.orgId], references: [organizations.id] }),
 }));
 
+export const invitationsRelations = relations(invitations, ({ one }) => ({
+  org: one(organizations, { fields: [invitations.orgId], references: [organizations.id] }),
+  invitedBy: one(users, { fields: [invitations.invitedByUserId], references: [users.id] }),
+}));
+
 export const projectsRelations = relations(projects, ({ one, many }) => ({
   gc: one(organizations, { fields: [projects.gcOrgId], references: [organizations.id], relationName: "project_gc" }),
   owner: one(organizations, {
@@ -619,6 +656,9 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
 
 export type Organization = typeof organizations.$inferSelect;
 export type User = typeof users.$inferSelect;
+/** A user row without its password hash: the only user shape that should reach a page. */
+export type PublicUser = Omit<User, "passwordHash">;
+export type Invitation = typeof invitations.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type Contract = typeof contracts.$inferSelect;
 export type Document = typeof documents.$inferSelect;

@@ -1,19 +1,26 @@
 /**
- * Persona sessions.
+ * Sessions.
  *
- * Users are seeded; signing in picks a persona. The cookie is an HMAC-signed JWT so a client cannot
- * forge another persona without SESSION_SECRET. Authorization never trusts the cookie alone: every
- * query goes through org-scoped helpers in ./scoped.ts.
+ * Two ways in, one cookie:
+ *   - Real accounts sign in with an email and password. The page calls `verifyCredentials` (or
+ *     `signUp` / `acceptInvitation`) from src/server/actions and then `createSession(userId)`.
+ *   - The sample workspace is entered by picking one of its seeded people, who have no password:
+ *     `listSamplePersonas()` and `createSampleSession(userId)`, which refuses anyone outside it.
  *
- * Production swap path: replace createSession/auth with an IdP (Clerk/WorkOS) and keep scoped.ts as is.
+ * `createSession` trusts its caller: only call it with a user id that one of the functions above
+ * has just returned, never with an id taken from a form.
+ *
+ * The cookie is an HMAC-signed JWT so a client cannot forge another user without SESSION_SECRET.
+ * Authorization never trusts the cookie alone: every query goes through org-scoped helpers in
+ * ./scoped.ts. The session never carries the password hash.
  */
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SignJWT, jwtVerify } from "jose";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
-import type { Organization, User } from "@/db/schema";
+import type { Organization, PublicUser } from "@/db/schema";
 
 const COOKIE = "gw_session";
 
@@ -24,7 +31,18 @@ function secret() {
 }
 
 export type OrgKind = Organization["kind"];
-export type Session = { user: User; org: Organization };
+export type Session = { user: PublicUser; org: Organization };
+
+/** Every user column except the password hash. */
+const publicUser = {
+  id: schema.users.id,
+  orgId: schema.users.orgId,
+  name: schema.users.name,
+  email: schema.users.email,
+  title: schema.users.title,
+  role: schema.users.role,
+  createdAt: schema.users.createdAt,
+};
 
 export async function createSession(userId: string) {
   const jwt = await new SignJWT({})
@@ -46,7 +64,7 @@ export async function clearSession() {
   (await cookies()).delete(COOKIE);
 }
 
-/** Current persona, memoized per request. Null when signed out or the user no longer exists. */
+/** Current user and their company, memoized per request. Null when signed out or the user no longer exists. */
 export const auth = cache(async (): Promise<Session | null> => {
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
@@ -60,13 +78,47 @@ export const auth = cache(async (): Promise<Session | null> => {
   if (!userId) return null;
   const db = await getDb();
   const rows = await db
-    .select({ user: schema.users, org: schema.organizations })
+    .select({ user: publicUser, org: schema.organizations })
     .from(schema.users)
     .innerJoin(schema.organizations, eq(schema.users.orgId, schema.organizations.id))
     .where(eq(schema.users.id, userId))
     .limit(1);
   return rows[0] ?? null;
 });
+
+/** True when the organization is part of the seeded sample workspace, which a demo reset rebuilds. */
+export function isSampleWorkspace(org: Pick<Organization, "isDemo">): boolean {
+  return org.isDemo;
+}
+
+/** The people of the sample workspace, for the "explore the sample" picker. Real accounts are never listed. */
+export async function listSamplePersonas(): Promise<Session[]> {
+  const db = await getDb();
+  return db
+    .select({ user: publicUser, org: schema.organizations })
+    .from(schema.users)
+    .innerJoin(schema.organizations, eq(schema.users.orgId, schema.organizations.id))
+    .where(eq(schema.organizations.isDemo, true))
+    .orderBy(schema.organizations.kind, schema.users.createdAt, schema.users.name);
+}
+
+/**
+ * Password-less sign-in, for sample personas only. Returns the session's user and company, or null
+ * (and sets no cookie) when the id is not a person in the sample workspace.
+ */
+export async function createSampleSession(userId: string): Promise<Session | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(userId)) return null;
+  const db = await getDb();
+  const [row] = await db
+    .select({ user: publicUser, org: schema.organizations })
+    .from(schema.users)
+    .innerJoin(schema.organizations, eq(schema.users.orgId, schema.organizations.id))
+    .where(and(eq(schema.users.id, userId), eq(schema.organizations.isDemo, true)))
+    .limit(1);
+  if (!row) return null;
+  await createSession(row.user.id);
+  return row;
+}
 
 export function homeFor(kind: OrgKind): string {
   switch (kind) {
@@ -79,7 +131,7 @@ export function homeFor(kind: OrgKind): string {
   }
 }
 
-/** Redirects to sign-in when signed out, and to the persona's home when the org kind does not match. */
+/** Redirects to sign-in when signed out, and to the user's home when the org kind does not match. */
 export async function requireAuth(kind?: OrgKind | OrgKind[]): Promise<Session> {
   const session = await auth();
   if (!session) redirect("/sign-in");

@@ -44,7 +44,8 @@ export async function addLowerTierParty(input: {
     const id = input.id ?? randomUUID();
     const orgId = randomUUID();
     const slug = `${input.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${orgId.slice(0, 6)}`;
-    await tx.insert(schema.organizations).values({ id: orgId, kind: "sub", name: input.name.trim(), slug });
+    // A party added inside the sample workspace belongs to it, so a demo reset removes it too.
+    await tx.insert(schema.organizations).values({ id: orgId, kind: "sub", name: input.name.trim(), slug, isDemo: parent.sub.isDemo });
     const extracted = manualRuleSet({
       payer: parent.sub.name,
       payee: input.name.trim(),

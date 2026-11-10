@@ -12,12 +12,15 @@
  *             backcharge set off and the supplier's share planned, Ironline's release waiting on its
  *             supplier's waiver, and half of Ironline's retainage certified and waiting on the owner
  * Runs inside the app process so the embedded PGlite database is never opened by two processes at once.
+ *
+ * A reset rebuilds the sample workspace only. Real companies, their people, projects, contracts,
+ * documents, events and ledger are left exactly as they were (see deleteSampleData in src/db/seed.ts).
  */
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { and, eq } from "drizzle-orm";
 import { getDb, schema, type Db } from "@/db/client";
-import { ID, SEED, TEXAS, seedBaseline, truncateAll } from "@/db/seed";
+import { ID, SEED, TEXAS, deleteSampleData, seedBaseline } from "@/db/seed";
 import type { ExtractedRuleSet } from "@/domain/rules/schema";
 import { ruleSetFromSpec, type ContractSpec } from "@/domain/rules/from-spec";
 import { stableId } from "@/lib/ids";
@@ -250,7 +253,7 @@ async function applyCloseout(db: Db) {
 export async function resetTo(checkpoint: Checkpoint): Promise<{ checkpoint: Checkpoint; ms: number }> {
   const db = await getDb();
   const t0 = Date.now();
-  await truncateAll(db);
+  await deleteSampleData(db);
   await seedBaseline(db);
   const order = CHECKPOINTS.indexOf(checkpoint);
   if (order >= 1) await applyCompiled(db);
