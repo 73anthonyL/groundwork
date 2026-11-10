@@ -1,0 +1,306 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Harbor Point Construction, Inc.",
+        "evidence": {
+          "quote": "by and between Harbor Point Construction, Inc., a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Harbor Point Construction, Inc. as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Delta Mechanical Systems, LLC",
+        "evidence": {
+          "quote": "and Delta Mechanical Systems, LLC, a California limited liability company",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Delta Mechanical Systems, LLC as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Sacramento Unified School District",
+        "evidence": {
+          "quote": "Sacramento Unified School District (\"Owner\")",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The Recitals define Owner."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Rosemont Elementary Modernization, 9594 Mormon Street, Sacramento, California 95827",
+        "evidence": {
+          "quote": "for construction of the project known as Rosemont Elementary Modernization, located at 9594 Mormon Street, Sacramento, California 95827",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The Recitals define the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California, without regard to its conflict-of-laws",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Section 17.1 is the governing-law clause."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "The parties have agreed in writing, by this Subcontract, that Contractor's payment to Subcontractor is due on a pay-when-paid basis",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 expressly states pay-when-paid and says the provision governs timing only. Section 6.2 ties payment to 7 days after Owner payment."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "within seven (7) days after Contractor receives payment from Owner for that Subcontract Work",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.2 states the 7-day period."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The parties have agreed in writing, by this Subcontract, that Contractor's payment to Subcontractor is due on a pay-when-paid basis",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific period is written in Section 6.2, and Section 6.3 states written agreement."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 1000,
+        "evidence": {
+          "quote": "Contractor shall withhold retention of ten percent (10%) from each progress payment otherwise due to Subcontractor under this Subcontract.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.1 sets the rate at 10%. The 5% figure in the Recitals is Owner's retention against Contractor, not the subcontract rate."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "(a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of retention from Owner for the Subcontract Work",
+        "evidence": {
+          "quote": "both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of retention from Owner for the Subcontract Work.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.3 states both conditions. Section 7.4 adds pre-release document deliveries."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall release retention to Subcontractor within ten (10) days after both of the following have occurred",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.3 states the 10-day period."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "As a condition of each progress payment, Subcontractor shall deliver to Contractor a conditional waiver and release on progress payment covering the amount requested",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.1 requires a conditional progress waiver."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "Within five (5) days after receipt of each progress payment, Subcontractor shall deliver to Contractor an unconditional waiver and release on progress payment",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.2 requires an unconditional waiver after each payment."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor conditional and unconditional waivers and releases from each of its lower-tier subcontractors and material suppliers",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.4 requires lower-tier waivers."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "All waivers and releases furnished under this Subcontract must be in the statutory form prescribed by California Civil Code Sections 8132 through 8138",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.3 requires the statutory forms."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off against any payment due to Subcontractor under this Subcontract the amount of any backcharge for costs incurred by Contractor because of Subcontractor's failure to perform",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.1 grants a backcharge setoff, subject to written notice and 48 hours to cure where practicable."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount sufficient to correct defective or nonconforming Subcontract Work",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 9.2 allows withholding for defective work. Section 9.3 adds withholding for claims and missing payrolls or waivers."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will make no payment for materials or equipment stored on site or off site that have not been incorporated into the Project",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 6.4 expressly excludes payment for stored materials."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "retainage.percent_bps",
+        "description": "Subcontract retention (10%) is double the retention Owner withholds from Contractor under the Prime Contract (5%). Do not use the 5% Recital figure as the subcontract rate. A controller should note the mismatch.",
+        "evidence": {
+          "quote": "Under the Prime Contract, Owner withholds five percent (5%) retention from Contractor on each progress payment.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Subcontract retention (10%) is double the retention Owner withholds from Contractor under the Prime Contract (5%). Do not use the 5% Recital figure as the subcontract rate. A controller should note the mismatch."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release depends on Contractor's receipt of retention from Owner, with no outside date if Owner does not release.",
+        "evidence": {
+          "quote": "(b) Contractor's receipt of retention from Owner for the Subcontract Work.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release depends on Contractor's receipt of retention from Owner, with no outside date if Owner does not release."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Additional preconditions to retention release include a final conditional waiver, lower-tier final waivers, warranties and payroll evidence.",
+        "evidence": {
+          "quote": "Before release of retention, Subcontractor shall furnish a conditional waiver and release on final payment as described in Article 5, together with final lower-tier waivers",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Additional preconditions to retention release include a final conditional waiver, lower-tier final waivers, warranties and payroll evidence."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Contractor may apply retention to any amount owed by Subcontractor, including Article 9 amounts. This is a broad setoff right against retention.",
+        "evidence": {
+          "quote": "Contractor may apply retention to any amount owed by Subcontractor to Contractor under this Subcontract, including amounts described in Article 9.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may apply retention to any amount owed by Subcontractor, including Article 9 amounts. This is a broad setoff right against retention."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Release of amounts withheld for defective work depends on correction to the satisfaction of Contractor, the Architect and the Inspector of Record, which is a discretionary standard.",
+        "evidence": {
+          "quote": "until that Subcontract Work has been corrected to the satisfaction of Contractor, the Architect, and the Inspector of Record.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Release of amounts withheld for defective work depends on correction to the satisfaction of Contractor, the Architect and the Inspector of Record, which is a discretionary standard."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "For Owner-initiated changes, Subcontractor's price adjustment is capped at what Contractor actually receives from Owner. This is a pay-if-paid-type risk shift limited to change orders.",
+        "evidence": {
+          "quote": "Subcontractor's adjustment in price and time will not exceed the amount Contractor actually receives from Owner for that portion of the change attributable to the Subcontract Work.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "For Owner-initiated changes, Subcontractor's price adjustment is capped at what Contractor actually receives from Owner. This is a pay-if-paid-type risk shift limited to change orders."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "On termination for convenience, payment is limited to amounts Contractor recovers from Owner.",
+        "evidence": {
+          "quote": "plus reasonable demobilization costs, to the extent Contractor recovers those amounts from Owner.",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "On termination for convenience, payment is limited to amounts Contractor recovers from Owner."
+        }
+      },
+      {
+        "field": "offsets.joint_check",
+        "description": "The contract does not address payment by joint check.",
+        "evidence": null
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 34745,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 23457,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 4213,
+    "output_tokens_details": {
+      "thinking_tokens": 1008
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:28:35.492Z"
+}

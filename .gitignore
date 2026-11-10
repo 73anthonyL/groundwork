@@ -45,5 +45,6 @@ next-env.d.ts
 
 # eval artifacts
 /evals/results/*.json
+!/evals/results/latest.json
 !.env.example
 /evals/real/contracts/

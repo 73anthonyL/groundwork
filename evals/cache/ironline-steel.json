@@ -1,0 +1,371 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Meridian Builders, Inc.",
+        "evidence": {
+          "quote": "Meridian Builders, Inc., a California corporation, License No. 1083421",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Meridian Builders, Inc. as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Ironline Steel Fabricators, Inc.",
+        "evidence": {
+          "quote": "Ironline Steel Fabricators, Inc., a California corporation, License No. 994817",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Ironline Steel Fabricators, Inc. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Bayview Health",
+        "evidence": {
+          "quote": "The Owner is Bayview Health, a California nonprofit public benefit corporation.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The Owner is stated expressly."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Bayview Clinic Tenant Improvement at 1400 Embarcadero West, Oakland, California 94607",
+        "evidence": {
+          "quote": "The Project is the Bayview Clinic Tenant Improvement at 1400 Embarcadero West, Oakland, California 94607.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The Project is stated expressly."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract shall be governed by the laws of the State of California.",
+        "page": 5,
+        "confidence": "high",
+        "rationale": "Section 11.1 governing-law clause."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Contractor's receipt of payment from Owner fixes the time for payment to Subcontractor and does not condition Contractor's obligation to pay",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.2 expressly states that owner payment fixes timing only and is not a condition, and calls itself a pay-when-paid provision."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor's receipt of the corresponding progress payment from Owner",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Seven days after Contractor's receipt of owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor's receipt of the corresponding progress payment from Owner",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific payment period is written in Section 6.2."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 1000,
+        "evidence": {
+          "quote": "Contractor shall withhold ten percent (10%) of each progress payment as retention.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "10% retention equals 1000 basis points."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": "Upon Substantial Completion of the Subcontract Work, as certified by the Architect, one-half of the accumulated retention is released",
+        "evidence": {
+          "quote": "Upon Substantial Completion of the Subcontract Work, as certified by the Architect, Contractor shall release to Subcontractor one-half of the accumulated retention then held",
+          "page": 3,
+          "confidence": "medium",
+          "rationale": "The 10% withholding rate never steps down. Instead, half of the accumulated retention is released at Substantial Completion, which reduces the retention held. Treating this partial release as the reduction trigger requires interpretation."
+        },
+        "not_found": false
+      },
+      "release_condition": {
+        "value": "Final Completion of the Subcontract Work, acceptance by Owner, and delivery of the closeout documents required by Article 7",
+        "evidence": {
+          "quote": "The balance of retention shall be released upon Final Completion of the Subcontract Work, acceptance by Owner, and delivery of the closeout documents required by Article 7",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 states the conditions for releasing the retention balance. Section 7.1 adds further closeout conditions, including lower-tier releases and surety consent."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "within ten (10) days after Contractor's receipt of final retention from Owner.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Ten days after Contractor receives final retention from Owner. The partial release at Substantial Completion also runs ten days after Contractor receives the corresponding retention."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "With each application for payment, Subcontractor shall furnish a conditional waiver and release upon progress payment, in the form prescribed by California Civil Code Section 8132",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A conditional progress waiver is required with each application."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "together with unconditional waivers and releases upon progress payment, in the form prescribed by California Civil Code Section 8134",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Unconditional waivers covering all prior payments are required with each application."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "from Subcontractor and from each of its sub-subcontractors and suppliers of every tier, covering all prior payments",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Waivers are required from lower tiers of every tier. Section 7.1(c) repeats this requirement for final payment."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "conditional waiver and release upon final payment in the form prescribed by California Civil Code Section 8136",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.4 requires the statutory forms under Civil Code Sections 8132, 8134, 8136 and 8138."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may, at its sole option and without liability to Subcontractor, make any payment under this Subcontract by check payable jointly to Subcontractor and any sub-subcontractor, supplier or laborer",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.6 expressly permits joint checks."
+        },
+        "not_found": false
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may perform the obligation and deduct the reasonable cost, plus ten percent (10%) for overhead, from amounts due Subcontractor.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.8 permits backcharges with a 10% overhead markup after 3 days' notice, and also permits setoff across other contracts."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount reasonably necessary to protect Contractor and Owner from loss on account of defective work not remedied",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.7 permits withholding for defective work, claims, stop payment notices and other grounds."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": true,
+      "evidence": {
+        "quote": "Contractor shall include in progress payments the value of fabricated steel and other materials delivered and suitably stored at the Project site",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "On-site stored materials are payable. Off-site storage is payable only with Contractor's prior written approval, plus a bill of sale, insurance and access."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Cross-contract setoff: Contractor may deduct amounts owed under other, unrelated contracts from payments due on this Subcontract.",
+        "evidence": {
+          "quote": "Contractor may also set off against any amount due under this Subcontract any amount owed by Subcontractor to Contractor under any other contract between them.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Cross-contract setoff: Contractor may deduct amounts owed under other, unrelated contracts from payments due on this Subcontract."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Backcharges carry a 10% overhead markup and require only three days' written notice.",
+        "evidence": {
+          "quote": "If Subcontractor fails to perform any obligation under this Subcontract after three (3) days' written notice",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Backcharges carry a 10% overhead markup and require only three days' written notice."
+        }
+      },
+      {
+        "field": "waivers.conditional_before_progress",
+        "description": "Each payment is conditioned on waivers in a form satisfactory to Contractor. This is a discretionary standard, and it includes unconditional waivers from every lower tier.",
+        "evidence": {
+          "quote": "Receipt of the required waivers and releases, in form satisfactory to Contractor, is a condition of each payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Each payment is conditioned on waivers in a form satisfactory to Contractor. This is a discretionary standard, and it includes unconditional waivers from every lower tier."
+        }
+      },
+      {
+        "field": "retainage.release_days",
+        "description": "Both retention releases are keyed to Contractor's receipt of retention from Owner, and no outside date is stated. Release timing therefore depends on Owner.",
+        "evidence": {
+          "quote": "within ten (10) days after Contractor's receipt of the corresponding retention from Owner.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Both retention releases are keyed to Contractor's receipt of retention from Owner, and no outside date is stated. Release timing therefore depends on Owner."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Final release also requires Owner acceptance and the Article 7 closeout items, including lower-tier releases and surety consent.",
+        "evidence": {
+          "quote": "Final payment of the balance of the Subcontract Sum, including retention, shall be made as provided in Section 6.3 after: (a) Final Completion of the Subcontract Work and its acceptance by Owner and the Architect;",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Final release also requires Owner acceptance and the Article 7 closeout items, including lower-tier releases and surety consent."
+        }
+      },
+      {
+        "field": "retainage.reduction_trigger",
+        "description": "The withholding rate stays at 10% throughout. The reduction is a release of half the accumulated retention at Architect-certified Substantial Completion, not a step-down in rate.",
+        "evidence": {
+          "quote": "Contractor shall release to Subcontractor one-half of the accumulated retention then held",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The withholding rate stays at 10% throughout. The reduction is a release of half the accumulated retention at Architect-certified Substantial Completion, not a step-down in rate."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Although progress payments are pay-when-paid, delay compensation is payable only to the extent Contractor recovers it from Owner. This works as a pay-if-paid condition for delay claims.",
+        "evidence": {
+          "quote": "Subcontractor shall be entitled to additional compensation for such delays only to the extent Contractor recovers that compensation from Owner on Subcontractor's behalf.",
+          "page": 2,
+          "confidence": "high",
+          "rationale": "Although progress payments are pay-when-paid, delay compensation is payable only to the extent Contractor recovers it from Owner. This works as a pay-if-paid condition for delay claims."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "The progress payment amount is the amount approved by Owner and Contractor, so Owner approval governs the amount paid.",
+        "evidence": {
+          "quote": "Each progress payment shall equal the amount approved by Owner and Contractor for the Subcontract Work covered by the application",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The progress payment amount is the amount approved by Owner and Contractor, so Owner approval governs the amount paid."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Payment for off-site stored materials is at Contractor's discretion (prior written approval) and requires title transfer, insurance and access.",
+        "evidence": {
+          "quote": "with Contractor's prior written approval, of fabricated steel stored at Subcontractor's fabrication shop or at a bonded warehouse off the site",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Payment for off-site stored materials is at Contractor's discretion (prior written approval) and requires title transfer, insurance and access."
+        }
+      },
+      {
+        "field": "offsets.joint_check",
+        "description": "Joint checks are at Contractor's sole option and without liability to Subcontractor.",
+        "evidence": {
+          "quote": "Contractor may, at its sole option and without liability to Subcontractor",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Joint checks are at Contractor's sole option and without liability to Subcontractor."
+        }
+      },
+      {
+        "field": "timing.days",
+        "description": "Applications are due by the 25th but must cover work through the end of that month, so they project work not yet performed.",
+        "evidence": {
+          "quote": "no later than the twenty-fifth (25th) day of each month, an application for payment for Subcontract Work performed and materials suitably stored through the end of that month",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Applications are due by the 25th but must cover work through the end of that month, so they project work not yet performed."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Prime Contract terms flow down to Subcontractor and may affect payment terms. The Prime Contract is not included in this document.",
+        "evidence": {
+          "quote": "Subcontractor shall be bound to Contractor by the terms of the Prime Contract",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Prime Contract terms flow down to Subcontractor and may affect payment terms. The Prime Contract is not included in this document."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Acceptance of final payment releases all of Subcontractor's claims except those identified in writing as unsettled.",
+        "evidence": {
+          "quote": "Acceptance of final payment by Subcontractor shall constitute a release of all claims by Subcontractor against Contractor and Owner except those identified in writing as unsettled",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Acceptance of final payment releases all of Subcontractor's claims except those identified in writing as unsettled."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 49410,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 18240,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 6262,
+    "output_tokens_details": {
+      "thinking_tokens": 2227
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:23:28.680Z"
+}

@@ -14,7 +14,9 @@ export type EvalRun = {
 
 export function latestEval(dir = path.resolve("evals/results")): EvalRun | null {
   if (!existsSync(dir)) return null;
-  const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
+  // Timestamped runs sort oldest first; latest.json (the committed copy) is tried last-resort first.
+  const files = readdirSync(dir).filter((f) => f.endsWith(".json") && f !== "latest.json").sort();
+  if (existsSync(path.join(dir, "latest.json"))) files.unshift("latest.json");
   for (const f of files.reverse()) {
     try {
       const raw = JSON.parse(readFileSync(path.join(dir, f), "utf8")) as { at: string; metrics: Metrics; results: ContractResult[] };

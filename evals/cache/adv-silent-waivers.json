@@ -1,0 +1,296 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Harbor Point Construction, Inc.",
+        "evidence": {
+          "quote": "Harbor Point Construction, Inc.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Harbor Point Construction, Inc. as the \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Delta Mechanical Systems, LLC",
+        "evidence": {
+          "quote": "Delta Mechanical Systems, LLC",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The preamble names Delta Mechanical Systems, LLC as the \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Sacramento Unified School District",
+        "evidence": {
+          "quote": "Sacramento Unified School District",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The recitals identify the District as the \"Owner\" under the Prime Contract."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Rosemont Elementary Modernization",
+        "evidence": {
+          "quote": "Rosemont Elementary Modernization",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "The recitals identify the Project by this name."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California, without regard to its conflict of laws principles.",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Paragraph 16.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "The Contractor shall pay the Subcontractor each progress payment within seven (7) days after the Contractor receives payment from the Owner for the Subcontract Work covered by that payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Paragraph 6.3 is titled Pay-When-Paid. It ties the timing of payment to the Owner's payment, and the parties agree that Owner receipt governs timing. No express condition precedent is stated."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "The Contractor shall pay the Subcontractor each progress payment within seven (7) days after the Contractor receives payment from the Owner for the Subcontract Work covered by that payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Paragraph 6.3 states seven (7) days."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The Contractor and the Subcontractor agree in writing, by signing this Subcontract, that the Contractor's receipt of payment from the Owner governs the timing of payment to the Subcontractor under this paragraph.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific period is written into the contract, and the parties expressly agree in writing."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "The Contractor shall withhold retainage of five percent (5%) from each progress payment to the Subcontractor.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Paragraph 7.1 sets 5% retainage, which is 500 bps."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "(a) Final Completion of the Subcontract Work, and (b) the Contractor's receipt of retention from the Owner",
+        "evidence": {
+          "quote": "The Contractor shall pay the retainage withheld from the Subcontractor within ten (10) days after both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) the Contractor's receipt of retention from the Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Paragraph 7.2 requires both conditions to occur before retainage is released."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "The Contractor shall pay the retainage withheld from the Subcontractor within ten (10) days after both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) the Contractor's receipt of retention from the Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Paragraph 7.2 states ten (10) days after both triggers."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "unconditional_after_payment": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "lower_tier_required": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "statutory_form_required": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "The Contractor may set off against any amount due to the Subcontractor the costs the Contractor incurs because of the Subcontractor's failure to perform",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Paragraph 8.1 expressly grants setoff for backcharges, subject to the notice and documentation requirements in 8.2."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "The Contractor may withhold from any payment an amount reasonably sufficient to cover the cost of correcting defective or nonconforming Subcontract Work until the defect is corrected and accepted by the Contractor and the Architect.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Paragraph 8.3 expressly permits withholding for defective work."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "The Contractor will not pay for materials or equipment stored on or off the Project site that have not yet been incorporated into the Subcontract Work.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Paragraph 6.5 expressly states that stored materials are not payable."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "waivers.conditional_before_progress",
+        "description": "The subcontract contains no lien waiver or release requirements of any kind. There is no conditional or unconditional waiver, no lower-tier release, and no statutory form requirement. The controller should confirm how waivers will be collected before relying on payment rules.",
+        "evidence": null
+      },
+      {
+        "field": "timing.type",
+        "description": "Final payment is also routed through the pay-when-paid clause, so its timing depends on the Owner's payment.",
+        "evidence": {
+          "quote": "Final payment, consisting of the unpaid balance of the Subcontract Sum other than retainage, shall be made under paragraph 6.3 after the Subcontractor has achieved Final Completion and delivered all closeout items described in Article 12.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Final payment is also routed through the pay-when-paid clause, so its timing depends on the Owner's payment."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Delay compensation is limited to amounts the Owner actually pays. This shifts the risk of Owner non-payment to the Subcontractor for delay costs.",
+        "evidence": {
+          "quote": "any additional compensation only to the extent the Owner pays the Contractor for that delay on the Subcontractor's behalf.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Delay compensation is limited to amounts the Owner actually pays. This shifts the risk of Owner non-payment to the Subcontractor for delay costs."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Adjustments for changes subject to Owner or DSA approval are capped at the amount the Owner approves.",
+        "evidence": {
+          "quote": "the Subcontractor's adjustment is limited to the amount the Owner approves for the Subcontract Work",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Adjustments for changes subject to Owner or DSA approval are capped at the amount the Owner approves."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retainage release depends on the Contractor receiving retention from the Owner, in addition to Final Completion. Final Completion itself requires acceptance of closeout submittals by the Contractor.",
+        "evidence": {
+          "quote": "The Contractor shall pay the retainage withheld from the Subcontractor within ten (10) days after both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) the Contractor's receipt of retention from the Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retainage release depends on the Contractor receiving retention from the Owner, in addition to Final Completion. Final Completion itself requires acceptance of closeout submittals by the Contractor."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Article 8 withholdings, including backcharges and liquidated damages, may be deducted from retainage before it is released.",
+        "evidence": {
+          "quote": "Any amount the Contractor is entitled to withhold under Article 8 at the time retainage becomes payable may be deducted from the retainage before payment.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Article 8 withholdings, including backcharges and liquidated damages, may be deducted from retainage before it is released."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The setoff right extends to liquidated damages the Owner assesses and allocates to the Subcontractor.",
+        "evidence": {
+          "quote": "supplementation of the Subcontractor's workforce under Article 14, and liquidated damages allocated under paragraph 5.5.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "The setoff right extends to liquidated damages the Owner assesses and allocates to the Subcontractor."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Release of amounts withheld for defective work depends on acceptance by the Contractor and the Architect. This is a discretionary release trigger.",
+        "evidence": {
+          "quote": "until the defect is corrected and accepted by the Contractor and the Architect.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Release of amounts withheld for defective work depends on acceptance by the Contractor and the Architect. This is a discretionary release trigger."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Materials stored on or off site are expressly not payable until installed. Billing for rooftop equipment and other long-lead items must wait until installation.",
+        "evidence": {
+          "quote": "The Subcontractor shall include materials and equipment in its applications for payment only after they have been installed in place.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Materials stored on or off site are expressly not payable until installed. Billing for rooftop equipment and other long-lead items must wait until installation."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 38599,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 25635,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 5019,
+    "output_tokens_details": {
+      "thinking_tokens": 1813
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:30:35.959Z"
+}

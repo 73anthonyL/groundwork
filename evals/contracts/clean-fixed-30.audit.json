@@ -1,0 +1,10 @@
+{
+  "brief_followed": false,
+  "decisive_passage": "Contractor shall pay Subcontractor the amount due on each Approved Application, less Retention under Article 6, within thirty (30) days after Contractor's receipt of the Approved Application. This payment obligation is independent of whether Owner has paid Contractor. Owner's failure or delay in making payment to Contractor shall not extend or excuse Contractor's obligation to pay Subcontractor within this thirty (30) day period.",
+  "problems": [
+    "The retention release condition differs from the brief. The brief's term is 'Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner'. Section 6.2 instead releases Retention within ten (10) days after Final Completion alone and states that 'This release is not conditioned on Contractor's receipt of retention or any other payment from Owner.' The brief contradicts itself here: this term ties release to Owner payment, while the special instruction says not to link payment to Owner payment anywhere. The draft resolved the conflict in favor of the special instruction without the term being changed. The brief needs to be clarified."
+  ],
+  "passed": false,
+  "model": "claude-opus-5-5",
+  "at": "2026-11-10T11:27:18.073Z"
+}

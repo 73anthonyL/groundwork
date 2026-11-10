@@ -1,0 +1,331 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "ELEVEN WESTERN BUILDERS INC., a California Corporation",
+        "evidence": {
+          "quote": "ELEVEN WESTERN BUILDERS INC., a California Corporation (Contractor)",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Contractor is named in the preamble."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "owner": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "project": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      }
+    },
+    "governing_law_state": {
+      "value": null,
+      "evidence": null,
+      "not_found": true
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Partial payments for work performed under this Agreement will be made by Contractor within 10 days after being paid therefore by Owner",
+          "page": 10,
+          "confidence": "medium",
+          "rationale": "Payment is due a stated number of days after Owner pays. There is no express condition precedent. However, the Owner-delinquency clause lets Contractor delay payment while it pursues Owner, and the Prime Contract payment terms govern in a conflict."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 10,
+        "evidence": {
+          "quote": "will be made by Contractor within 10 days after being paid therefore by Owner",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "The clause states 10 days after Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "will be made by Contractor within 10 days after being paid therefore by Owner",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "A specific 10-day period is written in Section 17(b)."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "On completion of the Prime Contract and payment therefore in full by Owner",
+        "evidence": {
+          "quote": "On completion of the Prime Contract and payment therefore in full by Owner, Subcontractor will be paid the remaining amount due Subcontractor under this Agreement.",
+          "page": 11,
+          "confidence": "medium",
+          "rationale": "Retention is not named. The remaining amount due (which includes retained sums) is payable on completion of the Prime Contract and full payment by Owner. Final payment also requires the closeout items in 17(e)."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "(vi) lien releases for the previous payment, executed by all entities who may have mechanic's lien, stop notice or labor and material bond rights against the Project",
+          "page": 10,
+          "confidence": "medium",
+          "rationale": "Each application must include releases for the previous payment. The word 'unconditional' is used only for final payment (17(e)(i)), so the type for progress releases requires interpretation."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Receipt by Contractor of all unconditional lien releases Subcontractor, sub-subcontractors and suppliers;",
+          "page": 11,
+          "confidence": "high",
+          "rationale": "Final payment requires releases from sub-subcontractors and suppliers. Progress applications require releases executed by all entities with lien or bond rights."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor, at its option, may make any payment due hereunder by check made payable jointly to Subcontractor and any of its sub-subcontractors, suppliers and/or material men",
+          "page": 11,
+          "confidence": "high",
+          "rationale": "Section 17(d) expressly permits joint checks."
+        },
+        "not_found": false
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "(d) to reimburse Contractor for any back charges incurred as a result of any act or omission by Subcontractor (or anyone providing any of the work hereunder) and to pay damage to another subcontractor;",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "Section 17(b) permits Contractor to withhold or offset for backcharges."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold , offset against, or on account of subsequently discovered evidence nullify the whole or part of any payment to Subcontractor",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "Section 17(b) permits withholding, including '(b) to remedy any defective work' and for unpaid labor and material claims."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": null,
+      "evidence": null,
+      "not_found": true
+    },
+    "anomalies": [
+      {
+        "field": "timing.type",
+        "description": "If Owner is delinquent, Contractor gets an open-ended 'reasonable time' to pursue Owner before it must pay. This can delay payment beyond the 10-day term and moves Owner non-payment risk toward Subcontractor.",
+        "evidence": {
+          "quote": "To the extent Owner is delinquent in paying amounts to Contractor, Subcontractor agrees that Contractor shall be entitled to a reasonable time to exhaust all remedies available to Contractor to collect amounts due from Owner before Contractor shall be obligated to pay",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "If Owner is delinquent, Contractor gets an open-ended 'reasonable time' to pursue Owner before it must pay. This can delay payment beyond the 10-day term and moves Owner non-payment risk toward Subcontractor."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "The Prime Contract payment terms override this Agreement's payment terms. Section 1 says the opposite: the Agreement supersedes the Prime Contract. The Prime Contract is not attached.",
+        "evidence": {
+          "quote": "In the event of a conflict between the payment terms of the Prime Contract and this Agreement, the payment terms of the Prime Contract shall govern.",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "The Prime Contract payment terms override this Agreement's payment terms. Section 1 says the opposite: the Agreement supersedes the Prime Contract. The Prime Contract is not attached."
+        }
+      },
+      {
+        "field": "retainage.percent_bps",
+        "description": "No fixed retention rate is stated. Retention equals whatever percentage Owner retains under the unattached Prime Contract, so the rate may vary.",
+        "evidence": {
+          "quote": "less the sum of previous payments and less a percentage equal to the percentage retained by Owner",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "No fixed retention rate is stated. Retention equals whatever percentage Owner retains under the unattached Prime Contract, so the rate may vary."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Final payment of the remaining balance requires completion of the entire Prime Contract and Owner's payment in full. This ties release to Owner payment and to other trades' completion.",
+        "evidence": {
+          "quote": "On completion of the Prime Contract and payment therefore in full by Owner, Subcontractor will be paid the remaining amount due Subcontractor under this Agreement.",
+          "page": 11,
+          "confidence": "high",
+          "rationale": "Final payment of the remaining balance requires completion of the entire Prime Contract and Owner's payment in full. This ties release to Owner payment and to other trades' completion."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The setoff right is unusually broad. It reaches obligations under other contracts, including those of Subcontractor's affiliates, parent or subsidiaries, whether or not liquidated.",
+        "evidence": {
+          "quote": "(f) to secure Contractor with respect to any breach or default under any other obligation (whether or not liquidated) of Subcontractor or Subcontractors affiliates, parent company or subsidiaries.",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "The setoff right is unusually broad. It reaches obligations under other contracts, including those of Subcontractor's affiliates, parent or subsidiaries, whether or not liquidated."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Withholding is discretionary. It may be based on Contractor's own determination that the unpaid balance is insufficient, or on any other default.",
+        "evidence": {
+          "quote": "(c) to complete the work if Contractor determines the unpaid balance of the contract price herein is at any time insufficient to pay for the cost of the work then unperformed herein;",
+          "page": 10,
+          "confidence": "high",
+          "rationale": "Withholding is discretionary. It may be based on Contractor's own determination that the unpaid balance is insufficient, or on any other default."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Extra-work compensation is payable only to the extent Owner allows it, and only as and when Owner pays. This works like pay-if-paid for changes.",
+        "evidence": {
+          "quote": "Subcontractor waives any claim against Contractor for compensation or equitable adjustment for such claims, changed conditions, or extra work, except to the extent the claim is allowed to Contractor by Owner.",
+          "page": 13,
+          "confidence": "high",
+          "rationale": "Extra-work compensation is payable only to the extent Owner allows it, and only as and when Owner pays. This works like pay-if-paid for changes."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Owner's estimates of work done are final and binding on Contractor and Subcontractor.",
+        "evidence": {
+          "quote": "Estimates and calculations made by Owner, or Owner’s architect or engineer, as to the amount of work done by Subcontractor, shall be final and binding on the parties",
+          "page": 11,
+          "confidence": "high",
+          "rationale": "Owner's estimates of work done are final and binding on Contractor and Subcontractor."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "The two clauses give inconsistent deadlines for submitting payment applications: the 20th of the month in 17(a), and the last day of the pay period in 17(g).",
+        "evidence": {
+          "quote": "All statements for which payment is requested by Subcontractor shall be in the office of Contractor on or before the last day of the contract pay period for work done the preceding month.",
+          "page": 11,
+          "confidence": "high",
+          "rationale": "The two clauses give inconsistent deadlines for submitting payment applications: the 20th of the month in 17(a), and the last day of the pay period in 17(g)."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Further deduction and withholding rights appear elsewhere: insurance premiums plus overhead, Contractor-procured submittal costs, wage-information withholding, safety fines, and withholding of any payments for insurance failure.",
+        "evidence": {
+          "quote": "Contractor may, but is not obligated to, procure such insurance and charge all premiums plus a reasonable sum of overhead to Subcontractors account, all of which sums may be deducted from any amounts due Subcontractor.",
+          "page": 9,
+          "confidence": "high",
+          "rationale": "Further deduction and withholding rights appear elsewhere: insurance premiums plus overhead, Contractor-procured submittal costs, wage-information withholding, safety fines, and withholding of any payments for insurance failure."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Wage-related withholding lets Contractor withhold any amount it reasonably believes necessary, from monies owed under this Agreement 'or otherwise'.",
+        "evidence": {
+          "quote": "then Contractor may back charge or withhold from monies owing to Subcontractor under the Agreement or otherwise, any amount reasonably believed necessary to protect it from any claims related to the foregoing",
+          "page": 17,
+          "confidence": "high",
+          "rationale": "Wage-related withholding lets Contractor withhold any amount it reasonably believes necessary, from monies owed under this Agreement 'or otherwise'."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "After a termination for cause, all further payment is deferred until the entire Prime Contract work is finished.",
+        "evidence": {
+          "quote": "Subcontractor shall not be entitled to receive any further payment until the work undertaken by Contractor in the Prime Contract is completely finished.",
+          "page": 14,
+          "confidence": "high",
+          "rationale": "After a termination for cause, all further payment is deferred until the entire Prime Contract work is finished."
+        }
+      },
+      {
+        "field": "governing_law_state",
+        "description": "There is no governing-law clause naming a state. The arbitration clause applies the substantive law of the state where the Project is located, and the Project location is blank.",
+        "evidence": {
+          "quote": "the arbitrators shall apply the substantive Law of the state in which the Project is located in rendering their decision on the merits of any controversy or dispute.",
+          "page": 21,
+          "confidence": "high",
+          "rationale": "There is no governing-law clause naming a state. The arbitration clause applies the substantive law of the state where the Project is located, and the Project location is blank."
+        }
+      },
+      {
+        "field": "parties.subcontractor",
+        "description": "The Subcontractor name, Owner, Project, Prime Contract date and Agreement date are all blank in the form. The compensation clause states no contract sum.",
+        "evidence": {
+          "quote": "agrees to pay Subcontractor as full compensation.",
+          "page": 2,
+          "confidence": "high",
+          "rationale": "The Subcontractor name, Owner, Project, Prime Contract date and Agreement date are all blank in the form. The compensation clause states no contract sum."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 48605,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 67776,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 5924,
+    "output_tokens_details": {
+      "thinking_tokens": 2161
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:32:03.870Z"
+}

@@ -1,0 +1,346 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Northgate Builders Group",
+        "evidence": {
+          "quote": "Northgate Builders Group, a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Northgate Builders Group as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Allied Fire Protection, Inc.",
+        "evidence": {
+          "quote": "Allied Fire Protection, Inc., a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Allied Fire Protection, Inc. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Coastal Logistics REIT",
+        "evidence": {
+          "quote": "with Coastal Logistics REIT (\"Owner\")",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the Owner under the Prime Contract."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Port of Stockton Warehouse 7",
+        "evidence": {
+          "quote": "for construction of the project known as Port of Stockton Warehouse 7, located at 3300 Wharf Access Road",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California",
+        "page": 8,
+        "confidence": "high",
+        "rationale": "Section 17.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Contractor's receipt of payment from Owner is not a condition precedent to Contractor's obligation to pay.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.2 expressly calls the arrangement pay-when-paid and says Owner payment is not a condition precedent. Section 6.5 on on-site stored materials uses different wording; see anomalies."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor receives payment from Owner",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.1 states seven days after Contractor receives Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The parties expressly agree in writing that progress payments under this Subcontract are made on a pay-when-paid basis.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "The contract states a specific 7-day period in writing (7.1), and 7.2 confirms the parties agreed to it in writing."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor shall withhold retention of five percent (5%) from each progress payment to Subcontractor.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.1 sets retention at 5%, which is 500 basis points."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "(a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of retention from Owner",
+        "evidence": {
+          "quote": "within ten (10) days after both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.2 lists both conditions. Section 8.3 also requires the final conditional waiver and lower-tier final waivers before release."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall release retention to Subcontractor within ten (10) days after both of the following have occurred",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.2 states ten days."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver a conditional waiver and release on progress payment with each Application for Payment",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.1 requires a conditional waiver with each Application."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "After receiving each progress payment, Subcontractor shall deliver to Contractor an unconditional waiver and release on progress payment covering the amount received.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.2 requires an unconditional waiver for each payment received."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor conditional and unconditional waivers and releases, in the same statutory forms, from each of its sub-subcontractors and suppliers.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 9.4 requires lower-tier waivers."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "All waivers and releases delivered under this Subcontract shall be in the statutory forms prescribed by California Civil Code Sections 8132, 8134, 8136 and 8138, as applicable.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 9.3 requires the California statutory forms."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may issue any payment due under this Subcontract by check made jointly payable to Subcontractor and any one or more of Subcontractor's suppliers, sub-subcontractors or vendors.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 10.1 grants a joint check right."
+        },
+        "not_found": false
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off any Backcharge against any amount owed to Subcontractor under this Subcontract, including progress payments, final payment and retention.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Section 11.3 grants backcharge setoff."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold payment for any Subcontract Work that is defective or does not conform to the Contract Documents until that work is corrected and accepted.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Section 11.2 permits withholding for defective work. Section 11.1 also covers claims, liens and other listed items."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": true,
+      "evidence": {
+        "quote": "Stored Materials are payable under this Subcontract.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 6.1 makes stored materials payable. Off-site materials require a bonded, insured warehouse and title passing to Owner. On-site materials are covered by 6.5."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "timing.type",
+        "description": "Payment for on-site Stored Materials is made 'subject to' Contractor's receipt of Owner payment. This wording differs from the 7.2 statement that Owner payment is not a condition precedent, and it could be read as a pay-if-paid condition for stored materials.",
+        "evidence": {
+          "quote": "Payment is subject to Contractor's receipt of corresponding payment from Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Payment for on-site Stored Materials is made 'subject to' Contractor's receipt of Owner payment. This wording differs from the 7.2 statement that Owner payment is not a condition precedent, and it could be read as a pay-if-paid condition for stored materials."
+        }
+      },
+      {
+        "field": "timing.days",
+        "description": "If Owner fails to pay, the fallback payment period is an undefined 'reasonable time' rather than a stated number of days.",
+        "evidence": {
+          "quote": "If Owner fails to pay for reasons not caused by Subcontractor, Contractor shall pay Subcontractor within a reasonable time.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "If Owner fails to pay, the fallback payment period is an undefined 'reasonable time' rather than a stated number of days."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Prime Contract terms that are more stringent on Subcontractor govern over this Subcontract unless it expressly states otherwise. This could import different payment terms from a document not attached.",
+        "evidence": {
+          "quote": "Where this Subcontract and the Prime Contract conflict, the provision imposing the more stringent requirement on Subcontractor governs, unless this Subcontract expressly states otherwise.",
+          "page": 2,
+          "confidence": "high",
+          "rationale": "Prime Contract terms that are more stringent on Subcontractor govern over this Subcontract unless it expressly states otherwise. This could import different payment terms from a document not attached."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Applications are due by the 20th but must cover work performed through the end of that month. That includes work not yet performed when the Application is submitted.",
+        "evidence": {
+          "quote": "On or before the twentieth (20th) day of each month, Subcontractor shall submit to Contractor an Application for Payment covering Subcontract Work performed through the end of that month.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Applications are due by the 20th but must cover work performed through the end of that month. That includes work not yet performed when the Application is submitted."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release requires Contractor's receipt of retention from Owner. Unlike progress payments under 7.2, there is no statement that Owner payment is not a condition precedent and no fallback if Owner does not release retention.",
+        "evidence": {
+          "quote": "(b) Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release requires Contractor's receipt of retention from Owner. Unlike progress payments under 7.2, there is no statement that Owner payment is not a condition precedent and no fallback if Owner does not release retention."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Final Completion, a release trigger, requires acceptance by Contractor and Owner, which is a discretionary approval. Release also requires final waivers from Subcontractor and its lower tiers (8.3).",
+        "evidence": {
+          "quote": "accepted by the authority having jurisdiction, and accepted by Contractor and Owner.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Final Completion, a release trigger, requires acceptance by Contractor and Owner, which is a discretionary approval. Release also requires final waivers from Subcontractor and its lower tiers (8.3)."
+        }
+      },
+      {
+        "field": "offsets.joint_check",
+        "description": "Contractor may issue joint checks at its sole discretion at any time, not only on the listed triggers. A joint check counts as payment to Subcontractor whether or not Subcontractor endorses it.",
+        "evidence": {
+          "quote": "Contractor may exercise this right at its discretion at any time.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Contractor may issue joint checks at its sole discretion at any time, not only on the listed triggers. A joint check counts as payment to Subcontractor whether or not Subcontractor endorses it."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Retention may be applied to any amount Subcontractor owes under any provision of the Subcontract, not only backcharges.",
+        "evidence": {
+          "quote": "Contractor may apply retention to any amount Subcontractor owes Contractor under Article 11 or under any other provision of this Subcontract.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention may be applied to any amount Subcontractor owes under any provision of the Subcontract, not only backcharges."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Backcharges carry a 15% overhead and profit markup. Under 11.4, Subcontractor must pay any excess of withholding or setoff over amounts due within 10 days of demand.",
+        "evidence": {
+          "quote": "Backcharges shall include the actual cost of labor, materials and equipment, plus fifteen percent (15%) for overhead and profit.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Backcharges carry a 15% overhead and profit markup. Under 11.4, Subcontractor must pay any excess of withholding or setoff over amounts due within 10 days of demand."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Withholding rights extend beyond defective work to any other material breach. Contractor may also withhold all subsequent payments until an unconditional waiver is received (9.2).",
+        "evidence": {
+          "quote": "(f) any other material breach of this Subcontract.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Withholding rights extend beyond defective work to any other material breach. Contractor may also withhold all subsequent payments until an unconditional waiver is received (9.2)."
+        }
+      },
+      {
+        "field": "waivers.unconditional_after_payment",
+        "description": "Contractor may withhold all subsequent payments, not just the related amount, until the unconditional waiver is delivered.",
+        "evidence": {
+          "quote": "Contractor may withhold subsequent payments until it receives the unconditional waiver.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Contractor may withhold all subsequent payments, not just the related amount, until the unconditional waiver is delivered."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 47147,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 25648,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 6200,
+    "output_tokens_details": {
+      "thinking_tokens": 2555
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:31:13.711Z"
+}

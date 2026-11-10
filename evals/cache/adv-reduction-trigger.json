@@ -1,0 +1,351 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Northgate Builders Group",
+        "evidence": {
+          "quote": "Northgate Builders Group",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Northgate Builders Group as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Allied Fire Protection, Inc.",
+        "evidence": {
+          "quote": "Allied Fire Protection, Inc.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Allied Fire Protection, Inc. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Coastal Logistics REIT",
+        "evidence": {
+          "quote": "Coastal Logistics REIT",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies Coastal Logistics REIT as \"Owner\"."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Port of Stockton Warehouse 7",
+        "evidence": {
+          "quote": "Port of Stockton Warehouse 7",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital names the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Section 15.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Owner's payment to Contractor fixes the timing of Contractor's payment to Subcontractor but is not a condition precedent to Contractor's obligation to pay.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 states pay-when-paid timing. Section 6.4 says owner payment is not a condition precedent."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor receives payment from Owner for the Subcontract Work covered by that application.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 sets 7 days after Contractor receives Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor and Subcontractor expressly agree in writing to this payment timing",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 writes a specific 7-day period and states express written agreement."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 1000,
+        "evidence": {
+          "quote": "Contractor shall withhold retention of ten percent (10%) from each progress payment to Subcontractor until the Subcontract Work is fifty percent (50%) complete as certified by the Architect.",
+          "page": 3,
+          "confidence": "medium",
+          "rationale": "The initial rate is 10%. Section 7.2 drops it to 5% after the Architect certifies 50% completion."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": "After the Architect certifies that the Subcontract Work is fifty percent (50%) complete, retention on further progress payments shall be five percent (5%)",
+        "evidence": {
+          "quote": "After the Architect certifies that the Subcontract Work is fifty percent (50%) complete, retention on further progress payments shall be five percent (5%).",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.2 states the step-down trigger and the reduced rate."
+        },
+        "not_found": false
+      },
+      "release_condition": {
+        "value": "(a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of retention from Owner covering the Subcontract Work; also conditioned on delivery of final releases (Section 8.4) and closeout materials (Section 12.4)",
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor all retention held under this Subcontract within ten (10) days after both of the following have occurred: (a) Final Completion of the Subcontract Work, and (b) Contractor's receipt of",
+          "page": 3,
+          "confidence": "medium",
+          "rationale": "Section 7.3 runs from page 3 to page 4. Section 7.4 adds further conditions, so clauses were combined."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor all retention held under this Subcontract within ten (10) days after both of the following have occurred",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.3 sets 10 days after both triggers occur."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver a conditional waiver and release on progress payment with each application for payment, covering the amount requested, as a condition of Contractor processing that payment.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.1."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver an unconditional waiver and release on progress payment after it receives each progress payment, covering the amount actually received.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.2."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor, with each application for payment, conditional and unconditional waivers and releases from each of its lower-tier subcontractors and material suppliers",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.3."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "All waivers and releases under this Article, including lower-tier waivers, shall be on the statutory forms set out in California Civil Code Sections 8132, 8134, 8136, and 8138, as applicable, without modification.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.5."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off Backcharges against any amount owed to Subcontractor under this Subcontract.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.2."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment due Subcontractor an amount reasonably sufficient to cover the cost of correcting defective or nonconforming Subcontract Work that has not been remedied",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.1. Section 9.3 adds withholding for claims, liens and missing waivers."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will not make payment for materials or equipment stored on site or off site that have not been installed, and Subcontractor shall not include stored materials in any payment application.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 6.5 expressly excludes payment for stored materials."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "retainage.percent_bps",
+        "description": "The retention rate changes from 10% to 5% after the Architect certifies 50% completion. Retention already withheld at 10% is not released at the reduction, so the step-down applies only going forward.",
+        "evidence": {
+          "quote": "Retention withheld at the ten percent (10%) rate before that certification remains retained and is not released at the time of the reduction.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The retention rate changes from 10% to 5% after the Architect certifies 50% completion. Retention already withheld at 10% is not released at the reduction, so the step-down applies only going forward."
+        }
+      },
+      {
+        "field": "retainage.reduction_trigger",
+        "description": "The reduction depends on a third party, the Architect, certifying 50% completion, not on objective progress. Section 6.2 also lets Contractor adjust applications to the Architect's certified percentage.",
+        "evidence": {
+          "quote": "Contractor may adjust Subcontractor's application to reflect the Architect's certification of the percentage of Subcontract Work completed.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The reduction depends on a third party, the Architect, certifying 50% completion, not on objective progress. Section 6.2 also lets Contractor adjust applications to the Architect's certified percentage."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release depends on Contractor's receipt of retention from Owner, plus final releases and closeout materials. No fallback is stated if Owner does not release retention.",
+        "evidence": {
+          "quote": "Release of retention is also conditioned on Subcontractor's delivery of the final releases required by Section 8.4 and the closeout materials required by Section 12.4.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release depends on Contractor's receipt of retention from Owner, plus final releases and closeout materials. No fallback is stated if Owner does not release retention."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Contractor may apply held retention to Subcontractor's unperformed obligations.",
+        "evidence": {
+          "quote": "Contractor may apply retention to those obligations in accordance with applicable law.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may apply held retention to Subcontractor's unperformed obligations."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "If Owner fails to pay, the fallback payment period is an undefined \"reasonable time\" rather than a stated number of days.",
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor for properly completed and approved Subcontract Work within a reasonable time.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "If Owner fails to pay, the fallback payment period is an undefined \"reasonable time\" rather than a stated number of days."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Release of withheld amounts is made \"subject to Section 6.3\", which ties it back to Owner payment timing.",
+        "evidence": {
+          "quote": "Contractor shall pay withheld amounts within seven (7) days after the basis for withholding is removed, subject to Section 6.3.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Release of withheld amounts is made \"subject to Section 6.3\", which ties it back to Owner payment timing."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "Contractor may charge supplementation or completion costs plus a 10% supervision and administration markup against amounts due.",
+        "evidence": {
+          "quote": "and charge the cost, plus ten percent (10%) for supervision and administration, against amounts due Subcontractor.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Contractor may charge supplementation or completion costs plus a 10% supervision and administration markup against amounts due."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Broad, judgment-based withholding right based on a \"reasonable likelihood\" of non-completion.",
+        "evidence": {
+          "quote": "a reasonable likelihood that the Subcontract Work will not be completed for the unpaid balance of the Subcontract Sum.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Broad, judgment-based withholding right based on a \"reasonable likelihood\" of non-completion."
+        }
+      },
+      {
+        "field": "waivers.unconditional_after_payment",
+        "description": "Contractor may withhold the next progress payment until the unconditional waiver for the prior payment is delivered.",
+        "evidence": {
+          "quote": "Contractor may withhold the next progress payment until the unconditional waiver for the prior payment is delivered.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may withhold the next progress payment until the unconditional waiver for the prior payment is delivered."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "The Schedule of Values contains a separate materials line item while Section 6.5 bars payment for uninstalled stored materials. Billing against this line must be limited to installed materials.",
+        "evidence": {
+          "quote": "ESFR and wet-pipe mains and branch lines — materials $118,000.00",
+          "page": 8,
+          "confidence": "high",
+          "rationale": "The Schedule of Values contains a separate materials line item while Section 6.5 bars payment for uninstalled stored materials. Billing against this line must be limited to installed materials."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Recovery of delay damages is limited to amounts Contractor actually recovers from Owner.",
+        "evidence": {
+          "quote": "Subcontractor's recovery of delay damages is limited to amounts Contractor actually recovers from Owner on Subcontractor's behalf.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Recovery of delay damages is limited to amounts Contractor actually recovers from Owner."
+        }
+      },
+      {
+        "field": "retainage.cap_bps",
+        "description": "No maximum total retention is stated.",
+        "evidence": null
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 41535,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 23192,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 5429,
+    "output_tokens_details": {
+      "thinking_tokens": 1783
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:29:40.025Z"
+}

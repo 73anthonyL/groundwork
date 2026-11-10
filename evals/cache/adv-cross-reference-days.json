@@ -1,0 +1,311 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Sierra Crest General Contractors, Inc.",
+        "evidence": {
+          "quote": "Sierra Crest General Contractors, Inc., a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Sierra Crest General Contractors, Inc. as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Granite State Concrete, Inc.",
+        "evidence": {
+          "quote": "Granite State Concrete, Inc., a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Granite State Concrete, Inc. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Pasadena Arts Foundation",
+        "evidence": {
+          "quote": "Pasadena Arts Foundation, a California nonprofit public benefit corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies Pasadena Arts Foundation as \"Owner\"."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Colorado Boulevard Gallery Expansion, 1265 East Colorado Boulevard, Pasadena, California",
+        "evidence": {
+          "quote": "Colorado Boulevard Gallery Expansion, located at 1265 East Colorado Boulevard, Pasadena, California",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the Project by name and location."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Section 14.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Owner's payment is not a condition precedent to Contractor's obligation to pay.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.3 measures payment timing from Owner payment but expressly says Owner payment is not a condition precedent."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "\"Payment Period\" means seven (7) days after Contractor's receipt of the corresponding payment from Owner.",
+          "page": 7,
+          "confidence": "medium",
+          "rationale": "Section 4.2 makes payment due within the \"Payment Period\", which is defined only in Section 14.6 as seven days after Owner payment; requires combining clauses."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The parties have agreed in writing that the time for each progress payment is measured from Contractor's receipt of the corresponding payment from Owner.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.3 states the parties agreed in writing to the timing, and Section 14.6 states a specific period."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor shall retain five percent (5%) of each progress payment otherwise due to Subcontractor.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 5.1 sets retention at 5%."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "Final Completion of the Subcontract Work; and Contractor's receipt of retention from Owner",
+        "evidence": {
+          "quote": "- Final Completion of the Subcontract Work; and - Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "medium",
+          "rationale": "Section 5.2 requires both events. Section 5.3 adds further conditions: closeout documents, waivers, and Article 7 withholding."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall pay the retention to Subcontractor within ten (10) days after the later of those two events.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 5.2 states ten days after the later of Final Completion and Owner's release of retention."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "As a condition of each progress payment, Subcontractor shall deliver to Contractor, together with its application for payment, a conditional waiver and release on progress payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.5 requires a conditional waiver with each application."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "Within five (5) days after Subcontractor receives each progress payment, Subcontractor shall deliver to Contractor an unconditional waiver and release on progress payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.6 requires an unconditional waiver after each payment."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor conditional and unconditional waivers and releases from each of its sub-subcontractors, suppliers, and equipment lessors",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.7 requires lower-tier waivers for progress and final payments."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Every waiver and release delivered under this Subcontract shall be in substantially the form set out in California Civil Code Sections 8132, 8134, 8136, and 8138, as applicable.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.8 requires the California statutory forms."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off against any amount due to Subcontractor, under this Subcontract or otherwise, the reasonable costs Contractor incurs because of Subcontractor's failure to perform.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.2 grants backcharge and setoff rights."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount sufficient to cover the reasonable cost of correcting Subcontract Work that is defective or not in conformance with the Subcontract Documents.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.1 permits withholding for defective work. Section 7.4 adds other grounds."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will not pay for materials or equipment stored on or off the Project site.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 4.4 expressly excludes payment for stored materials."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "timing.days",
+        "description": "The payment period is not stated in the payment article. Section 4.2 refers to the \"Payment Period\", which is defined only in Section 14.6 (7 days after Owner payment). Controllers must read the cross-reference to get the number of days.",
+        "evidence": {
+          "quote": "is due and payable to Subcontractor within the Payment Period.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The payment period is not stated in the payment article. Section 4.2 refers to the \"Payment Period\", which is defined only in Section 14.6 (7 days after Owner payment). Controllers must read the cross-reference to get the number of days."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "If Owner fails to pay, the fallback payment timing is an undefined \"reasonable time\" rather than a fixed number of days.",
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor for properly performed Subcontract Work within a reasonable time.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "If Owner fails to pay, the fallback payment timing is an undefined \"reasonable time\" rather than a fixed number of days."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Payment on termination for convenience is limited to amounts Contractor recovers from Owner. This puts the risk of Owner non-payment on Subcontractor and appears inconsistent with the pay-when-paid language in Section 4.3.",
+        "evidence": {
+          "quote": "the extent Contractor recovers those amounts from Owner.",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "Payment on termination for convenience is limited to amounts Contractor recovers from Owner. This puts the risk of Owner non-payment on Subcontractor and appears inconsistent with the pay-when-paid language in Section 4.3."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release depends on Contractor's receipt of retention from Owner. It is also subject to closeout documents, waivers, and Article 7 withholding for unresolved backcharges or defective work.",
+        "evidence": {
+          "quote": "Contractor's right to withhold amounts under Article 7 for unresolved backcharges",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release depends on Contractor's receipt of retention from Owner. It is also subject to closeout documents, waivers, and Article 7 withholding for unresolved backcharges or defective work."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The setoff right reaches amounts due \"under this Subcontract or otherwise\", which may include other contracts or projects. It also covers delay damages assessed against Contractor.",
+        "evidence": {
+          "quote": "Contractor may set off against any amount due to Subcontractor, under this Subcontract or otherwise",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "The setoff right reaches amounts due \"under this Subcontract or otherwise\", which may include other contracts or projects. It also covers delay damages assessed against Contractor."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Any finish variance noted by the architect may be treated as defective work subject to withholding. This is a discretionary trigger.",
+        "evidence": {
+          "quote": "Contractor may treat any variance noted by the architect as defective work under Article 7.",
+          "page": 6,
+          "confidence": "high",
+          "rationale": "Any finish variance noted by the architect may be treated as defective work subject to withholding. This is a discretionary trigger."
+        }
+      },
+      {
+        "field": "waivers.unconditional_after_payment",
+        "description": "Contractor may withhold the entire next progress payment until the prior unconditional waiver is delivered.",
+        "evidence": {
+          "quote": "Contractor may withhold the next progress payment until Subcontractor delivers the unconditional waiver for the prior payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Contractor may withhold the entire next progress payment until the prior unconditional waiver is delivered."
+        }
+      },
+      {
+        "field": "timing.days",
+        "description": "Applications are due by the 20th of each month but must cover work through the last day of that month. This is internally inconsistent and may affect when payment periods begin.",
+        "evidence": {
+          "quote": "The application shall cover Subcontract Work performed through the last day of that month.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Applications are due by the 20th of each month but must cover work through the last day of that month. This is internally inconsistent and may affect when payment periods begin."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 41338,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 23648,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 5316,
+    "output_tokens_details": {
+      "thinking_tokens": 2112
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:28:00.701Z"
+}

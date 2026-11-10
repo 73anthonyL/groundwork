@@ -1,0 +1,291 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Mesa Verde Contractors, Inc.",
+        "evidence": {
+          "quote": "Mesa Verde Contractors, Inc.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Mesa Verde Contractors, Inc. as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Lumen Electric Corp.",
+        "evidence": {
+          "quote": "Lumen Electric Corp.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Lumen Electric Corp. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Ventura County Credit Union",
+        "evidence": {
+          "quote": "Ventura County Credit Union",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the Owner under the Prime Contract."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Oxnard Branch Remodel",
+        "evidence": {
+          "quote": "Oxnard Branch Remodel",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital names the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California.",
+        "page": 7,
+        "confidence": "high",
+        "rationale": "Section 15.4 governing-law clause."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "days": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "agreed_in_writing": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor shall retain five percent (5%) of the amount earned under each Application for Payment",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.1 sets retainage at 5% = 500 bps."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "Final Completion of the Subcontract Work; and Contractor's receipt of retention from Owner",
+        "evidence": {
+          "quote": "Retainage held under this Subcontract will be released only after both of the following have occurred: - (a) Final Completion of the Subcontract Work; and - (b) Contractor's receipt of retention from Owner.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.2 states both conditions for release."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall release retainage to Subcontractor within ten (10) days after Final Completion of",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 6.3 sets release within ten days after Final Completion and receipt of retention from Owner."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "With each Application for Payment, Subcontractor shall deliver a conditional waiver and release on progress payment, covering the amount requested, before Contractor makes the progress payment.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.1."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "After receiving each progress payment, Subcontractor shall deliver an unconditional waiver and release on progress payment covering the amount actually received.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.2."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor corresponding conditional and unconditional waivers and releases from each of its lower-tier subcontractors and material suppliers",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.5."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "All waivers and releases furnished under this Subcontract must be on the statutory forms prescribed by California Civil Code Sections 8132, 8134, 8136, and 8138",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.4 requires California statutory forms."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off against any amount otherwise due to Subcontractor under this Subcontract the amount of any Backcharge.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.1."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount sufficient to cover the cost of correcting Subcontract Work that is defective or does not conform to the Subcontract Documents.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.3."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will not pay for materials or equipment stored off site, or for materials or equipment delivered to the site but not yet incorporated into the Subcontract Work.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 5.4 expressly excludes payment for stored materials, on or off site."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "timing.type",
+        "description": "The contract contains no clause stating when progress payments are due (no days after application, invoice, or Owner payment). Article 5 covers application content and rejection only. Payment timing for progress payments is undefined.",
+        "evidence": null
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Release of retainage is conditioned on Contractor's receipt of retention from Owner, so release depends on Owner payment.",
+        "evidence": {
+          "quote": "Retainage held under this Subcontract will be released only after both of the following have occurred",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Release of retainage is conditioned on Contractor's receipt of retention from Owner, so release depends on Owner payment."
+        }
+      },
+      {
+        "field": "retainage.release_days",
+        "description": "The 10-day retainage release obligation is further subject to delivery of Article 7 waivers and to any Article 8 withholding.",
+        "evidence": {
+          "quote": "This obligation is subject to Subcontractor's delivery of the waivers and releases required by Article 7, and to any withholding permitted by Article 8.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The 10-day retainage release obligation is further subject to delivery of Article 7 waivers and to any Article 8 withholding."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Contractor may withhold any amount Owner withholds from Contractor on account of the Subcontract Work. This passes Owner withholding through to Subcontractor.",
+        "evidence": {
+          "quote": "any amount Owner withholds from Contractor on account of the Subcontract Work",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may withhold any amount Owner withholds from Contractor on account of the Subcontract Work. This passes Owner withholding through to Subcontractor."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The Backcharge definition is broad and includes costs resulting from any failure to perform. Setoff applies against any amount due under the Subcontract.",
+        "evidence": {
+          "quote": "costs resulting from Subcontractor's failure to perform any obligation under this Subcontract",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "The Backcharge definition is broad and includes costs resulting from any failure to perform. Setoff applies against any amount due under the Subcontract."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Recovery on change claims involving Owner is limited to the adjustment Owner grants, less Contractor markup and costs.",
+        "evidence": {
+          "quote": "Subcontractor's entitlement is limited to the adjustment Owner grants for the Subcontract Work.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Recovery on change claims involving Owner is limited to the adjustment Owner grants, less Contractor markup and costs."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "On Owner termination of the Prime Contract, Subcontractor's recovery is limited to what Contractor recovers from Owner.",
+        "evidence": {
+          "quote": "Subcontractor's recovery will be limited to the amount Contractor recovers from Owner on account of the Subcontract Work.",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "On Owner termination of the Prime Contract, Subcontractor's recovery is limited to what Contractor recovers from Owner."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "No payment for stored materials, either off site or delivered on site but not yet incorporated. This may affect billing for long-lead switchboard and lighting equipment.",
+        "evidence": {
+          "quote": "Payment will be made only for Subcontract Work actually installed at the Project site.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "No payment for stored materials, either off site or delivered on site but not yet incorporated. This may affect billing for long-lead switchboard and lighting equipment."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 35313,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 23558,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 4290,
+    "output_tokens_details": {
+      "thinking_tokens": 1567
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:30:26.486Z"
+}

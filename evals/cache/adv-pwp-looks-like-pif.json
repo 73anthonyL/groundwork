@@ -1,0 +1,311 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Calder & Webb Builders",
+        "evidence": {
+          "quote": "Calder & Webb Builders**, a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Calder & Webb Builders as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Brightline Glazing Co.",
+        "evidence": {
+          "quote": "and **Brightline Glazing Co.**, a California corporation",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble names Brightline Glazing Co. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Fresno Community Health Partners",
+        "evidence": {
+          "quote": "**Fresno Community Health Partners** (\"Owner\")",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital defines Owner."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Kings Canyon Medical Office Building, 6120 East Kings Canyon Road, Fresno, California 93727",
+        "evidence": {
+          "quote": "the construction of the **Kings Canyon Medical Office Building**,",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the Project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California, without regard to its conflict-of-law",
+        "page": 6,
+        "confidence": "high",
+        "rationale": "Section 15.1 states that California law governs."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Contractor's receipt of payment from Owner is a timing mechanism only and is not a condition precedent to Contractor's obligation to pay Subcontractor.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.2 ties timing to Owner payment. Section 7.3 expressly disclaims a condition precedent, and Section 7.4 keeps Contractor liable even if Owner never pays."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "within seven (7) days after Contractor receives payment from Owner on account of that portion of the Subcontract Work",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 7.2 states seven days after receipt of Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The parties have agreed in writing, by signing this Subcontract, to this seven-day timing for progress payments.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific period is written in Section 7.2."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor shall withhold retention of five percent (5%) from each progress payment made to Subcontractor.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.1 sets 5%, which is 500 bps."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "(a) Final Completion of the Subcontract Work; and (b) Contractor's receipt of retention from Owner",
+        "evidence": {
+          "quote": "both of the following have occurred: (a) Final Completion of the Subcontract Work; and (b) Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "medium",
+          "rationale": "Section 8.2 sets both conditions. Final Completion is defined in 1.4 as requiring Contractor's written confirmation, and 8.3 adds application requirements."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall release the retention to Subcontractor within ten (10) days after both of the following have",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.2 states ten days."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "With each application for a progress payment, Subcontractor shall deliver to Contractor a conditional waiver and release on progress payment covering the amount requested.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.1."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver to Contractor an unconditional waiver and release on progress payment covering the amount received.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.2 requires it before the next application is processed."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain and deliver to Contractor the same conditional and unconditional statutory waivers from each of its lower-tier subcontractors and material suppliers",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.5."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Every waiver and release delivered under this Subcontract must be on the statutory form prescribed by California Civil Code sections 8132, 8134, 8136, and 8138, as applicable.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 9.4."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off against any amount due to Subcontractor under this Subcontract the amount of any backcharge properly assessed against Subcontractor",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 10.2. Section 10.3 requires notice, a 48-hour cure period, and documentation."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment due to Subcontractor an amount reasonably sufficient to cover the cost of correcting defective or nonconforming Subcontract Work that Subcontractor has not corrected.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 10.1. Section 10.4 also allows withholding for lower-tier claims."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will not pay for materials or equipment that are stored on or off the site but not yet installed",
+        "page": 4,
+        "confidence": "high",
+        "rationale": "Section 7.5 expressly excludes stored materials."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "timing.type",
+        "description": "Payment timing is keyed to Owner payment and could read like pay-if-paid. However, Section 7.3 expressly says this is not a condition precedent. The fallback when Owner never pays is only 'a reasonable time', with no fixed number of days.",
+        "evidence": {
+          "quote": "Contractor remains liable to pay Subcontractor for that work within a reasonable time after Subcontractor's application, even if Owner never pays.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Payment timing is keyed to Owner payment and could read like pay-if-paid. However, Section 7.3 expressly says this is not a condition precedent. The fallback when Owner never pays is only 'a reasonable time', with no fixed number of days."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release requires Contractor's receipt of retention from Owner. Article 8 has no fallback if Owner withholds retention. The 7.3 timing-only language refers to payment from Owner generally.",
+        "evidence": {
+          "quote": "(b) Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release requires Contractor's receipt of retention from Owner. Article 8 has no fallback if Owner withholds retention. The 7.3 timing-only language refers to payment from Owner generally."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Final Completion of the Subcontract Work, a release trigger, depends on Contractor's written confirmation. This makes the trigger partly discretionary. It also requires final lien releases.",
+        "evidence": {
+          "quote": "and has delivered all closeout submittals, warranties, and final lien releases required by this Subcontract, as confirmed in writing by Contractor.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Final Completion of the Subcontract Work, a release trigger, depends on Contractor's written confirmation. This makes the trigger partly discretionary. It also requires final lien releases."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "The flow-down clause gives the Prime Contract provision controlling effect where it grants Contractor greater rights, unless this Subcontract expressly states otherwise. Prime Contract payment terms were not reviewed.",
+        "evidence": {
+          "quote": "provision giving Contractor the greater right or imposing on Subcontractor the higher standard of performance controls, unless this Subcontract expressly states otherwise.",
+          "page": 2,
+          "confidence": "high",
+          "rationale": "The flow-down clause gives the Prime Contract provision controlling effect where it grants Contractor greater rights, unless this Subcontract expressly states otherwise. Prime Contract payment terms were not reviewed."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "Contractor may also withhold for unpaid lower-tier claims, in addition to defective work and backcharges.",
+        "evidence": {
+          "quote": "Contractor may also withhold amounts needed to protect against unpaid claims of Subcontractor's lower-tier subcontractors and suppliers, to the extent permitted by California law.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Contractor may also withhold for unpaid lower-tier claims, in addition to defective work and backcharges."
+        }
+      },
+      {
+        "field": "waivers.conditional_before_progress",
+        "description": "Contractor is not required to process an application that lacks the conditional waiver. Missing paperwork can delay payment timing.",
+        "evidence": {
+          "quote": "Contractor is not required to process any application that lacks this conditional waiver.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor is not required to process an application that lacks the conditional waiver. Missing paperwork can delay payment timing."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Stored materials, on or off site, are not payable. Pay applications that include them must be rejected or adjusted.",
+        "evidence": {
+          "quote": "Subcontractor shall not include stored materials in any application for payment.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Stored materials, on or off site, are not payable. Pay applications that include them must be rejected or adjusted."
+        }
+      },
+      {
+        "field": "parties.contractor",
+        "description": "The signature blocks are blank and undated in this copy. Confirm an executed version exists.",
+        "evidence": {
+          "quote": "Name: Daniel R. Calder",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "The signature blocks are blank and undated in this copy. Confirm an executed version exists."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 35142,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 20815,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 4263,
+    "output_tokens_details": {
+      "thinking_tokens": 1144
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:29:31.912Z"
+}

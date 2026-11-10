@@ -135,6 +135,8 @@ async function main() {
   mkdirSync(path.resolve("evals/results"), { recursive: true });
   writeFileSync(path.resolve("evals/results", `${stamp}.json`), JSON.stringify({ at: stamp, metrics: metrics(results), results }, null, 2));
   writeFileSync(path.resolve("evals/results", "latest.md"), md + "\n");
+  // Committed copy, so the app and /api/v1/eval can show the run without re-running it.
+  writeFileSync(path.resolve("evals/results", "latest.json"), JSON.stringify({ at: stamp, metrics: metrics(results), results }, null, 2));
 }
 
 main().catch((e) => {

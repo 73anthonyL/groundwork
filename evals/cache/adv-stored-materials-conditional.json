@@ -1,0 +1,331 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Redwood Peak Construction Co.",
+        "evidence": {
+          "quote": "Redwood Peak Construction Co.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Redwood Peak Construction Co. as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Precision Roofing & Sheet Metal",
+        "evidence": {
+          "quote": "Precision Roofing & Sheet Metal",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Precision Roofing & Sheet Metal as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "City of Santa Rosa",
+        "evidence": {
+          "quote": "City of Santa Rosa",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies the City of Santa Rosa as \"Owner\"."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Fire Station 5 Replacement",
+        "evidence": {
+          "quote": "Fire Station 5 Replacement",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital names the project."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "This Subcontract is governed by the laws of the State of California, without regard to its conflict-of-law rules.",
+        "page": 8,
+        "confidence": "high",
+        "rationale": "Section 16.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "The parties agree in writing that Contractor's receipt of payment from Owner fixes the time when Contractor's payment to Subcontractor becomes due.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.2 is titled Pay When Paid. Owner payment fixes the timing of payment. It is not stated as a condition precedent to the obligation to pay."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "within seven (7) days after Contractor receives payment from Owner",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 5.2 sets payment at 7 days after Contractor receives Owner payment."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "The parties agree in writing that Contractor's receipt of payment from Owner fixes the time when Contractor's payment to Subcontractor becomes due.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "A specific 7-day period is written into Section 5.2."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor shall withhold retainage of five percent (5%) from each progress payment to Subcontractor.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "5% retainage equals 500 basis points."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "Retainage becomes payable upon both (a) Final Completion of the Subcontract Work and (b) Contractor's receipt of retention from Owner covering the Subcontract Work.",
+        "evidence": {
+          "quote": "Retainage becomes payable upon both (a) Final Completion of the Subcontract Work and (b) Contractor's receipt of retention from Owner covering the Subcontract Work.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.2 states both release conditions. Section 7.3 adds closeout deliverables required before release."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "release retainage to Subcontractor within ten (10) days after Final Completion of the Subcontract Work and Contractor's receipt of retention from Owner.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.2 requires release within 10 days after the triggers."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver to Contractor a conditional waiver and release on progress payment covering the amount requested.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.1 requires a conditional waiver with each application."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall deliver to Contractor an unconditional waiver and release on progress payment for the amount received.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.2 requires an unconditional waiver after each payment."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall also deliver conditional and unconditional waivers, in the same statutory forms, from each of its sub-subcontractors and material suppliers whose labor or materials are included in that application.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.4 requires lower-tier waivers."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "form prescribed by California Civil Code Sections 8132, 8134, 8136 and 8138, as applicable.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 8.3 requires the California statutory forms."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may set off against any amount due to Subcontractor, including retainage, the amount of any backcharge for costs Contractor incurs because of Subcontractor's failure to perform under this Subcontract.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 9.1 grants a backcharge setoff right."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold from any payment an amount sufficient to cover the cost of correcting defective or nonconforming Subcontract Work until that work is corrected and accepted.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 9.2 permits withholding for defective work."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": true,
+      "evidence": {
+        "quote": "Contractor may include in a progress payment the value of materials and equipment delivered to the Project site and suitably stored there for later incorporation into the Subcontract Work.",
+        "page": 3,
+        "confidence": "medium",
+        "rationale": "On-site stored materials may be paid if protected and invoiced. Off-site materials are payable only with Contractor's prior written approval, proof of insurance and a bill of sale (Section 6.2). Both on-site and off-site payment are conditional."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "stored_materials",
+        "description": "Off-site stored materials are payable only with Contractor's prior written approval, which is discretionary. Payment also requires insurance naming Contractor and Owner as loss payees and a bill of sale transferring title.",
+        "evidence": {
+          "quote": "Materials stored off site are payable only with Contractor's prior written approval, proof of insurance, and a bill of sale transferring title.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Off-site stored materials are payable only with Contractor's prior written approval, which is discretionary. Payment also requires insurance naming Contractor and Owner as loss payees and a bill of sale transferring title."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Approval for off-site storage is limited to each shipment or location and does not carry over to other shipments or locations.",
+        "evidence": {
+          "quote": "Approval for one shipment or storage location does not extend to any other.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Approval for off-site storage is limited to each shipment or location and does not carry over to other shipments or locations."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "On-site stored materials payment is permissive ('may include') and conditioned on protection and separate listing with invoices.",
+        "evidence": {
+          "quote": "This applies only if the materials are protected from weather, theft and damage and are listed separately in the application for payment with supporting invoices.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "On-site stored materials payment is permissive ('may include') and conditioned on protection and separate listing with invoices."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release depends on Contractor's receipt of retention from Owner. Release also depends on Final Completion, which includes acceptance by Owner's representative. Further closeout deliverables are required before release.",
+        "evidence": {
+          "quote": "Before retainage is released, Subcontractor shall deliver to Contractor:",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Retention release depends on Contractor's receipt of retention from Owner. Release also depends on Final Completion, which includes acceptance by Owner's representative. Further closeout deliverables are required before release."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The setoff right extends to retainage.",
+        "evidence": {
+          "quote": "Contractor may set off against any amount due to Subcontractor, including retainage",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "The setoff right extends to retainage."
+        }
+      },
+      {
+        "field": "waivers.unconditional_after_payment",
+        "description": "Contractor may withhold the next progress payment until it receives the unconditional waiver for the prior payment.",
+        "evidence": {
+          "quote": "Contractor may withhold the next payment until it receives the unconditional waiver.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Contractor may withhold the next progress payment until it receives the unconditional waiver for the prior payment."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Termination-for-convenience payments are conditioned on Contractor's recovery from Owner, which is pay-if-paid style language outside the progress payment clause.",
+        "evidence": {
+          "quote": "These payments are made only to the extent Contractor recovers them from Owner, and no payment shall be made for anticipated profit on unperformed work.",
+          "page": 7,
+          "confidence": "high",
+          "rationale": "Termination-for-convenience payments are conditioned on Contractor's recovery from Owner, which is pay-if-paid style language outside the progress payment clause."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Delay compensation and time extensions are limited to relief Contractor obtains from Owner.",
+        "evidence": {
+          "quote": "Subcontractor shall be entitled to an extension of time or additional compensation for delay only to the extent Contractor obtains corresponding relief from Owner.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Delay compensation and time extensions are limited to relief Contractor obtains from Owner."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "A broad discretionary withholding right is based on Contractor's belief that the remaining balance is insufficient to complete the work.",
+        "evidence": {
+          "quote": "a reasonable belief that the remaining balance of the Subcontract Sum will not be enough to complete the Subcontract Work.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "A broad discretionary withholding right is based on Contractor's belief that the remaining balance is insufficient to complete the work."
+        }
+      },
+      {
+        "field": "timing.days",
+        "description": "Contractor may unilaterally adjust payment applications based on its own evaluation before submitting them to Owner.",
+        "evidence": {
+          "quote": "Contractor may adjust an application to reflect its good-faith evaluation of the work actually completed",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Contractor may unilaterally adjust payment applications based on its own evaluation before submitting them to Owner."
+        }
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 41621,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 25909,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 5423,
+    "output_tokens_details": {
+      "thinking_tokens": 2123
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:30:54.181Z"
+}

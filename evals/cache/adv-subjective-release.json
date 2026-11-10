@@ -1,0 +1,316 @@
+{
+  "extracted": {
+    "parties": {
+      "contractor": {
+        "value": "Calder & Webb Builders",
+        "evidence": {
+          "quote": "Calder & Webb Builders",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Calder & Webb Builders as \"Contractor\"."
+        },
+        "not_found": false
+      },
+      "subcontractor": {
+        "value": "Brightline Glazing Co.",
+        "evidence": {
+          "quote": "Brightline Glazing Co.",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Preamble identifies Brightline Glazing Co. as \"Subcontractor\"."
+        },
+        "not_found": false
+      },
+      "owner": {
+        "value": "Fresno Community Health Partners",
+        "evidence": {
+          "quote": "Fresno Community Health Partners",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital identifies Fresno Community Health Partners as \"Owner\"."
+        },
+        "not_found": false
+      },
+      "project": {
+        "value": "Kings Canyon Medical Office Building",
+        "evidence": {
+          "quote": "Kings Canyon Medical Office Building",
+          "page": 1,
+          "confidence": "high",
+          "rationale": "Recital names the Project, located at 6120 East Kings Canyon Road, Fresno, California."
+        },
+        "not_found": false
+      }
+    },
+    "governing_law_state": {
+      "value": "CA",
+      "evidence": {
+        "quote": "The laws of the State of California govern this Subcontract, without regard to its conflict-of-laws rules.",
+        "page": 8,
+        "confidence": "high",
+        "rationale": "Section 13.1 selects California law."
+      },
+      "not_found": false
+    },
+    "timing": {
+      "type": {
+        "value": "pay_when_paid",
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor receives payment from Owner for the Subcontract Work included in that payment application.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.2 ties payment timing to Owner payment. Section 4.3 says Owner receipt \"sets the time\" for payment. Neither section states an express condition precedent."
+        },
+        "not_found": false
+      },
+      "days": {
+        "value": 7,
+        "evidence": {
+          "quote": "Contractor shall pay Subcontractor each progress payment within seven (7) days after Contractor receives payment from Owner for the Subcontract Work included in that payment application.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Seven days after Contractor receives Owner payment, repeated in Section 4.3."
+        },
+        "not_found": false
+      },
+      "agreed_in_writing": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor further agrees that each progress payment becomes due seven (7) days after that receipt.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Section 4.3 is a written agreement to a specific payment period."
+        },
+        "not_found": false
+      }
+    },
+    "retainage": {
+      "percent_bps": {
+        "value": 500,
+        "evidence": {
+          "quote": "Contractor will retain five percent (5%) of each progress payment otherwise due to Subcontractor (\"Retention\").",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "5% equals 500 bps."
+        },
+        "not_found": false
+      },
+      "cap_bps": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "reduction_trigger": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "release_condition": {
+        "value": "completion of all punch list items to the satisfaction of Contractor in its sole discretion",
+        "evidence": {
+          "quote": "Contractor shall release Retention to Subcontractor within ten (10) days after completion of all punch list items to the satisfaction of Contractor in its sole discretion.",
+          "page": 3,
+          "confidence": "low",
+          "rationale": "The trigger depends on Contractor's sole discretion, and Contractor's decision is conclusive. Section 5.4 also conditions release on delivery of waivers, warranties, as-builts, O&M data and attic stock."
+        },
+        "not_found": false
+      },
+      "release_days": {
+        "value": 10,
+        "evidence": {
+          "quote": "Contractor shall release Retention to Subcontractor within ten (10) days after completion of all punch list items to the satisfaction of Contractor in its sole discretion.",
+          "page": 3,
+          "confidence": "medium",
+          "rationale": "Ten days is stated plainly, but it runs from a discretionary trigger."
+        },
+        "not_found": false
+      }
+    },
+    "waivers": {
+      "conditional_before_progress": {
+        "value": true,
+        "evidence": {
+          "quote": "With each application for payment, Subcontractor shall deliver to Contractor a conditional waiver and release on progress payment covering the full amount requested.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.1."
+        },
+        "not_found": false
+      },
+      "unconditional_after_payment": {
+        "value": true,
+        "evidence": {
+          "quote": "After Subcontractor receives each payment, Subcontractor shall deliver to Contractor an unconditional waiver and release covering the amount actually paid.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.2."
+        },
+        "not_found": false
+      },
+      "lower_tier_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Subcontractor shall obtain conditional and unconditional waivers and releases from each of its lower-tier subcontractors and material suppliers.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.3."
+        },
+        "not_found": false
+      },
+      "statutory_form_required": {
+        "value": true,
+        "evidence": {
+          "quote": "Every waiver and release delivered under this Article 6 shall be in the form prescribed by California Civil Code Sections 8132 through 8138, as applicable.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 6.4."
+        },
+        "not_found": false
+      }
+    },
+    "offsets": {
+      "joint_check": {
+        "value": null,
+        "evidence": null,
+        "not_found": true
+      },
+      "backcharge_setoff": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may back-charge Subcontractor for, and set off against any amount otherwise due under this Subcontract, all costs Contractor incurs because of Subcontractor's acts or omissions.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Section 7.1."
+        },
+        "not_found": false
+      },
+      "withhold_defective": {
+        "value": true,
+        "evidence": {
+          "quote": "Contractor may withhold payment from Subcontractor for any defective or nonconforming Subcontract Work.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "Section 7.2. Section 7.3 adds other grounds, including claims and material breach."
+        },
+        "not_found": false
+      }
+    },
+    "stored_materials": {
+      "value": false,
+      "evidence": {
+        "quote": "Contractor will not pay for materials or equipment stored on the Project site or at any off-site location.",
+        "page": 3,
+        "confidence": "high",
+        "rationale": "Section 4.4 expressly excludes stored materials, on or off site."
+      },
+      "not_found": false
+    },
+    "anomalies": [
+      {
+        "field": "retainage.release_condition",
+        "description": "The retention release trigger is discretionary. Punch list completion must be to Contractor's satisfaction in its sole discretion, and Contractor's decision is conclusive. There is no objective release date.",
+        "evidence": {
+          "quote": "Contractor's decision on that question will be conclusive for purposes of releasing Retention.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "The retention release trigger is discretionary. Punch list completion must be to Contractor's satisfaction in its sole discretion, and Contractor's decision is conclusive. There is no objective release date."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Contractor may keep adding punch list items, which can postpone the retention release trigger indefinitely.",
+        "evidence": {
+          "quote": "Contractor may add items to the punch list as later inspections reveal them.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Contractor may keep adding punch list items, which can postpone the retention release trigger indefinitely."
+        }
+      },
+      {
+        "field": "retainage.release_condition",
+        "description": "Retention release is also conditioned on delivery of closeout documents: waivers, warranties, as-builts, O&M data and attic stock.",
+        "evidence": {
+          "quote": "Contractor's release of Retention is conditioned on Subcontractor first delivering the following:",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Retention release is also conditioned on delivery of closeout documents: waivers, warranties, as-builts, O&M data and attic stock."
+        }
+      },
+      {
+        "field": "timing.type",
+        "description": "Payment timing is set entirely by Owner's payment, with no outside date if Owner pays late or never pays. The contract does not state an express condition precedent, but a controller should confirm how owner non-payment is handled.",
+        "evidence": {
+          "quote": "that Contractor's receipt of payment from Owner sets the time for Contractor's payment to Subcontractor.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Payment timing is set entirely by Owner's payment, with no outside date if Owner pays late or never pays. The contract does not state an express condition precedent, but a controller should confirm how owner non-payment is handled."
+        }
+      },
+      {
+        "field": "offsets.backcharge_setoff",
+        "description": "The setoff right extends to amounts Owner withholds from Contractor, which shifts owner withholding risk to Subcontractor.",
+        "evidence": {
+          "quote": "(e) amounts Owner withholds from Contractor because of the Subcontract Work.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "The setoff right extends to amounts Owner withholds from Contractor, which shifts owner withholding risk to Subcontractor."
+        }
+      },
+      {
+        "field": "offsets.withhold_defective",
+        "description": "The amount withheld for defective work is based on Contractor's own estimate. Withholding continues until the work is corrected and accepted.",
+        "evidence": {
+          "quote": "The amount withheld may equal the reasonable cost to correct that work, as Contractor estimates it.",
+          "page": 5,
+          "confidence": "high",
+          "rationale": "The amount withheld for defective work is based on Contractor's own estimate. Withholding continues until the work is corrected and accepted."
+        }
+      },
+      {
+        "field": "waivers.statutory_form_required",
+        "description": "Any waiver that departs from the statutory form is treated as not delivered. This can block payment processing under Sections 6.1 and 6.2.",
+        "evidence": {
+          "quote": "Contractor will treat a rejected waiver as not delivered.",
+          "page": 4,
+          "confidence": "high",
+          "rationale": "Any waiver that departs from the statutory form is treated as not delivered. This can block payment processing under Sections 6.1 and 6.2."
+        }
+      },
+      {
+        "field": "stored_materials",
+        "description": "Stored materials are not payable and Subcontractor bears the risk of loss until incorporation, although the Schedule of Values carries a large materials line ($112,000 for curtain wall materials).",
+        "evidence": {
+          "quote": "Subcontractor bears the risk of loss for all its materials until they are incorporated into the Subcontract Work.",
+          "page": 3,
+          "confidence": "high",
+          "rationale": "Stored materials are not payable and Subcontractor bears the risk of loss until incorporation, although the Schedule of Values carries a large materials line ($112,000 for curtain wall materials)."
+        }
+      },
+      {
+        "field": "retainage.cap_bps",
+        "description": "There is no retention cap or step-down. Retention is a flat 5% throughout.",
+        "evidence": null
+      }
+    ]
+  },
+  "model": "claude-opus-5-5",
+  "ms": 37245,
+  "promptVersion": "extract-v2",
+  "usage": {
+    "input_tokens": 25794,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 4614,
+    "output_tokens_details": {
+      "thinking_tokens": 1501
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "at": "2026-11-10T11:30:58.771Z"
+}
