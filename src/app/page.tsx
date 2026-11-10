@@ -27,15 +27,15 @@ export default async function Landing() {
   const trust = run?.layers[0];
   return (
     <div className="flex flex-1 flex-col bg-card">
-      {/* The opening: a blueprint, and the contract page laid on top of it. */}
-      <div className="blueprint">
+      {/* The opening: the dark stage, and the contract page laid on top of it. */}
+      <div className="stage">
         <header className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Wordmark />
           <nav className="flex items-center gap-1 text-[13px]">
-            <Link href="/statutes" className="rounded-md px-2.5 py-1 text-blueprint-muted transition-colors hover:text-white">
+            <Link href="/statutes" className="rounded-md px-2.5 py-1 text-stage-muted transition-colors hover:text-white">
               Payment law
             </Link>
-            <Link href="/api/v1" className="hidden rounded-md px-2.5 py-1 text-blueprint-muted transition-colors hover:text-white sm:inline">
+            <Link href="/api/v1" className="hidden rounded-md px-2.5 py-1 text-stage-muted transition-colors hover:text-white sm:inline">
               API
             </Link>
             <Link href={cta.href} className="ml-2 rounded-md border border-white/30 px-3 py-1 font-medium text-white transition-colors hover:bg-white/10">
@@ -45,11 +45,11 @@ export default async function Landing() {
         </header>
         <section className="mx-auto w-full max-w-6xl px-5 pb-56 pt-14 sm:px-8 sm:pt-20">
           <h1 className="reveal max-w-5xl text-[2.6rem] font-bold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-[4.75rem]">The contract already says when the sub gets paid.</h1>
-          <p className="reveal mt-7 max-w-2xl text-lg leading-relaxed text-blueprint-muted sm:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
+          <p className="reveal mt-7 max-w-2xl text-lg leading-relaxed text-stage-muted sm:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
             Groundwork reads the subcontract, turns its payment terms into rules a person approves once, and pays every subcontractor the moment the owner&rsquo;s money lands.
           </p>
           <div className="reveal mt-9 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ "--i": 2 } as React.CSSProperties}>
-            <Link href={cta.href} className="inline-flex h-11 items-center rounded-full bg-white px-6 text-[15px] font-semibold text-blueprint transition-transform active:scale-[0.97]">
+            <Link href={cta.href} className="inline-flex h-11 items-center rounded-full bg-signal px-6 text-[15px] font-semibold text-signal-foreground transition-[transform,filter] hover:brightness-105 active:scale-[0.97]">
               {cta.label}
             </Link>
             <Link href="#how" className="text-[15px] text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
@@ -132,12 +132,14 @@ export default async function Landing() {
         </div>
       </section>
 
-      <footer className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-[13px] text-muted-foreground sm:px-8">
-          <span>Groundwork, built for the BBS and Ramp hackathon. The demo data is synthetic, and nothing here is legal advice.</span>
-          <Link href={cta.href} className="font-medium text-link hover:underline">
+      <footer className="stage">
+        <div className="mx-auto max-w-6xl px-5 pb-10 pt-24 sm:px-8">
+          <h2 className="max-w-3xl text-4xl font-bold leading-[1.05] sm:text-5xl">See one owner payment become four.</h2>
+          <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-stage-muted">The demo runs a real project from signed subcontract to paid subcontractor. Pick a seat and follow the money.</p>
+          <Link href={cta.href} className="mt-8 inline-flex h-11 items-center rounded-full bg-signal px-6 text-[15px] font-semibold text-signal-foreground transition-[transform,filter] hover:brightness-105 active:scale-[0.97]">
             {cta.label}
           </Link>
+          <p className="mt-20 border-t border-white/10 pt-6 text-[13px] text-stage-muted">Groundwork, built for the BBS and Ramp hackathon. The demo data is synthetic, and nothing here is legal advice.</p>
         </div>
       </footer>
     </div>

@@ -62,9 +62,9 @@
   --color-surface-sunken: var(--surface-sunken);
   --color-link: var(--link);
   --color-link-soft: var(--link-soft);
-  --color-blueprint: var(--blueprint);
-  --color-blueprint-foreground: var(--blueprint-foreground);
-  --color-blueprint-muted: var(--blueprint-muted);
+  --color-signal: var(--signal);
+  --color-signal-foreground: var(--signal-foreground);
+  --color-stage-deep: var(--stage-deep);
   --color-stage: var(--stage);
   --color-stage-foreground: var(--stage-foreground);
   --color-stage-muted: var(--stage-muted);
@@ -87,95 +87,113 @@
 
 :root {
   /*
-    Paper: the default. White sheets on a quiet page, true ink, hairlines instead of boxes.
-    Color is information here, never decoration: blue is something you can act on, orange is a
-    clock running, green has landed, amber is held.
+    Paper, the default theme. The palette is built, not picked: every color is an OKLCH value on
+    one of six hue anchors, so lightness and strength are comparable across hues.
+
+      steel   250   every neutral, the page, the ink, the dark stage
+      signal   45   safety orange: money on its way, a clock running, the one loud color
+      landed  160   green: paid
+      held     82   amber: held, or waiting on someone
+      stop     27   red: failed, blocked
+      setoff  305   violet: backcharges (charts only)
+
+    Rules the values follow, checked by `node scripts/contrast.mjs`:
+      - text colors sit at L 0.48 to 0.56, which clears 4.5:1 on white and on their own tint
+      - tints sit at L 0.955 with a trace of chroma, so a tinted row never looks like a fill
+      - neutrals carry a little steel (C 0.004 to 0.03), so greys and the dark stage are one family
+      - signal orange and steel are near-complements; nothing else competes with the orange
   */
-  --background: #f5f6f8;
-  --foreground: #14171f;
-  --card: #ffffff;
-  --card-foreground: #1c1c1e;
-  --popover: #ffffff;
-  --popover-foreground: #1c1c1e;
-  --primary: #1c1c1e;
-  --primary-foreground: #ffffff;
-  --secondary: #ececea;
-  --secondary-foreground: #1c1c1e;
-  --muted: #f0f0ee;
-  --muted-foreground: #6a6a6f;
-  --accent: #ececea;
-  --accent-foreground: #1c1c1e;
-  --destructive: #c0271d;
-  --destructive-foreground: #ffffff;
-  --border: rgb(0 0 0 / 0.09);
-  --input: rgb(0 0 0 / 0.2);
-  --ring: #1f4ed8;
-  --surface-sunken: #f1f1ef;
+  --background: oklch(0.975 0.004 250);
+  --foreground: oklch(0.21 0.022 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.022 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.022 250);
+  --primary: oklch(0.21 0.022 250);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.935 0.007 250);
+  --secondary-foreground: oklch(0.21 0.022 250);
+  --muted: oklch(0.955 0.005 250);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.935 0.007 250);
+  --accent-foreground: oklch(0.21 0.022 250);
+  --destructive: oklch(0.53 0.2 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.21 0.022 250 / 0.1);
+  --input: oklch(0.21 0.022 250 / 0.24);
+  --ring: oklch(0.48 0.11 250);
+  --surface-sunken: oklch(0.96 0.005 250);
 
-  /* Blueprint blue: links and anything you can act on. */
-  --link: #1f4ed8;
-  --link-soft: #e8eefc;
+  /* Links: steel with the chroma turned up. Quiet enough to sit in a table, clearly not body ink. */
+  --link: oklch(0.48 0.11 250);
+  --link-soft: oklch(0.955 0.02 250);
 
-  /* The drawing sheet. Every page sits on a faint drafting grid; the landing opens on a blueprint. */
-  --grid-line: rgb(31 78 216 / 0.04);
-  --grid-line-major: rgb(31 78 216 / 0.06);
-  --blueprint: #1838a0;
-  --blueprint-deep: #122a7c;
-  --blueprint-line: rgb(255 255 255 / 0.075);
-  --blueprint-line-major: rgb(255 255 255 / 0.14);
-  --blueprint-foreground: #f6f8ff;
-  --blueprint-muted: #c0ccf5;
+  /* Signal orange twice: a bright fill that carries dark lettering, and a deeper one for text. */
+  --signal: oklch(0.72 0.185 47);
+  --signal-foreground: oklch(0.21 0.022 250);
+  --money: oklch(0.535 0.16 42);
+  --money-foreground: oklch(1 0 0);
+  --money-soft: oklch(0.96 0.022 55);
+  --settled: oklch(0.5 0.115 160);
+  --settled-foreground: oklch(1 0 0);
+  --settled-soft: oklch(0.955 0.03 160);
+  --hold: oklch(0.52 0.1 85);
+  --hold-foreground: oklch(1 0 0);
+  --hold-soft: oklch(0.955 0.04 88);
 
-  --money: #d9541a;                /* a clock running, money on its way */
-  --money-foreground: #ffffff;
-  --money-soft: #fbeade;
-  --settled: #1d7a54;              /* landed */
-  --settled-foreground: #ffffff;
-  --settled-soft: #e2f1e9;
-  --hold: #9a6410;                 /* held or waiting on someone */
-  --hold-foreground: #ffffff;
-  --hold-soft: #f6ecd6;
+  --chart-1: var(--flow-moving);
+  --chart-2: var(--flow-paid);
+  --chart-3: var(--flow-held);
+  --chart-4: var(--foreground);
+  --chart-5: var(--muted-foreground);
 
-  --chart-1: #d9541a;
-  --chart-2: #1d7a54;
-  --chart-3: #9a6410;
-  --chart-4: #1c1c1e;
-  --chart-5: #6a6a6f;
+  /* The stage: steel at night. The landing page opens and closes on it. */
+  --stage: oklch(0.25 0.035 252);
+  --stage-deep: oklch(0.19 0.03 252);
+  --stage-foreground: oklch(0.975 0.004 250);
+  --stage-muted: oklch(0.8 0.025 250);
+  --stage-line: oklch(1 0 0 / 0.045);
+  --stage-line-major: oklch(1 0 0 / 0.085);
+
+  /* The drafting grid every page sits on. */
+  --grid-line: oklch(0.48 0.11 250 / 0.045);
+  --grid-line-major: oklch(0.48 0.11 250 / 0.07);
+
+  /* One meaning per color, shared by every chart: where the money is. Marks are a step brighter than text. */
+  --flow-paid: oklch(0.6 0.13 160);
+  --flow-moving: oklch(0.68 0.185 45);
+  --flow-held: oklch(0.67 0.13 82);
+  --flow-setoff: oklch(0.55 0.11 305);
+  --flow-idle: oklch(0.8 0.012 250);
 
   --radius: 0.625rem;
 
-  /* Dark "stage" for full-bleed visual moments. */
-  --stage: #17181a;
-  --stage-foreground: #f4f3ee;
-  --stage-muted: #a1a3a8;
-
-  /* One meaning per color, shared by every chart: where the money is. */
-  --flow-paid: var(--settled);
-  --flow-moving: var(--money);
-  --flow-held: var(--hold);
-  --flow-setoff: #76598c;
-  --flow-idle: #b3b5ba;
-
   /* Elevation is rare: sheets sit on the page with a hairline; only floating things cast a shadow. */
-  --shadow-card-value: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-float-value: 0 12px 40px rgb(0 0 0 / 0.14), 0 2px 6px rgb(0 0 0 / 0.06);
+  --shadow-card-value: 0 0 0 1px oklch(0.21 0.022 250 / 0.07), 0 1px 2px oklch(0.21 0.022 250 / 0.04);
+  --shadow-float-value: 0 24px 60px -12px oklch(0.19 0.03 252 / 0.45), 0 0 0 1px oklch(0.21 0.022 250 / 0.06);
 
   --numeral-font: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1c1c1e;
-  --sidebar-primary: #1c1c1e;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f0ee;
-  --sidebar-accent-foreground: #1c1c1e;
-  --sidebar-border: rgb(0 0 0 / 0.09);
-  --sidebar-ring: #1f4ed8;
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 /* Concrete: the original look, kept for comparison in the lab. */
 [data-theme="concrete"] {
   --grid-line: transparent;
   --grid-line-major: transparent;
+  --stage-deep: #0f1418;
+  --flow-paid: var(--settled);
+  --flow-moving: var(--money);
+  --flow-held: var(--hold);
+  --signal: var(--money);
+  --signal-foreground: #ffffff;
   --background: #eceeeb;           /* concrete */
   --foreground: #1b2228;           /* graphite */
   --card: #ffffff;
@@ -252,8 +270,10 @@
 [data-theme="ink"] {
   --grid-line: rgb(16 38 28 / 0.04);
   --grid-line-major: rgb(16 38 28 / 0.07);
-  --blueprint: #14402e;
-  --blueprint-deep: #0e2d20;
+  --stage-deep: #0a1c14;
+  --flow-paid: var(--settled);
+  --flow-moving: var(--money);
+  --flow-held: var(--hold);
   --link: #1f6b4a;
   --link-soft: #e0ede5;
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
@@ -290,8 +310,12 @@
 [data-theme="night"] {
   --grid-line: rgb(143 176 255 / 0.04);
   --grid-line-major: rgb(143 176 255 / 0.07);
-  --blueprint: #10245f;
-  --blueprint-deep: #0b1840;
+  --stage-deep: #040506;
+  --flow-paid: var(--settled);
+  --flow-moving: var(--money);
+  --flow-held: var(--hold);
+  --signal: var(--money);
+  --signal-foreground: #14100c;
   --link: #8fb0ff;
   --link-soft: #1b2540;
   --background: #0c0e10;
@@ -371,19 +395,23 @@
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
   background-position: -1px -1px;
 }
-/* The blueprint: white linework on blue, lit from the top left like a sheet under a lamp. */
-@utility blueprint {
-  color: var(--blueprint-foreground);
-  background-color: var(--blueprint);
+/*
+  The stage: the dark steel sheet the landing page opens on. Drafting lines in white, a cool light
+  from the top left, and the glow of a work light low on the right, where the contract sheet sits.
+*/
+@utility stage {
+  color: var(--stage-foreground);
+  background-color: var(--stage);
   background-image:
-    radial-gradient(90% 70% at 12% 0%, rgb(255 255 255 / 0.13), transparent 62%),
-    linear-gradient(to bottom, transparent 55%, var(--blueprint-deep)),
-    linear-gradient(var(--blueprint-line-major) 1px, transparent 1px),
-    linear-gradient(90deg, var(--blueprint-line-major) 1px, transparent 1px),
-    linear-gradient(var(--blueprint-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
-  background-size: auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  background-position: 0 0, 0 0, -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+    radial-gradient(55% 60% at 78% 104%, oklch(from var(--signal) l c h / 0.34), transparent 70%),
+    radial-gradient(70% 55% at 8% -8%, oklch(1 0 0 / 0.09), transparent 65%),
+    linear-gradient(to bottom, transparent 40%, var(--stage-deep)),
+    linear-gradient(var(--stage-line-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-line-major) 1px, transparent 1px),
+    linear-gradient(var(--stage-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stage-line) 1px, transparent 1px);
+  background-size: auto, auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: 0 0, 0 0, 0 0, -1px -1px, -1px -1px, -1px -1px, -1px -1px;
 }
 /* The page-load sequence: each piece rises in turn. Set --i for its place in the order. */
 @utility reveal {
