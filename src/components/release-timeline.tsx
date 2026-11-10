@@ -33,7 +33,8 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref, payee 
   const steps: { title: string; detail: React.ReactNode; done: boolean; active: boolean; tone?: "money" | "settled" | "hold" }[] = [
     {
       title: `${ownerName} paid ${gcName}`,
-      detail: `${formatCentsCompact(r.event.amountCents)} · ${r.event.reference} · ${fmt(r.event.receivedAt)}`,
+      // The size and bank reference of the owner's payment are the contractor's business, not the payee's.
+      detail: payee ? `${formatCentsCompact(r.event.amountCents)}, ${r.event.reference}, ${fmt(r.event.receivedAt)}` : fmt(r.event.receivedAt),
       done: true,
       active: false,
     },
@@ -53,7 +54,7 @@ export function ReleaseTimeline({ r, ownerName, gcName, nowIso, signHref, payee 
       title: conditional ? WAIVER_TITLES[conditional.form as WaiverFormId].title : "Waiver",
       detail:
         conditional?.status === "signed"
-          ? `Signed by ${conditional.signerName} · ${conditional.signedAt ? fmt(conditional.signedAt) : ""}`
+          ? `Signed by ${conditional.signerName}${conditional.signedAt ? `, ${fmt(conditional.signedAt)}` : ""}`
           : conditional && signHref
             ? (
                 <a href={signHref(conditional.id)} className="font-medium text-link hover:underline">

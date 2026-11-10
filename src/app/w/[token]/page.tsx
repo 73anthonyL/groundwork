@@ -40,7 +40,7 @@ export default async function TokenWaiverPage({ params, searchParams }: { params
       </header>
       <main className="mx-auto w-full max-w-xl flex-1 px-4 py-6">
         <div className="text-xs text-muted-foreground">
-          {r.contract.project.name} · from {r.contract.payer.name}
+          {r.contract.project.name}, from {r.contract.payer.name}
         </div>
         <div className="mt-1 flex items-end justify-between gap-3">
           <div className="num text-3xl font-semibold">{formatCents(r.releaseCents)}</div>
@@ -61,9 +61,9 @@ export default async function TokenWaiverPage({ params, searchParams }: { params
 
         <h1 className="mt-6 text-xl font-semibold">{meta.title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {meta.cite} · {meta.conditional ? "takes effect only when the payment clears" : "confirms payment received"}
+          {meta.conditional ? "It takes effect only when the payment clears." : "It confirms you have been paid."} {meta.cite}.
         </p>
-        <article className="mt-4 rounded-xl bg-card shadow-card p-4 font-mono text-[13px] leading-relaxed" aria-label="Waiver text">
+        <article className="type-contract mt-4 space-y-0.5 rounded-xl bg-card px-6 py-6 text-[15px] shadow-card sm:px-8" aria-label="Waiver text">
           {waiverBody(fields).map((line, i) => (line === "" ? <div key={i} className="h-3" /> : <p key={i} className={/^[A-Z ()0-9.§:·']+$/.test(line) && line.length < 90 ? "font-semibold" : ""}>{line}</p>))}
         </article>
 
