@@ -71,7 +71,7 @@ export default async function SubHome() {
                 <li key={r.id} className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <Link href={`/sub/contracts/${r.contractId}#release-${r.id}`} className="num text-lg font-semibold hover:text-link">
+                      <Link href={`/sub/contracts/${r.contractId}#release-${r.id}`} className="num text-lg font-semibold text-link hover:underline">
                         {formatCents(r.releaseCents)}
                       </Link>
                       <div className="text-[13px] text-muted-foreground">
@@ -113,7 +113,7 @@ export default async function SubHome() {
           {contracts.map((c) => (
             <li key={c.id} className="flex items-center justify-between gap-3 p-4">
               <div className="min-w-0">
-                <Link href={`/sub/contracts/${c.id}`} className="font-medium hover:text-link">
+                <Link href={`/sub/contracts/${c.id}`} className="font-medium text-link hover:underline">
                   {c.trade}
                 </Link>
                 <div className="num text-[13px] text-muted-foreground">

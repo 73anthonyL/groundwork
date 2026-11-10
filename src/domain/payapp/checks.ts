@@ -64,7 +64,7 @@ export function runPayAppChecks(app: PayAppInput, ctx: PayAppContext): CheckResu
           id: "rules_approved",
           label: "Payment rules approved",
           status: "fail",
-          detail: "This contract has no approved payment rules. Compile and approve the subcontract first.",
+          detail: "This contract has no approved payment rules. Read and approve the subcontract first.",
         },
   );
 

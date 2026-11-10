@@ -30,7 +30,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
 
   return (
     <div>
-      <Link href={`/gc/projects/${project.id}`} className="text-sm text-muted-foreground hover:text-link">
+      <Link href={`/gc/projects/${project.id}`} className="text-sm text-link hover:underline">
         {project.name}
       </Link>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">

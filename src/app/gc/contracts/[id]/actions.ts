@@ -107,7 +107,7 @@ export async function uploadContractPdfAction(formData: FormData) {
       bytes: new Uint8Array(await file.arrayBuffer()),
       actor: { userId: session.user.id, label: session.user.name },
     });
-    message = `Uploaded ${r.pageCount}-page PDF. Compile it with Claude to propose rules.`;
+    message = `Uploaded ${r.pageCount}-page PDF. Read it to propose payment rules.`;
   } catch (e) {
     if (!(e instanceof UploadError)) throw e;
     message = e.message;

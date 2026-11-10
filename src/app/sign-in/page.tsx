@@ -17,10 +17,10 @@ const GROUPS: { kind: "owner" | "gc" | "sub"; title: string; blurb: string }[] =
 /** The seat to start from: the controller sees the whole chain. */
 const START = "Priya Natarajan";
 
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ error?: string; switch?: string }> }) {
   const session = await auth();
-  if (session) redirect(homeFor(session.org.kind));
-  const { error } = await searchParams;
+  const { error, switch: switching } = await searchParams;
+  if (session && !switching) redirect(homeFor(session.org.kind));
 
   const db = await getDb();
   const rows = await db
@@ -35,9 +35,10 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <Wordmark />
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 pb-16 pt-14">
-        <h1 className="max-w-2xl text-4xl font-semibold leading-[1.1] sm:text-5xl">Whose seat do you want?</h1>
+        <p className="text-sm font-medium text-muted-foreground">Demo sign-in, no password needed</p>
+        <h1 className="mt-2 max-w-2xl text-4xl font-semibold leading-[1.1] sm:text-5xl">Who do you want to be?</h1>
         <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
-          On a construction job, money moves down a chain. Everyone below sits somewhere on it, on the same two demo projects. Start as {START.split(" ")[0]} to see the whole chain, then come back and look from a subcontractor&rsquo;s side.
+          The owner pays the general contractor, who pays the subcontractors. Click a name to use Groundwork as that person. Start as {START.split(" ")[0]}, the contractor&rsquo;s controller, who does most of the work.
         </p>
         {error && (
           <p role="alert" className="mt-4 text-sm text-destructive">
@@ -64,7 +65,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
                     <li key={user.id}>
                       <form action={signInAs}>
                         <input type="hidden" name="userId" value={user.id} />
-                        <button type="submit" className="group flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/60 focus-visible:bg-muted/60">
+                        <button type="submit" className="group flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-link-soft focus-visible:bg-link-soft">
                           <span className="min-w-0">
                             <span className="block font-medium">
                               {user.name}
@@ -74,7 +75,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
                               {user.title}, {org.name}
                             </span>
                           </span>
-                          <span className="shrink-0 text-[13px] text-muted-foreground transition-colors group-hover:text-link">Sign in</span>
+                          <span className="shrink-0 text-[13px] font-medium text-link transition-transform duration-150 group-hover:translate-x-1">Sign in</span>
                         </button>
                       </form>
                     </li>

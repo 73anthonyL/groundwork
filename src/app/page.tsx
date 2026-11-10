@@ -1,30 +1,23 @@
 import Link from "next/link";
 import { auth, homeFor } from "@/server/auth";
-import { latestEval } from "@/server/read/eval";
-import { STATES, coverage } from "@/domain/statutes";
 import { Wordmark } from "@/components/wordmark";
 import { ContractHero } from "@/components/landing/contract-hero";
 import { MoneyFlow } from "@/components/viz/money-flow";
-import { AblationChart, DaysGap } from "@/components/viz/charts";
-import { StateGrid } from "@/components/viz/state-grid";
+import { DaysGap } from "@/components/viz/charts";
 import { SAMPLE_FLOW } from "@/lib/sample-flow";
 
 /** The work, in order, and who does each part. It is a sequence, so it is numbered. */
 const STEPS = [
-  { who: "Claude", verb: "reads", body: "Once per subcontract. It fills a fixed form of 21 payment terms and must attach the clause each one came from." },
-  { who: "Code", verb: "checks", body: "It looks for every quoted clause in the PDF, applies the governing state's payment law, and flags whatever it cannot stand behind." },
+  { who: "Claude", verb: "reads", body: "You upload a subcontract. Claude pulls out its payment terms and shows the clause each one came from." },
+  { who: "Code", verb: "checks", body: "It finds every quoted clause in the PDF, applies the state's payment deadline, and flags anything it is unsure of." },
   { who: "A person", verb: "approves", body: "The controller settles the flagged terms and approves once. The rules are frozen and hashed." },
   { who: "The engine", verb: "pays", body: "When the owner pays, it splits the money, holds retainage, drafts each waiver and starts the legal clock. Same inputs, same result, every time." },
 ];
 
-/** The front door: what the product does to one clause, the problem, one project's money, the evidence. */
+/** The front door: what the product does to one clause, the problem, how it works, one project's money. */
 export default async function Landing() {
   const session = await auth();
-  const run = latestEval();
-  const c = coverage();
   const cta = session ? { href: homeFor(session.org.kind), label: "Open your workspace" } : { href: "/sign-in", label: "Open the demo" };
-  const prod = run?.layers[run.layers.length - 1];
-  const trust = run?.layers[0];
   return (
     <div className="flex flex-1 flex-col bg-card">
       {/* The opening: the dark stage, and the contract page laid on top of it. */}
@@ -32,12 +25,6 @@ export default async function Landing() {
         <header className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Wordmark />
           <nav className="flex items-center gap-1 text-[13px]">
-            <Link href="/statutes" className="rounded-md px-2.5 py-1 text-stage-muted transition-colors hover:text-white">
-              Payment law
-            </Link>
-            <Link href="/api/v1" className="hidden rounded-md px-2.5 py-1 text-stage-muted transition-colors hover:text-white sm:inline">
-              API
-            </Link>
             <Link href={cta.href} className="ml-2 rounded-md border border-white/30 px-3 py-1 font-medium text-white transition-colors hover:bg-white/10">
               {session ? "Workspace" : "Sign in"}
             </Link>
@@ -75,17 +62,7 @@ export default async function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-5 py-24 sm:px-8" aria-labelledby="flow-h">
-        <h2 id="flow-h" className="max-w-2xl text-3xl font-semibold leading-tight sm:text-[2.5rem]">One project, three owner payments.</h2>
-        <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
-          Each payment is split by the approved rules as it arrives. Retainage is held back, a backcharge is set off, and a supplier one step down is paid out of its subcontractor&rsquo;s share. Orange is on its way. Green has landed.
-        </p>
-        <div className="mt-10 rounded-2xl bg-background p-5 sm:p-8" style={{ "--flow-surface": "var(--background)" } as React.CSSProperties}>
-          <MoneyFlow flow={SAMPLE_FLOW} autoPlay height={380} />
-        </div>
-      </section>
-
-      <section id="how" className="scroll-mt-16 bg-background">
+      <section id="how" className="scroll-mt-16">
         <div className="mx-auto grid max-w-6xl gap-x-16 gap-y-10 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <h2 className="text-3xl font-semibold leading-tight sm:text-[2.5rem]">The model reads. It never does the math.</h2>
@@ -105,30 +82,15 @@ export default async function Landing() {
         </div>
       </section>
 
-      {run && prod && trust && (
-        <section className="mx-auto w-full max-w-6xl px-5 py-24 sm:px-8" aria-labelledby="eval-h">
-          <h2 id="eval-h" className="max-w-3xl text-3xl font-semibold leading-tight sm:text-[2.5rem]">What happens when the model reads a contract wrong?</h2>
-          <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
-            We ran it on {run.metrics.contracts} subcontracts with answer keys, most of them written to mislead: payment terms buried in definitions, riders that override the body, two real California forms. It got {(run.metrics.accuracy * 100).toFixed(1)}% of {run.metrics.fields} terms right, and every clause it quoted was really in the document.
-          </p>
-          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed">
-            The number that matters is the wrong ones. Trust the model outright and {trust.silentErrors} wrong terms reach the payment engine with nobody asked to look. With every check on, {prod.silentErrors === 1 ? "1 does" : `${prod.silentErrors} do`}.
-          </p>
-          <div className="mt-10 max-w-4xl">
-            <AblationChart run={run} />
-          </div>
-        </section>
-      )}
-
-      <section className="bg-background" aria-labelledby="law-h">
-        <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
-          <h2 id="law-h" className="max-w-3xl text-3xl font-semibold leading-tight sm:text-[2.5rem]">The contract says one thing. The state may say another.</h2>
-          <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
-            {c.promptPay} states set a deadline for paying subcontractors. {c.retainageCap} cap or forbid retainage. {c.payIfPaidVoid + c.payIfPaidLimited} void or limit pay-if-paid clauses. Groundwork applies each state&rsquo;s rule in code, shows its source, and falls back to the contract where the law is silent.
-          </p>
-          <div className="mt-10">
-            <StateGrid states={STATES} />
-          </div>
+      <section className="bg-background" aria-labelledby="flow-h">
+        <div className="mx-auto w-full max-w-6xl px-5 py-24 sm:px-8">
+        <h2 id="flow-h" className="max-w-2xl text-3xl font-semibold leading-tight sm:text-[2.5rem]">One project, three owner payments.</h2>
+        <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
+          Each payment is split by the approved rules as it arrives. Retainage is held back, a backcharge is set off, and a supplier one step down is paid out of its subcontractor&rsquo;s share. Orange is on its way. Green has landed.
+        </p>
+        <div className="mt-10 rounded-2xl bg-card p-5 shadow-card sm:p-8">
+          <MoneyFlow flow={SAMPLE_FLOW} autoPlay height={380} />
+        </div>
         </div>
       </section>
 

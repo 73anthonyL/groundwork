@@ -13,7 +13,7 @@ import { demoOutbox } from "@/server/scoped";
 import { formatCents } from "@/lib/money";
 
 const DESCRIPTIONS: Record<(typeof CHECKPOINTS)[number], string> = {
-  fresh: "Parties, project, three subcontracts with PDFs, schedules of values. Nothing compiled.",
+  fresh: "Parties, project, three subcontracts with PDFs, schedules of values. Nothing read yet.",
   compiled: "Ironline approved. Pacific extracted and waiting on review (subjective release trigger). Summit not compiled: compile it live.",
   paid1: "All three approved. Pay App #1 approved and funded by Owner Payment #1 ($200,000). Waivers signed, payments settled.",
   intake: "paid1 + Pay App #2 approved for Ironline and Pacific. Summit's #2 submitted with retainage at 5% instead of 10%.",

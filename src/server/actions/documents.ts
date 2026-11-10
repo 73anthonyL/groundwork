@@ -10,25 +10,31 @@ export const MAX_PDF_BYTES = 4 * 1024 * 1024; // Vercel request bodies cap at 4.
 
 export class UploadError extends Error {}
 
-export async function attachContractDocument(input: { contractId: string; orgId: string; filename: string; bytes: Uint8Array; actor: Actor }) {
-  const { bytes } = input;
-  if (bytes.length === 0) throw new UploadError("The file is empty.");
+/** Checks that the bytes are a readable text PDF and returns its pages. Throws UploadError otherwise. */
+export async function inspectPdf(bytes: Uint8Array) {
+  if (bytes.length === 0) throw new UploadError("Choose the subcontract PDF.");
   if (bytes.length > MAX_PDF_BYTES) throw new UploadError("PDFs up to 4 MB, please.");
   if (Buffer.from(bytes.subarray(0, 5)).toString("latin1") !== "%PDF-") throw new UploadError("That file is not a PDF.");
-
-  const db = await getDb();
-  const contract = await db.query.contracts.findFirst({ where: eq(schema.contracts.id, input.contractId) });
-  if (!contract) throw new UploadError("Contract not found.");
-  if (contract.status === "active") throw new UploadError("This contract's rules are approved and frozen to the PDF they were compiled from.");
-
   let pages: string[];
   let pageCount: number;
   try {
-    ({ pages, pageCount } = await extractPageTexts(bytes));
+    // The PDF reader takes ownership of the buffer it is given, so it gets a copy.
+    ({ pages, pageCount } = await extractPageTexts(bytes.slice()));
   } catch {
     throw new UploadError("Couldn't read that PDF. Is it encrypted or damaged?");
   }
   if (!pages.some((t) => t.trim().length > 0)) throw new UploadError("This PDF has no text layer (it looks scanned). Upload a text PDF.");
+  return { pages, pageCount };
+}
+
+export async function attachContractDocument(input: { contractId: string; orgId: string; filename: string; bytes: Uint8Array; actor: Actor }) {
+  const { bytes } = input;
+  const db = await getDb();
+  const contract = await db.query.contracts.findFirst({ where: eq(schema.contracts.id, input.contractId) });
+  if (!contract) throw new UploadError("Contract not found.");
+  if (contract.status === "active") throw new UploadError("This contract's rules are approved and frozen to the PDF they were read from.");
+
+  const { pages, pageCount } = await inspectPdf(bytes);
 
   const buf = Buffer.from(bytes);
   const sha256 = sha256Hex(buf);

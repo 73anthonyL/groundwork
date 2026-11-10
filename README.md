@@ -84,7 +84,7 @@ Where to look:
 ## Verify it
 
 ```bash
-pnpm test        # 117 tests
+pnpm test        # 120 tests
 pnpm eval        # extraction eval against the answer keys (cached extractions; --fresh calls the model)
 pnpm typecheck && pnpm lint
 ```

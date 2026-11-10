@@ -13,9 +13,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { certifyRetentionAction, decideChangeOrderAction, proposeChangeOrderAction, recordBackchargeAction, uploadContractPdfAction, voidBackchargeAction } from "./actions";
 
-export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string }> }) {
+export default async function ContractPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ msg?: string; read?: string }> }) {
   const { id } = await params;
-  const { msg } = await searchParams;
+  const { msg, read } = await searchParams;
   const { org } = await requireAuth("gc");
   const contract = await getContract(org, id);
   if (!contract) notFound();
@@ -42,8 +42,8 @@ export default async function ContractPage({ params, searchParams }: { params: P
 
   return (
     <div>
-      <Link href={`/gc/projects/${contract.projectId}`} className="text-sm text-muted-foreground hover:text-link">
-        {contract.project.name}
+      <Link href={`/gc/projects/${contract.projectId}`} className="text-sm text-link hover:underline">
+        Back to {contract.project.name}
       </Link>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -74,7 +74,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
       )}
 
       <div className="mt-6">
-        <CompileReview contractId={contract.id} documentUrl={contract.documentId ? `/api/documents/${contract.documentId}` : null} subName={contract.sub.name} ruleSet={view} canCompile={Boolean(contract.documentId)} />
+        <CompileReview contractId={contract.id} documentUrl={contract.documentId ? `/api/documents/${contract.documentId}` : null} subName={contract.sub.name} ruleSet={view} canCompile={Boolean(contract.documentId)} autoCompile={read === "1"} />
       </div>
 
       {adjustments && (

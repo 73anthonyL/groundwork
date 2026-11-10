@@ -33,7 +33,7 @@ const THEME_BOOT = `try{var d=document.documentElement,t=localStorage.getItem("g
 export const metadata: Metadata = {
   title: { default: "Groundwork", template: "%s · Groundwork" },
   description:
-    "Compiles subcontracts into executable payment rules and pays subcontractors the moment the owner's money lands.",
+    "Reads subcontracts into payment rules a person approves, and pays subcontractors the moment the owner's money lands.",
 };
 
 export const viewport: Viewport = {

@@ -97,3 +97,14 @@ Figures use lining tabular numerals everywhere (`.num`, `type-numeral`). The mon
 - Linear, How we redesigned the Linear UI.
 - Adrian Krebs, Capital & Compute, Utsubo and others on the tells of generated design.
 - The `TristanMarston/sift` design system: three fonts with strict jobs, one shared spring set, a written system beside the code.
+
+## Simplification pass (Nov 10)
+
+Anthony's feedback: the site was confusing, it was unclear what could be clicked, and it showed law that a contractor or sub never needs to read.
+
+- **One rule for clickable things.** Links are always blue and underline on hover. Buttons lift and gain a shadow under the cursor and press down on click. Every clickable element shows a pointer.
+- **The board says what to do next.** "How a payment happens" lists the five steps in order, ticks the finished ones, and puts the only button on the current step.
+- **Upload is the front door.** "Add a subcontract" (project board) takes the PDF and three facts, then goes straight to Claude reading it.
+- **Law appears only where it changes something:** in the contract review, on a deadline, on a waiver. The statute library, the lab and the demo controls left the main navigation; the library and demo controls are footer links.
+- **The landing page is four parts:** the contract becoming rules, the problem, the four steps, one project's money.
+- **Plain words.** "Compile" became "read".

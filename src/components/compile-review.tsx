@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, AlertTriangle, OctagonAlert, FileSearch, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,12 +30,15 @@ export function CompileReview({
   subName,
   ruleSet,
   canCompile,
+  autoCompile = false,
 }: {
   contractId: string;
   documentUrl: string | null;
   subName: string;
   ruleSet: RuleSetView | null;
   canCompile: boolean;
+  /** Start reading straight away: set when the contract was uploaded a moment ago. */
+  autoCompile?: boolean;
 }) {
   const router = useRouter();
   const [page, setPage] = useState(1);
@@ -62,6 +65,20 @@ export function CompileReview({
     }
   }
 
+  // A fresh upload goes straight to reading; the person asked for that by uploading it.
+  const started = useRef(false);
+  useEffect(() => {
+    if (!autoCompile || ruleSet || !canCompile) return;
+    // The guard is set when the read starts, not when it is scheduled, so a remounted effect still fires once.
+    const t = setTimeout(() => {
+      if (started.current) return;
+      started.current = true;
+      void compile("model");
+    }, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const stored = ruleSet?.stored ?? null;
   const editable = ruleSet?.status === "extracted" || ruleSet?.status === "in_review";
   const blocking = stored ? RULE_FIELDS.filter((p) => ["escalated", "needs_review"].includes(stored.annotations[p].review.state)) : [];
@@ -87,14 +104,14 @@ export function CompileReview({
                 ? ruleSet.status === "approved"
                   ? `Version ${ruleSet.version}, approved by ${ruleSet.approvedByName ?? "the controller"}`
                   : `Version ${ruleSet.version}, read by ${ruleSet.model ?? "the model"}${ruleSet.extractionMs ? ` in ${(ruleSet.extractionMs / 1000).toFixed(0)} seconds` : ""}`
-                : "Not compiled yet"}
+                : "Not read yet"}
             </p>
           </div>
           {canCompile && (
             <div className="flex gap-2">
               <Button onClick={() => compile("model")} disabled={compiling !== null} variant={ruleSet ? "outline" : "money"} size="sm">
                 <Sparkles className="h-4 w-4" aria-hidden />
-                {compiling === "model" ? "Reading the contract…" : ruleSet ? "Read it again" : "Compile with Claude"}
+                {compiling === "model" ? "Reading the contract…" : ruleSet ? "Read it again" : "Read the contract"}
               </Button>
             </div>
           )}

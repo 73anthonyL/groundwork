@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { requireAuth } from "@/server/auth";
 import { getProject } from "@/server/scoped";
 import { recordOwnerPayment } from "@/server/actions/owner-payment";
+import { addSubcontract, ContractInputError } from "@/server/actions/contracts";
 import { dollars, parseDollars } from "@/lib/money";
 
 export type RecordState = { error?: string; ok?: boolean };
@@ -38,4 +39,32 @@ export async function recordOwnerPaymentAction(_prev: RecordState, formData: For
   });
   revalidatePath(`/gc/projects/${projectId}`);
   redirect(`/gc/projects/${projectId}?event=${result.eventId}${result.duplicate ? "&duplicate=1" : ""}`);
+}
+
+export type AddSubcontractState = { error?: string };
+
+export async function addSubcontractAction(_prev: AddSubcontractState, formData: FormData): Promise<AddSubcontractState> {
+  const session = await requireAuth("gc");
+  const projectId = String(formData.get("projectId") ?? "");
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose the subcontract PDF." };
+  let contractId: string;
+  try {
+    ({ contractId } = await addSubcontract({
+      projectId,
+      gcOrgId: session.org.id,
+      subName: String(formData.get("subName") ?? ""),
+      trade: String(formData.get("trade") ?? ""),
+      sumCents: parseDollars(formData.get("sum")),
+      contactName: String(formData.get("contactName") ?? ""),
+      filename: file.name,
+      bytes: new Uint8Array(await file.arrayBuffer()),
+      actor: { userId: session.user.id, label: session.user.name },
+    }));
+  } catch (e) {
+    if (e instanceof ContractInputError) return { error: e.message };
+    throw e;
+  }
+  revalidatePath(`/gc/projects/${projectId}`);
+  redirect(`/gc/contracts/${contractId}?read=1`);
 }

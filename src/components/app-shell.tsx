@@ -1,4 +1,5 @@
 import { Wordmark } from "./wordmark";
+import Link from "next/link";
 import { NavLinks } from "./nav-links";
 import { signOut } from "@/app/sign-in/actions";
 import type { Session } from "@/server/auth";
@@ -47,6 +48,23 @@ export function AppShell({
         </div>
       </header>
       <main className={`mx-auto w-full flex-1 px-4 py-8 sm:px-6 sm:py-10 ${inner}`}>{children}</main>
+      {/* Not part of anyone's daily work: the demo's controls and the reference behind the rules. */}
+      <footer className={`mx-auto flex w-full flex-wrap gap-x-5 gap-y-1 px-4 pb-8 pt-4 text-[13px] text-muted-foreground sm:px-6 ${inner}`}>
+        <span>Demo tools:</span>
+        <Link href="/sign-in?switch=1" className="text-link hover:underline">
+          Switch to another person
+        </Link>
+        {session.org.kind === "gc" && (
+          <>
+            <Link href="/demo" className="text-link hover:underline">
+              Reset or fast-forward the demo
+            </Link>
+            <Link href="/statutes" className="text-link hover:underline">
+              State payment law reference
+            </Link>
+          </>
+        )}
+      </footer>
     </div>
   );
 }

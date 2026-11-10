@@ -469,6 +469,19 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
+  /* Anything you can click says so: a pointer, and it moves a little under the cursor. */
+  a, button:not(:disabled), summary, label[for], [role="button"], [role="tab"], select, input[type="file"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  summary {
+    transition: color 0.15s ease-out;
+  }
+  summary:hover {
+    color: var(--link);
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;

@@ -41,7 +41,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
 
   return (
     <div>
-      <Link href={`/gc/projects/${app.contract.projectId}`} className="text-sm text-muted-foreground hover:text-link">
+      <Link href={`/gc/projects/${app.contract.projectId}`} className="text-sm text-link hover:underline">
         {app.contract.project.name}
       </Link>
       <div className="mt-1 flex flex-wrap items-start justify-between gap-4">
@@ -49,7 +49,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           <h1 className="text-[2rem] font-semibold leading-tight">Pay application #{app.number}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             From{" "}
-            <Link href={`/gc/contracts/${app.contractId}`} className="hover:text-link">
+            <Link href={`/gc/contracts/${app.contractId}`} className="text-link hover:underline">
               {app.contract.sub.name}
             </Link>
             , for work through {through}

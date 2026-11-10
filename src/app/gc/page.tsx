@@ -43,7 +43,7 @@ export default async function GcHome() {
                 return (
                   <TableRow key={p.id}>
                     <TableCell className="py-4">
-                      <Link href={`/gc/projects/${p.id}`} className="text-[15px] font-semibold hover:text-link">
+                      <Link href={`/gc/projects/${p.id}`} className="text-[15px] font-semibold text-link hover:underline">
                         {p.name}
                       </Link>
                       <div className="text-[13px] text-muted-foreground">

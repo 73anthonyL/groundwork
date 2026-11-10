@@ -14,6 +14,8 @@ import { RecordOwnerPayment } from "@/components/record-owner-payment";
 import { RevealRow, WaterfallReveal } from "@/components/waterfall-reveal";
 import { ProjectTabs } from "@/components/project-tabs";
 import { MoneyFlow } from "@/components/viz/money-flow";
+import { ProjectSteps, type ProjectStep } from "@/components/project-steps";
+import { buttonVariants } from "@/components/ui/button";
 
 const day = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 const dayYear = (iso: string) => new Date(`${iso}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -48,6 +50,43 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
   const nextDue = open.map((r) => r.payByAt).filter((d): d is Date => d !== null).sort((a, b) => a.getTime() - b.getTime())[0];
   const openSubs = new Set(open.map((r) => r.contractId)).size;
   const late = open.filter((r) => r.payByAt && r.payByAt < nowDate).length;
+
+  // Where this project is in the process, and the one thing to do next.
+  const approved = contracts.filter((c) => c.status === "active");
+  const allApps = contracts.flatMap((c) => c.payApplications);
+  const allReleases = events.flatMap((e) => e.releases);
+  const steps: ProjectStep[] = [
+    {
+      title: "Add a subcontract",
+      body: "You upload the signed contract PDF.",
+      done: contracts.length > 0,
+      action: { href: `/gc/projects/${id}/subcontracts/new`, label: "Add a subcontract" },
+    },
+    {
+      title: "Approve its payment rules",
+      body: "Claude reads the payment terms. You check them against the contract and approve once.",
+      done: contracts.length > 0 && toCompile.length === 0,
+      action: toCompile[0] ? { href: `/gc/contracts/${toCompile[0].id}`, label: `Review ${toCompile[0].sub.name}` } : undefined,
+    },
+    {
+      title: "The sub bills, you review",
+      body: "Each subcontractor sends a pay application. Groundwork checks the math.",
+      done: allApps.length > 0 && toReview.length === 0 && approved.length > 0,
+      action: toReview[0] ? { href: `/gc/pay-apps/${toReview[0].id}`, label: `Review ${toReview[0].sub}'s bill` } : undefined,
+    },
+    {
+      title: "Record the owner's payment",
+      body: "Groundwork splits it between the subs, holds retainage and starts each deadline.",
+      done: events.length > 0,
+      action: { href: "#payments-heading", label: "Record a payment" },
+    },
+    {
+      title: "Subs sign, money goes out",
+      body: "Each sub signs a lien waiver, then their payment is sent.",
+      done: allReleases.length > 0 && open.length === 0,
+      action: open[0] ? { href: `/gc/releases/${open[0].id}`, label: "See what's waiting" } : undefined,
+    },
+  ];
 
   // Just recorded a payment: play the project's money from the moment before it landed.
   const flow = highlighted ? await projectFlow(org, id) : null;
@@ -95,14 +134,16 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         </dl>
       </section>
 
+      <ProjectSteps steps={steps} />
+
       {(toReview.length > 0 || toCompile.length > 0) && (
-        <ul className="mt-6 space-y-2 text-sm" aria-label="Waiting on you">
+        <ul className="mt-4 space-y-2 text-sm" aria-label="Waiting on you">
           {toReview.map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-4 rounded-lg bg-hold-soft px-4 py-2.5">
               <span>
                 {p.sub} submitted pay application #{p.number}. It is waiting for your review.
               </span>
-              <Link href={`/gc/pay-apps/${p.id}`} className="shrink-0 font-medium text-link hover:underline">
+              <Link href={`/gc/pay-apps/${p.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })} style={{ background: "var(--card)" }}>
                 Review it
               </Link>
             </li>
@@ -110,10 +151,10 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           {toCompile.map((c) => (
             <li key={c.id} className="flex items-center justify-between gap-4 rounded-lg bg-hold-soft px-4 py-2.5">
               <span>
-                {c.sub.name}&rsquo;s subcontract {c.status === "draft" ? "has not been compiled into payment rules yet" : "has payment rules waiting for your approval"}. Nothing can be paid on it until then.
+                {c.sub.name}&rsquo;s subcontract {c.status === "draft" ? "has not been read into payment rules yet" : "has payment rules waiting for your approval"}. Nothing can be paid on it until then.
               </span>
-              <Link href={`/gc/contracts/${c.id}`} className="shrink-0 font-medium text-link hover:underline">
-                {c.status === "draft" ? "Compile it" : "Review the rules"}
+              <Link href={`/gc/contracts/${c.id}`} className={buttonVariants({ variant: "outline", size: "sm", className: "shrink-0" })} style={{ background: "var(--card)" }}>
+                {c.status === "draft" ? "Read it" : "Review the rules"}
               </Link>
             </li>
           ))}
@@ -139,7 +180,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
       <section className="mt-12" aria-labelledby="payments-heading">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 id="payments-heading" className="text-xl font-semibold">
+            <h2 id="payments-heading" className="scroll-mt-20 text-xl font-semibold">
               Owner payments
             </h2>
             <p className="mt-1 max-w-xl text-sm text-muted-foreground">
@@ -207,7 +248,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                         {e.releases.map((r, i) => (
                           <RevealRow key={r.id} index={i} active={active}>
                             <TableCell>
-                              <Link href={`/gc/releases/${r.id}`} className="font-medium hover:text-link">
+                              <Link href={`/gc/releases/${r.id}`} className="font-medium text-link hover:underline">
                                 {subName(r.contractId)}
                               </Link>
                               <div className="text-xs text-muted-foreground">
@@ -241,12 +282,19 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
       </section>
 
       <section className="mt-14" aria-labelledby="contracts-heading">
-        <h2 id="contracts-heading" className="text-xl font-semibold">
-          Subcontracts
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {contracts.length} contract{contracts.length === 1 ? "" : "s"} worth <span className="num">{formatCentsCompact(contracts.reduce((s, c) => s + c.contractSumCents, 0))}</span>. Open one to see its rules, change orders, retainage and backcharges.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 id="contracts-heading" className="text-xl font-semibold">
+              Subcontracts
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {contracts.length} contract{contracts.length === 1 ? "" : "s"} worth <span className="num">{formatCentsCompact(contracts.reduce((s, c) => s + c.contractSumCents, 0))}</span>. Click a subcontractor to see its payment rules.
+            </p>
+          </div>
+          <Link href={`/gc/projects/${id}/subcontracts/new`} className={buttonVariants({ variant: "outline" })} style={{ background: "var(--card)" }}>
+            Add a subcontract
+          </Link>
+        </div>
         <div className="mt-5 overflow-hidden rounded-xl bg-card shadow-card">
           <Table>
             <TableHeader>
@@ -262,7 +310,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               {contracts.map((c) => (
                 <TableRow key={c.id}>
                   <TableCell>
-                    <Link href={`/gc/contracts/${c.id}`} className="font-medium hover:text-link">
+                    <Link href={`/gc/contracts/${c.id}`} className="font-medium text-link hover:underline">
                       {c.sub.name}
                     </Link>
                   </TableCell>
