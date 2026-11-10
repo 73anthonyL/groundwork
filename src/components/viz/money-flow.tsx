@@ -97,7 +97,22 @@ function layout(flow: ProjectFlow, upTo: number, height: number) {
   return { laid: [...laid.values()].map((l) => ({ ...l, labelY: labelY.get(l.node.id)! })), ribbons };
 }
 
-export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls = true, initialStep }: { flow: ProjectFlow; height?: number; autoPlay?: boolean; showControls?: boolean; initialStep?: number }) {
+export function MoneyFlow({
+  flow,
+  height = 420,
+  autoPlay = false,
+  showControls = true,
+  initialStep,
+  playFrom = 0,
+}: {
+  flow: ProjectFlow;
+  height?: number;
+  autoPlay?: boolean;
+  showControls?: boolean;
+  initialStep?: number;
+  /** With autoPlay: the step playback starts from (for example, the state just before a new payment). */
+  playFrom?: number;
+}) {
   const reduce = useReducedMotion();
   const last = flow.events.length - 1;
   // The server cannot know the viewer's motion setting, so the first render never depends on it;
@@ -109,12 +124,12 @@ export function MoneyFlow({ flow, height = 420, autoPlay = false, showControls =
     const t = setTimeout(() => {
       setMounted(true);
       if (autoPlay && !reduce) {
-        setStep(0);
+        setStep(Math.max(0, Math.min(playFrom, last)));
         setPlaying(true);
       }
     }, 0);
     return () => clearTimeout(t);
-  }, [autoPlay, reduce]);
+  }, [autoPlay, reduce, playFrom, last]);
   const [hover, setHover] = useState<string | null>(null);
   const at = Math.min(Math.max(step, 0), Math.max(last, 0));
 

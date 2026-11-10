@@ -6,6 +6,8 @@ import { formatBps, formatCentsCompact, formatCents } from "@/lib/money";
 import { now } from "@/server/clock";
 import { releaseLabel } from "@/lib/release-label";
 import { ProjectTabs } from "@/components/project-tabs";
+import { projectFlow } from "@/server/read/project";
+import { MoneyFlow } from "@/components/viz/money-flow";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
@@ -27,6 +29,9 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
   if (!board) notFound();
   const { project, contracts, events, balances } = board;
   const committed = contracts.reduce((s, c) => s + c.contractSumCents, 0);
+  // Just recorded a payment: play the project's money from the moment before it landed.
+  const flow = highlighted ? await projectFlow(org, id) : null;
+  const landedAt = flow ? flow.events.findIndex((e) => e.id === highlighted) : -1;
   const nowIso = now().toISOString();
   const subName = (contractId: string) => contracts.find((c) => c.id === contractId)?.sub.name ?? "Subcontractor";
   const openPayApps = contracts.flatMap((c) => c.payApplications.filter((p) => p.status === "submitted").map((p) => ({ ...p, sub: c.sub.name })));
@@ -83,6 +88,22 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           </div>
         ))}
       </dl>
+
+      {flow && landedAt >= 0 && !duplicate && (
+        <section aria-label="The payment that just landed" className="mt-6 rounded-lg border bg-card p-5 shadow-card">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-base font-semibold">
+              {formatCentsCompact(flow.events[landedAt].amountCents)} just landed. Here is where it goes.
+            </h2>
+            <Link href={`/gc/projects/${id}/live`} className="text-sm underline underline-offset-2">
+              Open the live view
+            </Link>
+          </div>
+          <div className="mt-3">
+            <MoneyFlow flow={flow} height={340} autoPlay playFrom={Math.max(0, landedAt - 1)} />
+          </div>
+        </section>
+      )}
 
       {openPayApps.length > 0 && (
         <div className="mt-6 flex items-center justify-between rounded-md border border-hold/40 bg-hold-soft px-4 py-3 text-sm">
