@@ -152,7 +152,12 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
                   </p>
                 )}
                 <p className="mt-1 text-xs text-muted-foreground">{CONF[rule.source(sel).confidence]}</p>
-                {rule.source(sel).notes && <p className="mt-3 max-h-48 overflow-y-auto text-xs leading-relaxed text-muted-foreground">{rule.source(sel).notes}</p>}
+                {rule.source(sel).notes && (
+                  <details className="mt-3 text-xs text-muted-foreground">
+                    <summary className="cursor-pointer hover:text-foreground">Research notes</summary>
+                    <p className="mt-2 max-h-48 overflow-y-auto leading-relaxed">{rule.source(sel).notes}</p>
+                  </details>
+                )}
               </motion.div>
             ) : (
               <p className="text-sm text-muted-foreground">Pick a state.</p>

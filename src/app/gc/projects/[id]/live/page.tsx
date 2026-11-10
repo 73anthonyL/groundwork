@@ -14,10 +14,10 @@ export default async function ProjectLivePage({ params }: { params: Promise<{ id
   if (!project) notFound();
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="text-sm text-muted-foreground">{project.address}</div>
-          <h1 className="mt-1 text-3xl font-semibold">{project.name}</h1>
+      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-4">
+        <div className="min-w-0">
+          <h1 className="text-[2rem] font-semibold leading-tight">{project.name}</h1>
+          <p className="mt-1.5 text-sm text-muted-foreground">The same project as the board, drawn instead of listed.</p>
         </div>
         <ProjectTabs projectId={id} active="live" />
       </div>

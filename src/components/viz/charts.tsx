@@ -148,7 +148,7 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
       <svg viewBox={`0 0 ${W} ${LANES.length * rowH + 8}`} className="h-auto w-full" role="img" aria-label={`${entries.length} recorded events across five lanes`} onMouseLeave={() => setAt(null)}>
         {LANES.map((l, li) => (
           <g key={l.id}>
-            <text x={0} y={li * rowH + 17} className="type-label fill-muted-foreground">
+            <text x={0} y={li * rowH + 16} className="fill-muted-foreground" style={{ fontSize: 8.5 }}>
               {l.label}
             </text>
             <line x1={left} x2={W - 8} y1={li * rowH + 13} y2={li * rowH + 13} stroke="var(--border)" />

@@ -42,31 +42,30 @@ export default async function ContractPage({ params, searchParams }: { params: P
 
   return (
     <div>
-      <div className="text-sm text-muted-foreground">
-        <Link href={`/gc/projects/${contract.projectId}`} className="hover:underline">
-          {contract.project.name}
-        </Link>{" "}
-        / {contract.trade}
-      </div>
+      <Link href={`/gc/projects/${contract.projectId}`} className="text-sm text-muted-foreground hover:text-link">
+        {contract.project.name}
+      </Link>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-3xl font-semibold">{contract.sub.name}</h1>
-        <div className="flex items-center gap-4 text-sm">
-          <span className="num font-medium">{formatCentsCompact(contract.contractSumCents)}</span>
-          <StatusPill status={contract.status} />
+        <div>
+          <h1 className="text-[2rem] font-semibold leading-tight">{contract.sub.name}</h1>
+          <p className="num mt-1 text-sm text-muted-foreground">
+            {contract.trade}, {formatCentsCompact(contract.contractSumCents)} subcontract
+          </p>
         </div>
+        <StatusPill status={contract.status} />
       </div>
       {contract.status !== "active" && (
-        <form action={uploadContractPdfAction} className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-          <input type="hidden" name="contractId" value={contract.id} />
-          <label htmlFor="contract-pdf" className="text-muted-foreground">
-            {contract.documentId ? "Try a different subcontract:" : "Upload the subcontract:"}
-          </label>
-          <input id="contract-pdf" name="file" type="file" accept="application/pdf" required className="max-w-64 text-sm file:mr-2 file:rounded file:border file:bg-card file:px-2 file:py-1" />
-          <Button type="submit" size="sm" variant="outline">
-            Upload PDF
-          </Button>
-          <span className="text-xs text-muted-foreground">Text PDF, up to 4 MB. Compiling it needs the Claude API.</span>
-        </form>
+        <details className="mt-3 text-sm">
+          <summary className="cursor-pointer text-muted-foreground hover:text-foreground">{contract.documentId ? "Use a different subcontract PDF" : "Upload the subcontract PDF"}</summary>
+          <form action={uploadContractPdfAction} className="mt-3 flex flex-wrap items-center gap-3">
+            <input type="hidden" name="contractId" value={contract.id} />
+            <input id="contract-pdf" name="file" type="file" accept="application/pdf" required aria-label="Subcontract PDF" className="max-w-72 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium" />
+            <Button type="submit" size="sm" variant="outline">
+              Upload
+            </Button>
+            <span className="text-xs text-muted-foreground">A text PDF up to 4 MB. Reading it needs the Claude API.</span>
+          </form>
+        </details>
       )}
       {msg && (
         <p role="status" className="mt-3 rounded-xl bg-card shadow-card px-3 py-2 text-sm">

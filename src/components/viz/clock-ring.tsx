@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import type { Clock } from "@/server/read/project";
-import { ease, list } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 import { formatUsd0 } from "./rolling-number";
 
 const R = 26;
@@ -48,18 +48,22 @@ export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: 
   return (
     <div className="flex items-center gap-3">
       <svg width={size} height={size} viewBox="0 0 64 64" className="shrink-0 -rotate-90" aria-hidden>
-        <circle cx="32" cy="32" r={R} fill="none" stroke="var(--border)" strokeWidth="5" />
-        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="5" strokeLinecap="round" strokeDasharray={C} initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: 0.9, ease: ease.trace }} />
+        <circle cx="32" cy="32" r={R} fill="none" stroke="var(--border)" strokeWidth="7" />
+        <motion.circle cx="32" cy="32" r={R} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round" strokeDasharray={C} initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: C * (1 - remaining) }} transition={{ duration: 0.9, ease: ease.trace }} />
       </svg>
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium">
-          {clock.party} <span className="num font-normal text-muted-foreground">· {formatUsd0(clock.cents)}</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="truncate text-sm font-medium">{clock.party}</span>
+          <span className="num shrink-0 text-sm font-semibold">{formatUsd0(clock.cents)}</span>
         </div>
-        <div className="num text-xs" style={{ color }} suppressHydrationWarning>
-          {waiting ? `starts when ${clock.payer} is paid` : leftText(left)}
-        </div>
-        <div className="truncate text-[11px] text-muted-foreground">
-          {clock.label} · {clock.citations.map((c) => c.cite).join(" · ") || "contract terms"}
+        <div className="flex items-baseline justify-between gap-3 text-[13px]">
+          <span className="truncate text-muted-foreground">
+            {clock.label}
+            {clock.citations.length > 0 ? `, ${clock.citations[clock.citations.length - 1].cite}` : ", contract terms"}
+          </span>
+          <span className="num shrink-0" style={{ color: waiting || (left !== null && total !== null && left / total >= 0.5) ? "var(--muted-foreground)" : color }} suppressHydrationWarning>
+            {waiting ? `starts when ${clock.payer} is paid` : leftText(left)}
+          </span>
         </div>
       </div>
     </div>
@@ -69,12 +73,12 @@ export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: 
 export function ClockBoard({ clocks, nowIso, empty = "Nothing is on a clock right now." }: { clocks: Clock[]; nowIso: string; empty?: string }) {
   if (!clocks.length) return <p className="text-sm text-muted-foreground">{empty}</p>;
   return (
-    <motion.ul variants={list.parent} initial="hidden" animate="show" className="grid gap-3 sm:grid-cols-2">
+    <ul className="divide-y">
       {clocks.map((c) => (
-        <motion.li key={c.releaseId} variants={list.row} className="rounded-xl bg-card shadow-card p-3 shadow-card">
-          <ClockRing clock={c} nowIso={nowIso} />
-        </motion.li>
+        <li key={c.releaseId} className="py-3 first:pt-0 last:pb-0">
+          <ClockRing clock={c} nowIso={nowIso} size={34} />
+        </li>
       ))}
-    </motion.ul>
+    </ul>
   );
 }

@@ -29,20 +29,23 @@ export async function ProjectLive({ org, projectId, autoPlay = false }: { org: O
   const { summary, flow, timeline, series, clocks } = o;
   const t = summary.totals;
   const figures = [
-    { label: "Paid to subcontractors", cents: t.paidCents, tone: "text-settled" },
-    { label: "On its way", cents: t.inMotionCents, tone: "text-money" },
-    { label: "Retainage held", cents: t.retainageHeldCents, tone: "text-hold" },
-    { label: "Billed, waiting on the owner", cents: t.awaitingOwnerCents, tone: "" },
+    { label: "Paid to subcontractors", cents: t.paidCents, color: "var(--flow-paid)" },
+    { label: "On its way", cents: t.inMotionCents, color: "var(--flow-moving)" },
+    { label: "Retainage held", cents: t.retainageHeldCents, color: "var(--flow-held)" },
+    { label: "Billed, waiting on the owner", cents: t.awaitingOwnerCents, color: "var(--flow-idle)" },
   ];
   return (
     <div className="space-y-6">
-      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border shadow-card lg:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-10 gap-y-6 border-b pb-8 lg:grid-cols-4">
         {figures.map((f) => (
-          <div key={f.label} className="bg-card p-4">
-            <dd className={`type-numeral text-3xl sm:text-4xl ${f.tone}`}>
+          <div key={f.label}>
+            <dt className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: f.color }} />
+              {f.label}
+            </dt>
+            <dd className="type-numeral mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               <RollingNumber value={f.cents} />
             </dd>
-            <dt className="mt-2 text-xs text-muted-foreground">{f.label}</dt>
           </div>
         ))}
       </dl>

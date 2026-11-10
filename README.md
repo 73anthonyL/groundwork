@@ -141,7 +141,7 @@ drizzle/          SQL migrations     seed/   contracts (md → pdf) + specs (ans
 - **Visuals**: theme sets and type sets are variable blocks in `src/app/globals.css`; motion is tuned in `src/lib/motion.ts`; `/lab` shows every chart with the file and endpoint behind it.
 - **Auth**: persona sessions in a signed cookie; authorization is org-scoped query helpers on every read and write. Lower-tier claimants are authorized by an unguessable link.
 
-The reasoning behind each choice, and the ones still open, are in [docs/DECISIONS.md](docs/DECISIONS.md).
+The reasoning behind each choice, and the ones still open, are in [docs/DECISIONS.md](docs/DECISIONS.md). How the interface is meant to look and read, and the research behind it, is in [docs/DESIGN.md](docs/DESIGN.md).
 
 ## Honest notes
 

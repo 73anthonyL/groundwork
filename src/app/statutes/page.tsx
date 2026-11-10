@@ -11,42 +11,26 @@ const PIF: Record<string, string> = { void: "Void", limited: "Limited", enforcea
 /** Public reference: the law the engine applies, state by state, with sources. */
 export default function StatutesPage() {
   const c = coverage();
-  const figures = [
-    { n: c.jurisdictions, label: "jurisdictions researched" },
-    { n: c.promptPay, label: "set a deadline to pay subcontractors" },
-    { n: c.retainageCap, label: "cap or prohibit retainage on private work" },
-    { n: c.payIfPaidVoid + c.payIfPaidLimited, label: "void or limit pay-if-paid" },
-    { n: c.statutoryWaiverForms, label: "prescribe a statutory lien waiver form" },
-  ];
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-xl backdrop-saturate-150">
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Wordmark />
-          <nav className="flex items-center gap-5 text-sm text-muted-foreground">
-            <Link href="/api/v1/statutes" className="hover:text-foreground">
-              JSON
+          <nav className="flex items-center gap-1 text-[13px]">
+            <Link href="/api/v1/statutes" className="rounded-md px-2.5 py-1 text-muted-foreground transition-colors hover:text-foreground">
+              The data as JSON
             </Link>
-            <Link href="/sign-in" className="hover:text-foreground">
-              Open the app
+            <Link href="/sign-in" className="rounded-md px-2.5 py-1 text-muted-foreground transition-colors hover:text-foreground">
+              Open the demo
             </Link>
           </nav>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
-        <div className="type-label text-muted-foreground">Statute library</div>
-        <h1 className="mt-2 max-w-3xl text-4xl font-semibold leading-tight">The contract says one thing. The state may say another.</h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Groundwork reads the governing-law clause, then applies that state&rsquo;s private-works payment law in code. Every rule below carries its citation and how it was confirmed. Where the research could not confirm a rule, the engine uses the contract&rsquo;s own terms and says so.
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12 sm:px-6">
+        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.08] sm:text-5xl">The contract says one thing. The state may say another.</h1>
+        <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
+          Groundwork reads the governing-law clause, then applies that state&rsquo;s private-works payment law in code. Of {c.jurisdictions} jurisdictions, {c.promptPay} set a deadline for paying subcontractors, {c.retainageCap} cap or forbid retainage, {c.payIfPaidVoid + c.payIfPaidLimited} void or limit pay-if-paid clauses, and {c.statutoryWaiverForms} prescribe the exact lien waiver form. Every rule below carries its source. Where one could not be confirmed, the engine uses the contract&rsquo;s own terms and says so.
         </p>
-        <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border shadow-card sm:grid-cols-5">
-          {figures.map((f) => (
-            <div key={f.label} className="bg-card p-4">
-              <dd className="type-numeral text-4xl">{f.n}</dd>
-              <dt className="mt-2 text-xs text-muted-foreground">{f.label}</dt>
-            </div>
-          ))}
-        </dl>
 
         <section className="mt-10" aria-label="Map">
           <StateGrid states={STATES} />
@@ -70,7 +54,7 @@ export default function StatutesPage() {
               </thead>
               <tbody className="divide-y">
                 {STATES.map((s) => (
-                  <tr key={s.state} className="align-top hover:bg-muted/40">
+                  <tr key={s.state} className="align-top transition-colors hover:bg-muted/40">
                     <td className="px-4 py-2.5 font-medium">
                       {s.name} <span className="font-mono text-xs text-muted-foreground">{s.state}</span>
                     </td>
