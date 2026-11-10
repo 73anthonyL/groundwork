@@ -10,5 +10,5 @@ const $ = (c) => "$" + (c / 100).toLocaleString();
 if (d.summary) { console.log("totals", JSON.stringify(d.summary.totals)); console.log("balances", JSON.stringify(d.summary.balances)); for (const c of d.summary.contracts) console.log(" ", c.tier, c.payee.padEnd(18), "sum", $(c.contractSumCents), "billed", $(c.billedCents), "paid", $(c.paidCents), "moving", $(c.inMotionCents), "held", $(c.retainageHeldCents)); }
 if (d.flow) { console.log("nodes", d.flow.nodes.map((n) => n.label).join(" | ")); for (const e of d.flow.events) console.log(" ev", e.tier, e.reference, $(e.amountCents), e.links.map((l) => `${l.source.slice(0, 6)}>${l.target.slice(0, 8)}:${l.kind}:${$(l.cents)}`).join(", ")); }
 if (d.timeline) console.log("timeline", d.timeline.length, d.timeline.slice(-4).map((t) => `${t.lane}/${t.title}/${t.party}/${t.amountCents}`).join(" ; "));
-if (d.series) console.log("series", d.series.length, JSON.stringify(d.series.at(-1).balances));
+if (d.series) for (const pt of d.series) console.log(" pt", pt.memo.slice(0, 34).padEnd(34), Object.entries(pt.balances).map(([k, v]) => `${k}:${v / 100}`).join(" "));
 if (d.clocks) for (const c of d.clocks) console.log(" clock", c.tier, c.party, $(c.cents), c.status, c.payByAt, c.elapsed?.toFixed(3), c.citations.map((x) => x.cite).join("+"));

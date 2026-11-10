@@ -9,6 +9,8 @@ export default async function GcLayout({ children }: { children: React.ReactNode
       nav={[
         { href: "/gc", label: "Projects" },
         { href: "/gc/ledger", label: "Ledger" },
+        { href: "/statutes", label: "Statutes" },
+        { href: "/lab", label: "Lab" },
         { href: "/demo", label: "Demo" },
       ]}
     >

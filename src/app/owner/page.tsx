@@ -2,6 +2,7 @@ import { requireAuth } from "@/server/auth";
 import { listProjects } from "@/server/scoped";
 import { AppShell } from "@/components/app-shell";
 import { formatCentsCompact } from "@/lib/money";
+import { ProjectLive } from "@/components/project-live";
 
 export default async function OwnerHome() {
   const session = await requireAuth("owner");
@@ -19,6 +20,14 @@ export default async function OwnerHome() {
           </li>
         ))}
       </ul>
+      {projects.map((p) => (
+        <section key={p.id} className="mt-10" aria-label={`${p.name} live view`}>
+          <h2 className="text-xl font-semibold">{p.name}: where your money went</h2>
+          <div className="mt-4">
+            <ProjectLive org={session.org} projectId={p.id} />
+          </div>
+        </section>
+      ))}
     </AppShell>
   );
 }

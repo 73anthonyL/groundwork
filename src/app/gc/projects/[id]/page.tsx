@@ -5,6 +5,7 @@ import { getProjectBoard } from "@/server/scoped";
 import { formatBps, formatCentsCompact, formatCents } from "@/lib/money";
 import { now } from "@/server/clock";
 import { releaseLabel } from "@/lib/release-label";
+import { ProjectTabs } from "@/components/project-tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
@@ -44,6 +45,9 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           <div className="text-sm text-muted-foreground">{project.address}</div>
           <h1 className="mt-1 text-3xl font-semibold">{project.name}</h1>
         </div>
+        <ProjectTabs projectId={project.id} active="board" />
+      </div>
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
         <dl className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm sm:grid-cols-4">
           <div>
             <dt className="text-muted-foreground">Owner</dt>

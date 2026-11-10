@@ -20,7 +20,7 @@ export function RollingNumber({ value, format = "usd", className = "", seconds =
     const a = from.current;
     let raf = 0;
     const tick = (t: number) => {
-      const k = Math.min(1, (t - start) / (seconds * 1000));
+      const k = Math.min(1, Math.max(0, (t - start) / (seconds * 1000)));
       const eased = 1 - Math.pow(1 - k, 3);
       const v = a + (value - a) * eased;
       setShown(v);
