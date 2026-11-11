@@ -1,3 +1,5 @@
+// STALE: this script predates the removal of the /demo and /lab pages and fails at the steps that visit them.
+// It is not run in CI. See docs/TESTING.md for what is tested today.
 // Dev tool: click through the new forms in a real (headless) browser against the running dev server.
 //   start Chrome with --remote-debugging-port=9333, run `pnpm dev`, then: node scripts/e2e.mjs
 // Resets the demo to the closeout checkpoint first. Exits non-zero on the first failed expectation.

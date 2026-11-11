@@ -53,19 +53,18 @@ A bill reaches the rail only after the matching waiver is signed. Reason: Ramp's
 3. **Backcharges are per contract and need a setoff clause.** No clause in the approved rules, no deduction. Unrecovered amounts carry to the contract's next release.
 4. **The lower tier has no accounts.** Suppliers are typed in by the sub that pays them, their billing is declared on the sub's pay application, and they sign from an emailed link. Alternative: full accounts and compiled contracts one hop down, which the data model already supports (`parentContractId`).
 5. **Lower-tier agreements cannot carry retainage yet.** There is no certification or final application one hop down to release it, so it is refused rather than held forever.
-6. **The payer never sees its supplier's signing link.** Otherwise a sub could sign its own supplier's waiver and release its own payment. The demo panel's outbox stands in for email.
+6. **The payer never sees its supplier's signing link.** Otherwise a sub could sign its own supplier's waiver and release its own payment. The demo panel's outbox used to stand in for email; that panel has since been removed, so a supplier's link is not shown anywhere in the app yet.
 7. **All 51 jurisdictions are loaded from research, not from a lawyer.** Each rule records its source and confidence. Unconfirmed rules are null and the engine falls back to the contract. Conditions it cannot evaluate are shown to the reviewer, not applied.
 8. **Step-down retainage caps are approximated** as a cap on payments after 50% of the contract is billed. Some statutes cap the total held instead.
 9. **Only California's statutory waiver text is reproduced.** Other states get a general form that says when the state prescribes its own.
 10. **Kansas uses its 5% default cap**, not the 10% ceiling the statute allows when specifically justified.
-11. **Three themes and two type sets ship side by side** (`/lab`). Nothing was chosen for you: the default look is unchanged.
+11. **Superseded.** Three themes and two type sets once shipped side by side on a `/lab` page. One theme ships now and `/lab` was removed; see `docs/DESIGN.md`.
 12. **The landing page is at `/`** and signed-in users are no longer redirected past it.
 13. **A second project in Texas** was added to show another state's law in the product. Its contract was generated and compiled by the model, and the compile is replayed from a cached copy.
 14. **Eval artifacts are committed** (generated contracts, cached extractions, results) so the numbers can be re-scored without an API key.
 
 ## Where to change the look
 
-- Colors, radii, shadows, fonts: one block per theme in `src/app/globals.css`.
+- Colors, radii, shadows, fonts: the `:root` block in `src/app/globals.css`.
 - Motion: `src/lib/motion.ts` is the only file that sets a spring or duration.
 - Every chart takes plain JSON from `src/server/read/project.ts` (also served at `/api/v1`), so a new view needs no new queries.
-- `/lab` shows every chart with the file and endpoint behind it.

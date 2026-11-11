@@ -1,0 +1,22 @@
+# https://editorconfig.org
+# Matches the formatting already in the repository. There is no Prettier configuration.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Two trailing spaces are a line break in Markdown.
+[*.md]
+trim_trailing_whitespace = false
+
+# Generated or vendored: leave as written by their tools.
+[{pnpm-lock.yaml,drizzle/**,evals/cache/**,evals/results/**,src/domain/statutes/data/**}]
+indent_style = unset
+indent_size = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset

@@ -29,7 +29,7 @@ The model reads; it never does the math. Claude proposes each payment term with 
 - Documents: subcontract PDFs (text, up to 4 MB), pay applications shaped like AIA G702/G703, conditional and unconditional lien waivers, owner payments identified by a bank reference.
 - The chain: owner pays general contractor, who pays subcontractors, who may pay their own suppliers one level down.
 - Deadlines come from the contract and from state prompt-payment law; retainage, backcharges and change orders adjust what is paid.
-- The demo runs on seeded data with a "pick a person" sign-in and resettable checkpoints (`/demo`). Payments run on a simulated rail.
+- The demo runs on seeded data in a sample workspace (`/sample`, choose a role) with resettable checkpoints (`POST /api/demo/reset?to=<checkpoint>`). Payments run on a simulated rail.
 
 ## Capabilities and Constraints
 
