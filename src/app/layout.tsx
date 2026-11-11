@@ -26,7 +26,9 @@ const newsreader = Newsreader({
 });
 
 /** Applies the theme and type set chosen in the lab before first paint, so there is no flash. */
-const THEME_BOOT = `try{var d=document.documentElement,t=localStorage.getItem("gw-theme"),y=localStorage.getItem("gw-type");if(t)d.dataset.theme=t;if(y)d.dataset.type=y}catch(e){}`;
+// The product has one theme. An older build let the lab page save an alternate theme in the browser,
+// which then overrode the palette on every page; this clears that saved choice.
+const THEME_BOOT = `try{localStorage.removeItem("gw-theme");localStorage.removeItem("gw-type");delete document.documentElement.dataset.theme;delete document.documentElement.dataset.type}catch(e){}`;
 
 export const metadata: Metadata = {
   title: { default: "Groundwork", template: "%s · Groundwork" },
