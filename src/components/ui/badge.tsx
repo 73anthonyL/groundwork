@@ -1,5 +1,5 @@
 /**
- * Badge: a status in words. 20px high, 12/500, sentence case, tinted background, darker text and a
+ * Badge: a status in words. A 22px pill, 13/500, sentence case, tinted background, darker text and a
  * leading dot or icon, so the state never rests on color alone.
  *
  *   <Badge tone="settled">Paid</Badge>
@@ -15,12 +15,12 @@ import { cn } from "cn"
 export type BadgeTone = "neutral" | "money" | "settled" | "hold" | "danger" | "info"
 
 const TONE: Record<BadgeTone, string> = {
-  neutral: "text-muted-foreground",
-  money: "text-money",
-  settled: "text-settled",
-  hold: "text-hold",
-  danger: "text-destructive",
-  info: "text-link",
+  neutral: "bg-secondary text-muted-foreground",
+  money: "bg-money-soft text-money",
+  settled: "bg-settled-soft text-settled",
+  hold: "bg-hold-soft text-hold",
+  danger: "bg-destructive-soft text-destructive",
+  info: "bg-link-soft text-link",
 }
 
 function Badge({
@@ -35,7 +35,7 @@ function Badge({
     <span
       data-slot="badge"
       data-tone={tone}
-      className={cn("inline-flex h-5 w-fit shrink-0 items-center gap-1.5 text-[13px] leading-5 font-medium whitespace-nowrap [&>svg]:size-3.5 [&>svg]:shrink-0", TONE[tone], className)}
+      className={cn("inline-flex h-[22px] w-fit shrink-0 items-center gap-1.5 rounded-full px-2 text-[13px] leading-5 font-medium whitespace-nowrap [&>svg]:size-3.5 [&>svg]:shrink-0", TONE[tone], className)}
       {...props}
     >
       {icon ?? (dot && <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-current" />)}

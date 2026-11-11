@@ -62,7 +62,7 @@ export default async function OwnerHome() {
               {rows.map(({ p, paid, moving, held }) => (
                 <TableRow key={p.id}>
                   <TableCell>
-                    <TableLink href={`/owner/projects/${p.id}`}>{p.name}</TableLink>
+                    <TableLink href={`/owner/projects/${p.id}`} mark={p.name}>{p.name}</TableLink>
                     <div className="type-meta text-muted-foreground md:hidden">{p.gc.name}</div>
                     <div className="type-meta num text-muted-foreground lg:hidden">{formatCentsCompact(p.primeContractSumCents)} prime contract</div>
                     <div className="type-meta num text-muted-foreground sm:hidden">

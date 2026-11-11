@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Check, Clock, FileText, PenLine } from "lucide-react";
 import { auth, homeFor } from "@/server/auth";
-import { latestEval } from "@/server/read/eval";
 import { Wordmark } from "@/components/wordmark";
 import { buttonVariants } from "@/components/ui/button";
 import { DaysFragment } from "@/components/landing/fragments";
@@ -119,7 +118,6 @@ function SplitPicture() {
 /** The front door: what it does, why it matters, how it works. Nothing a first-time visitor has to decode. */
 export default async function Landing() {
   const session = await auth();
-  const run = latestEval();
   const primary = session ? { href: homeFor(session.org.kind), label: "Open Groundwork" } : { href: "/sign-up", label: "Create an account" };
 
   const cta = (
@@ -200,13 +198,15 @@ export default async function Landing() {
             </ol>
             </InView>
 
-            {run && (
-              <InView>
-                <p className="iv mt-6 max-w-[62ch] text-[15px] leading-6 text-muted-foreground">
-                  Tested on {run.metrics.contracts} subcontracts: Groundwork read <span className="num font-medium text-foreground">{(run.metrics.accuracy * 100).toFixed(1)}%</span> of {run.metrics.fields} payment terms correctly. The ones it is unsure of are flagged for you, and nothing is paid until you approve the rules.
-                </p>
-              </InView>
-            )}
+            <InView>
+              <p className="iv mt-6 max-w-[64ch] text-[15px] leading-6 text-muted-foreground">
+                Every figure links back to the clause or statute it came from, and nothing is paid until you approve the rules. Payment deadlines and retainage limits for{" "}
+                <Link href="/statutes" className="font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                  all 50 states
+                </Link>{" "}
+                are built in, and your subcontractors use Groundwork free.
+              </p>
+            </InView>
           </div>
         </section>
 

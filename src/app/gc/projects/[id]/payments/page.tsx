@@ -119,7 +119,7 @@ export default async function ProjectPaymentsPage({ params, searchParams }: { pa
                         {e.releases.map((r, i) => (
                           <RevealRow key={r.id} index={i} active={active}>
                             <TableCell>
-                              <TableLink href={`/gc/releases/${r.id}`} className="whitespace-nowrap">
+                              <TableLink href={`/gc/releases/${r.id}`} mark={subName(r.contractId)} className="whitespace-nowrap">
                                 {subName(r.contractId)}
                               </TableLink>
                               <span className="type-meta ml-2 whitespace-nowrap text-muted-foreground">{releaseLabel(r)}</span>

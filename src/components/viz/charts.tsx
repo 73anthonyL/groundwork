@@ -16,66 +16,117 @@ const BANDS = [
   { key: "backcharge_recovered", label: "Backcharges kept", color: "var(--flow-setoff)" },
 ] as const;
 
+/** A round figure for an axis label: $250k, $1.2M. */
+const axisUsd = (cents: number) => {
+  const d = cents / 100;
+  if (d >= 1_000_000) return `$${(d / 1_000_000).toFixed(d % 1_000_000 === 0 ? 0 : 1)}M`;
+  if (d >= 1_000) return `$${Math.round(d / 1_000)}k`;
+  return `$${Math.round(d)}`;
+};
+/** The step between gridlines: 1, 2, 2.5 or 5 times a power of ten, giving three or four lines. */
+function niceStep(max: number) {
+  const raw = max / 3.5;
+  const pow = 10 ** Math.floor(Math.log10(raw));
+  const pick = [1, 2, 2.5, 5, 10].find((m) => m * pow >= raw) ?? 10;
+  return pick * pow;
+}
+
 /**
- * Stacked step chart of the ledger: after each posting, where the owner's money sits. The x axis is
- * the sequence of postings (not wall time), so a burst of activity does not collapse into one pixel.
+ * Where the owner's money is after each recorded movement, as stacked bands that swell and settle.
+ * The x axis is the sequence of movements (not wall time), so a burst of activity does not collapse
+ * into one pixel. Dashed lines mark each owner payment; the gridlines give the scale. Point at the
+ * chart, or tab through it, to read the figures at that moment in the legend below.
  */
-export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; height?: number }) {
+export function BalanceChart({ series, height = 260 }: { series: SeriesPoint[]; height?: number }) {
   const [at, setAt] = useState<number | null>(null);
   const clip = useId();
   if (series.length < 2) return <p className="text-sm text-muted-foreground">This chart is drawn once money has moved at least twice.</p>;
   const W = 720;
-  const pad = { l: 8, r: 8, t: 10, b: 22 };
-  const totals = series.map((p) => BANDS.reduce((s, b) => s + Math.max(0, p.balances[b.key] ?? 0), 0));
-  const max = Math.max(...totals, 1);
-  // Each posting owns one equal slot: its balances hold from its left edge to the next posting's.
-  const slot = (W - pad.l - pad.r) / series.length;
-  const x = (i: number) => pad.l + i * slot;
-  const y = (v: number) => pad.t + (1 - v / max) * (height - pad.t - pad.b);
-  const stackAt = (i: number, upto: number) => BANDS.slice(0, upto).reduce((s, b) => s + Math.max(0, series[i].balances[b.key] ?? 0), 0);
-  // Step paths: a balance holds until the next posting changes it.
-  const area = (band: number) => {
-    const top: string[] = [];
-    const bottom: string[] = [];
-    series.forEach((_, i) => {
-      const nx = x(i + 1);
-      top.push(`${i === 0 ? "M" : "L"}${x(i)},${y(stackAt(i, band + 1))} L${nx},${y(stackAt(i, band + 1))}`);
-      bottom.unshift(`L${nx},${y(stackAt(i, band))} L${x(i)},${y(stackAt(i, band))}`);
-    });
-    return `${top.join(" ")} ${bottom.join(" ")} Z`;
+  const pad = { l: 40, r: 10, t: 24, b: 8 };
+  const n = series.length;
+  const bands = BANDS.filter((b) => series.some((p) => (p.balances[b.key] ?? 0) > 0));
+  const stackAt = (i: number, upto: number) => bands.slice(0, upto).reduce((sum, b) => sum + Math.max(0, series[i].balances[b.key] ?? 0), 0);
+  const max = Math.max(...series.map((_, i) => stackAt(i, bands.length)), 1);
+  const step = niceStep(max);
+  const top = Math.ceil(max / step) * step;
+  const ticks = Array.from({ length: Math.round(top / step) + 1 }, (_, i) => i * step);
+  const x = (i: number) => pad.l + (i * (W - pad.l - pad.r)) / (n - 1);
+  const y = (v: number) => pad.t + (1 - v / top) * (height - pad.t - pad.b);
+  // Each change eases in as an S-curve between two movements: level, rise, level. No sharp corners.
+  const curve = (level: number, reverse = false) => {
+    const idx = series.map((_, i) => i);
+    if (reverse) idx.reverse();
+    return idx
+      .map((i, k) => {
+        const px = x(i);
+        const py = y(stackAt(i, level));
+        if (k === 0) return `${px},${py}`;
+        const prev = idx[k - 1];
+        const mid = (x(prev) + px) / 2;
+        return `C${mid},${y(stackAt(prev, level))} ${mid},${py} ${px},${py}`;
+      })
+      .join(" ");
   };
-  const shown = at ?? series.length - 1;
+  const area = (band: number) => `M${curve(band + 1)} L${curve(band, true)} Z`;
+  // An owner payment is a movement where the money received from the owner goes up.
+  const ownerPayments = series.map((p, i) => ((p.balances.owner_receipts ?? 0) > (i === 0 ? 0 : (series[i - 1].balances.owner_receipts ?? 0)) ? i : -1)).filter((i) => i >= 0);
+  const shown = at ?? n - 1;
+  const slot = (W - pad.l - pad.r) / (n - 1);
   return (
     <figure>
-      <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full" role="img" aria-label="Where the owner's money is after each recorded movement" onMouseLeave={() => setAt(null)}>
+      <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full overflow-visible" role="img" aria-label="Where the owner's money is after each recorded movement" onMouseLeave={() => setAt(null)}>
         <defs>
           <clipPath id={clip}>
             <motion.rect x="0" y="0" height={height} initial={{ width: 0 }} animate={{ width: W }} transition={{ duration: duration.draw, ease: ease.trace }} />
           </clipPath>
         </defs>
-        <g clipPath={`url(#${clip})`}>
-          {BANDS.map((b, i) =>
-            // A band that never holds money would draw as a stray line along the top of the one below it.
-            series.some((p) => (p.balances[b.key] ?? 0) > 0) ? <path key={b.key} d={area(i)} fill={b.color} fillOpacity={0.85} stroke={b.color} strokeWidth={0.75} strokeLinejoin="round" /> : null,
-          )}
-        </g>
-        <rect x={x(shown)} y={pad.t} width={slot} height={height - pad.t - pad.b} fill="var(--foreground)" opacity={at === null ? 0 : 0.08} />
-        {series.map((_, i) => (
-          <rect key={i} x={x(i)} y={0} width={slot} height={height} fill="transparent" tabIndex={0} role="img" aria-label={`${series[i].memo}: ${BANDS.map((b) => `${b.label} ${formatUsd0(series[i].balances[b.key] ?? 0)}`).join(", ")}`} onMouseEnter={() => setAt(i)} onFocus={() => setAt(i)} />
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray={t === 0 ? undefined : "2 4"} />
+            <text x={pad.l - 8} y={y(t) + 3} textAnchor="end" className="fill-muted-foreground" style={{ fontSize: 9 }}>
+              {axisUsd(t)}
+            </text>
+          </g>
         ))}
-        <line x1={pad.l} x2={W - pad.r} y1={height - pad.b} y2={height - pad.b} stroke="var(--border)" />
+        <g clipPath={`url(#${clip})`}>
+          {bands.map((b, i) => (
+            <path key={b.key} d={area(i)} fill={b.color} stroke="var(--card)" strokeWidth={1.5} strokeLinejoin="round" />
+          ))}
+        </g>
+        {ownerPayments.map((i, k) => (
+          <g key={i}>
+            <line x1={x(i)} x2={x(i)} y1={pad.t - 6} y2={height - pad.b} stroke="var(--foreground)" strokeOpacity={0.35} strokeDasharray="3 3" />
+            <text x={x(i)} y={pad.t - 11} textAnchor={i === 0 ? "start" : i === n - 1 ? "end" : "middle"} className="fill-foreground" style={{ fontSize: 9, fontWeight: 500 }}>
+              Owner payment {k + 1}
+            </text>
+          </g>
+        ))}
+        {/* The moment being read: a line, and a ringed dot on top of each band. */}
+        <motion.g initial={false} animate={{ opacity: at === null ? 0 : 1 }} transition={{ duration: duration.hover }}>
+          <motion.line y1={pad.t} y2={height - pad.b} stroke="var(--foreground)" strokeWidth={1} initial={false} animate={{ x1: x(shown), x2: x(shown) }} transition={spring.snappy} />
+          {bands.map((b, i) => (
+            <motion.circle key={b.key} r={3.5} fill="var(--card)" stroke={b.color} strokeWidth={2} initial={false} animate={{ cx: x(shown), cy: y(stackAt(shown, i + 1)) }} transition={spring.snappy} />
+          ))}
+        </motion.g>
+        {series.map((p, i) => (
+          <rect key={i} x={x(i) - slot / 2} y={0} width={slot} height={height} fill="transparent" tabIndex={0} role="img" aria-label={`${p.memo}: ${bands.map((b) => `${b.label} ${formatUsd0(p.balances[b.key] ?? 0)}`).join(", ")}`} onMouseEnter={() => setAt(i)} onFocus={() => setAt(i)} onBlur={() => setAt(null)} style={{ outline: "none" }} />
+        ))}
       </svg>
-      <figcaption className="type-caption mt-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <ul className="flex flex-wrap gap-x-5 gap-y-1">
-          {BANDS.filter((b) => series.some((p) => (p.balances[b.key] ?? 0) > 0)).map((b) => (
-            <li key={b.key} className="flex items-center gap-1.5">
-              <span aria-hidden className="size-2 rounded-[2px]" style={{ background: b.color }} />
-              <span className="text-muted-foreground">{b.label}</span>
-              <span className="type-mono text-foreground">{formatUsd0(series[shown].balances[b.key] ?? 0)}</span>
+      <figcaption className="mt-3 flex flex-wrap items-start justify-between gap-x-8 gap-y-2">
+        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          {bands.map((b) => (
+            <li key={b.key}>
+              <span className="type-meta flex items-center gap-1.5 text-muted-foreground">
+                <span aria-hidden className="size-2.5 rounded-full" style={{ background: b.color }} />
+                {b.label}
+              </span>
+              <span className="num text-[15px] leading-6 font-semibold">{formatUsd0(series[shown].balances[b.key] ?? 0)}</span>
             </li>
           ))}
         </ul>
-        <span className="text-muted-foreground">{at === null ? "now" : series[shown].memo}</span>
+        <span className="type-meta max-w-[40ch] text-right text-muted-foreground" aria-live="polite">
+          {at === null ? "Now. Point at the chart to go back in time." : series[shown].memo}
+        </span>
       </figcaption>
     </figure>
   );
@@ -129,61 +180,95 @@ export function ContractBars({ contracts }: { contracts: ContractSummary[] }) {
 
 const LANES: { id: TimelineEntry["lane"]; label: string; color: string }[] = [
   { id: "contract", label: "Subcontract", color: "var(--foreground)" },
-  { id: "billing", label: "Pay apps", color: "var(--flow-idle)" },
+  { id: "billing", label: "Pay apps", color: "var(--flow-held)" },
   { id: "money", label: "Payments", color: "var(--flow-moving)" },
   { id: "waiver", label: "Waivers", color: "var(--flow-paid)" },
   { id: "adjustment", label: "Adjustments", color: "var(--flow-setoff)" },
 ];
 
-/** The append-only event log as dots on five lanes, in order. Hover a dot to read the event. */
+/**
+ * Everything recorded on the project, oldest on the left, on one rounded track per kind of event.
+ * Dashed lines mark each owner payment, so the order reads at a glance: subcontracts, pay apps,
+ * the owner pays, waivers, payments. Point at a dot, or tab to it, to read that event in the card below.
+ */
 export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
   const [at, setAt] = useState<number | null>(null);
   if (!entries.length) return <p className="text-sm text-muted-foreground">Nothing has happened yet.</p>;
-  const W = 720;
-  const rowH = 26;
-  const left = 96;
-  const x = (i: number) => left + 8 + (i * (W - left - 20)) / Math.max(1, entries.length - 1);
-  const sel = at === null ? entries[entries.length - 1] : entries[at];
+  const n = entries.length;
+  const pct = (i: number) => 1.5 + (n === 1 ? 48.5 : (i / (n - 1)) * 97);
+  const shown = at ?? n - 1;
+  const sel = entries[shown];
+  const selLane = LANES.find((l) => l.id === sel.lane) ?? LANES[0];
+  const ownerPayments = entries.map((e, i) => (e.type === "owner_payment.recorded" ? i : -1)).filter((i) => i >= 0);
+  const ROW = "h-10";
   return (
     <figure>
-      <svg viewBox={`0 0 ${W} ${LANES.length * rowH + 8}`} className="h-auto w-full" role="img" aria-label={`${entries.length} recorded events across five lanes`} onMouseLeave={() => setAt(null)}>
-        {LANES.map((l, li) => (
-          <g key={l.id}>
-            <text x={0} y={li * rowH + 16} className="fill-muted-foreground" style={{ fontSize: 8.5 }}>
-              {l.label}
-            </text>
-            <line x1={left} x2={W - 8} y1={li * rowH + 13} y2={li * rowH + 13} stroke="var(--border)" />
-          </g>
-        ))}
-        {entries.map((e, i) => {
-          const li = LANES.findIndex((l) => l.id === e.lane);
-          const big = e.type === "owner_payment.recorded" || e.type === "payment.paid";
-          return (
-            <motion.circle
-              key={e.id}
-              cx={x(i)}
-              cy={li * rowH + 13}
-              fill={LANES[li].color}
-              initial={{ r: 0 }}
-              animate={{ r: at === i ? 4.5 : big ? 3.5 : 2.25 }}
-              transition={{ ...spring.pop, delay: at === null ? Math.min(1.2, i * 0.012) : 0 }}
-              onMouseEnter={() => setAt(i)}
-              onFocus={() => setAt(i)}
-              tabIndex={0}
-              role="img"
-              aria-label={`${e.title}${e.party ? `, ${e.party}` : ""}${e.amountCents !== null ? `, ${formatUsd0(e.amountCents)}` : ""}`}
-             
-            />
-          );
-        })}
-      </svg>
-      <figcaption className="type-caption mt-2 flex min-h-9 flex-wrap items-baseline gap-x-3 gap-y-0.5" aria-live="polite">
-        <span className="font-medium text-foreground">{sel.title}</span>
-        {sel.party && <span className="text-muted-foreground">{sel.party}</span>}
-        {sel.amountCents !== null && <span className="type-mono">{formatUsd0(sel.amountCents)}</span>}
-        {sel.detail && <span className="truncate text-muted-foreground">{sel.detail}</span>}
-        <span className="text-muted-foreground" suppressHydrationWarning>
-          {sel.actor}, {new Date(sel.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+      <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[9rem_minmax(0,1fr)]" onMouseLeave={() => setAt(null)}>
+        <div>
+          <div className="h-7" />
+          {LANES.map((l) => (
+            <div key={l.id} className={`${ROW} flex items-center justify-between gap-2`}>
+              <span className="flex min-w-0 items-center gap-2 text-sm">
+                <span aria-hidden className="size-2.5 shrink-0 rounded-full" style={{ background: l.color }} />
+                <span className="truncate">{l.label}</span>
+              </span>
+              <span className="num type-meta text-muted-foreground">{entries.filter((e) => e.lane === l.id).length}</span>
+            </div>
+          ))}
+        </div>
+        <div className="relative">
+          {/* Owner payments: a label on top and a dashed line down through every track. */}
+          <div className="relative h-7">
+            {ownerPayments.map((i, k) => (
+              <span key={i} className="type-caption absolute top-0 rounded-full bg-secondary px-2 py-0.5 font-medium whitespace-nowrap" style={pct(i) < 12 ? { left: `${pct(i)}%` } : pct(i) > 88 ? { right: `${100 - pct(i)}%` } : { left: `${pct(i)}%`, translate: "-50% 0" }}>
+                Owner payment {k + 1}
+              </span>
+            ))}
+          </div>
+          {ownerPayments.map((i) => (
+            <span key={i} aria-hidden className="absolute bottom-0 top-6 border-l border-dashed border-foreground/35" style={{ left: `${pct(i)}%` }} />
+          ))}
+          {LANES.map((l) => (
+            <div key={l.id} className={`${ROW} relative`}>
+              <span aria-hidden className="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-muted" />
+              {entries.map((e, i) => {
+                if (e.lane !== l.id) return null;
+                const big = e.type === "owner_payment.recorded" || e.type === "payment.paid";
+                const on = shown === i;
+                return (
+                  <motion.button
+                    key={e.id}
+                    type="button"
+                    aria-label={`${e.title}${e.party ? `, ${e.party}` : ""}${e.amountCents !== null ? `, ${formatUsd0(e.amountCents)}` : ""}`}
+                    onMouseEnter={() => setAt(i)}
+                    onFocus={() => setAt(i)}
+                    initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                    animate={{ scale: on ? 1.5 : 1, x: "-50%", y: "-50%" }}
+                    transition={{ ...spring.pop, delay: at === null && !on ? Math.min(1.2, i * 0.012) : 0 }}
+                    className="absolute top-1/2 cursor-default rounded-full ring-2 ring-card"
+                    style={{ left: `${pct(i)}%`, width: big ? 14 : 10, height: big ? 14 : 10, background: l.color, zIndex: on ? 2 : 1, boxShadow: on ? `0 0 0 2px var(--card), 0 0 0 4px ${l.color}` : undefined }}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      <figcaption className="mt-3 flex min-h-[4.25rem] items-start gap-3 rounded-lg border bg-card px-4 py-3" aria-live="polite">
+        <span aria-hidden className="mt-1.5 size-2.5 shrink-0 rounded-full" style={{ background: selLane.color }} />
+        <div key={sel.id} className="reveal min-w-0 flex-1">
+          <p className="flex flex-wrap items-baseline gap-x-3 text-sm leading-5">
+            <span className="font-medium">{sel.title}</span>
+            {sel.party && <span className="text-muted-foreground">{sel.party}</span>}
+            {sel.amountCents !== null && <span className="num font-medium">{formatUsd0(sel.amountCents)}</span>}
+          </p>
+          <p className="type-meta mt-0.5 text-muted-foreground" suppressHydrationWarning>
+            {sel.detail ? `${sel.detail} ` : ""}
+            {sel.actor}, {new Date(sel.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+          </p>
+        </div>
+        <span className="type-meta shrink-0 text-muted-foreground">
+          {at === null ? "Latest" : `${shown + 1} of ${n}`}
         </span>
       </figcaption>
     </figure>

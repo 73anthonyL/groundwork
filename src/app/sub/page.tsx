@@ -4,14 +4,14 @@ import { requireAuth } from "@/server/auth";
 import { listReleasesForOrg } from "@/server/scoped";
 import { listBillableContracts } from "@/server/read/sub";
 import { now } from "@/server/clock";
-import { formatCents, formatCentsCompact } from "@/lib/money";
+import { formatCents } from "@/lib/money";
 import { releaseLabel } from "@/lib/release-label";
 import { PageBody, PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Checklist } from "@/components/ui/checklist";
 import { Panel, Section } from "@/components/ui/panel";
-import { Stat, StatGroup } from "@/components/ui/stat";
+import { MoneySummary } from "@/components/money-summary";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableLink, TableRow } from "@/components/ui/table";
 import { StatusPill } from "@/components/status-pill";
 import { SUB_CONTRACT } from "./_shared/status";
@@ -142,19 +142,15 @@ export default async function SubHome() {
           )}
         </Section>
 
-        <section aria-labelledby="money-heading" className="grid gap-x-10 gap-y-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-end">
-          <div className="min-w-0">
-            <h2 id="money-heading" className="type-meta text-muted-foreground">
-              On its way to you
-            </h2>
-            <p className={`num type-figure mt-1 ${owed > 0 ? "text-money" : ""}`}>{formatCents(owed)}</p>
-            <p className="mt-1 max-w-xl text-sm leading-5 text-muted-foreground">{sentence}</p>
-          </div>
-          <StatGroup>
-            <Stat label="Paid to date" value={formatCentsCompact(paid)} />
-            <Stat label="Held as retainage" value={formatCentsCompact(held)} hint={held > 0 ? "Paid to you when your contract's release condition is met" : undefined} />
-          </StatGroup>
-        </section>
+        <MoneySummary
+          aria-labelledby="money-heading"
+          lead={{ label: <span id="money-heading">On its way to you</span>, value: formatCents(owed), tone: owed > 0 ? "money" : "default", hint: sentence }}
+          parts={[
+            { label: "Paid to date", cents: paid, kind: "paid" },
+            { label: "On its way", cents: owed, kind: "moving" },
+            { label: "Held as retainage", cents: held, kind: "held", hint: held > 0 ? "Paid to you when your contract's release condition is met" : undefined },
+          ]}
+        />
 
         <Section
           title="Recent payments"

@@ -578,6 +578,11 @@ main [role="alert"] {
 }
 
 /* Drawn faces blink while their card is hovered, focused or chosen. */
+/* A bar filling from its left edge. */
+@keyframes gw-grow {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
 @keyframes gw-blink {
   0%, 91%, 100% { transform: scaleY(1); }
   95% { transform: scaleY(0.1); }

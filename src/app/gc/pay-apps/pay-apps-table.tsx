@@ -45,7 +45,7 @@ export function PayAppsTable({ rows, showProject = false, empty }: { rows: PayAp
         {rows.map((a) => (
           <TableRow key={a.id}>
             <TableCell>
-              <TableLink href={`/gc/pay-apps/${a.id}`} className="whitespace-nowrap">
+              <TableLink href={`/gc/pay-apps/${a.id}`} mark={a.subName} className="whitespace-nowrap">
                 {a.subName}
               </TableLink>
             </TableCell>

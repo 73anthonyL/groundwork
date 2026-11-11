@@ -76,7 +76,7 @@ export default async function SubcontractsPage({ params }: { params: Promise<{ i
               return (
                 <TableRow key={c.id}>
                   <TableCell>
-                    <TableLink href={`/gc/contracts/${c.id}`} className="whitespace-nowrap">
+                    <TableLink href={`/gc/contracts/${c.id}`} mark={c.sub.name} className="whitespace-nowrap">
                       {c.sub.name}
                     </TableLink>
                   </TableCell>

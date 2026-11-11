@@ -1,5 +1,5 @@
 /**
- * Table: full container width, sits on the page inside a 1px frame.
+ * Table: full container width, in a paper panel with a 1px frame and a tinted header row.
  *
  *   <Table>                                   // density="compact" for 32px line-item rows; bare to drop the frame (inside a Panel)
  *     <TableHeader><TableRow>
@@ -15,7 +15,7 @@
  *     <TableFoot><TableRow><TableCell>Total</TableCell><TableCell numeric>$12,400.00</TableCell></TableRow></TableFoot>
  *   </Table>
  *
- * Rows are 40px, cells 14/400, headers 13/500 muted, cell padding 16px. Row hover changes the
+ * Rows are 40px, cells 14/400, headers 13/500 muted, cell padding 12px (16px at the panel's edges). Row hover changes the
  * background with no transition. An empty table keeps its headers and shows one TableEmpty row.
  * TableCell / TableHead take `numeric` (money, counts) and `muted` (cell only: 13px secondary text).
  * TableChevron is an optional last cell for rows that open a page. TableFooter is an alias of TableFoot.
@@ -24,6 +24,7 @@ import * as React from "react"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { cn } from "cn"
+import { CompanyMark } from "./company-mark"
 
 function Table({
   className,
@@ -32,7 +33,7 @@ function Table({
   ...props
 }: React.ComponentProps<"table"> & { density?: "default" | "compact"; bare?: boolean }) {
   return (
-    <div data-slot="table-container" className={cn("relative w-full overflow-x-auto", !bare && "border-y [&_td:first-child]:pl-0 [&_td:last-child]:pr-0 [&_th:first-child]:pl-0 [&_th:last-child]:pr-0")}>
+    <div data-slot="table-container" className={cn("relative w-full overflow-x-auto", !bare && "rounded-lg border bg-card [&_thead]:bg-muted/60")}>
       <table data-slot="table" data-density={density} className={cn("group/table w-full caption-bottom border-collapse text-sm leading-5", className)} {...props} />
     </div>
   )
@@ -60,7 +61,7 @@ function TableHead({ className, numeric, ...props }: React.ComponentProps<"th"> 
       data-slot="table-head"
       scope="col"
       className={cn(
-        "h-9 px-4 text-left align-middle text-[13px] leading-[18px] font-medium whitespace-nowrap text-muted-foreground group-data-[density=compact]/table:h-8",
+        "h-9 px-3 first:pl-4 last:pr-4 text-left align-middle text-[13px] leading-[18px] font-medium whitespace-nowrap text-muted-foreground group-data-[density=compact]/table:h-8",
         numeric && "text-right",
         className
       )}
@@ -74,7 +75,7 @@ function TableCell({ className, numeric, muted, ...props }: React.ComponentProps
     <td
       data-slot="table-cell"
       className={cn(
-        "h-10 px-4 py-2 align-middle group-data-[density=compact]/table:h-8 group-data-[density=compact]/table:py-1",
+        "h-10 px-3 py-2 align-middle first:pl-4 last:pr-4 group-data-[density=compact]/table:h-8 group-data-[density=compact]/table:py-1",
         numeric && "type-mono text-right whitespace-nowrap",
         muted && "text-[13px] leading-[18px] text-muted-foreground",
         className
@@ -84,9 +85,14 @@ function TableCell({ className, numeric, muted, ...props }: React.ComponentProps
   )
 }
 
-/** The name cell's link: the way into the row's page. */
-function TableLink({ className, ...props }: React.ComponentProps<typeof Link>) {
-  return <Link data-slot="table-link" className={cn("rounded-sm font-medium text-foreground underline-offset-4 hover:underline", className)} {...props} />
+/** The name cell's link: the way into the row's page. `mark` is a company or project name to draw a monogram for. */
+function TableLink({ className, mark, children, ...props }: React.ComponentProps<typeof Link> & { mark?: string }) {
+  return (
+    <Link data-slot="table-link" className={cn("rounded-sm font-medium text-foreground underline-offset-4 hover:underline", mark && "inline-flex items-center gap-2.5", className)} {...props}>
+      {mark && <CompanyMark name={mark} />}
+      {children}
+    </Link>
+  )
 }
 
 /** Optional trailing cell: a chevron for rows that open a page. */

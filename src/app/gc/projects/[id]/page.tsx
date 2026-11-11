@@ -15,7 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Section } from "@/components/ui/panel";
-import { Stat, StatGroup } from "@/components/ui/stat";
 import { Table, TableBody, TableCaption, TableCell, TableFoot, TableHead, TableHeader, TableLink, TableRow } from "@/components/ui/table";
 import { StatusPill, RELEASE } from "@/components/status-pill";
 import { Countdown } from "@/components/countdown";
@@ -23,6 +22,7 @@ import { RecordOwnerPayment } from "@/components/record-owner-payment";
 import { AddSubcontractForm } from "@/components/add-subcontract-form";
 import { RevealRow, WaterfallReveal } from "@/components/waterfall-reveal";
 import { MoneyFlow } from "@/components/viz/money-flow";
+import { MoneySummary } from "@/components/money-summary";
 import { AttentionTable } from "../_components/attention-table";
 
 const day = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -166,13 +166,14 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         )}
 
         {events.length > 0 && (
-          <section data-tour="project-money" aria-label="Money on this project" className="grid items-end gap-x-8 gap-y-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-            <dl>
-              <Stat
-                size="lg"
-                label="Owed to subcontractors now"
-                value={formatCents(owedCents)}
-                hint={
+          <MoneySummary
+            data-tour="project-money"
+            aria-label="Money on this project"
+            lead={{
+              label: "Owed to subcontractors now",
+              value: formatCents(owedCents),
+              tone: owedCents > 0 ? "money" : "default",
+              hint:
                   owedCents === 0 ? (
                     "Every payment so far has reached its subcontractor."
                   ) : (
@@ -180,16 +181,15 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                       {open.length} payment{open.length === 1 ? "" : "s"} to {openSubs} subcontractor{openSubs === 1 ? "" : "s"}
                       {late > 0 ? <span className="font-medium text-destructive">, {late} past its deadline</span> : nextDue ? `, the first due ${day(nextDue)}` : ""}.
                     </>
-                  )
-                }
-              />
-            </dl>
-            <StatGroup>
-              <Stat label="Received from owner" value={formatCents(balances.owner_receipts ?? 0)} />
-              <Stat label="Paid to subcontractors" value={formatCents(balances.sub_paid ?? 0)} />
-              <Stat label="Retainage held" value={formatCents(balances.retainage_held ?? 0)} />
-            </StatGroup>
-          </section>
+                  ),
+            }}
+            parts={[
+              { label: "Paid to subcontractors", cents: balances.sub_paid ?? 0, kind: "paid" },
+              { label: "On its way", cents: owedCents, kind: "moving" },
+              { label: "Retainage held", cents: balances.retainage_held ?? 0, kind: "held" },
+            ]}
+            total={{ label: "Received from owner", cents: balances.owner_receipts ?? 0 }}
+          />
         )}
 
         <Section title="Waiting on you">
@@ -272,7 +272,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                   {latest.releases.map((r, i) => (
                     <RevealRow key={r.id} index={i} active={active}>
                       <TableCell>
-                        <TableLink href={`/gc/releases/${r.id}`} className="whitespace-nowrap">
+                        <TableLink href={`/gc/releases/${r.id}`} mark={subName(r.contractId)} className="whitespace-nowrap">
                           {subName(r.contractId)}
                         </TableLink>
                       </TableCell>

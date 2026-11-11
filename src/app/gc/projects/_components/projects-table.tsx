@@ -53,7 +53,7 @@ export async function ProjectsTable({ org, createAction = true }: { org: Organiz
         {rows.map(({ p, t }) => (
           <TableRow key={p.id}>
             <TableCell>
-              <TableLink href={`/gc/projects/${p.id}`} className="whitespace-nowrap">
+              <TableLink href={`/gc/projects/${p.id}`} mark={p.name} className="whitespace-nowrap">
                 {p.name}
               </TableLink>
             </TableCell>

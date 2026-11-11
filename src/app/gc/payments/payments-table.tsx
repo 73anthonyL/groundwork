@@ -63,7 +63,7 @@ export function PaymentsTable({ rows, nowIso, empty }: { rows: PaymentRow[]; now
         {rows.map((r) => (
           <TableRow key={r.id}>
             <TableCell>
-              <TableLink href={`/gc/releases/${r.id}`} className="whitespace-nowrap">
+              <TableLink href={`/gc/releases/${r.id}`} mark={r.subName} className="whitespace-nowrap">
                 {r.subName}
               </TableLink>
             </TableCell>
