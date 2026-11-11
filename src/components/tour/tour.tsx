@@ -19,9 +19,9 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Circle, RotateCcw, X } from "lucide-react";
+import { ArrowLeftRight, Check, Circle, RotateCcw, X } from "lucide-react";
 import { cn } from "cn";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { spring } from "@/lib/motion";
 import { Face } from "./faces";
 import { TOURS, type TourChapter, type TourKind, type TourStep } from "./tours";
@@ -261,7 +261,7 @@ function Guide({ kind, name, state, lifted, onReplayPage, onEnd }: { kind: TourK
             className="w-[min(20rem,calc(100vw-2rem))] rounded-xl border bg-popover p-4 text-sm leading-5 text-popover-foreground shadow-float"
           >
             <h2 className="font-semibold">{complete ? "That is the tour" : `Things to try as ${first}`}</h2>
-            <p className="type-meta mt-0.5 text-muted-foreground">{complete ? "You have seen each part. The sample workspace is yours to explore." : "Tips appear the first time you open each page."}</p>
+            <p className="type-meta mt-0.5 text-muted-foreground">{complete ? "You have seen each part. Keep exploring, or see the same payments from another role." : "Tips appear the first time you open each page."}</p>
             <ul className="mt-3 flex flex-col gap-0.5">
               {tour.missions.map((m) => (
                 <li key={m.label}>
@@ -292,10 +292,15 @@ function Guide({ kind, name, state, lifted, onReplayPage, onEnd }: { kind: TourK
               ) : (
                 <span />
               )}
-              <Button type="button" variant={complete ? "primary" : "secondary"} size="sm" onClick={onEnd}>
+              <Button type="button" variant="secondary" size="sm" onClick={onEnd}>
                 {complete ? "Finish" : "End tour"}
               </Button>
             </div>
+            {/* The way to another role is always here, and becomes the main button once this tour is done. */}
+            <Link href="/sample" onClick={onEnd} className={buttonVariants({ variant: complete ? "primary" : "tertiary", size: "sm", className: "mt-2 w-full" })}>
+              <ArrowLeftRight aria-hidden />
+              {complete ? "Try another role" : "Switch role"}
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

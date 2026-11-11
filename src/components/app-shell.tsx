@@ -17,7 +17,7 @@
  * in the shell is held to the default 1100px so older pages still line up.
  */
 import Link from "next/link";
-import { LogOut, RotateCcw } from "lucide-react";
+import { ArrowLeftRight, LogOut, RotateCcw } from "lucide-react";
 import { signOut } from "@/app/sign-in/actions";
 import type { Session } from "@/server/auth";
 import { Badge } from "@/components/ui/badge";
@@ -104,6 +104,14 @@ export function AppShell({
               <NavLink href={n.href} label={n.label} icon={n.icon} scope={scope} />
             </li>
           ))}
+          {sample && (
+            <li>
+              <Link href="/sample" className={navRow}>
+                <ArrowLeftRight aria-hidden className={navIcon} />
+                Switch role
+              </Link>
+            </li>
+          )}
           {sample && (
             <li>
               <TourRestartButton home={home} className={navRow}>
