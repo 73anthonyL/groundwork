@@ -202,24 +202,9 @@ export default async function Landing() {
 
             {run && (
               <InView>
-                <dl className="iv mt-5 grid overflow-hidden rounded-lg border bg-card sm:grid-cols-3 sm:divide-x">
-                  <div className="flex flex-col border-b p-6 sm:border-b-0">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">of contract terms read correctly</dt>
-                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">
-                      <CountUp value={run.metrics.accuracy * 100} decimals={1} suffix="%" />
-                    </dd>
-                  </div>
-                  <div className="flex flex-col border-b p-6 sm:border-b-0">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">contract terms tested, across {run.metrics.contracts} subcontracts</dt>
-                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">
-                      <CountUp value={run.metrics.fields} />
-                    </dd>
-                  </div>
-                  <div className="flex flex-col p-6">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">is approved by you before anything is paid</dt>
-                    <dd className="text-[32px] font-medium leading-none tracking-[-0.01em] text-money">Every rule</dd>
-                  </div>
-                </dl>
+                <p className="iv mt-6 max-w-[62ch] text-[15px] leading-6 text-muted-foreground">
+                  Tested on {run.metrics.contracts} subcontracts: Groundwork read <span className="num font-medium text-foreground">{(run.metrics.accuracy * 100).toFixed(1)}%</span> of {run.metrics.fields} payment terms correctly. The ones it is unsure of are flagged for you, and nothing is paid until you approve the rules.
+                </p>
               </InView>
             )}
           </div>
