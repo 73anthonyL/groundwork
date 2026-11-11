@@ -56,7 +56,7 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
         <g clipPath={`url(#${clip})`}>
           {BANDS.map((b, i) =>
             // A band that never holds money would draw as a stray line along the top of the one below it.
-            series.some((p) => (p.balances[b.key] ?? 0) > 0) ? <path key={b.key} d={area(i)} fill={b.color} fillOpacity={0.3} stroke={b.color} strokeWidth={0.75} strokeLinejoin="round" /> : null,
+            series.some((p) => (p.balances[b.key] ?? 0) > 0) ? <path key={b.key} d={area(i)} fill={b.color} fillOpacity={0.85} stroke={b.color} strokeWidth={0.75} strokeLinejoin="round" /> : null,
           )}
         </g>
         <rect x={x(shown)} y={pad.t} width={slot} height={height - pad.t - pad.b} fill="var(--foreground)" opacity={at === null ? 0 : 0.08} />

@@ -6,9 +6,9 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
-  Groundwork: a flat near-white page, white panels, 1px borders, ink buttons.
-  Color carries state only: orange = money on its way or a clock running, green = paid,
-  amber = waiting or held, red = failed or blocked, blue = links and focus.
+  Groundwork: a flat grey page, near-white panels, 1px borders, ink buttons.
+  Color carries state only: orange = money on its way or a clock running, red = failed or blocked.
+  The money flow charts are the one place with saturated color.
 */
 @theme inline {
   --color-background: var(--background);
@@ -98,59 +98,59 @@
 
 :root {
   /*
-    The theme is three colors, taken from a building site and the office that pays for it:
+    The theme is flat and grey, like a drawing sheet: a pale grey page, near-white panels, slate ink.
+    Every neutral leans a hair toward site green (hue 165) so the greys are not dead, and nothing glows.
 
-      site green   oklch(0.2 0.018 165)    every surface: the ground, and a ledger's cloth
-      limestone    oklch(0.955 0.02 95)    text, and the thing to press: primary buttons are stone with green ink
-      survey orange oklch(0.76 0.16 55)    money: on its way, a running deadline, figures that matter, focus
+      sheet grey   oklch(0.948 0.004 165)   the page
+      slate ink    oklch(0.25 0.012 165)    text, and the thing to press: primary buttons are ink
+      burnt orange oklch(0.53 0.15 45)      money as text: on its way, a running deadline
 
-    Orange is the one loud color and is never used for anything that is not money or a deadline,
-    apart from the landing page's one button. Everything else is green or limestone made lighter or
-    darker along its own hue. Links are a light green so they differ from text without competing
-    with the orange. Checked by `node scripts/contrast.mjs` (text 4.5:1, marks 3:1).
+    The interface stays grey so the money flow can be loud. The flow colors are the only saturated
+    colors on a page, one meaning each: green paid, orange on its way, blue held, magenta set off.
+    Checked by `node scripts/contrast.mjs` (text 4.5:1, marks 3:1).
     Status is never color alone: each state has an icon and a word.
   */
-  color-scheme: dark;
-  --background: oklch(0.2 0.018 165);
-  --foreground: oklch(0.955 0.02 95);
-  --card: oklch(0.235 0.02 165);
-  --card-foreground: oklch(0.955 0.02 95);
-  --popover: oklch(0.262 0.022 165);
-  --popover-foreground: oklch(0.955 0.02 95);
-  --primary: oklch(0.93 0.03 95);
-  --primary-foreground: oklch(0.2 0.018 165);
-  --secondary: oklch(0.285 0.024 165);
-  --secondary-foreground: oklch(0.955 0.02 95);
-  --muted: oklch(0.262 0.022 165);
-  --muted-foreground: oklch(0.77 0.03 125);
-  --accent: oklch(0.285 0.024 165);
-  --accent-foreground: oklch(0.955 0.02 95);
-  --destructive: oklch(0.71 0.17 20);
-  --destructive-foreground: oklch(0.2 0.018 165);
-  --destructive-soft: oklch(0.3 0.06 20);
-  --border: oklch(0.955 0.02 95 / 0.12);
-  --input: oklch(0.955 0.02 95 / 0.26);
-  --ring: oklch(0.76 0.16 55);
-  --surface-sunken: oklch(0.172 0.016 165);
+  color-scheme: light;
+  --background: oklch(0.948 0.004 165);
+  --foreground: oklch(0.25 0.012 165);
+  --card: oklch(0.985 0.003 165);
+  --card-foreground: oklch(0.25 0.012 165);
+  --popover: oklch(0.995 0.002 165);
+  --popover-foreground: oklch(0.25 0.012 165);
+  --primary: oklch(0.29 0.014 165);
+  --primary-foreground: oklch(0.985 0.003 165);
+  --secondary: oklch(0.915 0.005 165);
+  --secondary-foreground: oklch(0.25 0.012 165);
+  --muted: oklch(0.928 0.005 165);
+  --muted-foreground: oklch(0.45 0.012 165);
+  --accent: oklch(0.915 0.005 165);
+  --accent-foreground: oklch(0.25 0.012 165);
+  --destructive: oklch(0.5 0.17 22);
+  --destructive-foreground: oklch(0.985 0.003 165);
+  --destructive-soft: oklch(0.93 0.03 20);
+  --border: oklch(0.25 0.012 165 / 0.13);
+  --input: oklch(0.25 0.012 165 / 0.28);
+  --ring: oklch(0.42 0.07 165);
+  --surface-sunken: oklch(0.925 0.005 165);
 
-  /* Links: a light green, so they differ from text without competing with the orange. */
-  --link: oklch(0.84 0.1 155);
-  --link-soft: oklch(0.3 0.04 160);
+  /* Links: a greyed green, a step away from the ink without becoming a second loud color. */
+  --link: oklch(0.42 0.07 165);
+  --link-soft: oklch(0.915 0.025 165);
 
-  /* The accent button on the landing page is orange; in the app the primary button is limestone. */
-  --signal: oklch(0.76 0.16 55);
-  --signal-foreground: oklch(0.2 0.018 165);
-  /* Orange is money: on its way, a deadline running. */
-  --money: oklch(0.76 0.16 55);
-  --money-foreground: oklch(0.2 0.018 165);
-  --money-soft: oklch(0.31 0.05 55);
-  /* Paid is quiet: the page's own light, with a check. */
-  --settled: oklch(0.955 0.02 95);
-  --settled-foreground: oklch(0.2 0.018 165);
-  --settled-soft: oklch(0.3 0.03 165);
-  --hold: oklch(0.77 0.03 125);
-  --hold-foreground: oklch(0.2 0.018 165);
-  --hold-soft: oklch(0.285 0.024 165);
+  /* The accent button on the landing page is orange; in the app the primary button is ink. */
+  --signal: oklch(0.72 0.17 50);
+  --signal-foreground: oklch(0.22 0.012 165);
+  /* Orange is money: on its way, a deadline running. Darkened so it reads as text on a light panel. */
+  --money: oklch(0.53 0.15 45);
+  --money-foreground: oklch(0.985 0.003 165);
+  --money-soft: oklch(0.935 0.04 65);
+  /* Paid is quiet: ink, with a check. */
+  --settled: oklch(0.3 0.02 165);
+  --settled-foreground: oklch(0.985 0.003 165);
+  --settled-soft: oklch(0.905 0.012 165);
+  --hold: oklch(0.45 0.012 165);
+  --hold-foreground: oklch(0.985 0.003 165);
+  --hold-soft: oklch(0.915 0.005 165);
 
   --chart-1: var(--flow-moving);
   --chart-2: var(--flow-paid);
@@ -158,27 +158,27 @@
   --chart-4: var(--foreground);
   --chart-5: var(--muted-foreground);
 
-  /* One section of the landing page goes a step darker than the page. */
-  --stage: oklch(0.16 0.015 165);
-  --stage-deep: oklch(0.13 0.012 165);
-  --stage-foreground: oklch(0.955 0.02 95);
-  --stage-muted: oklch(0.78 0.03 125);
+  /* One section of the landing page is slate, against the light page. */
+  --stage: oklch(0.27 0.012 165);
+  --stage-deep: oklch(0.22 0.012 165);
+  --stage-foreground: oklch(0.97 0.004 165);
+  --stage-muted: oklch(0.8 0.01 165);
 
-  /* A page of the contract: warm paper against the green. */
-  --paper: oklch(0.965 0.018 95);
-  --paper-ink: oklch(0.24 0.02 165);
-  --paper-muted: oklch(0.45 0.03 150);
+  /* A page of the contract: white paper on the grey sheet. */
+  --paper: oklch(0.995 0.003 95);
+  --paper-ink: oklch(0.24 0.012 165);
+  --paper-muted: oklch(0.45 0.012 165);
 
-  /* One meaning per color, shared by every chart: where the money is. */
-  --flow-paid: oklch(0.82 0.03 95);
-  --flow-moving: oklch(0.76 0.16 55);
-  --flow-held: oklch(0.66 0.1 160);
-  --flow-setoff: oklch(0.62 0.15 20);
-  --flow-idle: oklch(0.43 0.02 165);
+  /* Where the money is. The only saturated colors in the interface, so the flow stands out of the grey. */
+  --flow-paid: oklch(0.62 0.17 150);
+  --flow-moving: oklch(0.67 0.185 45);
+  --flow-held: oklch(0.56 0.2 265);
+  --flow-setoff: oklch(0.58 0.22 0);
+  --flow-idle: oklch(0.76 0.008 165);
 
-  /* A low light behind the page: green from one corner, orange from the other. */
-  --glow-a: oklch(0.5 0.09 165 / 0.2);
-  --glow-b: oklch(0.76 0.16 55 / 0.07);
+  /* Flat: no light behind the page. */
+  --glow-a: transparent;
+  --glow-b: transparent;
 
   --radius: 0.5rem;
 
@@ -189,12 +189,12 @@
 
   --numeral-font: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
 
-  /* The sidebar sits one step below the page. */
-  --sidebar: oklch(0.172 0.016 165);
+  /* The sidebar is one step greyer than the page. */
+  --sidebar: oklch(0.925 0.005 165);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.275 0.024 165);
+  --sidebar-accent: oklch(0.885 0.007 165);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
@@ -548,7 +548,7 @@ main [role="alert"] {
 
 /* The dim layer is the spotlight's own shadow, so the lit section is a real hole and stays clickable. */
 .tour-spot {
-  box-shadow: 0 0 0 200vmax oklch(0 0 0 / 0.62);
+  box-shadow: 0 0 0 200vmax oklch(0.2 0.012 165 / 0.34);
   transition: opacity 200ms var(--ease-out);
 }
 .tour-spot-glide {

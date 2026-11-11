@@ -170,9 +170,9 @@ export function MoneyFlow({
               key={r.key}
               d={r.d}
               fill={COLOR[r.kind]}
-              fillOpacity={r.kind === "idle" ? 0.2 : 0.24}
+              fillOpacity={r.kind === "idle" ? 0.45 : 0.82}
               stroke={COLOR[r.kind]}
-              strokeOpacity={0.7}
+              strokeOpacity={1}
               strokeWidth={0.75}
               strokeLinejoin="round"
               initial={{ opacity: 0 }}
@@ -189,7 +189,7 @@ export function MoneyFlow({
             .filter((r) => r.kind === "moving" && !dim(r))
             .flatMap((r) =>
               [0, 1, 2].map((i) => (
-                <circle key={`${r.key}-${i}`} r={Math.min(2.5, Math.max(1.5, r.thickness / 8))} fill={COLOR.moving}>
+                <circle key={`${r.key}-${i}`} r={Math.min(2.5, Math.max(1.5, r.thickness / 8))} fill="var(--flow-surface, var(--card))">
                   <animateMotion dur="2.4s" begin={`${i * 0.8}s`} repeatCount="indefinite" path={r.mid} keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.65 0 0.35 1" />
                 </circle>
               )),

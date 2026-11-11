@@ -1,6 +1,6 @@
 /**
  * Face: a drawn cartoon portrait for each person in the sample workspace. Flat shapes, one stroke
- * weight, colors from the palette (site green, limestone, survey orange) plus natural skin and hair tones.
+ * weight, greens, orange and stone that sit on the grey page, plus natural skin and hair tones.
  *
  *   <Face name="Priya Natarajan" size={88} />
  *
