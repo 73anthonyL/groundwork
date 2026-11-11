@@ -29,7 +29,7 @@ const rel = [...new Set([...board.matchAll(/\/gc\/releases\/([0-9a-f-]{36})/g)].
 for (const id of rel.slice(0, 4)) await get("priya", `/gc/releases/${id}`);
 const apps = [...new Set([...board.matchAll(/\/gc\/pay-apps\/([0-9a-f-]{36})/g)].map((m) => m[1]))];
 for (const id of apps.slice(0, 2)) await get("priya", `/gc/pay-apps/${id}`);
-for (const p of ["/gc", "/gc/ledger", "/demo", ...extra]) await get("priya", p);
+for (const p of ["/gc", "/gc/ledger", ...extra]) await get("priya", p);
 const sub = await get("rosa", `/sub/contracts/${C("ironline")}`);
 await get("rosa", "/sub");
 await get("rosa", `/sub/pay-apps/new?contract=${C("ironline")}`);

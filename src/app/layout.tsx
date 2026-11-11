@@ -25,11 +25,6 @@ const newsreader = Newsreader({
   style: ["normal", "italic"],
 });
 
-/** Applies the theme and type set chosen in the lab before first paint, so there is no flash. */
-// The product has one theme. An older build let the lab page save an alternate theme in the browser,
-// which then overrode the palette on every page; this clears that saved choice.
-const THEME_BOOT = `try{localStorage.removeItem("gw-theme");localStorage.removeItem("gw-type");delete document.documentElement.dataset.theme;delete document.documentElement.dataset.type}catch(e){}`;
-
 export const metadata: Metadata = {
   title: { default: "Groundwork", template: "%s · Groundwork" },
   description:
@@ -50,7 +45,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <MotionProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </MotionProvider>

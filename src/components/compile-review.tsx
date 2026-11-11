@@ -182,14 +182,6 @@ export function CompileReview({
               <OctagonAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-destructive" />
               <span>{error.message}</span>
             </p>
-            {error.canLoadSaved && (
-              <div className="mt-3 flex flex-wrap items-center gap-3 pl-6">
-                <Button onClick={() => compile("seed")} loading={compiling === "seed"} size="sm" variant="secondary">
-                  Load the saved reading
-                </Button>
-                <span className="type-meta text-muted-foreground">Available for the subcontracts that come with the sample workspace.</span>
-              </div>
-            )}
           </div>
         )}
 

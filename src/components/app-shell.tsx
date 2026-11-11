@@ -10,7 +10,7 @@
  * Props: `session`; `nav` (NavItem[] from ./gc-nav: GC_NAV, SUB_NAV, OWNER_NAV; defaults to the
  * list for the company's kind); `projects?` (listed under a "Projects" group, current one
  * highlighted); `isSample?` (defaults to the organization's `isDemo`; shows one "Sample workspace"
- * badge with a link to /demo); `children`.
+ * badge); `children`.
  *
  * The shell pads the page (16px phone, 24px tablet, 32px desktop) and sets 14/20 text. Pages put
  * <PageHeader> and <PageBody> at the top level; those set the width. Anything else placed directly
@@ -95,9 +95,6 @@ export function AppShell({
         {sample && (
           <div className="flex items-center justify-between gap-2 px-2 pb-2">
             <Badge dot={false}>Sample workspace</Badge>
-            <Link href="/demo" className="type-caption rounded-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
-              Reset
-            </Link>
           </div>
         )}
         <ul className="flex flex-col gap-px">
