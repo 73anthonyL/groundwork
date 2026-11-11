@@ -86,3 +86,24 @@ describe("bootstrap", () => {
     expect(ci![1]).toBeGreaterThanOrEqual(point);
   });
 });
+
+describe("degenerate runs", () => {
+  it("a statistic that is undefined in every resample has no interval, rather than a NaN one", () => {
+    const good = scoreContract(spec, perfect, pages);
+    // No wrong fields anywhere, so the catch rate is null in every resample.
+    expect(bootstrap([good, good, good], (m) => m.layers.L3.catchRate)).toBeNull();
+    expect(bootstrap([good], (m) => m.accuracy)).toBeNull();
+  });
+
+  it("the quote-verification rate is undefined, not 0%, when no field carries a quote", () => {
+    const r = scoreContract(spec, perfect, pages);
+    const unquoted = { ...r, fields: r.fields.map((f) => ({ ...f, quoted: false, quoteVerified: false })) };
+    expect(metrics([unquoted]).quoteVerifiedRate).toBeNull();
+  });
+
+  it("an empty run yields no NaN", () => {
+    const m = metrics([]);
+    expect(Object.values(m).filter((v) => typeof v === "number").every(Number.isFinite)).toBe(true);
+    for (const l of LAYERS) expect(Object.values(m.layers[l]).every((v) => v === null || Number.isFinite(v))).toBe(true);
+  });
+});

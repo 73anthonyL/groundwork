@@ -93,7 +93,8 @@ export type Metrics = {
   contracts: number;
   fields: number;
   accuracy: number;
-  quoteVerifiedRate: number;
+  /** Share of quoted fields whose quote the verifier found in the PDF; null when no field carries a quote. */
+  quoteVerifiedRate: number | null;
   /** Share of wrong fields marked medium/low by the model itself. */
   calibration: number | null;
   wrong: number;
@@ -115,7 +116,7 @@ export function metrics(results: ContractResult[]): Metrics {
     contracts: results.length,
     fields: all.length,
     accuracy: ratio(all.filter((f) => f.correct).length, all.length),
-    quoteVerifiedRate: ratio(quoted.filter((f) => f.quoteVerified).length, quoted.length),
+    quoteVerifiedRate: quoted.length ? quoted.filter((f) => f.quoteVerified).length / quoted.length : null,
     calibration: wrong.length ? wrong.filter((f) => f.confidence === "medium" || f.confidence === "low").length / wrong.length : null,
     wrong: wrong.length,
     layers,
@@ -133,7 +134,12 @@ function mulberry32(seed: number) {
   };
 }
 
-/** 95% percentile bootstrap over contracts (fields within a contract are not independent). */
+/**
+ * 95% percentile bootstrap over contracts (fields within a contract are not independent).
+ * Resamples in which the statistic is undefined (null) are dropped, so an interval for a conditional
+ * statistic such as catch rate is conditional on the resample containing at least one wrong field.
+ * The resampling indexes into `results`, so the interval depends on their order: callers pass a stable order.
+ */
 export function bootstrap(results: ContractResult[], stat: (m: Metrics) => number | null, iters = 2000, seed = 7): [number, number] | null {
   if (results.length < 2) return null;
   const rand = mulberry32(seed);
@@ -143,6 +149,8 @@ export function bootstrap(results: ContractResult[], stat: (m: Metrics) => numbe
     const v = stat(metrics(sample));
     if (v !== null) xs.push(v);
   }
+  // A statistic that is undefined in every resample (e.g. catch rate on a run with no wrong fields) has no interval.
+  if (!xs.length) return null;
   xs.sort((a, b) => a - b);
   return [xs[Math.floor(0.025 * xs.length)], xs[Math.min(xs.length - 1, Math.floor(0.975 * xs.length))]];
 }

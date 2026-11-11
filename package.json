@@ -19,7 +19,10 @@
     "ramp:webhook": "node --env-file-if-exists=.env.local --import tsx scripts/ramp-webhook.ts",
     "eval:fetch": "node --import tsx evals/fetch-real.ts",
     "eval:specs": "node --import tsx evals/build-specs.ts",
-    "eval": "node --env-file-if-exists=.env.local --import tsx evals/run.ts"
+    "eval": "node --env-file-if-exists=.env.local --import tsx evals/run.ts",
+    "eval:check": "node --import tsx evals/run.ts --cache-only --check",
+    "eval:gate": "node --import tsx scripts/eval-gate.ts",
+    "eval:report": "node --import tsx scripts/eval-report.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",

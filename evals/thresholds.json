@@ -1,0 +1,10 @@
+{
+  "source": "evals/results/latest.json",
+  "note": "Regression gate for the extraction eval, read by scripts/eval-gate.ts. Each bound sits at or just inside the committed run (28 contracts, 588 fields, 583 correct, 1 silent error under the production policy, 34.2% review burden). Tighten a bound when a run improves on it; loosen one only in a commit that says why.",
+  "minContracts": 28,
+  "minFields": 588,
+  "minAccuracy": 0.99,
+  "minQuoteVerifiedRate": 0.995,
+  "maxSilentErrors": 1,
+  "maxReviewBurden": 0.36
+}
