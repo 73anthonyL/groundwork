@@ -98,58 +98,58 @@
 
 :root {
   /*
-    The default theme is built from three colors:
+    The theme is three colors:
 
-      indigo  #2e294e  oklch(0.306 0.065 288.1)  ink: text, primary buttons, the dark section
-      teal    #1b998b  oklch(0.616 0.104 183.2)  paid and approved; links
-      orange  #f46036  oklch(0.674 0.191 36.3)   money on its way, a running deadline, the one call to action
+      onyx   #151515  oklch(0.196 0 0)          every surface
+      mauve  #a63d40  oklch(0.507 0.139 21.8)   the thing to press: primary buttons, the brand
+      clay   #e9b872  oklch(0.812 0.104 75.3)   money: on its way, a running deadline, figures that matter, focus
 
-    The page is white with a trace of the indigo, so the three colors do the talking. Teal and
-    orange are both too light to carry small text on white, so text uses a deeper step of each;
-    the exact colors appear on fills, marks and icons. Every other value is one of the three made
-    lighter or darker along its own hue. Checked by `node scripts/contrast.mjs` (text 4.5:1, marks
-    3:1). Status is never color alone: each state has an icon and a word.
+    Text is clay taken almost to white, so the page stays warm. Everything else is one of the three
+    made lighter or darker along its own hue. Mauve is too dark to read as small text on onyx, so
+    links use a lighter step of it. Checked by `node scripts/contrast.mjs` (text 4.5:1, marks 3:1).
+    Status is never color alone: each state has an icon and a word.
   */
-  --background: oklch(0.985 0.004 288.1);
-  --foreground: oklch(0.306 0.065 288.1);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.306 0.065 288.1);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.306 0.065 288.1);
-  --primary: oklch(0.306 0.065 288.1);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.012 288.1);
-  --secondary-foreground: oklch(0.306 0.065 288.1);
-  --muted: oklch(0.965 0.009 288.1);
-  --muted-foreground: oklch(0.5 0.04 288.1);
-  --accent: oklch(0.95 0.012 288.1);
-  --accent-foreground: oklch(0.306 0.065 288.1);
-  --destructive: oklch(0.5 0.19 27);
-  --destructive-foreground: oklch(1 0 0);
-  --destructive-soft: oklch(0.95 0.02 27);
-  --border: oklch(0.306 0.065 288.1 / 0.13);
-  --input: oklch(0.306 0.065 288.1 / 0.28);
-  --ring: oklch(0.616 0.104 183.2);
-  --surface-sunken: oklch(0.965 0.009 288.1);
+  color-scheme: dark;
+  --background: oklch(0.196 0 0);
+  --foreground: oklch(0.95 0.018 75.3);
+  --card: oklch(0.23 0.003 75.3);
+  --card-foreground: oklch(0.95 0.018 75.3);
+  --popover: oklch(0.255 0.004 75.3);
+  --popover-foreground: oklch(0.95 0.018 75.3);
+  --primary: oklch(0.507 0.139 21.8);
+  --primary-foreground: oklch(0.97 0.012 75.3);
+  --secondary: oklch(0.275 0.004 75.3);
+  --secondary-foreground: oklch(0.95 0.018 75.3);
+  --muted: oklch(0.255 0.004 75.3);
+  --muted-foreground: oklch(0.74 0.02 75.3);
+  --accent: oklch(0.275 0.004 75.3);
+  --accent-foreground: oklch(0.95 0.018 75.3);
+  --destructive: oklch(0.72 0.15 28);
+  --destructive-foreground: oklch(0.196 0 0);
+  --destructive-soft: oklch(0.29 0.05 28);
+  --border: oklch(0.95 0.018 75.3 / 0.12);
+  --input: oklch(0.95 0.018 75.3 / 0.26);
+  --ring: oklch(0.812 0.104 75.3);
+  --surface-sunken: oklch(0.17 0 0);
 
-  /* Links: teal, a step deeper so it reads as text. */
-  --link: oklch(0.47 0.085 183.2);
-  --link-soft: oklch(0.955 0.03 183.2);
+  /* Links: mauve, lifted until it reads on onyx. */
+  --link: oklch(0.76 0.1 21.8);
+  --link-soft: oklch(0.3 0.05 21.8);
 
-  /* Orange twice: the color itself for marks and fills, a deeper step for text. */
-  --signal: oklch(0.674 0.191 36.3);
-  --signal-foreground: oklch(0.2 0.05 288.1);
-  --money: oklch(0.52 0.17 36.3);
-  --money-foreground: oklch(1 0 0);
-  --money-soft: oklch(0.95 0.022 45);
-  /* Teal: paid, approved, done. */
-  --settled: oklch(0.47 0.085 183.2);
-  --settled-foreground: oklch(1 0 0);
-  --settled-soft: oklch(0.955 0.03 183.2);
-  /* Held or waiting: indigo, a step lighter. */
-  --hold: oklch(0.5 0.04 288.1);
-  --hold-foreground: oklch(1 0 0);
-  --hold-soft: oklch(0.95 0.012 288.1);
+  /* The accent button on the landing page is clay; in the app the primary button is mauve. */
+  --signal: oklch(0.812 0.104 75.3);
+  --signal-foreground: oklch(0.196 0 0);
+  /* Clay is money: on its way, a deadline running. */
+  --money: oklch(0.812 0.104 75.3);
+  --money-foreground: oklch(0.196 0 0);
+  --money-soft: oklch(0.3 0.04 75.3);
+  /* Paid is quiet: the page's own light, with a check. */
+  --settled: oklch(0.95 0.018 75.3);
+  --settled-foreground: oklch(0.196 0 0);
+  --settled-soft: oklch(0.3 0.006 75.3);
+  --hold: oklch(0.74 0.02 75.3);
+  --hold-foreground: oklch(0.196 0 0);
+  --hold-soft: oklch(0.275 0.004 75.3);
 
   --chart-1: var(--flow-moving);
   --chart-2: var(--flow-paid);
@@ -157,39 +157,43 @@
   --chart-4: var(--foreground);
   --chart-5: var(--muted-foreground);
 
-  /* The one dark surface: indigo. */
-  --stage: oklch(0.306 0.065 288.1);
-  --stage-deep: oklch(0.25 0.06 288.1);
-  --stage-foreground: oklch(0.985 0.004 288.1);
-  --stage-muted: oklch(0.84 0.03 288.1);
+  /* One section of the landing page goes a step darker than the page. */
+  --stage: oklch(0.15 0 0);
+  --stage-deep: oklch(0.12 0 0);
+  --stage-foreground: oklch(0.95 0.018 75.3);
+  --stage-muted: oklch(0.76 0.02 75.3);
 
-  /* A page of the contract. */
-  --paper: oklch(1 0 0);
-  --paper-ink: oklch(0.306 0.065 288.1);
-  --paper-muted: oklch(0.5 0.04 288.1);
+  /* A page of the contract: warm paper against the onyx. */
+  --paper: oklch(0.965 0.02 75.3);
+  --paper-ink: oklch(0.24 0.01 75.3);
+  --paper-muted: oklch(0.45 0.02 75.3);
 
   /* One meaning per color, shared by every chart: where the money is. */
-  --flow-paid: oklch(0.616 0.104 183.2);
-  --flow-moving: oklch(0.674 0.191 36.3);
-  --flow-held: oklch(0.6 0.05 288.1);
-  --flow-setoff: oklch(0.45 0.09 288.1);
-  --flow-idle: oklch(0.82 0.02 288.1);
+  --flow-paid: oklch(0.72 0.03 75.3);
+  --flow-moving: oklch(0.812 0.104 75.3);
+  --flow-held: oklch(0.66 0.11 21.8);
+  --flow-setoff: oklch(0.56 0.13 21.8);
+  --flow-idle: oklch(0.42 0.005 75.3);
+
+  /* A low warmth behind the page: mauve from one corner, clay from the other. */
+  --glow-a: oklch(0.507 0.139 21.8 / 0.2);
+  --glow-b: oklch(0.812 0.104 75.3 / 0.08);
 
   --radius: 0.5rem;
 
   /* Panels are outlined, not lifted: "shadow-card" is a 1px border. Only floating things cast a shadow. */
   --shadow-card-value: 0 0 0 1px var(--border);
-  --shadow-float-value: 0 0 0 1px oklch(0.306 0.065 288.1 / 0.1), 0 4px 8px -2px oklch(0.306 0.065 288.1 / 0.1), 0 16px 32px -8px oklch(0.306 0.065 288.1 / 0.18);
+  --shadow-float-value: 0 0 0 1px oklch(0 0 0 / 0.1), 0 4px 8px -2px oklch(0 0 0 / 0.1), 0 16px 32px -8px oklch(0 0 0 / 0.18);
   --shadow-lift-value: 0 0 0 0 transparent;
 
   --numeral-font: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
 
   /* The sidebar sits one step below the page. */
-  --sidebar: oklch(0.965 0.009 288.1);
+  --sidebar: oklch(0.17 0 0);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.93 0.016 288.1);
+  --sidebar-accent: oklch(0.27 0.004 78.5);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
@@ -332,6 +336,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(60rem 40rem at 0% -10%, var(--glow-a), transparent 70%), radial-gradient(55rem 38rem at 100% 0%, var(--glow-b), transparent 70%);
+    background-attachment: fixed;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
   }

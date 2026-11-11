@@ -83,7 +83,7 @@ export default async function Landing() {
   );
 
   return (
-    <div className="flex flex-1 flex-col bg-background">
+    <div className="flex flex-1 flex-col">
       <header className={`${WRAP} flex h-16 items-center justify-between gap-4`}>
         <Wordmark />
         <nav aria-label="Main" className="flex items-center gap-1 text-sm">
