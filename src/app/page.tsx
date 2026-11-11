@@ -1,43 +1,74 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Check, Clock, PenLine } from "lucide-react";
 import { auth, homeFor } from "@/server/auth";
 import { latestEval } from "@/server/read/eval";
-import { STATE_LAW, coverage } from "@/domain/statutes";
 import { Wordmark } from "@/components/wordmark";
 import { buttonVariants } from "@/components/ui/button";
-import { ContractHero } from "@/components/landing/contract-hero";
-import { ApproveFragment, ArrivalFragment, DaysFragment, EvidenceFragment, LawFragment, LayersFragment, MissesFragment, PayFragment, ReadFragment } from "@/components/landing/fragments";
+import { DaysFragment } from "@/components/landing/fragments";
+import { SAMPLE_PAYMENT, type SamplePaymentLine } from "@/lib/sample-flow";
+import { formatCentsCompact } from "@/lib/money";
 
 /** Landing type, set here because it is larger than anything in the app. */
-const WRAP = "mx-auto w-full max-w-[1200px] px-4 sm:px-8";
-const H1 = "text-[clamp(2.25rem,1.35rem+3.9vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]";
-const H2 = "text-[clamp(1.75rem,1.3rem+1.9vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.02em]";
-const TEXT_LINK = "rounded-sm text-foreground underline decoration-input underline-offset-4 hover:decoration-foreground";
-const HEADLINE = "The contract already says when to pay.";
-
-const pct = (n: number) => (n === 1 ? "100%" : `${(n * 100).toFixed(1)}%`);
-const runDate = (at: string) => new Date(`${at.slice(0, 10)}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+const WRAP = "mx-auto w-full max-w-[1120px] px-5 sm:px-8";
+const H1 = "text-[clamp(2.25rem,1.35rem+3.9vw,3.75rem)] font-medium leading-[1.06] tracking-[-0.02em]";
+const H2 = "text-[clamp(1.75rem,1.3rem+1.9vw,2.5rem)] font-medium leading-[1.12] tracking-[-0.015em]";
+const HEADLINE = "When the owner pays, every subcontractor gets paid.";
 
 const STEPS = [
-  { title: "Read", body: "Upload the signed subcontract.", fragment: <ReadFragment /> },
-  { title: "Approve once", body: "Settle what's flagged. Approve the rules.", fragment: <ApproveFragment /> },
-  { title: "Pay every time", body: "Each owner payment splits itself.", fragment: <PayFragment /> },
+  { title: "Upload the subcontract", body: "Groundwork reads its payment terms." },
+  { title: "Approve the rules once", body: "You check them against the contract." },
+  { title: "Record the owner's payment", body: "Each share, hold-back and deadline is worked out for you." },
 ];
 
-function Section({ id, className = "", children }: { id?: string; className?: string; children: React.ReactNode }) {
+const STATUS: Record<SamplePaymentLine["status"], { label: string; icon: typeof Check; tone: string }> = {
+  paid: { label: "Paid", icon: Check, tone: "text-foreground" },
+  waiver: { label: "Waiting for their signature", icon: PenLine, tone: "text-muted-foreground" },
+  due: { label: "Due in 7 days", icon: Clock, tone: "text-money" },
+};
+
+/** The product in one picture: one payment in, everyone's share out. */
+function SplitPicture() {
+  const p = SAMPLE_PAYMENT;
   return (
-    <section id={id} className={`scroll-mt-8 border-t ${className}`}>
-      <div className={`${WRAP} py-20 sm:py-28`}>{children}</div>
-    </section>
+    <figure aria-label="One owner payment split between three subcontractors" className="rounded-lg border bg-card shadow-float">
+      <div className="flex items-baseline justify-between gap-4 px-6 py-5">
+        <span className="text-[15px] text-muted-foreground">The owner pays you</span>
+        <span className="num text-[28px] font-semibold leading-none">{formatCentsCompact(p.amountCents)}</span>
+      </div>
+      <ul className="border-t">
+        {p.lines.map((l, i) => {
+          const s = STATUS[l.status];
+          return (
+            <li key={l.name} className="split-row flex items-center justify-between gap-4 border-b px-6 py-4" style={{ "--i": i } as React.CSSProperties}>
+              <div className="min-w-0">
+                <div className="text-[15px] font-medium">{l.name}</div>
+                <div className={`mt-0.5 flex items-center gap-1.5 text-[13px] ${s.tone}`}>
+                  <s.icon aria-hidden className="size-3.5" />
+                  {s.label}
+                </div>
+              </div>
+              <span className="num text-[17px] font-medium">{formatCentsCompact(l.netCents)}</span>
+            </li>
+          );
+        })}
+        <li className="split-row flex items-center justify-between gap-4 px-6 py-4 text-muted-foreground" style={{ "--i": p.lines.length } as React.CSSProperties}>
+          <span className="text-[15px]">Held back until the job is done</span>
+          <span className="num text-[17px]">{formatCentsCompact(p.retainageCents)}</span>
+        </li>
+      </ul>
+      {/* The rows arrive one after another, once. Reduced motion shows them at once (see globals.css). */}
+      <style>{`
+        @keyframes gw-split { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .split-row { animation: gw-split 0.5s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(var(--i) * 140ms + 300ms); }
+      `}</style>
+    </figure>
   );
 }
 
-/** The front door: what the product does to one clause, the evidence behind it, and what it does not do. */
+/** The front door: what it does, why it matters, how it works. Nothing a first-time visitor has to decode. */
 export default async function Landing() {
   const session = await auth();
   const run = latestEval();
-  const cover = coverage();
-  const texas = STATE_LAW.TX;
   const primary = session ? { href: homeFor(session.org.kind), label: "Open Groundwork" } : { href: "/sign-up", label: "Create your account" };
 
   const cta = (
@@ -46,7 +77,7 @@ export default async function Landing() {
         {primary.label}
       </Link>
       <Link href="/sample" className={buttonVariants({ variant: "secondary", size: "lg", className: "px-5 text-[15px]" })}>
-        Explore the sample workspace
+        Try the sample
       </Link>
     </div>
   );
@@ -56,12 +87,6 @@ export default async function Landing() {
       <header className={`${WRAP} flex h-16 items-center justify-between gap-4`}>
         <Wordmark />
         <nav aria-label="Main" className="flex items-center gap-1 text-sm">
-          <Link href="#how" className="hidden rounded-md px-3 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground md:block">
-            How it works
-          </Link>
-          <Link href="#accuracy" className="hidden rounded-md px-3 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground md:block">
-            Accuracy
-          </Link>
           {!session && (
             <Link href="/sign-in" className="rounded-md px-3 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground">
               Sign in
@@ -74,44 +99,17 @@ export default async function Landing() {
       </header>
 
       <main>
-        <section className={`${WRAP} pb-16 pt-14 sm:pb-20 sm:pt-24`}>
-          <h1 className={`${H1} max-w-[16ch]`}>{HEADLINE}</h1>
-          <p className="mt-6 max-w-[60ch] text-[19px] leading-[1.5] text-muted-foreground">
-            Upload a subcontract. Approve its payment rules once. Every owner payment splits itself.
-          </p>
-          <div className="mt-8">{cta}</div>
-          <div className="mt-14 sm:mt-16">
-            <ContractHero />
+        <section className={`${WRAP} grid items-center gap-x-16 gap-y-12 pb-20 pt-12 sm:pb-28 sm:pt-20 lg:grid-cols-[1.1fr_1fr]`}>
+          <div>
+            <h1 className={H1}>{HEADLINE}</h1>
+            <p className="mt-6 max-w-[44ch] text-[19px] leading-[1.5] text-muted-foreground">Groundwork reads your subcontracts and works out every payment: who gets what, what&rsquo;s held back, and when it&rsquo;s due.</p>
+            <div className="mt-8">{cta}</div>
           </div>
-
-          {run && (
-            <div className="mt-16 sm:mt-20">
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4">
-                {[
-                  { value: String(run.metrics.contracts), label: "subcontracts read" },
-                  { value: String(run.metrics.fields), label: "payment terms checked" },
-                  { value: pct(run.metrics.accuracy), label: "terms read correctly" },
-                  { value: pct(run.metrics.quoteVerifiedRate), label: "quotes found in the PDF" },
-                ].map((s) => (
-                  <div key={s.label} className="flex flex-col border-t pt-4">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">{s.label}</dt>
-                    <dd className="num text-[clamp(2.5rem,2rem+1.6vw,3rem)] font-medium leading-[1.1] tracking-[-0.02em]">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="type-meta mt-6 text-muted-foreground">
-                Evaluation run, {runDate(run.at)}.{" "}
-                <Link href="#accuracy" className={TEXT_LINK}>
-                  Method
-                </Link>
-              </p>
-            </div>
-          )}
+          <SplitPicture />
         </section>
 
-        {/* The one dark section: the problem, with its source. */}
         <section className="stage">
-          <div className={`${WRAP} grid gap-x-16 gap-y-12 py-20 sm:py-28 lg:grid-cols-[1fr_1fr] lg:items-center`}>
+          <div className={`${WRAP} grid gap-x-16 gap-y-12 py-20 sm:py-24 lg:grid-cols-2 lg:items-center`}>
             <h2 className={`${H2} max-w-[16ch]`}>The owner pays in 17 days. The sub waits 50.</h2>
             <div>
               <DaysFragment />
@@ -120,115 +118,38 @@ export default async function Landing() {
           </div>
         </section>
 
-        <Section id="how" className="border-t-0">
-          <h2 className={`${H2} max-w-[20ch]`}>Read once. Approve once. Pay every time.</h2>
-          <ol className="mt-14 grid gap-x-8 gap-y-14 lg:grid-cols-3">
-            {STEPS.map((s, i) => (
-              <li key={s.title} className="flex flex-col">
-                <div className="flex items-baseline gap-3 border-t border-foreground pt-4">
-                  <span className="type-mono text-[13px] text-muted-foreground">0{i + 1}</span>
-                  <h3 className="text-[20px] font-medium leading-7 tracking-[-0.012em]">{s.title}</h3>
-                </div>
-                <p className="mt-2 text-[15px] leading-6 text-muted-foreground">{s.body}</p>
-                <div className="mt-6">{s.fragment}</div>
-              </li>
-            ))}
-          </ol>
-        </Section>
-
-        <Section>
-          <h2 className={`${H2} max-w-[18ch]`}>Every term comes with its clause.</h2>
-          <div className="mt-12">
-            <EvidenceFragment />
-          </div>
-        </Section>
-
-        <Section>
-          <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[1fr_1.25fr] lg:items-start">
-            <h2 className={`${H2} max-w-[14ch]`}>The owner pays. The rest is already moving.</h2>
-            <ArrivalFragment />
-          </div>
-        </Section>
-
-        {texas?.promptPay.days != null && (
-          <Section>
-            <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[1.25fr_1fr] lg:items-start">
-              <div className="lg:order-2">
-                <h2 className={`${H2} max-w-[14ch]`}>Where state law beats the contract, it wins.</h2>
-                <p className="mt-6 text-[15px] leading-6 text-muted-foreground">
-                  {cover.jurisdictions} jurisdictions, each with its citation.{" "}
-                  <Link href="/statutes" className={TEXT_LINK}>
-                    See every state
-                  </Link>
-                </p>
-              </div>
-              <LawFragment law={texas} />
-            </div>
-          </Section>
-        )}
-
-        {run && (
-          <Section id="accuracy">
-            <h2 className={`${H2} max-w-[18ch]`}>Measured. Every miss shown.</h2>
-            <div className="mt-12 grid gap-8 lg:grid-cols-2">
-              <LayersFragment run={run} />
-              <MissesFragment run={run} />
-            </div>
-            <p className="mt-8 text-[15px] leading-6 text-muted-foreground">
-              {run.metrics.contracts} hand-labeled subcontracts. A person approves every rule.{" "}
-              <Link href="/api/v1/eval" className={TEXT_LINK}>
-                Full run as JSON
-              </Link>
-            </p>
-          </Section>
-        )}
-
-        <Section>
-          <h2 className={`${H1} max-w-[16ch]`}>{HEADLINE}</h2>
-          <div className="mt-8">{cta}</div>
-        </Section>
-      </main>
-
-      <footer className="border-t bg-card">
-        <div className={`${WRAP} grid gap-x-16 gap-y-10 py-14 md:grid-cols-[1.6fr_1fr_1fr]`}>
-          <div>
-            <Wordmark />
-            <p className="type-meta mt-4 max-w-[46ch] text-muted-foreground">Test mode: no real money moves. Not legal advice.</p>
-            <p className="type-meta mt-3 text-muted-foreground">Built for the BBS and Ramp hackathon.</p>
-          </div>
-          <nav aria-label="Product">
-            <h2 className="type-meta font-medium">Product</h2>
-            <ul className="type-body mt-3 space-y-2 text-muted-foreground">
-              {[
-                { href: "#how", label: "How it works" },
-                { href: "#accuracy", label: "Accuracy and method" },
-                { href: "/statutes", label: "State payment rules" },
-                { href: "/sample", label: "Sample workspace" },
-              ].map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="rounded-sm underline-offset-4 hover:text-foreground hover:underline">
-                    {l.label}
-                  </Link>
+        <section id="how" className="scroll-mt-8">
+          <div className={`${WRAP} py-20 sm:py-28`}>
+            <h2 className={H2}>Three steps.</h2>
+            <ol className="mt-12 grid gap-x-10 gap-y-10 md:grid-cols-3">
+              {STEPS.map((s, i) => (
+                <li key={s.title} className="border-t border-foreground pt-5">
+                  <span className="num text-[15px] text-muted-foreground">{i + 1}</span>
+                  <h3 className="mt-2 text-[22px] font-medium leading-7">{s.title}</h3>
+                  <p className="mt-2 text-[16px] leading-6 text-muted-foreground">{s.body}</p>
                 </li>
               ))}
-            </ul>
-          </nav>
-          <nav aria-label="Account">
-            <h2 className="type-meta font-medium">Account</h2>
-            <ul className="type-body mt-3 space-y-2 text-muted-foreground">
-              <li>
-                <Link href="/sign-in" className="rounded-sm underline-offset-4 hover:text-foreground hover:underline">
-                  Sign in
-                </Link>
-              </li>
-              <li>
-                <Link href={primary.href} className="inline-flex items-center gap-1 rounded-sm underline-offset-4 hover:text-foreground hover:underline">
-                  {primary.label}
-                  <ArrowRight aria-hidden className="size-3.5" />
-                </Link>
-              </li>
-            </ul>
-          </nav>
+            </ol>
+            {run && (
+              <p className="mt-14 text-[16px] leading-6 text-muted-foreground">
+                In our test, Groundwork read <span className="num font-medium text-foreground">{(run.metrics.accuracy * 100).toFixed(1)}%</span> of <span className="num">{run.metrics.fields}</span> contract terms correctly. You approve every rule before anything is paid.
+              </p>
+            )}
+          </div>
+        </section>
+
+        <section className="border-t">
+          <div className={`${WRAP} py-20 sm:py-28`}>
+            <h2 className={`${H1} max-w-[18ch]`}>See it with your own subcontract.</h2>
+            <div className="mt-8">{cta}</div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t">
+        <div className={`${WRAP} flex flex-wrap items-center justify-between gap-x-8 gap-y-3 py-8`}>
+          <Wordmark />
+          <p className="type-meta text-muted-foreground">Test mode: no real money moves. Not legal advice. Built for the BBS and Ramp hackathon.</p>
         </div>
       </footer>
     </div>
