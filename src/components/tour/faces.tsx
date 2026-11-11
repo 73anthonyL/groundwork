@@ -1,6 +1,6 @@
 /**
  * Face: a drawn cartoon portrait for each person in the sample workspace. Flat shapes, one stroke
- * weight, greens, orange and stone that sit on the grey page, plus natural skin and hair tones.
+ * weight, verdigris, vermilion and Prussian blue from the palette, plus natural skin and hair tones.
  *
  *   <Face name="Priya Natarajan" size={88} />
  *
@@ -21,11 +21,11 @@ type Spec = {
   earrings?: boolean;
 };
 
-const GREEN = "oklch(0.5 0.09 165)";
+const GREEN = "oklch(0.55 0.1 170)";
 const GREEN_DEEP = "oklch(0.36 0.06 165)";
-const ORANGE = "oklch(0.76 0.16 55)";
-const ORANGE_DEEP = "oklch(0.6 0.12 55)";
-const STONE = "oklch(0.36 0.02 165)";
+const ORANGE = "oklch(0.72 0.17 45)";
+const ORANGE_DEEP = "oklch(0.58 0.14 42)";
+const STONE = "oklch(0.36 0.06 252)";
 const CREAM = "oklch(0.92 0.03 95)";
 const INK = "oklch(0.2 0.01 40)";
 

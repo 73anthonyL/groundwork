@@ -6,9 +6,9 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
-  Groundwork: a flat grey page, near-white panels, 1px borders, ink buttons.
-  Color carries state only: orange = money on its way or a clock running, red = failed or blocked.
-  The money flow charts are the one place with saturated color.
+  Groundwork: a vellum page, bright paper panels, 1px borders, Prussian ink buttons.
+  Color carries state: vermilion = money on its way or a clock running, verdigris = paid,
+  ochre = waiting, lapis = retainage held, madder = failed, blocked or set off.
 */
 @theme inline {
   --color-background: var(--background);
@@ -98,59 +98,64 @@
 
 :root {
   /*
-    The theme is flat and grey, like a drawing sheet: a pale grey page, near-white panels, slate ink.
-    Every neutral leans a hair toward site green (hue 165) so the greys are not dead, and nothing glows.
+    The palette is taken from the things on a drawing table, not from a color wheel:
 
-      sheet grey   oklch(0.948 0.004 165)   the page
-      slate ink    oklch(0.25 0.012 165)    text, and the thing to press: primary buttons are ink
-      burnt orange oklch(0.53 0.15 45)      money as text: on its way, a running deadline
+      vellum         oklch(0.955 0.013 85)   the page: warm drafting paper, with a faint grain
+      Prussian ink   oklch(0.24 0.035 255)   text, buttons and the one dark section: blueprint blue-black
+      vermilion      oklch(0.67 0.185 42)    money on its way, a running deadline
+      verdigris      oklch(0.62 0.12 168)    paid: weathered copper
+      lapis          oklch(0.52 0.17 262)    retainage held
+      madder         oklch(0.56 0.2 12)      set off, failed, blocked
+      ochre          oklch(0.48 0.09 80)     waiting
 
-    The interface stays grey so the money flow can be loud. The flow colors are the only saturated
-    colors on a page, one meaning each: green paid, orange on its way, blue held, magenta set off.
+    Two things keep it from looking generated. The neutrals are not one hue made lighter and darker:
+    they drift, warm at the paper end and cool at the ink end, the way light and shadow do. And each
+    pigment sits at its own lightness and strength instead of sharing one, so no two feel like siblings.
     Checked by `node scripts/contrast.mjs` (text 4.5:1, marks 3:1).
     Status is never color alone: each state has an icon and a word.
   */
   color-scheme: light;
-  --background: oklch(0.948 0.004 165);
-  --foreground: oklch(0.25 0.012 165);
-  --card: oklch(0.985 0.003 165);
-  --card-foreground: oklch(0.25 0.012 165);
-  --popover: oklch(0.995 0.002 165);
-  --popover-foreground: oklch(0.25 0.012 165);
-  --primary: oklch(0.29 0.014 165);
-  --primary-foreground: oklch(0.985 0.003 165);
-  --secondary: oklch(0.915 0.005 165);
-  --secondary-foreground: oklch(0.25 0.012 165);
-  --muted: oklch(0.928 0.005 165);
-  --muted-foreground: oklch(0.45 0.012 165);
-  --accent: oklch(0.915 0.005 165);
-  --accent-foreground: oklch(0.25 0.012 165);
-  --destructive: oklch(0.5 0.17 22);
-  --destructive-foreground: oklch(0.985 0.003 165);
-  --destructive-soft: oklch(0.93 0.03 20);
-  --border: oklch(0.25 0.012 165 / 0.13);
-  --input: oklch(0.25 0.012 165 / 0.28);
-  --ring: oklch(0.42 0.07 165);
-  --surface-sunken: oklch(0.925 0.005 165);
+  --background: oklch(0.955 0.013 85);
+  --foreground: oklch(0.24 0.035 255);
+  --card: oklch(0.982 0.008 88);
+  --card-foreground: oklch(0.24 0.035 255);
+  --popover: oklch(0.992 0.006 90);
+  --popover-foreground: oklch(0.24 0.035 255);
+  --primary: oklch(0.31 0.065 252);
+  --primary-foreground: oklch(0.982 0.008 88);
+  --secondary: oklch(0.922 0.016 82);
+  --secondary-foreground: oklch(0.24 0.035 255);
+  --muted: oklch(0.932 0.015 83);
+  --muted-foreground: oklch(0.45 0.028 245);
+  --accent: oklch(0.922 0.016 82);
+  --accent-foreground: oklch(0.24 0.035 255);
+  --destructive: oklch(0.48 0.16 18);
+  --destructive-foreground: oklch(0.982 0.008 88);
+  --destructive-soft: oklch(0.925 0.035 25);
+  --border: oklch(0.24 0.035 255 / 0.14);
+  --input: oklch(0.24 0.035 255 / 0.3);
+  --ring: oklch(0.43 0.11 248);
+  --surface-sunken: oklch(0.93 0.016 82);
 
-  /* Links: a greyed green, a step away from the ink without becoming a second loud color. */
-  --link: oklch(0.42 0.07 165);
-  --link-soft: oklch(0.915 0.025 165);
+  /* Links: blueprint blue, a lighter cut of the ink. */
+  --link: oklch(0.43 0.11 248);
+  --link-soft: oklch(0.915 0.03 235);
 
-  /* The accent button on the landing page is orange; in the app the primary button is ink. */
-  --signal: oklch(0.72 0.17 50);
-  --signal-foreground: oklch(0.22 0.012 165);
-  /* Orange is money: on its way, a deadline running. Darkened so it reads as text on a light panel. */
-  --money: oklch(0.53 0.15 45);
-  --money-foreground: oklch(0.985 0.003 165);
-  --money-soft: oklch(0.935 0.04 65);
-  /* Paid is quiet: ink, with a check. */
-  --settled: oklch(0.3 0.02 165);
-  --settled-foreground: oklch(0.985 0.003 165);
-  --settled-soft: oklch(0.905 0.012 165);
-  --hold: oklch(0.45 0.012 165);
-  --hold-foreground: oklch(0.985 0.003 165);
-  --hold-soft: oklch(0.915 0.005 165);
+  /* The accent button on the landing page is vermilion; in the app the primary button is ink. */
+  --signal: oklch(0.67 0.185 42);
+  --signal-foreground: oklch(0.2 0.03 255);
+  /* Vermilion is money: on its way, a deadline running. Burnt down so it reads as text on paper. */
+  --money: oklch(0.51 0.155 40);
+  --money-foreground: oklch(0.982 0.008 88);
+  --money-soft: oklch(0.93 0.045 62);
+  /* Paid is verdigris. */
+  --settled: oklch(0.41 0.08 172);
+  --settled-foreground: oklch(0.982 0.008 88);
+  --settled-soft: oklch(0.915 0.035 168);
+  /* Waiting or held is ochre. */
+  --hold: oklch(0.47 0.09 78);
+  --hold-foreground: oklch(0.982 0.008 88);
+  --hold-soft: oklch(0.92 0.05 92);
 
   --chart-1: var(--flow-moving);
   --chart-2: var(--flow-paid);
@@ -158,27 +163,27 @@
   --chart-4: var(--foreground);
   --chart-5: var(--muted-foreground);
 
-  /* One section of the landing page is slate, against the light page. */
-  --stage: oklch(0.27 0.012 165);
-  --stage-deep: oklch(0.22 0.012 165);
-  --stage-foreground: oklch(0.97 0.004 165);
-  --stage-muted: oklch(0.8 0.01 165);
+  /* One section of the landing page is a blueprint at night. */
+  --stage: oklch(0.25 0.05 255);
+  --stage-deep: oklch(0.2 0.045 258);
+  --stage-foreground: oklch(0.96 0.014 85);
+  --stage-muted: oklch(0.81 0.03 235);
 
-  /* A page of the contract: white paper on the grey sheet. */
-  --paper: oklch(0.995 0.003 95);
-  --paper-ink: oklch(0.24 0.012 165);
-  --paper-muted: oklch(0.45 0.012 165);
+  /* A page of the contract: bright paper on the vellum. */
+  --paper: oklch(0.993 0.006 92);
+  --paper-ink: oklch(0.24 0.035 255);
+  --paper-muted: oklch(0.45 0.028 245);
 
-  /* Where the money is. The only saturated colors in the interface, so the flow stands out of the grey. */
-  --flow-paid: oklch(0.62 0.17 150);
-  --flow-moving: oklch(0.67 0.185 45);
-  --flow-held: oklch(0.56 0.2 265);
-  --flow-setoff: oklch(0.58 0.22 0);
-  --flow-idle: oklch(0.76 0.008 165);
+  /* Where the money is, in pigments: verdigris paid, vermilion on its way, lapis held, madder set off. */
+  --flow-paid: oklch(0.62 0.12 168);
+  --flow-moving: oklch(0.67 0.185 42);
+  --flow-held: oklch(0.52 0.17 262);
+  --flow-setoff: oklch(0.56 0.2 12);
+  --flow-idle: oklch(0.78 0.02 82);
 
-  /* Flat: no light behind the page. */
-  --glow-a: transparent;
-  --glow-b: transparent;
+  /* Light falling across the paper: ochre from one corner, pale sky from the other. */
+  --glow-a: oklch(0.86 0.09 85 / 0.38);
+  --glow-b: oklch(0.86 0.05 215 / 0.3);
 
   --radius: 0.5rem;
 
@@ -190,11 +195,11 @@
   --numeral-font: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
 
   /* The sidebar is one step greyer than the page. */
-  --sidebar: oklch(0.925 0.005 165);
+  --sidebar: oklch(0.938 0.015 83);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.885 0.007 165);
+  --sidebar-accent: oklch(0.895 0.02 80);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
@@ -337,7 +342,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(60rem 40rem at 0% -10%, var(--glow-a), transparent 70%), radial-gradient(55rem 38rem at 100% 0%, var(--glow-b), transparent 70%);
+    /* Paper grain, then the light across it. Panels are opaque, so the grain shows only on the page. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.14 0 0 0 0 0.17 0 0 0 0 0.26 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(60rem 40rem at 0% -10%, var(--glow-a), transparent 70%), radial-gradient(55rem 38rem at 100% 0%, var(--glow-b), transparent 70%);
     background-attachment: fixed;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
@@ -548,7 +554,7 @@ main [role="alert"] {
 
 /* The dim layer is the spotlight's own shadow, so the lit section is a real hole and stays clickable. */
 .tour-spot {
-  box-shadow: 0 0 0 200vmax oklch(0.2 0.012 165 / 0.34);
+  box-shadow: 0 0 0 200vmax oklch(0.2 0.04 255 / 0.36);
   transition: opacity 200ms var(--ease-out);
 }
 .tour-spot-glide {
