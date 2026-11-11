@@ -1,0 +1,43 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Next, its ESLint config and React are pinned to exact versions and have to move together.
+      next-react:
+        patterns:
+          - next
+          - eslint-config-next
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
+      # Everything else: one pull request for runtime packages and one for tooling.
+      # Major versions stay as individual pull requests so each can be read on its own.
+      production:
+        dependency-type: production
+        update-types: [minor, patch]
+      development:
+        dependency-type: development
+        update-types: [minor, patch]
+    ignore:
+      # engines.node is >=24 and CI runs Node 24: keep the Node types on that major.
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    # "/" covers .github/workflows; the composite action is listed separately.
+    directories:
+      - /
+      - /.github/actions/setup
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]

@@ -1,0 +1,32 @@
+name: Feature
+description: Something Groundwork should do that it does not do today.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Who needs this, and what are they stuck on
+      description: A GC controller, a sub, a supplier, an owner. Describe the situation on a real job, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen
+    validations:
+      required: true
+  - type: checkboxes
+    id: touches
+    attributes:
+      label: This would change
+      options:
+        - label: What is read from a contract (extraction schema, answer keys, eval)
+        - label: How money is split or when it is released
+        - label: Statute data (cite the source for any new number)
+        - label: Who can see what
+        - label: The payment rail
+  - type: textarea
+    id: example
+    attributes:
+      label: A worked example
+      description: Contract terms and amounts in, expected releases or screens out. This becomes the test. Optional.

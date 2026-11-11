@@ -1,0 +1,25 @@
+name: dependency-review
+
+# Fails a pull request that adds a dependency with a known high-severity vulnerability.
+# Only looks at what the pull request changes, so existing advisories do not block unrelated work.
+on:
+  pull_request:
+    paths:
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/**
+      - .github/actions/**
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: Review dependency changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

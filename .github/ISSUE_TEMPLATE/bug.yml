@@ -1,0 +1,67 @@
+name: Bug
+description: "Something is wrong: a number, a clock, a screen, an extraction."
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what should have happened
+      description: For money bugs, give the amounts you saw and the amounts you expected, and name the contract and the owner payment.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Start from a demo checkpoint if you can, so the data is the same for whoever picks this up.
+      placeholder: |
+        1. pnpm demo:reset --to=paid1
+        2. Sign in as Priya (GC)
+        3. Open /gc/projects/... and record an owner payment of $...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Contract extraction (compile, review, flags)
+        - Payment split (releases, retainage, backcharges, change orders)
+        - Clocks and statutes
+        - Waivers and lower tier
+        - Access (someone can see or do something they should not)
+        - Payment rail (simulated or Ramp)
+        - UI
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Signed in as
+      options:
+        - GC
+        - Subcontractor
+        - Owner
+        - Supplier signing link (/w/...)
+        - Not signed in
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Do not paste keys or connection strings.
+      value: |
+        - Commit:
+        - Database: embedded PGlite / Postgres (DATABASE_URL set)
+        - ANTHROPIC_API_KEY set: yes / no (cached extraction)
+        - PAYMENT_RAIL: simulated / ramp
+        - Browser:
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Server output, the browser console, or a screenshot. Optional.

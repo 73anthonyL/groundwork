@@ -1,23 +1,81 @@
 name: ci
+
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# A newer push to the same pull request supersedes the run in progress. Runs on main always finish.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
 jobs:
-  check:
+  static:
+    name: Typecheck and lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      # The pnpm version comes from "packageManager" in package.json.
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
       - run: pnpm typecheck
       - run: pnpm lint
-      - run: pnpm render:contracts
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      # The seed PDFs are committed, so the tests do not need this step to pass. It runs first so the
+      # suite reads PDFs produced by the renderer in this commit, and a broken renderer fails here.
+      - name: Render seed contracts (markdown to PDF)
+        run: pnpm render:contracts
+      # Each test file boots its own in-memory PGlite (see vitest.config.mts): no database service needed.
       - run: pnpm test
-      - name: Extraction eval (cached results only)
-        run: pnpm eval --cache-only
+
+  eval:
+    name: Extraction eval (cached, no model calls)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      # --cache-only scores the committed extractions in evals/cache against the answer keys and never
+      # calls the model, so no ANTHROPIC_API_KEY is set here. The two real contracts are skipped: their
+      # PDFs are third-party documents that are not in the repository (evals/real/README.md).
+      - name: Re-score the cache and confirm it reproduces the committed results
+        run: pnpm eval:check
+      - name: Gate on the thresholds in evals/thresholds.json
+        run: pnpm eval:gate
+      - name: Confirm the committed report is up to date
+        run: pnpm eval:report --check
+      - name: Publish the report to the job summary
+        if: always()
+        run: |
+          if [ -f evals/results/REPORT.md ]; then cat evals/results/REPORT.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Placeholders, not secrets. The build needs neither a database nor an API key: every page that
+      # reads data is rendered per request, and the prerendered ones (such as /statutes) read bundled
+      # JSON. SESSION_SECRET is set because the app refuses to sign sessions without one in production,
+      # and PGLITE_MEMORY keeps any build-time database access in memory instead of on disk.
+      SESSION_SECRET: ci-placeholder-not-a-secret
+      PGLITE_MEMORY: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      # Fetches the Google fonts declared in src/app/layout.tsx, so it needs outbound network.
+      - run: pnpm build
