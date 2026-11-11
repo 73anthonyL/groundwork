@@ -70,7 +70,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
   const landed = highlighted && !duplicate ? events.find((e) => e.id === highlighted) : undefined;
 
   const recordDefaults = {
-    amount: sample ? "125,000.00" : "",
+    amount: sample ? "150,000.00" : "",
     reference: sample ? `ACH BVH-${String(162 + events.length).padStart(4, "0")}` : "",
     periodThrough: latest ? endOfMonth(new Date(`${latest.periodThrough}T00:00:00Z`), 1) : sample ? "2026-09-30" : endOfMonth(nowDate, -1),
   };

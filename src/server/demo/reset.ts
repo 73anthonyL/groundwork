@@ -11,6 +11,12 @@
  *             one, a backcharge, a supplier one hop down, Owner Payment #3 ($175,000) with the
  *             backcharge set off and the supplier's share planned, Ironline's release waiting on its
  *             supplier's waiver, and half of Ironline's retainage certified and waiting on the owner
+ *   demo      the state the sample workspace is shown in, so every role has something to do: intake,
+ *             then Owner Payment #2 ($100,000) recorded before Summit's pay app is approved. Ironline
+ *             and Pacific each have a waiver to sign and a 7-day clock running, Summit's pay app and
+ *             the Texas rules wait on the controller, Summit still has to confirm its first payment
+ *             arrived, Pacific has a change order pending, and the owner sees money on its way.
+ *             It is built from intake, not from closeout.
  * Runs inside the app process so the embedded PGlite database is never opened by two processes at once.
  *
  * A reset rebuilds the sample workspace only. Real companies, their people, projects, contracts,
@@ -34,7 +40,7 @@ import { certifyRetention, decideChangeOrder, proposeChangeOrder, recordBackchar
 import { addLowerTierParty } from "@/server/actions/lower-tier";
 import type { Actor } from "@/server/events";
 
-export const CHECKPOINTS = ["fresh", "compiled", "paid1", "intake", "paid2", "closeout"] as const;
+export const CHECKPOINTS = ["fresh", "compiled", "paid1", "intake", "paid2", "closeout", "demo"] as const;
 export type Checkpoint = (typeof CHECKPOINTS)[number];
 
 const GC: Actor = { userId: ID.user.priya, label: "Priya Natarajan" };
@@ -107,7 +113,8 @@ async function applySummitCompiled(db: Db) {
 
 const sov = (key: keyof typeof ID.contract, n: number) => stableId(`sov:${ID.contract[key]}:${n}`);
 
-async function applyPaid1(db: Db) {
+/** `unconfirmed` leaves that sub's unconditional waiver unsigned, so it still has to confirm the payment arrived. */
+async function applyPaid1(db: Db, unconfirmed?: keyof typeof SUB) {
   await applyApproveRest();
   await applySummitCompiled(db);
   const apps = [
@@ -148,8 +155,22 @@ async function applyPaid1(db: Db) {
     const payment = await db.query.payments.findFirst({ where: eq(schema.payments.releaseId, r.id) });
     await settleSimulated(payment!.id);
     const uncond = await db.query.lienWaivers.findFirst({ where: eq(schema.lienWaivers.releaseId, r.id), orderBy: (w, { desc }) => [desc(w.createdAt)] });
-    if (uncond?.form === "up_8134") await signWaiver({ waiverId: uncond.id, signerName: SUB[key].signer, signerTitle: SUB[key].title, actor: SUB[key] });
+    if (uncond?.form === "up_8134" && key !== unconfirmed) await signWaiver({ waiverId: uncond.id, signerName: SUB[key].signer, signerTitle: SUB[key].title, actor: SUB[key] });
   }
+}
+
+/** On top of intake: the owner's second payment lands while Summit's pay app is still in review. */
+async function applyDemo() {
+  await recordOwnerPayment({
+    id: stableId("owner-payment:2"),
+    projectId: ID.project.bayview,
+    amountCents: dollars(100_000),
+    receivedAt: now(),
+    periodThrough: "2026-10-31",
+    reference: "ACH BVH-0162",
+    actor: GC,
+  });
+  await proposeChangeOrder({ id: stableId("co:pacific:1"), contractId: ID.contract.pacific, title: "Relocate panel EP-2 per RFI-41", description: "Two added 20A circuits and 40 ft of conduit.", amountCents: dollars(6_400), actor: SUB.pacific });
 }
 
 async function applyIntake() {
@@ -255,10 +276,13 @@ export async function resetTo(checkpoint: Checkpoint): Promise<{ checkpoint: Che
   const t0 = Date.now();
   await deleteSampleData(db);
   await seedBaseline(db);
-  const order = CHECKPOINTS.indexOf(checkpoint);
+  const demo = checkpoint === "demo";
+  // The demo state branches off intake; the later checkpoints are not part of it.
+  const order = CHECKPOINTS.indexOf(demo ? "intake" : checkpoint);
   if (order >= 1) await applyCompiled(db);
-  if (order >= 2) await applyPaid1(db);
+  if (order >= 2) await applyPaid1(db, demo ? "summit" : undefined);
   if (order >= 3) await applyIntake();
+  if (demo) await applyDemo();
   if (order >= 4) await applyPaid2();
   if (order >= 5) await applyCloseout(db);
   if (order >= 1) await applyTexasCompiled(db);
