@@ -34,7 +34,8 @@ const buttonVariants = cva(
         /* Aliases kept so older pages compile. */
         default: primary,
         money: primary,
-        signal: primary,
+        /* The accent button: terracotta, for the one call to action on a marketing page. */
+        signal: "bg-signal text-signal-foreground font-semibold hover:brightness-105",
         outline: secondary,
         stage: secondary,
         ghost: tertiary,

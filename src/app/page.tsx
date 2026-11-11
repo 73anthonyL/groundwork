@@ -42,7 +42,7 @@ export default async function Landing() {
 
   const cta = (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-      <Link href={primary.href} className={buttonVariants({ size: "lg", className: "px-5 text-[15px]" })}>
+      <Link href={primary.href} className={buttonVariants({ variant: "signal", size: "lg", className: "px-5 text-[15px]" })}>
         {primary.label}
       </Link>
       <Link href="/sample" className={buttonVariants({ variant: "secondary", size: "lg", className: "px-5 text-[15px]" })}>
