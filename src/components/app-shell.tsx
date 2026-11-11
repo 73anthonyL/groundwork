@@ -17,13 +17,14 @@
  * in the shell is held to the default 1100px so older pages still line up.
  */
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogOut, RotateCcw } from "lucide-react";
 import { signOut } from "@/app/sign-in/actions";
 import type { Session } from "@/server/auth";
 import { Badge } from "@/components/ui/badge";
 import { NAV_BY_KIND, type NavItem, type NavProject } from "./gc-nav";
 import { MobileNav, NavLink, navIcon, navRow } from "./nav-links";
 import { Wordmark } from "./wordmark";
+import { Tour, TourRestartButton } from "./tour/tour";
 
 export type { NavItem, NavProject };
 
@@ -103,6 +104,14 @@ export function AppShell({
               <NavLink href={n.href} label={n.label} icon={n.icon} scope={scope} />
             </li>
           ))}
+          {sample && (
+            <li>
+              <TourRestartButton home={home} className={navRow}>
+                <RotateCcw aria-hidden className={navIcon} />
+                Replay tour
+              </TourRestartButton>
+            </li>
+          )}
           <li>
             <form action={signOut}>
               <button type="submit" className={navRow}>
@@ -135,6 +144,7 @@ export function AppShell({
       <main className="min-w-0 flex-1 px-4 pt-6 pb-16 sm:px-6 lg:px-8 lg:pt-8 [&>*:not([data-page])]:mx-auto [&>*:not([data-page])]:w-full [&>*:not([data-page])]:max-w-[1100px]">
         {children}
       </main>
+      {sample && <Tour kind={session.org.kind} name={session.user.name} />}
     </div>
   );
 }

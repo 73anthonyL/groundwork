@@ -542,3 +542,45 @@ main [role="alert"] {
 @utility breathe {
   animation: gw-breathe 2.4s ease-in-out infinite;
 }
+
+/* ---------- Sample-workspace tour (src/components/tour) ---------- */
+
+/* The dim layer is the spotlight's own shadow, so the lit section is a real hole and stays clickable. */
+.tour-spot {
+  box-shadow: 0 0 0 200vmax oklch(0 0 0 / 0.62);
+  transition: opacity 200ms var(--ease-out);
+}
+.tour-spot-glide {
+  transition:
+    top 320ms var(--ease-out),
+    left 320ms var(--ease-out),
+    width 320ms var(--ease-out),
+    height 320ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+.tour-ring {
+  outline: 2px solid var(--signal);
+}
+@keyframes gw-tour-pulse {
+  from { outline-offset: 0; opacity: 0.9; }
+  to { outline-offset: 12px; opacity: 0; }
+}
+.tour-pulse {
+  outline: 2px solid var(--signal);
+  animation: gw-tour-pulse 1.8s var(--ease-out) infinite;
+}
+
+/* Drawn faces blink while their card is hovered, focused or chosen. */
+@keyframes gw-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.face-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+[data-face-live]:hover .face-eyes,
+[data-face-live]:focus-visible .face-eyes,
+[data-face-live][aria-checked="true"] .face-eyes {
+  animation: gw-blink 3.4s ease-in-out infinite;
+}

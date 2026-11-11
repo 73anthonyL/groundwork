@@ -10,5 +10,5 @@ import { createSampleSession, homeFor } from "@/server/auth";
 export async function enterSample(formData: FormData) {
   const session = await createSampleSession(String(formData.get("userId") ?? ""));
   if (!session) redirect("/sample?error=1");
-  redirect(homeFor(session.org.kind));
+  redirect(`${homeFor(session.org.kind)}?tour=1`);
 }
