@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Clock, PenLine } from "lucide-react";
+import { ArrowRight, Check, Clock, FileText, PenLine } from "lucide-react";
 import { auth, homeFor } from "@/server/auth";
 import { latestEval } from "@/server/read/eval";
 import { Wordmark } from "@/components/wordmark";
@@ -18,6 +18,46 @@ const STEPS = [
   { title: "Upload the subcontract", body: "Groundwork reads its payment terms." },
   { title: "Approve the rules once", body: "You check them against the contract." },
   { title: "Record the owner's payment", body: "Each share, hold-back and deadline is worked out for you." },
+];
+
+/** One small picture per step: the file going in, the rules being approved, the payment coming out. */
+const STEP_PICTURES = [
+  <div key="upload" className="w-full max-w-[15rem] rounded-md border border-dashed border-input bg-card px-4 py-4">
+    <div className="flex items-center gap-3">
+      <FileText className="size-8 shrink-0 text-money" />
+      <div className="min-w-0">
+        <div className="truncate text-[14px] font-medium">subcontract.pdf</div>
+        <div className="text-[12px] text-muted-foreground">7 pages</div>
+      </div>
+    </div>
+    <div className="mt-3 h-1 overflow-hidden rounded-full bg-secondary">
+      <div className="h-full w-2/3 rounded-full bg-signal" />
+    </div>
+  </div>,
+  <ul key="approve" className="w-full max-w-[15rem] divide-y rounded-md border bg-card text-[14px]">
+    {["Pay within 7 days", "Hold back 10%", "Waiver before payment"].map((r) => (
+      <li key={r} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+        <span>{r}</span>
+        <Check className="size-4 shrink-0 text-money" />
+      </li>
+    ))}
+  </ul>,
+  <div key="pay" className="w-full max-w-[15rem]">
+    <div className="flex items-baseline justify-between text-[14px]">
+      <span className="text-muted-foreground">Owner payment</span>
+      <span className="num font-semibold">$125,000</span>
+    </div>
+    <div className="mt-3 flex h-3 gap-1">
+      <span className="rounded-sm bg-signal" style={{ width: "36%" }} />
+      <span className="rounded-sm bg-signal/80" style={{ width: "38%" }} />
+      <span className="rounded-sm bg-signal/60" style={{ width: "18%" }} />
+      <span className="rounded-sm bg-primary" style={{ width: "8%" }} />
+    </div>
+    <div className="mt-3 flex justify-between text-[12px] text-muted-foreground">
+      <span>3 subcontractors paid</span>
+      <span>$10,000 held</span>
+    </div>
+  </div>,
 ];
 
 const STATUS: Record<SamplePaymentLine["status"], { label: string; icon: typeof Check; tone: string }> = {
@@ -121,19 +161,43 @@ export default async function Landing() {
         <section id="how" className="scroll-mt-8">
           <div className={`${WRAP} py-20 sm:py-28`}>
             <h2 className={H2}>Three steps.</h2>
-            <ol className="mt-12 grid gap-x-10 gap-y-10 md:grid-cols-3">
+            <ol className="mt-12 grid gap-5 md:grid-cols-3">
               {STEPS.map((s, i) => (
-                <li key={s.title} className="border-t border-foreground pt-5">
-                  <span className="num text-[15px] text-muted-foreground">{i + 1}</span>
-                  <h3 className="mt-2 text-[22px] font-medium leading-7">{s.title}</h3>
-                  <p className="mt-2 text-[16px] leading-6 text-muted-foreground">{s.body}</p>
+                <li key={s.title} className="relative flex flex-col rounded-lg border bg-card">
+                  {/* What the step looks like in the product. */}
+                  <div aria-hidden className="flex h-44 items-center justify-center rounded-t-lg border-b bg-background/60 px-6">
+                    {STEP_PICTURES[i]}
+                  </div>
+                  <div className="flex gap-4 p-6">
+                    <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-signal text-[15px] font-semibold text-signal-foreground">{i + 1}</span>
+                    <div>
+                      <h3 className="text-[19px] font-medium leading-7">{s.title}</h3>
+                      <p className="mt-1 text-[15px] leading-6 text-muted-foreground">{s.body}</p>
+                    </div>
+                  </div>
+                  {/* The arrow to the next step. */}
+                  {i < STEPS.length - 1 && (
+                    <span aria-hidden className="absolute -right-[27px] top-[5.5rem] z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border bg-card text-muted-foreground md:flex">
+                      <ArrowRight className="size-4" />
+                    </span>
+                  )}
                 </li>
               ))}
             </ol>
+
             {run && (
-              <p className="mt-14 text-[16px] leading-6 text-muted-foreground">
-                In our test, Groundwork read <span className="num font-medium text-foreground">{(run.metrics.accuracy * 100).toFixed(1)}%</span> of <span className="num">{run.metrics.fields}</span> contract terms correctly. You approve every rule before anything is paid.
-              </p>
+              <dl className="mt-5 grid overflow-hidden rounded-lg border bg-card sm:grid-cols-3 sm:divide-x">
+                {[
+                  { value: `${(run.metrics.accuracy * 100).toFixed(1)}%`, label: "of contract terms read correctly" },
+                  { value: String(run.metrics.fields), label: `terms tested across ${run.metrics.contracts} subcontracts` },
+                  { value: "Every rule", label: "approved by you before anything is paid" },
+                ].map((m) => (
+                  <div key={m.label} className="flex flex-col border-b p-6 last:border-b-0 sm:border-b-0">
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">{m.label}</dt>
+                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">{m.value}</dd>
+                  </div>
+                ))}
+              </dl>
             )}
           </div>
         </section>
