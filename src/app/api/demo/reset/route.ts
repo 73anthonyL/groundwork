@@ -7,7 +7,7 @@ import { CHECKPOINTS, resetTo, type Checkpoint } from "@/server/demo/reset";
  */
 export async function POST(req: Request) {
   const token = process.env.DEMO_RESET_TOKEN;
-  // Fail closed in production: no token configured means the HTTP reset is off (the /demo page still works).
+  // Fail closed in production: no token configured means the HTTP reset is off.
   if ((!token && process.env.NODE_ENV === "production") || (token && req.headers.get("x-demo-token") !== token)) {
     return new NextResponse("Forbidden", { status: 403 });
   }

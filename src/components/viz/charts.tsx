@@ -1,11 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ContractSummary, SeriesPoint, TimelineEntry } from "@/server/read/project";
-import type { EvalRun } from "@/server/read/eval";
 import { duration, ease, list, spring } from "@/lib/motion";
-import { RollingNumber, formatUsd0 } from "./rolling-number";
+import { formatUsd0 } from "./rolling-number";
 
 // ─── Where every dollar is, over time ───────────────────────────────────────
 
@@ -272,90 +271,5 @@ export function EventTimeline({ entries }: { entries: TimelineEntry[] }) {
         </span>
       </figcaption>
     </figure>
-  );
-}
-
-// ─── What each review layer buys ────────────────────────────────────────────
-
-/** The eval ablation as a small table: under each review policy, how many wrong values slip through and how much a person must read. */
-export function AblationChart({ run }: { run: EvalRun }) {
-  const max = Math.max(...run.layers.map((l) => l.silentErrors), 1);
-  const last = run.layers.length - 1;
-  const NAMES = ["Trust the model", "Add the model's own confidence", "Add checking each quote against the PDF", "Add state law and anomaly checks"];
-  return (
-    <figure>
-      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-x-6 text-sm sm:grid-cols-[minmax(0,17rem)_1fr_auto_auto]">
-        <div className="pb-2 text-xs text-muted-foreground">Review policy</div>
-        <div className="hidden pb-2 sm:block" />
-        <div className="pb-2 text-right text-xs text-muted-foreground">Wrong terms unflagged</div>
-        <div className="pb-2 text-right text-xs text-muted-foreground">Terms a person reviews</div>
-        {run.layers.map((l, i) => (
-          <div key={l.id} className="col-span-full grid grid-cols-subgrid items-center border-t py-3">
-            <div className={i === last ? "font-medium" : ""}>
-              {NAMES[i] ?? l.label}
-              {i === last && <span className="ml-2 text-xs font-normal text-muted-foreground">what Groundwork runs</span>}
-            </div>
-            <div className="hidden h-1.5 overflow-hidden rounded-[2px] bg-muted sm:block">
-              <motion.div className="h-full rounded-[2px]" style={{ background: i === last ? "var(--settled)" : "var(--foreground)", opacity: i === last ? 1 : 0.55 }} initial={{ width: 0 }} whileInView={{ width: `${Math.max(2, (l.silentErrors / max) * 100)}%` }} viewport={{ once: true }} transition={{ ...spring.ui, delay: 0.1 + i * 0.08 }} />
-            </div>
-            <div className="type-mono text-right font-medium">{l.silentErrors}</div>
-            <div className="type-mono text-right text-muted-foreground">{l.burden === null ? "0" : Math.round(l.burden * 100)}%</div>
-          </div>
-        ))}
-      </div>
-      <figcaption className="mt-3 border-t pt-3 text-xs text-muted-foreground">
-        {run.metrics.contracts} subcontracts, {run.metrics.fields} payment terms, run on Claude Opus 5.5. Each policy adds one check to the one above it.
-      </figcaption>
-    </figure>
-  );
-}
-
-/** Headline eval figures as three counting numbers. */
-export function EvalHeadline({ run }: { run: EvalRun }) {
-  const prod = run.layers[run.layers.length - 1];
-  const items = [
-    { label: "Values extracted correctly", node: <RollingNumber value={run.metrics.accuracy * 100} format="pct1" /> },
-    { label: "Quotes found verbatim in the PDF", node: <RollingNumber value={(run.metrics.quoteVerifiedRate ?? 0) * 100} format="pct1" /> },
-    { label: `Wrong values reaching the engine unflagged, of ${run.metrics.fields}`, node: <RollingNumber value={prod.silentErrors} format="int" /> },
-  ];
-  return (
-    <dl className="grid gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-3">
-      {items.map((it) => (
-        <div key={it.label} className="bg-card p-4">
-          <dd className="type-figure">{it.node}</dd>
-          <dt className="type-meta mt-1 text-muted-foreground">{it.label}</dt>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-// ─── The problem in one picture ─────────────────────────────────────────────
-
-/**
- * Owner pays the contractor in a median of 17 days; the sub waits a median of 50 (Built, Aug 2026).
- * Bars grow in sequence; the third shows the statutory 7 days from the owner's payment.
- */
-export function DaysGap({ onStage = false }: { onStage?: boolean }) {
-  const reduce = useReducedMotion();
-  const rows = [
-    { label: "Owner pays the general contractor", days: 17, color: onStage ? "var(--stage-muted)" : "var(--flow-idle)", note: "median" },
-    { label: "The subcontractor who did the work is paid", days: 50, color: "var(--money)", note: "median" },
-    { label: "With Groundwork: the day the owner's money lands, plus the clock the law allows", days: 24, color: "var(--settled)", note: "17 + 7 by statute" },
-  ];
-  return (
-    <ol className="space-y-5">
-      {rows.map((r, i) => (
-        <li key={r.label}>
-          <div className={`text-sm ${onStage ? "text-stage-foreground/80" : "text-muted-foreground"}`}>{r.label}</div>
-          <div className="mt-1.5 flex items-center gap-3">
-            <motion.span className="h-2 origin-left rounded-[2px]" style={{ background: r.color, width: `${(r.days / 50) * 72}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: duration.count, ease: ease.trace, delay: 0.2 + i * 0.5 }} />
-            <motion.span className="type-numeral whitespace-nowrap text-2xl" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: duration.fade, delay: reduce ? 0 : 1.1 + i * 0.5 }}>
-              {r.days} <span className={`font-sans text-xs tracking-normal ${onStage ? "text-stage-muted" : "text-muted-foreground"}`}>days, {r.note}</span>
-            </motion.span>
-          </div>
-        </li>
-      ))}
-    </ol>
   );
 }

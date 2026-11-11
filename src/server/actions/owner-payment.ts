@@ -6,17 +6,19 @@
  * release funds an application that declared lower-tier amounts, the next hop is planned in the same
  * transaction, so the whole chain is visible the moment the owner's money lands.
  *
- * Idempotent: the same (project, reference, amount, receivedAt) is a no-op that returns the first result.
+ * Idempotent: the same idempotency key, or (when the caller supplies no key) the same project, bank
+ * reference and amount on an owner payment, is a no-op that returns the first event. The time received is not part of the identity:
+ * the form defaults it to "now", so a second submit of the same payment carries a different time.
  */
 import { randomBytes, randomUUID } from "node:crypto";
-import { and, asc, eq, inArray, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, inArray, isNotNull, isNull, lte, or } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { planWaterfall, type Candidate, type RetentionCandidate, type WaterfallPlan } from "@/domain/waterfall/engine";
 import { overlayFor } from "@/domain/statutes";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { emit, post, type Actor } from "@/server/events";
 import { sha256Hex } from "@/lib/ids";
-import { isoDate } from "@/server/clock";
+import { isCalendarDate, isoDate } from "@/server/clock";
 import type { DbLike, Tx } from "@/server/db-types";
 import type { WaiverFields } from "@/domain/waivers/ca";
 
@@ -52,10 +54,12 @@ export type Loaded = { candidates: (Candidate & { parentPayApplicationId: string
 export async function loadCandidates(tx: DbLike, projectId: string, scope: FundingScope = { payerContractId: null }): Promise<Loaded> {
   const project = await tx.query.projects.findFirst({ where: eq(schema.projects.id, projectId) });
   if (!project) throw new Error("project not found");
+  // A contract is fundable while it has an approved rule set. Its status is not the test: reading the
+  // subcontract again puts it back "in review" while the approved rules still govern its pay applications.
   const contracts = await tx.query.contracts.findMany({
     where: and(
       eq(schema.contracts.projectId, projectId),
-      eq(schema.contracts.status, "active"),
+      isNotNull(schema.contracts.activeRuleSetId),
       scope.payerContractId ? eq(schema.contracts.parentContractId, scope.payerContractId) : isNull(schema.contracts.parentContractId),
     ),
   });
@@ -342,12 +346,29 @@ export function newSignToken(): string {
 }
 
 export async function recordOwnerPayment(input: RecordOwnerPaymentInput): Promise<{ eventId: string; plan: WaterfallPlan; duplicate: boolean }> {
+  // Checked here as well as in the form: scripts and the webhook path call this directly.
+  if (!Number.isInteger(input.amountCents) || input.amountCents <= 0) throw new Error("the amount received must be a positive whole number of cents");
+  if (input.retentionCents !== undefined && !Number.isInteger(input.retentionCents)) throw new Error("the retention portion must be a whole number of cents");
+  if (!isCalendarDate(input.periodThrough)) throw new Error("the period-through date is not a calendar date");
+  if (Number.isNaN(input.receivedAt.getTime())) throw new Error("the time received is not a valid date and time");
   const db = await getDb();
   const key = input.idempotencyKey ?? sha256Hex(`${input.projectId}|${input.reference}|${input.amountCents}|${input.receivedAt.toISOString()}`);
   const retentionCents = Math.max(0, input.retentionCents ?? 0);
   if (retentionCents > input.amountCents) throw new Error("the retention portion cannot exceed the payment");
   return db.transaction(async (tx) => {
-    const existing = await tx.query.ownerPaymentEvents.findFirst({ where: eq(schema.ownerPaymentEvents.idempotencyKey, key) });
+    const existing = await tx.query.ownerPaymentEvents.findFirst({
+      where: input.idempotencyKey
+        ? eq(schema.ownerPaymentEvents.idempotencyKey, key)
+        : or(
+            eq(schema.ownerPaymentEvents.idempotencyKey, key),
+            and(
+              eq(schema.ownerPaymentEvents.projectId, input.projectId),
+              eq(schema.ownerPaymentEvents.reference, input.reference),
+              eq(schema.ownerPaymentEvents.amountCents, input.amountCents),
+              isNull(schema.ownerPaymentEvents.payerContractId),
+            ),
+          ),
+    });
     if (existing) {
       return { eventId: existing.id, duplicate: true, plan: { releases: [], unfunded: [], unallocatedCents: 0, warnings: [] } };
     }

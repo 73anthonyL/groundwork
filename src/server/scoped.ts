@@ -295,7 +295,8 @@ export async function getDownstream(org: Organization, releaseId: string) {
 
 /**
  * Stand-in for email in the demo: the messages Groundwork would send to lower-tier claimants, each
- * with its signing link. Only the demo panel reads this.
+ * with its signing link. No page reads this at present (the demo panel that did was removed); it is
+ * kept, and covered by a test, as the one place a lower-tier signing link can be listed.
  */
 export async function demoOutbox() {
   const db = await getDb();

@@ -286,7 +286,9 @@ export async function settleSimulated(paymentId: string) {
   const p = await db.query.payments.findFirst({ where: eq(schema.payments.id, paymentId) });
   if (!p) throw new Error("payment not found");
   if (p.rail !== "simulated") throw new Error("only simulated payments can be settled by hand");
-  return handleRailWebhook("simulated", { externalEventId: `sim-evt-${paymentId}`, type: "bill.paid", externalBillId: p.externalBillId!, raw: { simulated: true, paymentId } });
+  // A failed attempt has no bill. Settling it would match nothing and use up this payment's one settlement event.
+  if (!p.externalBillId) throw new Error("this payment has not been sent, so there is nothing to settle");
+  return handleRailWebhook("simulated", { externalEventId: `sim-evt-${paymentId}`, type: "bill.paid", externalBillId: p.externalBillId, raw: { simulated: true, paymentId } });
 }
 
 export { railName };

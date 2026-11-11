@@ -71,34 +71,45 @@ export function runPayAppChecks(app: PayAppInput, ctx: PayAppContext): CheckResu
   // 2. Line math
   const sumThis = app.lines.reduce((s, l) => s + l.thisPeriodCents, 0);
   const sumStored = app.lines.reduce((s, l) => s + l.storedCents, 0);
-  const lineOk = sumThis === app.workThisPeriodCents && sumStored === app.storedMaterialsCents;
+  // A negative line would net against another line and hide what that one bills.
+  const negative = app.lines.some((l) => l.thisPeriodCents < 0 || l.storedCents < 0);
+  const lineOk = !negative && sumThis === app.workThisPeriodCents && sumStored === app.storedMaterialsCents;
   checks.push({
     id: "line_math",
     label: "Line items add up",
     status: lineOk ? "pass" : "fail",
     detail: lineOk
       ? "Schedule-of-values lines total the amounts billed this period."
-      : `Lines total ${sumThis} + stored ${sumStored} cents, but the application states ${app.workThisPeriodCents} + ${app.storedMaterialsCents}.`,
+      : negative
+        ? "A line bills a negative amount."
+        : `Lines total ${sumThis} + stored ${sumStored} cents, but the application states ${app.workThisPeriodCents} + ${app.storedMaterialsCents}.`,
     expectedCents: sumThis + sumStored,
     actualCents: app.workThisPeriodCents + app.storedMaterialsCents,
   });
 
-  // 3. Over-billing against scheduled value
-  const over = app.lines
-    .map((l) => {
-      const sov = ctx.sov.find((s) => s.id === l.sovLineId);
-      const total = l.previouslyCompletedCents + l.thisPeriodCents + l.storedCents;
+  // 3. Over-billing against scheduled value. A line listed twice is added up, and a line that is not
+  // on this contract's schedule has no value to bill against.
+  const billed = new Map<string, { previously: number; now: number }>();
+  for (const l of app.lines) {
+    const b = billed.get(l.sovLineId) ?? { previously: 0, now: 0 };
+    billed.set(l.sovLineId, { previously: Math.max(b.previously, l.previouslyCompletedCents), now: b.now + l.thisPeriodCents + l.storedCents });
+  }
+  const unknown = [...billed.keys()].filter((id) => !ctx.sov.some((s) => s.id === id)).length;
+  const over = [...billed]
+    .map(([id, b]) => {
+      const sov = ctx.sov.find((s) => s.id === id);
+      const total = b.previously + b.now;
       return sov && total > sov.scheduledValueCents ? { sov, total } : null;
     })
     .filter((x): x is { sov: PayAppContext["sov"][number]; total: number } => x !== null);
   checks.push(
-    over.length === 0
+    over.length === 0 && unknown === 0
       ? { id: "sov_overbilling", label: "No line billed past its scheduled value", status: "pass", detail: "Every line stays within its scheduled value." }
       : {
           id: "sov_overbilling",
           label: "No line billed past its scheduled value",
           status: "fail",
-          detail: over.map((o) => `Line ${o.sov.lineNo} (${o.sov.description}) totals ${o.total} of ${o.sov.scheduledValueCents} cents.`).join(" "),
+          detail: [...over.map((o) => `Line ${o.sov.lineNo} (${o.sov.description}) totals ${o.total} of ${o.sov.scheduledValueCents} cents.`), ...(unknown ? ["A line is not on this subcontract's schedule of values."] : [])].join(" "),
         },
   );
 

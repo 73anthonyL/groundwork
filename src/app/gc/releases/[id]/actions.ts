@@ -10,7 +10,7 @@ export async function settleAction(formData: FormData) {
   const session = await requireAuth("gc");
   const releaseId = String(formData.get("releaseId") ?? "");
   const release = await getRelease(session.org, releaseId);
-  if (!release?.payment) redirect(`/gc/releases/${releaseId}`);
+  if (!release?.payment?.externalBillId) redirect(`/gc/releases/${releaseId}`);
   await settleSimulated(release.payment.id);
   revalidatePath(`/gc/releases/${releaseId}`);
   revalidatePath(`/gc/projects/${release.contract.projectId}`);

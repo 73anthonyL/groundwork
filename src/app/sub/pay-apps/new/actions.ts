@@ -6,7 +6,8 @@ import { requireAuth } from "@/server/auth";
 import { getContract } from "@/server/scoped";
 import { setPayAppFlags, submitPayApp } from "@/server/actions/pay-apps";
 import { flagPayApp } from "@/lib/ai/flagPayApp";
-import { dollars } from "@/lib/money";
+import { parseDollars } from "@/lib/money";
+import { isCalendarDate } from "@/server/clock";
 
 export type SubmitState = { error?: string };
 
@@ -18,12 +19,12 @@ export async function submitPayAppAction(_prev: SubmitState, formData: FormData)
   const number = Number(formData.get("number"));
   if (!Number.isInteger(number) || number < 1) return { error: "Enter the pay app number." };
   const periodThrough = String(formData.get("periodThrough") ?? "");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(periodThrough)) return { error: "Choose the last day of the period you are billing." };
+  if (!isCalendarDate(periodThrough)) return { error: "Choose the last day of the period you are billing." };
   const money = (name: string) => {
-    const raw = String(formData.get(name) ?? "").replace(/[$,\s]/g, "");
-    if (raw === "") return 0;
-    const n = Number(raw);
-    return Number.isFinite(n) && n >= 0 ? dollars(n) : NaN;
+    const raw = String(formData.get(name) ?? "");
+    if (raw.replace(/[$,\s]/g, "") === "") return 0;
+    const cents = parseDollars(raw);
+    return cents >= 0 ? cents : NaN;
   };
   const lines = contract.sovLines.map((l) => ({ sovLineId: l.id, thisPeriodCents: money(`this_${l.id}`), storedCents: money(`stored_${l.id}`) }));
   if (lines.some((l) => Number.isNaN(l.thisPeriodCents) || Number.isNaN(l.storedCents))) return { error: "Every amount must be a number, like 1250.00." };

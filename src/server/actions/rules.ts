@@ -5,7 +5,7 @@
 import { randomUUID } from "node:crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
-import type { ExtractedRuleSet, RuleFieldPath } from "@/domain/rules/schema";
+import { RULE_FIELDS, overrideError, type ExtractedRuleSet, type RuleFieldPath } from "@/domain/rules/schema";
 import { annotate, approvedHash, blockingFields, unacknowledgedAnomalies, type StoredRules } from "@/server/rules/review";
 import { emit, type Actor } from "@/server/events";
 import { now } from "@/server/clock";
@@ -72,6 +72,11 @@ export async function resolveField(input: {
   note: string;
   actor: Actor;
 }) {
+  if (!RULE_FIELDS.includes(input.path)) throw new Error("that term is not part of the payment rules");
+  if (input.decision === "override") {
+    const problem = overrideError(input.path, input.value);
+    if (problem) throw new Error(problem);
+  }
   const db = await getDb();
   return db.transaction(async (tx) => {
     const row = await tx.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, input.ruleSetId) });
@@ -107,6 +112,7 @@ export async function acknowledgeAnomaly(input: { ruleSetId: string; index: numb
     if (!row) throw new Error("rule set not found");
     if (row.status === "approved" || row.status === "superseded") throw new Error("these payment rules are approved and can no longer be changed");
     const stored = row.rules as StoredRules;
+    if (!Number.isInteger(input.index) || input.index < 0 || input.index >= stored.extracted.anomalies.length) throw new Error("there is no such note on these payment rules");
     stored.anomalyAcks[input.index] = { note: input.note, by: input.actor.label, at: now().toISOString() };
     await tx.update(schema.ruleSets).set({ rules: stored }).where(eq(schema.ruleSets.id, row.id));
     await emit(tx, {

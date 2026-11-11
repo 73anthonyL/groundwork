@@ -5,7 +5,7 @@ import { getDb, schema } from "@/db/client";
 import { runPayAppChecks, type Check } from "@/domain/payapp/checks";
 import { effectiveValues, type StoredRules } from "@/server/rules/review";
 import { emit, type Actor } from "@/server/events";
-import { now } from "@/server/clock";
+import { isCalendarDate, now } from "@/server/clock";
 import type { DbLike } from "@/server/db-types";
 import { createDeclaredApplications } from "@/server/actions/lower-tier";
 
@@ -53,6 +53,7 @@ export async function payAppContext(tx: DbLike, contractId: string) {
 }
 
 export async function submitPayApp(input: SubmitPayAppInput) {
+  if (!isCalendarDate(input.periodThrough)) throw new Error("the period-through date is not a calendar date");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const { ctx, priorLines } = await payAppContext(tx, input.contractId);
@@ -144,13 +145,21 @@ export async function reviewPayApp(input: {
       await emit(tx, { aggregateType: "pay_application", aggregateId: app.id, type: "pay_app.changes_requested", actor: input.actor, payload: { note: input.note ?? null }, correlationId: randomUUID() });
       return { status: "changes_requested" as const };
     }
-    const { ctx } = await payAppContext(tx, app.contractId);
+    const { ctx, priorLines } = await payAppContext(tx, app.contractId);
+    // What was completed before this application is read now, not as it stood at submission:
+    // another application on the same lines may have been approved in between.
+    const lines = app.lines.map((l) => ({
+      sovLineId: l.sovLineId,
+      previouslyCompletedCents: priorLines.filter((p) => p.sovLineId === l.sovLineId).reduce((s, p) => s + p.thisPeriodCents + p.storedCents, 0),
+      thisPeriodCents: l.thisPeriodCents,
+      storedCents: l.storedCents,
+    }));
     const result = runPayAppChecks(
       {
         number: app.number,
         periodThrough: app.periodThrough,
         isFinal: app.isFinal,
-        lines: app.lines,
+        lines,
         workThisPeriodCents: app.workThisPeriodCents,
         storedMaterialsCents: app.storedMaterialsCents,
         previouslyBilledCents: app.previouslyBilledCents,

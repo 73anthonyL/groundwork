@@ -21,10 +21,13 @@ export function dollars(n: number): number {
   return Math.round(n * 100);
 }
 
-/** "$1,250.50" → 125050. NaN when the text is not an amount. Negative amounts are allowed. */
+/**
+ * "$1,250.50" → 125050. NaN when the text is not a plain decimal amount. Negative amounts are allowed.
+ * Only digits with an optional decimal point: Number() alone would read "0x10" as 16 and "1e5" as 100000.
+ */
 export function parseDollars(raw: FormDataEntryValue | string | null | undefined): number {
   const s = String(raw ?? "").replace(/[$,\s]/g, "");
-  if (s === "") return NaN;
+  if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
   const n = Number(s);
   return Number.isFinite(n) ? Math.round(n * 100) : NaN;
 }

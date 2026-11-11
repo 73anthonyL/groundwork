@@ -30,6 +30,8 @@ function parseOverride(path: RuleFieldPath, raw: string): unknown {
     case "offsets.withhold_defective":
     case "stored_materials":
       return v === "true" || v === "yes" || v === "on";
+    case "governing_law_state":
+      return v.toUpperCase();
     default:
       return v;
   }

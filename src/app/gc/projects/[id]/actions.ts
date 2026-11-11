@@ -9,6 +9,7 @@ import { recordOwnerPayment } from "@/server/actions/owner-payment";
 import { addSubcontract, ContractInputError } from "@/server/actions/contracts";
 import { invitationPath } from "@/server/actions/invitations";
 import { parseDollars } from "@/lib/money";
+import { isCalendarDate } from "@/server/clock";
 
 export type RecordField = "amount" | "reference" | "periodThrough" | "receivedAt" | "retention";
 export type RecordState = { error?: string; field?: RecordField; values?: Partial<Record<RecordField, string>>; ok?: boolean };
@@ -24,7 +25,7 @@ export async function recordOwnerPaymentAction(_prev: RecordState, formData: For
   const amountCents = parseDollars(values.amount);
   if (!Number.isInteger(amountCents) || amountCents <= 0) return fail("amount", "Enter the amount the owner paid, in dollars.");
   if (!values.reference) return fail("reference", "Enter the bank reference. Groundwork uses it to avoid recording the same payment twice.");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.periodThrough)) return fail("periodThrough", "Choose the last day of work this payment covers.");
+  if (!isCalendarDate(values.periodThrough)) return fail("periodThrough", "Choose the last day of work this payment covers.");
   const receivedAt = values.receivedAt ? new Date(values.receivedAt) : new Date();
   if (Number.isNaN(receivedAt.getTime())) return fail("receivedAt", "Enter the date and time the payment arrived, or leave it blank to use now.");
   const retentionCents = values.retention === "" ? 0 : parseDollars(values.retention);

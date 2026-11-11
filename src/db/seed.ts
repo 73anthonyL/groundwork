@@ -1,7 +1,7 @@
 /**
  * Baseline seed: parties, the Bayview Clinic TI project, three subcontracts and their schedules of values.
  * Ids are deterministic (uuid v5) so demo URLs survive resets. Idempotent: re-running inserts nothing new.
- * Later demo checkpoints (compiled, intake, paid1, paid2) layer on top via scripts/demo-reset.ts.
+ * Later demo checkpoints (compiled, paid1, intake, paid2, closeout, demo) layer on top via src/server/demo/reset.ts.
  *
  * Everything seeded here is the sample workspace: its organizations carry `isDemo`, and so does every
  * organization later created from inside it. `deleteSampleData` removes exactly that and nothing else.

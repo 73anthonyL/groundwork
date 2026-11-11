@@ -115,6 +115,43 @@ export const StrictRuleSetSchema = ExtractedRuleSetSchema.superRefine((r, ctx) =
   }
 });
 
+const YES_NO_FIELDS: readonly string[] = [
+  "timing.agreed_in_writing",
+  "waivers.conditional_before_progress",
+  "waivers.unconditional_after_payment",
+  "waivers.lower_tier_required",
+  "waivers.statutory_form_required",
+  "offsets.joint_check",
+  "offsets.backcharge_setoff",
+  "offsets.withhold_defective",
+  "stored_materials",
+];
+
+/**
+ * Why a reviewer's override cannot be stored for this term, or null when it can. The same ranges as
+ * `StrictRuleSetSchema`: the engine multiplies by these numbers, so a negative rate or a NaN typed
+ * into the review form must never become a payment rule.
+ */
+export function overrideError(path: string, value: unknown): string | null {
+  const whole = (lo: number, hi: number) => typeof value === "number" && Number.isInteger(value) && value >= lo && value <= hi;
+  switch (path) {
+    case "retainage.percent_bps":
+    case "retainage.cap_bps":
+      return whole(0, 2000) ? null : "enter the retainage as a percent between 0% and 20%";
+    case "timing.days":
+      return whole(0, 120) ? null : "enter a whole number of days between 0 and 120";
+    case "retainage.release_days":
+      return whole(0, 365) ? null : "enter a whole number of days between 0 and 365";
+    case "timing.type":
+      return TimingType.safeParse(value).success ? null : "choose one of the payment timing types";
+    case "governing_law_state":
+      return typeof value === "string" && /^[A-Z]{2}$/.test(value) ? null : "enter the two-letter state code, for example CA";
+    default:
+      if (YES_NO_FIELDS.includes(path)) return typeof value === "boolean" ? null : "answer yes or no";
+      return typeof value === "string" && value.trim().length > 0 ? null : "enter the corrected text";
+  }
+}
+
 // ─── Review-time annotations (added by our code, never by the model) ────────
 
 export const VerificationSchema = z.object({

@@ -56,10 +56,4 @@ export function getDb(): Promise<Db> {
   return holder.ready;
 }
 
-/** Tests: drop the singleton so each file gets a fresh in-memory database. */
-export async function resetDbForTests() {
-  holder.db = undefined;
-  holder.ready = undefined;
-}
-
 export { schema };
