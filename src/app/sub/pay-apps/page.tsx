@@ -74,7 +74,7 @@ export default async function SubPayAppsPage() {
             <TableRow>
               <TableHead>Pay app</TableHead>
               <TableHead className="max-sm:hidden">Project</TableHead>
-              <TableHead className="max-md:hidden">Period through</TableHead>
+              <TableHead className="max-md:hidden">Work through</TableHead>
               <TableHead className="max-sm:hidden">Status</TableHead>
               <TableHead numeric>Billed</TableHead>
               <TableHead numeric className="max-md:hidden">

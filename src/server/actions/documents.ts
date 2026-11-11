@@ -13,17 +13,17 @@ export class UploadError extends Error {}
 /** Checks that the bytes are a readable text PDF and returns its pages. Throws UploadError otherwise. */
 export async function inspectPdf(bytes: Uint8Array) {
   if (bytes.length === 0) throw new UploadError("Choose the subcontract PDF.");
-  if (bytes.length > MAX_PDF_BYTES) throw new UploadError("PDFs up to 4 MB, please.");
-  if (Buffer.from(bytes.subarray(0, 5)).toString("latin1") !== "%PDF-") throw new UploadError("That file is not a PDF.");
+  if (bytes.length > MAX_PDF_BYTES) throw new UploadError("That PDF is larger than 4 MB. Upload a smaller file.");
+  if (Buffer.from(bytes.subarray(0, 5)).toString("latin1") !== "%PDF-") throw new UploadError("That file is not a PDF. Choose the subcontract as a PDF.");
   let pages: string[];
   let pageCount: number;
   try {
     // The PDF reader takes ownership of the buffer it is given, so it gets a copy.
     ({ pages, pageCount } = await extractPageTexts(bytes.slice()));
   } catch {
-    throw new UploadError("Couldn't read that PDF. Is it encrypted or damaged?");
+    throw new UploadError("That PDF could not be opened. It may be password-protected or damaged. Try exporting it again.");
   }
-  if (!pages.some((t) => t.trim().length > 0)) throw new UploadError("This PDF has no text layer (it looks scanned). Upload a text PDF.");
+  if (!pages.some((t) => t.trim().length > 0)) throw new UploadError("This PDF has no selectable text, so it looks like a scan. Scanned PDFs cannot be read yet. Upload a PDF with selectable text.");
   return { pages, pageCount };
 }
 
@@ -31,8 +31,8 @@ export async function attachContractDocument(input: { contractId: string; orgId:
   const { bytes } = input;
   const db = await getDb();
   const contract = await db.query.contracts.findFirst({ where: eq(schema.contracts.id, input.contractId) });
-  if (!contract) throw new UploadError("Contract not found.");
-  if (contract.status === "active") throw new UploadError("This contract's rules are approved and frozen to the PDF they were read from.");
+  if (!contract) throw new UploadError("That subcontract could not be found.");
+  if (contract.status === "active") throw new UploadError("This subcontract's payment rules are approved and frozen to the PDF they were read from, so the PDF cannot be replaced.");
 
   const { pages, pageCount } = await inspectPdf(bytes);
 

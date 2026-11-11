@@ -35,7 +35,7 @@ export default async function GcHome() {
                 Pay every subcontractor what the contract says, by the day the law allows
               </h2>
               <p className="mt-2 text-sm leading-5 text-muted-foreground">
-                Upload a subcontract, approve its payment rules once, and every owner payment splits itself.
+                Upload a subcontract and approve its payment rules once. After that, each owner payment you record is split between your subcontractors for you.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
                 <Link href="/gc/projects/new" className={buttonVariants({ variant: "primary" })}>
@@ -60,7 +60,7 @@ export default async function GcHome() {
   const next = steps.find((s) => s.state === "current");
   return (
     <>
-      <PageHeader title="Home" badge={items.length > 0 ? <Badge tone="hold">{items.length} waiting</Badge> : undefined} description={org.name} />
+      <PageHeader title="Home" badge={items.length > 0 ? <Badge tone="hold">{items.length} waiting on you</Badge> : undefined} description={org.name} />
       <PageBody>
         {onboarding.done < onboarding.total && (
           <details open={items.length === 0} className="group border-y">
@@ -80,11 +80,12 @@ export default async function GcHome() {
           </details>
         )}
 
-        <Section title="Needs your attention">
+        <Section title="Waiting on you" data-tour="gc-attention">
           <AttentionTable items={items} nowIso={now().toISOString()} showProject />
         </Section>
 
         <Section
+          data-tour="gc-projects"
           title="Projects"
           actions={
             <Link href="/gc/projects/new" className={buttonVariants({ variant: "secondary", size: "sm" })}>

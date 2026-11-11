@@ -39,7 +39,7 @@ export function AddSubcontractForm({ projectId, knownSubs, isSample = false, can
             <span className="font-medium">{subName}&rsquo;s subcontract is uploaded,</span> and an invitation was created for <span className="type-mono">{email}</span>.
           </span>
         </p>
-        <CopyField label="Invite link" value={url} help="Email isn't connected: copy the link. Single use, 14 days." />
+        <CopyField label="Invite link" value={url} help="Groundwork does not send email yet. Copy this link and send it yourself. It works once and expires in 14 days." />
         <FormActions>
           <Link href={`/gc/contracts/${contractId}?read=1`} className={buttonVariants({ variant: "primary" })}>
             Review payment rules
@@ -77,7 +77,7 @@ export function AddSubcontractForm({ projectId, knownSubs, isSample = false, can
         >
           {file ? <FileText className="mb-1 size-5 text-foreground" aria-hidden /> : <Upload className="mb-1 size-5 text-muted-foreground" aria-hidden />}
           <span className="text-sm leading-5 font-medium">{file ?? "Drop the PDF here, or click to choose it"}</span>
-          <span className="type-meta text-muted-foreground">{file ? "Click to choose a different file" : "A PDF with selectable text, up to 4 MB. Scanned pages cannot be read yet."}</span>
+          <span className="type-meta text-muted-foreground">{file ? "Click to choose a different file" : "A PDF with selectable text, up to 4 MB. Scanned PDFs cannot be read yet."}</span>
         </label>
         <input ref={input} id="file" name="file" type="file" accept="application/pdf" className="sr-only" onChange={(e) => setFile(e.target.files?.[0]?.name ?? null)} />
       </div>
@@ -101,10 +101,10 @@ export function AddSubcontractForm({ projectId, knownSubs, isSample = false, can
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Their billing contact" optional>
+        <Field label="Subcontractor's billing contact" optional>
           <Input id="contactName" name="contactName" defaultValue={v?.contactName} placeholder="Full name" autoComplete="off" />
         </Field>
-        <Field label="Contact email" optional help={isSample ? "Invitations are turned off in the sample workspace, so nothing is created for this address." : "Creates an invite link for you to send. No email is sent."}>
+        <Field label="Their email" optional help={isSample ? "Invitations are turned off in the sample workspace, so no invite link is created." : "Creates an invite link for you to send them. Groundwork does not email it."}>
           <Input id="contactEmail" name="contactEmail" type="email" defaultValue={v?.contactEmail} placeholder="name@company.com" autoComplete="off" />
         </Field>
       </div>
@@ -123,7 +123,7 @@ export function AddSubcontractForm({ projectId, knownSubs, isSample = false, can
           </Link>
         )}
         <Button type="submit" loading={pending}>
-          Upload and read contract
+          Upload and read subcontract
         </Button>
       </FormActions>
     </form>

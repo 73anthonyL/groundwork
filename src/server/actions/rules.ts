@@ -76,7 +76,7 @@ export async function resolveField(input: {
   return db.transaction(async (tx) => {
     const row = await tx.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, input.ruleSetId) });
     if (!row) throw new Error("rule set not found");
-    if (row.status === "approved" || row.status === "superseded") throw new Error("approved rule sets are immutable; create a new version");
+    if (row.status === "approved" || row.status === "superseded") throw new Error("these payment rules are approved and can no longer be changed; read the subcontract again to start a new version");
     const stored = row.rules as StoredRules;
     const ann = stored.annotations[input.path];
     ann.review =
@@ -105,7 +105,7 @@ export async function acknowledgeAnomaly(input: { ruleSetId: string; index: numb
   return db.transaction(async (tx) => {
     const row = await tx.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, input.ruleSetId) });
     if (!row) throw new Error("rule set not found");
-    if (row.status === "approved" || row.status === "superseded") throw new Error("approved rule sets are immutable");
+    if (row.status === "approved" || row.status === "superseded") throw new Error("these payment rules are approved and can no longer be changed");
     const stored = row.rules as StoredRules;
     stored.anomalyAcks[input.index] = { note: input.note, by: input.actor.label, at: now().toISOString() };
     await tx.update(schema.ruleSets).set({ rules: stored }).where(eq(schema.ruleSets.id, row.id));

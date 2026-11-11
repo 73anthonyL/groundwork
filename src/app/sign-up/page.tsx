@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Create an account" };
 
 export default function SignUpPage() {
   return (
-    <AuthFrame title="Create your account" description="For general contractors. Subcontractors and owners join from an invitation.">
+    <AuthFrame title="Create an account" description="For general contractors. Subcontractors and owners join from an invitation.">
       <SignUpForm />
       <p className="mt-6 text-muted-foreground">
         Already have an account?{" "}

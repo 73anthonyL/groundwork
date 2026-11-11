@@ -36,7 +36,7 @@ export async function addSubcontract(input: {
   const contactName = input.contactName?.trim() ?? "";
   if (subName.length < 2) throw new ContractInputError("Enter the subcontractor's name.");
   if (trade.length < 2) throw new ContractInputError("Enter the trade or scope of work.");
-  if (!Number.isInteger(input.sumCents) || input.sumCents <= 0) throw new ContractInputError("Enter the contract sum in dollars.");
+  if (!Number.isInteger(input.sumCents) || input.sumCents <= 0) throw new ContractInputError("Enter the subcontract sum in dollars, for example 150,000.");
   let contactEmail: string | null = null;
   if (input.contactEmail?.trim()) {
     const parsed = emailSchema.safeParse(input.contactEmail);

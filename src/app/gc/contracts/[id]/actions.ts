@@ -53,7 +53,7 @@ function back(contractId: string, msg?: string) {
 export async function resolveFieldAction(formData: FormData) {
   const { contract, ruleSetId, actor } = await guard(formData);
   const path = String(formData.get("path") ?? "") as RuleFieldPath;
-  if (!RULE_FIELDS.includes(path)) back(contract.id, "Unknown field.");
+  if (!RULE_FIELDS.includes(path)) back(contract.id, "That term is not part of the payment rules.");
   const decision = formData.get("decision") === "override" ? "override" : "accept";
   const note = String(formData.get("note") ?? "").trim();
   const value = decision === "override" ? parseOverride(path, String(formData.get("value") ?? "")) : undefined;
@@ -161,7 +161,7 @@ export async function voidBackchargeAction(formData: FormData) {
   const { contract, actor } = await adjustmentGuard(formData);
   const id = String(formData.get("backchargeId") ?? "");
   const adj = await getContractAdjustments((await requireAuth("gc")).org, contract.id);
-  if (!adj?.backcharge.rows.some((b) => b.id === id)) back(contract.id, "That backcharge is not on this contract.");
+  if (!adj?.backcharge.rows.some((b) => b.id === id)) back(contract.id, "That backcharge is not on this subcontract.");
   await run(contract.id, contract.projectId, "Backcharge withdrawn.", () => voidBackcharge({ backchargeId: id, actor }));
 }
 
@@ -169,7 +169,7 @@ export async function proposeChangeOrderAction(formData: FormData) {
   const { contract, actor } = await adjustmentGuard(formData);
   const amount = parseDollars(formData.get("amount"));
   const deduct = formData.get("direction") === "deduct";
-  await run(contract.id, contract.projectId, "Change order recorded. Approve it to change the contract sum.", () =>
+  await run(contract.id, contract.projectId, "Change order recorded. Approve it to change the subcontract sum.", () =>
     proposeChangeOrder({
       contractId: contract.id,
       title: String(formData.get("title") ?? ""),
@@ -185,9 +185,9 @@ export async function decideChangeOrderAction(formData: FormData) {
   const { contract, actor } = await adjustmentGuard(formData);
   const id = String(formData.get("changeOrderId") ?? "");
   const adj = await getContractAdjustments((await requireAuth("gc")).org, contract.id);
-  if (!adj?.changeOrders.some((c) => c.id === id)) back(contract.id, "That change order is not on this contract.");
+  if (!adj?.changeOrders.some((c) => c.id === id)) back(contract.id, "That change order is not on this subcontract.");
   const approve = formData.get("decision") === "approve";
-  await run(contract.id, contract.projectId, approve ? "Change order approved. The contract sum and schedule of values are updated." : "Change order rejected.", () =>
+  await run(contract.id, contract.projectId, approve ? "Change order approved. The subcontract sum and schedule of values are updated." : "Change order rejected.", () =>
     decideChangeOrder({ changeOrderId: id, decision: approve ? "approve" : "reject", note: String(formData.get("note") ?? "") || undefined, actor }),
   );
 }
@@ -195,7 +195,7 @@ export async function decideChangeOrderAction(formData: FormData) {
 export async function certifyRetentionAction(formData: FormData) {
   const { contract, actor } = await adjustmentGuard(formData);
   const pct = Number(String(formData.get("percent") ?? "").replace("%", ""));
-  await run(contract.id, contract.projectId, "Release condition certified. The retainage is paid out when the owner's retention is received.", () =>
+  await run(contract.id, contract.projectId, "Release condition certified. The retainage is paid out when you record the owner's retainage payment.", () =>
     certifyRetention({ contractId: contract.id, releaseBps: Number.isFinite(pct) ? Math.round(pct * 100) : 0, note: String(formData.get("note") ?? ""), isFinal: formData.get("isFinal") === "on", actor }),
   );
 }

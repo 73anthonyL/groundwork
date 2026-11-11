@@ -10,7 +10,7 @@ import { Countdown } from "@/components/countdown";
 export type PaymentFilter = "open" | "paid" | "all";
 
 export const PAYMENT_FILTERS: Record<PaymentFilter, { label: string; match: (r: PaymentRow) => boolean; empty: string }> = {
-  open: { label: "On its way", match: (r) => paymentOpen(r), empty: "Nothing is on its way. Every payment has reached its subcontractor." },
+  open: { label: "On its way", match: (r) => paymentOpen(r), empty: "No payments are on their way. Every payment so far has reached its subcontractor." },
   paid: { label: "Paid", match: (r) => r.status === "paid" || r.status === "settled", empty: "No payments have been paid yet." },
   all: { label: "All", match: () => true, empty: "No payments yet. They appear here when you record an owner payment on a project." },
 };
@@ -49,7 +49,7 @@ export function PaymentsTable({ rows, nowIso, empty }: { rows: PaymentRow[]; now
           <TableHead>Subcontractor</TableHead>
           <TableHead>Project</TableHead>
           <TableHead>From owner payment</TableHead>
-          <TableHead>For</TableHead>
+          <TableHead>Pays for</TableHead>
           <TableHead numeric>Amount</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Deadline</TableHead>

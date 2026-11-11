@@ -102,13 +102,13 @@ export function CompileReview({
       const res = await fetch(`/api/extract/${contractId}${source === "seed" ? "?source=seed" : ""}`, { method: "POST" });
       const body = (await res.json()) as { error?: string; message?: string };
       if (!res.ok) {
-        if (body.error === "no_api_key") setError({ message: "No Claude API key is set on this server, so the contract cannot be read.", canLoadSaved: true });
-        else setError({ message: body.message ?? body.error ?? "Reading failed.", canLoadSaved: true });
+        if (body.error === "no_api_key") setError({ message: "This server has no Claude API key, so the subcontract cannot be read. Add one to the server settings and try again.", canLoadSaved: true });
+        else setError({ message: body.message ?? "The subcontract could not be read. Wait a moment, then try again.", canLoadSaved: true });
         return;
       }
       startTransition(() => router.refresh());
-    } catch (e) {
-      setError({ message: (e as Error).message, canLoadSaved: false });
+    } catch {
+      setError({ message: "Groundwork could not finish reading the subcontract. Check your connection and try again.", canLoadSaved: false });
     } finally {
       setCompiling(null);
     }
@@ -155,7 +155,7 @@ export function CompileReview({
             <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[55vh] w-full border-y lg:h-[calc(100dvh-9.5rem)]" />
           </>
         ) : (
-          (upload ?? <EmptyState title="No subcontract uploaded yet" description="Upload the signed PDF to read its payment terms." />)
+          (upload ?? <EmptyState title="No subcontract uploaded yet" description="Upload the signed PDF and Groundwork reads its payment terms." />)
         )}
       </section>
 
@@ -191,10 +191,10 @@ export function CompileReview({
           <EmptyState
             align="start"
             title="This subcontract has not been read yet"
-            description="Claude reads the payment terms and quotes the clause behind each. You approve once."
+            description="Claude reads the payment terms and quotes the clause behind each one. You check them and approve once."
             action={
               canCompile ? (
-                <Button onClick={() => compile("model")}>Read the contract</Button>
+                <Button onClick={() => compile("model")}>Read the subcontract</Button>
               ) : undefined
             }
           />
@@ -211,13 +211,13 @@ export function CompileReview({
                   {blocking.length + loose.length > 0 ? <Badge tone="hold">{blocking.length + loose.length} waiting</Badge> : <Badge tone="settled">Nothing waiting</Badge>}
                 </div>
                 {blocking.length + loose.length === 0 ? (
-                  <p className="type-meta text-muted-foreground">Every term is verified or settled. Approve when ready.</p>
+                  <p className="type-meta text-muted-foreground">Nothing is waiting on you. Check the verified terms below, then approve.</p>
                 ) : (
                   <>
-                    <p className="type-meta text-muted-foreground">Terms Claude was unsure of, quotes not found in the PDF, and anything state law overrides.</p>
+                    <p className="type-meta text-muted-foreground">These are the terms Claude was unsure of, quotes that could not be found in the PDF, and terms that state law overrides.</p>
                     {nudge && (
                       <p role="alert" className="type-meta font-medium text-destructive">
-                        Settle {waiting} below before approving.
+                        Decide on {waiting} below before approving.
                       </p>
                     )}
                     <ul className="divide-y border-y">
@@ -303,7 +303,7 @@ export function CompileReview({
                   {confirmed} of {RULE_FIELDS.length} confirmed
                 </span>
                 <span className="text-muted-foreground">
-                  {canApprove ? `. Approving freezes version ${ruleSet.version}; payments on this subcontract follow it from then on.` : `. Still waiting on you: ${waiting}.`}
+                  {canApprove ? `. Once approved, version ${ruleSet.version} cannot be edited, and every payment on this subcontract follows it.` : `. Still waiting on you: ${waiting}.`}
                 </span>
               </p>
               <SubmitButton>Approve payment rules</SubmitButton>
@@ -313,7 +313,7 @@ export function CompileReview({
               <ShieldCheck aria-hidden className="size-4 shrink-0 text-settled" />
               <span>
                 Approved by {ruleSet.approvedByName ?? "the controller"}
-                {ruleSet.approvedAtText ? ` on ${ruleSet.approvedAtText}` : ""}. Payments follow version {ruleSet.version}; reading the contract again starts a new version.
+                {ruleSet.approvedAtText ? ` on ${ruleSet.approvedAtText}` : ""}. Payments follow version {ruleSet.version}. Reading the subcontract again starts a new version for you to approve.
               </span>
               {ruleSet.approvedHash && (
                 <span className="type-mono" title={`sha256 ${ruleSet.approvedHash}`}>
@@ -344,7 +344,11 @@ function plainReason(r: string): string {
   if (r === "Not found in the contract; the engine treats it as absent.") return "Not found in the contract, so it is treated as absent.";
   const fuzzy = r.match(/^Quote matched approximately \((\d+)%\)\.$/);
   if (fuzzy) return `The quote is close to the PDF (${fuzzy[1]}% the same) but not word for word.`;
-  return r.replace(/^Anomaly: /, "").replace(/\bthe engine\b/g, "Groundwork");
+  return r
+    .replace(/^Anomaly: /, "")
+    .replace(/\bthe engine\b/g, "Groundwork")
+    .replace(/\bstatutory clock\b/g, "statutory deadline")
+    .replace(/\bretention cap\b/g, "retainage cap");
 }
 
 function PageLink({ page, onJump }: { page: number; onJump: (page: number) => void }) {
@@ -441,10 +445,10 @@ function DecisionItem({
         <form action={resolveFieldAction} className="flex flex-col gap-3 border-t pt-3">
           {hidden}
           <input type="hidden" name="decision" value="override" />
-          <Field label="What the contract actually says">
+          <Field label="What the contract says">
             <OverrideInput path={path} value={f.value} />
           </Field>
-          <Field label="Why you changed it" help="Kept with the rule so anyone can see who changed it and why.">
+          <Field label="Why you changed it" help="Saved with the rule, along with your name.">
             <Input name="note" required />
           </Field>
           <FormActions className="pt-0">
@@ -466,7 +470,7 @@ function DecisionItem({
           <Button type="button" variant="secondary" onClick={() => setChanging(true)} aria-label={`Change ${fieldLabel(path).toLowerCase()}`}>
             Change
           </Button>
-          <span className="type-meta text-muted-foreground">{value === null ? "Accept means the contract is silent on this." : "Accept means the reading matches the contract."}</span>
+          <span className="type-meta text-muted-foreground">{value === null ? "Accept confirms the contract does not state this." : "Accept confirms this matches the contract."}</span>
         </div>
       )}
     </li>
@@ -521,12 +525,12 @@ function VerifiedRow({ path, extracted, stored, onJump }: { path: RuleFieldPath;
       : review.state === "overridden"
         ? { icon: CheckCircle2, text: "Changed by you", ok: true }
         : !f.evidence
-          ? { icon: FileSearch, text: f.not_found ? "Not in the contract" : "No quote", ok: false }
+          ? { icon: FileSearch, text: f.not_found ? "Not stated in the contract" : "No supporting quote", ok: false }
           : verification.status === "exact"
             ? { icon: CheckCircle2, text: "Found in the PDF", ok: true }
             : verification.status === "fuzzy"
               ? { icon: CheckCircle2, text: `Found in the PDF, ${Math.round((verification.score ?? 0) * 100)}% match`, ok: true }
-              : { icon: FileSearch, text: "Quote not found", ok: false };
+              : { icon: FileSearch, text: "Quote not found in the PDF", ok: false };
   return (
     <li className="flex flex-col gap-1.5 px-4 py-3">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
@@ -619,7 +623,7 @@ function StateLaw({ stored }: { stored: StoredRules }) {
       from: rate === null ? "none" : capped ? "statute" : "contract",
     },
     {
-      term: "Pass retainage down within",
+      term: "Release retainage to the subcontractor within",
       contract: releaseDays === null ? "Not stated" : `${releaseDays} days`,
       law: passDays === null ? "No deadline on private work" : `${passDays} days after the owner releases it`,
       cite: passDays === null ? null : cite("retentionRelease", "CA_CIV_8814"),
@@ -627,11 +631,11 @@ function StateLaw({ stored }: { stored: StoredRules }) {
       from: applyRelease === null ? "none" : passDays !== null && (releaseDays === null || passDays <= releaseDays) ? "statute" : "contract",
     },
     {
-      term: "Payment only if the owner pays",
+      term: "Subcontractor is paid only if the owner pays",
       contract: type === "pay_if_paid" ? "Yes: pay-if-paid" : type === null ? "Not stated" : "No",
       law: { void: "Unenforceable", limited: "Enforceable, within limits", enforceable: "Enforceable when clearly worded", unsettled: "Unsettled" }[pif],
       cite: cite("payIfPaid", "CA_CLARKE_V_SAFECO"),
-      applies: type !== "pay_if_paid" ? "Does not come up" : pif === "void" ? "Read as pay-when-paid; the deadline still runs" : pif === "enforceable" ? "Honored" : "Honored; confirm it can be relied on",
+      applies: type !== "pay_if_paid" ? "Not applicable" : pif === "void" ? "Treated as pay-when-paid, so the deadline still applies" : pif === "enforceable" ? "Honored" : "Honored. Ask your lawyer whether it can be relied on",
       from: type !== "pay_if_paid" ? "none" : pif === "void" ? "statute" : "contract",
     },
   ];
@@ -643,7 +647,7 @@ function StateLaw({ stored }: { stored: StoredRules }) {
           {o.loaded ? `What ${name} law changes` : `No payment law on file for ${o.state}`}
         </h3>
         <p className="type-meta mt-0.5 text-muted-foreground">
-          {o.loaded ? "Applied by code from the governing-law clause. Claude never decides this." : "The contract's own terms apply, and some deadlines may be missing."}
+          {o.loaded ? "Groundwork applies these by fixed rules, using the state named in the contract's governing-law clause. Claude does not decide them." : "The contract's own terms apply. Where it sets no deadline, none is enforced."}
         </p>
       </div>
       {o.loaded && (
@@ -653,7 +657,7 @@ function StateLaw({ stored }: { stored: StoredRules }) {
               <TableRow>
                 <TableHead>Term</TableHead>
                 <TableHead>Contract says</TableHead>
-                <TableHead>Statute says</TableHead>
+                <TableHead>State law says</TableHead>
                 <TableHead>Groundwork applies</TableHead>
               </TableRow>
             </TableHeader>
@@ -668,7 +672,7 @@ function StateLaw({ stored }: { stored: StoredRules }) {
                   </TableCell>
                   <TableCell className="py-2! align-top font-medium">
                     {r.applies}
-                    {r.from !== "none" && <div className="type-caption mt-0.5 font-normal text-muted-foreground">{r.from === "statute" ? "from the statute" : "from the contract"}</div>}
+                    {r.from !== "none" && <div className="type-caption mt-0.5 font-normal text-muted-foreground">{r.from === "statute" ? "from state law" : "from the contract"}</div>}
                   </TableCell>
                 </TableRow>
               ))}
@@ -694,7 +698,7 @@ const TIMING_TYPES = [
   ["pay_when_paid", "Pay when paid"],
   ["pay_if_paid", "Pay if paid"],
   ["fixed_days", "A fixed number of days"],
-  ["silent", "The contract does not say"],
+  ["silent", "Not stated in the contract"],
 ] as const;
 const isYesNo = (path: RuleFieldPath) => /^(waivers|offsets)\.|agreed_in_writing|stored_materials/.test(path);
 
@@ -742,12 +746,12 @@ function Reading() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="border-y" role="status" aria-label="Reading the contract">
+    <div className="border-y" role="status" aria-label="Reading the subcontract">
       <div className="h-0.5 w-full overflow-hidden bg-muted">
         <div className="reading-bar h-full w-1/3 bg-signal" />
       </div>
       <div className="p-4">
-        <p className="font-semibold">Claude is reading the contract</p>
+        <p className="font-semibold">Claude is reading the subcontract</p>
         <p className="type-meta mt-0.5 text-muted-foreground">This takes about a minute. You can read the PDF while you wait.</p>
         <ol className="mt-4 flex flex-col gap-2.5">
           {READING_STEPS.map((label, i) => (

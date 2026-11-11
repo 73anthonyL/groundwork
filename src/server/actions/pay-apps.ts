@@ -82,7 +82,7 @@ export async function submitPayApp(input: SubmitPayAppInput) {
       const children = await tx.query.contracts.findMany({ where: eq(schema.contracts.parentContractId, input.contractId) });
       if (lowerTier.some((d) => !children.some((c) => c.id === d.contractId))) throw new Error("a declared lower-tier party is not on this contract");
       // The lower tier is paid out of what this application nets, so it cannot be owed more than that.
-      if (lowerTier.reduce((s, d) => s + d.amountCents, 0) > gross - input.retainageBilledCents) throw new Error("lower-tier amounts cannot exceed what this application nets after retainage");
+      if (lowerTier.reduce((s, d) => s + d.amountCents, 0) > gross - input.retainageBilledCents) throw new Error("what you owe your suppliers and sub-subcontractors cannot exceed this pay app's net due");
     }
     const id = input.id ?? randomUUID();
     const at = now();
@@ -134,7 +134,7 @@ export async function reviewPayApp(input: {
   return db.transaction(async (tx) => {
     const app = await tx.query.payApplications.findFirst({ where: eq(schema.payApplications.id, input.payAppId), with: { lines: true } });
     if (!app) throw new Error("pay application not found");
-    if (app.status !== "submitted" && app.status !== "changes_requested") throw new Error(`cannot review a pay application in status ${app.status}`);
+    if (app.status !== "submitted" && app.status !== "changes_requested") throw new Error(`this pay app has already been decided (it is ${app.status.replaceAll("_", " ")})`);
     const at = now();
     if (input.decision === "request_changes") {
       await tx

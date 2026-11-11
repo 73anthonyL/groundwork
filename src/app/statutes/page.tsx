@@ -6,7 +6,7 @@ import { Wordmark } from "@/components/wordmark";
 import { buttonVariants } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-export const metadata: Metadata = { title: "Statute library", description: "Private-works payment law for all 50 states and DC, as Groundwork applies it." };
+export const metadata: Metadata = { title: "State payment law", description: "Private-works payment law for all 50 states and DC, as Groundwork applies it." };
 
 const PIF: Record<string, string> = { void: "Void", limited: "Limited", enforceable: "Enforceable", unsettled: "Unsettled" };
 
@@ -31,7 +31,7 @@ export default function StatutesPage() {
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-4 pt-10 pb-16 text-sm leading-5 sm:px-6">
         <h1 className="type-title">State payment law, as Groundwork applies it</h1>
         <p className="mt-2 max-w-3xl text-muted-foreground">
-          Groundwork reads the governing-law clause, then applies that state&rsquo;s private-works payment law in code. Of {c.jurisdictions} jurisdictions, {c.promptPay} set a deadline for paying subcontractors, {c.retainageCap} cap or forbid retainage, {c.payIfPaidVoid + c.payIfPaidLimited} void or limit pay-if-paid clauses, and {c.statutoryWaiverForms} prescribe the exact lien waiver form. Every rule below carries its source. Where one could not be confirmed, the engine uses the contract&rsquo;s own terms and says so.
+          Groundwork reads the governing-law clause, then applies that state&rsquo;s payment law for private projects by fixed rules. Of {c.jurisdictions} jurisdictions, {c.promptPay} set a deadline for paying subcontractors, {c.retainageCap} cap or forbid retainage, {c.payIfPaidVoid + c.payIfPaidLimited} void or limit pay-if-paid clauses, and {c.statutoryWaiverForms} prescribe the exact lien waiver form. Every rule below carries its source. Where a rule could not be confirmed, Groundwork uses the contract&rsquo;s own terms and says so.
         </p>
 
         <section className="mt-8" aria-label="Map">
@@ -47,9 +47,9 @@ export default function StatutesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>State</TableHead>
-                  <TableHead>Pay the sub within</TableHead>
+                  <TableHead>Pay subcontractors within</TableHead>
                   <TableHead>Retainage cap</TableHead>
-                  <TableHead>Pass retainage within</TableHead>
+                  <TableHead>Release retainage within</TableHead>
                   <TableHead>Pay-if-paid</TableHead>
                   <TableHead>Waiver form</TableHead>
                 </TableRow>
@@ -71,7 +71,7 @@ export default function StatutesPage() {
             </Table>
           </div>
           <p className="type-caption mt-3 max-w-3xl text-muted-foreground">
-            Researched November 2026 from state codes and court opinions, with secondary sources where the official text could not be read. This is a reference for how the software behaves, not legal advice. Conditions the engine does not evaluate (project type, bonding, residential exclusions) are listed in each state&rsquo;s notes and shown to the reviewer when a contract is read.
+            Researched November 2026 from state codes and court opinions, with secondary sources where the official text could not be read. This is a reference for how the software behaves, not legal advice. Conditions Groundwork does not evaluate (project type, bonding, residential exclusions) are listed in each state&rsquo;s notes and shown to the reviewer when a contract is read.
           </p>
         </section>
       </main>

@@ -19,7 +19,7 @@ export default async function OwnerProjectPage({ params }: { params: Promise<{ i
         breadcrumbs={[{ label: "Your projects", href: "/owner" }, { label: project.name }]}
         title={project.name}
         badge={<Badge icon={<Eye aria-hidden />}>Read-only</Badge>}
-        description={`Built by ${project.gc.name} under a ${formatCentsCompact(project.primeContractSumCents)} prime contract${project.address ? `, ${project.address}` : ""}. You can see where each of your payments went; nothing here needs your action.`}
+        description={`Built by ${project.gc.name} under a ${formatCentsCompact(project.primeContractSumCents)} prime contract${project.address ? `, ${project.address}` : ""}. You can see where each of your payments went. There is nothing for you to do here.`}
       />
       <PageBody>
         <ProjectLive org={org} projectId={project.id} />

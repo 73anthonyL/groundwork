@@ -83,7 +83,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
             {failed && (
               <form action={retryAction}>
                 <input type="hidden" name="releaseId" value={r.id} />
-                <SubmitButton>Send it again</SubmitButton>
+                <SubmitButton>Send payment again</SubmitButton>
               </form>
             )}
           </>
@@ -109,12 +109,12 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
             )}
             {failed && !error && (
               <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive-soft px-4 py-3">
-                The bank did not accept this payment. The deadline is still running.
+                The bank did not accept this payment, so nothing was sent. The deadline is still running. Send the payment again.
               </p>
             )}
             {waitingOnLowerTier && (
               <p role="status" className="rounded-lg border border-hold/40 bg-hold-soft px-4 py-3">
-                {sub} has signed. The subcontract requires waivers from the lower tier too, so this payment goes out when the parties below have signed.
+                {sub} has signed. The subcontract also requires waivers from {sub}&rsquo;s suppliers and sub-subcontractors, so this payment is sent once they have signed.
               </p>
             )}
           </div>
@@ -122,7 +122,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
 
         <div className="grid gap-x-10 gap-y-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)]">
           <div className="flex min-w-0 flex-col gap-8">
-            <Section title="How the amount was worked out" description="Computed from the approved rules. No model involved.">
+            <Section data-tour="payment-math" title="How the amount was worked out" description="Worked out by arithmetic from the approved payment rules. Claude is not involved.">
               <Table>
                 <TableBody>
                   {math.map((m, i) => (
@@ -134,19 +134,19 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
                 </TableBody>
                 <TableFoot>
                   <TableRow>
-                    <TableCell>Paid out to {sub}</TableCell>
+                    <TableCell>Net payment to {sub}</TableCell>
                     <TableCell numeric>{formatCents(r.releaseCents)}</TableCell>
                   </TableRow>
                 </TableFoot>
               </Table>
               {r.awaitingOwnerCents > 0 && (
                 <p className="type-meta text-muted-foreground">
-                  <span className="num">{formatCents(r.awaitingOwnerCents)}</span> of this pay app has not been funded by the owner yet. It is paid out of a later owner payment.
+                  <span className="num">{formatCents(r.awaitingOwnerCents)}</span> of this pay app has not been paid by the owner yet. It is paid out of a later owner payment.
                 </p>
               )}
             </Section>
 
-            <Section title="What the numbers rest on" description="Each figure and the deadline trace to a term of the subcontract or to a statute.">
+            <Section data-tour="payment-sources" title="Where the numbers come from" description="Each figure, and the deadline, comes from a term of the subcontract or from state law.">
               <Table className="min-w-[440px]">
                 <TableHeader>
                   <TableRow>
@@ -198,7 +198,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
             </Section>
           </div>
 
-          <Section title="What happened" className="min-w-0">
+          <Section data-tour="payment-timeline" title="What happened" className="min-w-0">
             <div className="border-t pt-5">
               <ReleaseTimeline r={r} ownerName={project.owner.name} gcName={project.gc.name} nowIso={nowIso} payee={sub} log={log} />
             </div>
@@ -206,14 +206,14 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
           </Section>
         </div>
 
-        <Section title="Lien waivers" description={`Signed in exchange for this payment.`}>
+        <Section title="Lien waivers" description="The waivers the subcontractor signs in exchange for this payment.">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Waiver</TableHead>
-                <TableHead>State</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Signed by</TableHead>
-                <TableHead>Signature</TableHead>
+                <TableHead>Signature record</TableHead>
                 <TableHead>
                   <span className="sr-only">View</span>
                 </TableHead>
@@ -223,7 +223,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
               {r.waivers.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} className="text-muted-foreground">
-                    No waivers were drafted for this payment.
+                    No lien waivers are required for this payment.
                   </TableCell>
                 </TableRow>
               )}
@@ -256,7 +256,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
         </Section>
 
         {downstream.length > 0 && (
-          <Section title="Lower-tier payments" description={`What ${sub} pays its own suppliers and sub-subcontractors out of this payment.`}>
+          <Section title={`Payments ${sub} makes from this one`} description={`What ${sub} pays its own suppliers and sub-subcontractors out of this payment.`}>
             <Table className="min-w-[560px]">
               <TableHeader>
                 <TableRow>

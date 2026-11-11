@@ -14,8 +14,8 @@ const ACCOUNT: Record<string, { label: string; what: string }> = {
   retainage_held: { label: "Retainage held", what: "Withheld from subcontractors until its release condition is met." },
   sub_paid: { label: "Paid to subcontractors", what: "Confirmed by the bank." },
   backcharge_recovered: { label: "Backcharges recovered", what: "Set off against payments." },
-  lower_tier_payable: { label: "Lower tier: owed by subcontractors", what: "What your subcontractors owe their own suppliers." },
-  lower_tier_paid: { label: "Lower tier: paid by subcontractors", what: "What they have paid them." },
+  lower_tier_payable: { label: "Owed by subcontractors to their suppliers", what: "What your subcontractors owe their own suppliers and sub-subcontractors." },
+  lower_tier_paid: { label: "Paid by subcontractors to their suppliers", what: "What your subcontractors have paid them." },
 };
 
 const money = (cents: number) => (cents < 0 ? `−${formatCents(-cents)}` : formatCents(cents));
@@ -33,7 +33,7 @@ export default async function LedgerPage() {
       <PageHeader
         breadcrumbs={[{ label: "Payments", href: "/gc/payments" }, { label: "Ledger entries" }]}
         title="Ledger entries"
-        description="Every recorded movement of money, newest first."
+        description="Every movement of money Groundwork has recorded, newest first. Each balance is the sum of its entries."
       />
       <PageBody>
         <Section title="Balances">
@@ -66,7 +66,7 @@ export default async function LedgerPage() {
                 <TableHead>Subcontractor</TableHead>
                 <TableHead>Memo</TableHead>
                 <TableHead numeric>Amount</TableHead>
-                <TableHead>Batch</TableHead>
+                <TableHead>Recorded together</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

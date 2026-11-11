@@ -14,7 +14,7 @@ import type { DbLike } from "@/server/db-types";
 async function approvedRules(tx: DbLike, contractId: string) {
   const contract = await tx.query.contracts.findFirst({ where: eq(schema.contracts.id, contractId) });
   if (!contract) throw new Error("contract not found");
-  if (!contract.activeRuleSetId) throw new Error("the contract has no approved payment rules yet");
+  if (!contract.activeRuleSetId) throw new Error("this subcontract has no approved payment rules yet");
   const rs = await tx.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, contract.activeRuleSetId) });
   if (!rs) throw new Error("approved rule set not found");
   return { contract, values: effectiveValues(rs.rules as StoredRules) };
@@ -32,13 +32,13 @@ export async function backchargeBalance(tx: DbLike, contractId: string) {
 }
 
 export async function recordBackcharge(input: { contractId: string; amountCents: number; reason: string; noticeDate?: string | null; actor: Actor; id?: string }) {
-  if (!Number.isInteger(input.amountCents) || input.amountCents <= 0) throw new Error("a backcharge needs a positive amount");
+  if (!Number.isInteger(input.amountCents) || input.amountCents <= 0) throw new Error("enter the backcharge amount in dollars");
   if (input.reason.trim().length < 3) throw new Error("say what the backcharge is for");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const { values } = await approvedRules(tx, input.contractId);
     // The right to set off comes from the contract. No clause, no deduction.
-    if (values.offsets.backcharge_setoff !== true) throw new Error("the approved rules do not give the contractor a right to backcharge or set off under this contract");
+    if (values.offsets.backcharge_setoff !== true) throw new Error("this subcontract's approved payment rules do not allow backcharges");
     const id = input.id ?? randomUUID();
     await tx.insert(schema.backcharges).values({ id, contractId: input.contractId, amountCents: input.amountCents, reason: input.reason.trim(), noticeDate: input.noticeDate ?? null, createdBy: input.actor.userId });
     await emit(tx, { aggregateType: "contract", aggregateId: input.contractId, type: "backcharge.recorded", actor: input.actor, payload: { backchargeId: id, amountCents: input.amountCents, reason: input.reason.trim(), noticeDate: input.noticeDate ?? null }, correlationId: randomUUID() });
@@ -54,7 +54,7 @@ export async function voidBackcharge(input: { backchargeId: string; actor: Actor
     if (!b) throw new Error("backcharge not found");
     if (b.status === "void") return { id: b.id };
     const { appliedCents, chargedCents } = await backchargeBalance(tx, b.contractId);
-    if (chargedCents - b.amountCents < appliedCents) throw new Error("this backcharge has already been recovered from a release and cannot be withdrawn");
+    if (chargedCents - b.amountCents < appliedCents) throw new Error("this backcharge has already been deducted from a payment and cannot be withdrawn");
     // Database time, so replay compares it with event insertion times on one clock.
     await tx.update(schema.backcharges).set({ status: "void", voidedAt: sql`now()` }).where(eq(schema.backcharges.id, b.id));
     await emit(tx, { aggregateType: "contract", aggregateId: b.contractId, type: "backcharge.voided", actor: input.actor, payload: { backchargeId: b.id, amountCents: b.amountCents }, correlationId: randomUUID() });
@@ -65,14 +65,14 @@ export async function voidBackcharge(input: { backchargeId: string; actor: Actor
 // ─── Change orders ──────────────────────────────────────────────────────────
 
 export async function proposeChangeOrder(input: { contractId: string; title: string; description?: string | null; amountCents: number; sovLineId?: string | null; actor: Actor; id?: string }) {
-  if (!Number.isInteger(input.amountCents) || input.amountCents === 0) throw new Error("a change order needs a non-zero amount");
+  if (!Number.isInteger(input.amountCents) || input.amountCents === 0) throw new Error("enter the change order amount in dollars");
   if (input.title.trim().length < 3) throw new Error("give the change order a title");
-  if (input.amountCents < 0 && !input.sovLineId) throw new Error("a deductive change order must name the schedule-of-values line it reduces");
+  if (input.amountCents < 0 && !input.sovLineId) throw new Error("choose the schedule of values line this deduction reduces");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const contract = await tx.query.contracts.findFirst({ where: eq(schema.contracts.id, input.contractId), with: { sovLines: true } });
     if (!contract) throw new Error("contract not found");
-    if (input.sovLineId && !contract.sovLines.some((l) => l.id === input.sovLineId)) throw new Error("that line is not on this contract");
+    if (input.sovLineId && !contract.sovLines.some((l) => l.id === input.sovLineId)) throw new Error("that line is not on this subcontract");
     const [last] = await tx.select({ n: schema.changeOrders.number }).from(schema.changeOrders).where(eq(schema.changeOrders.contractId, input.contractId)).orderBy(desc(schema.changeOrders.number)).limit(1);
     const number = (last?.n ?? 0) + 1;
     const id = input.id ?? randomUUID();
@@ -91,7 +91,7 @@ export async function decideChangeOrder(input: { changeOrderId: string; decision
   return db.transaction(async (tx) => {
     const co = await tx.query.changeOrders.findFirst({ where: eq(schema.changeOrders.id, input.changeOrderId) });
     if (!co) throw new Error("change order not found");
-    if (co.status !== "proposed") throw new Error(`this change order is already ${co.status}`);
+    if (co.status !== "proposed") throw new Error(`this change order has already been ${co.status}`);
     const at = now();
     if (input.decision === "reject") {
       await tx.update(schema.changeOrders).set({ status: "rejected", decidedBy: input.actor.userId, decidedAt: at, decisionNote: input.note ?? null }).where(eq(schema.changeOrders.id, co.id));
@@ -140,14 +140,14 @@ export async function retentionPosition(tx: DbLike, contractId: string) {
  * of the retainage held. The release itself is planned when the owner's retention is received.
  */
 export async function certifyRetention(input: { contractId: string; releaseBps: number; note: string; isFinal?: boolean; actor: Actor; id?: string }) {
-  if (!Number.isInteger(input.releaseBps) || input.releaseBps <= 0 || input.releaseBps > 10_000) throw new Error("the share to release must be between 0% and 100%");
-  if (input.note.trim().length < 3) throw new Error("record how the release condition was met");
+  if (!Number.isInteger(input.releaseBps) || input.releaseBps <= 0 || input.releaseBps > 10_000) throw new Error("enter a share to release between 1% and 100%");
+  if (input.note.trim().length < 3) throw new Error("say how the release condition was met");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const { values } = await approvedRules(tx, input.contractId);
     const pos = await retentionPosition(tx, input.contractId);
     const amountCents = Math.round((pos.certifiableCents * input.releaseBps) / 10_000);
-    if (amountCents <= 0) throw new Error("no uncertified retainage is held on this contract");
+    if (amountCents <= 0) throw new Error("all the retainage held on this subcontract is already certified for release");
     const id = input.id ?? randomUUID();
     await tx.insert(schema.retentionCertifications).values({ id, contractId: input.contractId, releaseBps: input.releaseBps, amountCents, conditionText: values.retainage.release_condition, note: input.note.trim(), isFinal: input.isFinal ?? false, certifiedBy: input.actor.userId });
     await emit(tx, { aggregateType: "contract", aggregateId: input.contractId, type: "retention.certified", actor: input.actor, payload: { certificationId: id, releaseBps: input.releaseBps, amountCents, heldCents: pos.heldCents, condition: values.retainage.release_condition, note: input.note.trim() }, correlationId: randomUUID() });

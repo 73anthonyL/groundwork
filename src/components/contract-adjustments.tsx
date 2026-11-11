@@ -70,7 +70,7 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
         title="Change orders"
         description={
           <>
-            Original sum <span className="num">{formatCents(contract.contractSumCents - approvedCo)}</span>, now <span className="num font-medium text-foreground">{formatCents(contract.contractSumCents)}</span>. An approved change order moves the subcontract sum and the schedule of values together.
+            Original sum <span className="num">{formatCents(contract.contractSumCents - approvedCo)}</span>, now <span className="num font-medium text-foreground">{formatCents(contract.contractSumCents)}</span>. Approving a change order updates the subcontract sum and the schedule of values together.
           </>
         }
       >
@@ -135,12 +135,12 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
               </Field>
               <Field label="Type">
                 <Select name="direction" defaultValue="add">
-                  <option value="add">Adds scope</option>
-                  <option value="deduct">Deducts from a line</option>
+                  <option value="add">Adds to the subcontract sum</option>
+                  <option value="deduct">Deducts from a schedule of values line</option>
                 </Select>
               </Field>
             </div>
-            <Field label="Line reduced" help="Only for a deduction.">
+            <Field label="Line to reduce" help="Needed only for a deduction.">
               <Select name="sovLineId" defaultValue="">
                 <option value="">Not a deduction</option>
                 {contract.sovLines.map((l) => (
@@ -174,7 +174,7 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
         <dl className="grid gap-x-8 gap-y-3 border-t pt-5 sm:grid-cols-2">
           <div>
             <dt className="type-meta text-muted-foreground">Released when (from the approved rules)</dt>
-            <dd className="mt-0.5">{rules?.retainage.release_condition ?? "Not stated in the contract."}</dd>
+            <dd className="mt-0.5">{rules?.retainage.release_condition ?? "The contract does not say when retainage is released."}</dd>
           </div>
           {rules?.retainage.reduction_trigger && (
             <div>
@@ -209,10 +209,10 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
           </Table>
         )}
         {actions.certifyRetention && retention.certifiableCents > 0 && (
-          <FoldedForm label="Certify the release condition" action={actions.certifyRetention} submit="Certify">
+          <FoldedForm label="Certify that retainage can be released" action={actions.certifyRetention} submit="Certify release">
             {hidden}
             <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
-              <Field label="Share to release" help="Percent.">
+              <Field label="Share to release" help="A percent of the retainage not yet certified.">
                 <Input name="percent" defaultValue="100" inputMode="decimal" className="type-mono" required />
               </Field>
               <Field label="How the condition was met">
@@ -220,10 +220,10 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
               </Field>
             </div>
             <label className="flex items-center gap-2">
-              <input type="checkbox" name="isFinal" className="size-4" /> This is the final release of retainage (uses the final-payment waiver)
+              <input type="checkbox" name="isFinal" className="size-4" /> This is the final release of retainage. The subcontractor signs the final-payment waiver.
             </label>
             <p className="type-meta text-muted-foreground">
-              A percent of the <span className="num">{formatCents(retention.certifiableCents)}</span> not yet certified. It is paid out when the owner&rsquo;s retainage payment is recorded.
+              A percent of the <span className="num">{formatCents(retention.certifiableCents)}</span> not yet certified. It is paid out when you record the owner&rsquo;s retainage payment.
             </p>
           </FoldedForm>
         )}
@@ -231,7 +231,7 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
 
       <Section
         title="Backcharges"
-        description={canSetOff ? "A backcharge comes off this subcontractor's next payment and shows in its arithmetic." : "The approved payment rules do not give the contractor a right to backcharge or set off on this subcontract."}
+        description={canSetOff ? "A backcharge is deducted from this subcontractor's next payment and listed in how that payment was worked out." : "This subcontract's approved payment rules do not allow backcharges, so none can be recorded."}
       >
         <Table className="min-w-[560px]">
           <TableHeader>
@@ -304,10 +304,10 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
       </Section>
 
       <Section
-        title="Lower tier"
+        title="Suppliers and sub-subcontractors"
         description={
-          (role === "payee" ? "The suppliers and sub-subcontractors you pay on this job. When you are paid, Groundwork works out what you owe them and collects their waivers." : "Suppliers and sub-subcontractors this subcontractor pays on the job.") +
-          (rules?.waivers.lower_tier_required ? " Their waivers are required before payment goes out." : "")
+          (role === "payee" ? "The companies you pay on this job. When you are paid, Groundwork works out what you owe each of them and collects their lien waivers." : "The companies this subcontractor pays on the job.") +
+          (rules?.waivers.lower_tier_required ? " The subcontract requires their waivers before the subcontractor is paid." : "")
         }
       >
         <Table className="min-w-[640px]">
@@ -315,14 +315,14 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Provides</TableHead>
-              <TableHead numeric>Agreement</TableHead>
+              <TableHead numeric>Agreement amount</TableHead>
               <TableHead numeric>Paid</TableHead>
               <TableHead numeric>Owed</TableHead>
               <TableHead>Payments</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {lowerTier.length === 0 && <TableEmpty colSpan={6}>{role === "payee" ? "No suppliers or sub-subcontractors yet." : "None declared on this subcontract yet."}</TableEmpty>}
+            {lowerTier.length === 0 && <TableEmpty colSpan={6}>{role === "payee" ? "No suppliers or sub-subcontractors yet." : "This subcontractor has not listed any yet."}</TableEmpty>}
             {lowerTier.map((c) => (
               <TableRow key={c.id} className="align-top">
                 <TableCell className="font-medium">{c.sub.name}</TableCell>
@@ -373,7 +373,7 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
               <Field label="Agreement amount" help="In dollars.">
                 <Input name="sum" inputMode="decimal" required placeholder="60,000.00" className="type-mono" />
               </Field>
-              <Field label="Pay within" help="Days. Leave empty to use the state's deadline." optional>
+              <Field label="Pay within" help="In days. Leave blank to use the state's deadline." optional>
                 <Input name="days" inputMode="numeric" className="type-mono" />
               </Field>
             </div>

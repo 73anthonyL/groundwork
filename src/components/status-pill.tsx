@@ -27,7 +27,7 @@ export const RELEASE: StatusMap = {
   waiver_signed: { label: "Waiver signed", tone: "money", icon: ShieldCheck },
   payment_initiated: { label: "Payment sent", tone: "money", icon: Send },
   paid: { label: "Paid", tone: "settled", icon: Banknote },
-  settled: { label: "Settled", tone: "settled", icon: CheckCircle2 },
+  settled: { label: "Paid and confirmed", tone: "settled", icon: CheckCircle2 },
   blocked: { label: "Blocked", tone: "danger", icon: OctagonAlert },
 };
 
@@ -36,7 +36,7 @@ export const PAY_APP: StatusMap = {
   submitted: { label: "Needs review", tone: "hold", icon: Inbox },
   changes_requested: { label: "Changes requested", tone: "hold", icon: FileSearch },
   approved: { label: "Approved", tone: "settled", icon: CheckCircle2 },
-  funded: { label: "Funded", tone: "settled", icon: Banknote },
+  funded: { label: "Funded by owner", tone: "settled", icon: Banknote },
   closed: { label: "Closed", tone: "neutral", icon: CheckCircle2 },
 };
 

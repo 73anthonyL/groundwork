@@ -20,7 +20,7 @@ const PAD_Y = 28;
 const NODE_W = 6;
 const GAP = 14;
 const COLOR: Record<FlowLink["kind"], string> = { paid: "var(--flow-paid)", moving: "var(--flow-moving)", held: "var(--flow-held)", setoff: "var(--flow-setoff)", idle: "var(--flow-idle)" };
-const KIND_LABEL: Record<FlowLink["kind"], string> = { paid: "Paid", moving: "On its way", held: "Retainage held", setoff: "Backcharge kept", idle: "Not yet allocated" };
+const KIND_LABEL: Record<FlowLink["kind"], string> = { paid: "Paid", moving: "On its way", held: "Retainage held", setoff: "Backcharge deducted", idle: "Not yet matched to a pay app" };
 /** Text sits on a stroke of the card color, so it stays readable over a ribbon. */
 /** The halo takes the color of whatever the chart sits on: set --flow-surface on a parent that is not a card. */
 const HALO = { paintOrder: "stroke", stroke: "var(--flow-surface, var(--card))", strokeWidth: 3, strokeLinejoin: "round" } as const;
@@ -163,7 +163,7 @@ export function MoneyFlow({
       {/* On a phone the diagram keeps a readable width and scrolls sideways; the note below says so. */}
       <p className="type-caption mb-2 text-muted-foreground sm:hidden">Swipe sideways to see the whole diagram.</p>
       <div className="-mx-1 overflow-x-auto px-1">
-      <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full min-w-[640px] overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} funding events`}>
+      <svg viewBox={`0 0 ${W} ${h}`} className="h-auto w-full min-w-[640px] overflow-visible" role="img" aria-label={`Money flow through ${at + 1} of ${flow.events.length} payments`}>
         <AnimatePresence>
           {ribbons.map((r) => (
             <motion.path
@@ -236,7 +236,7 @@ export function MoneyFlow({
               {playing ? <Pause className="h-3.5 w-3.5" /> : at >= last ? <RotateCcw className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
               {playing ? "Pause" : at >= last ? "Replay" : "Play"}
             </button>
-            <ol className="flex items-center gap-1" aria-label="Funding events">
+            <ol className="flex items-center gap-1" aria-label="Payments, in order">
               {flow.events.map((e, i) => (
                 <li key={e.id}>
                   <button
@@ -259,7 +259,7 @@ export function MoneyFlow({
         )}
       </figcaption>
       <p className="type-caption mt-2 text-muted-foreground" aria-live={playing ? "off" : "polite"}>
-        <span className="mr-2 font-medium text-foreground">{current.tier === 2 ? "Passed to the lower tier" : `Owner payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
+        <span className="mr-2 font-medium text-foreground">{current.tier === 2 ? "Paid on to suppliers" : `Owner payment ${flow.events.slice(0, at + 1).filter((e) => e.tier === 1).length}`}</span>
         <span className={current.tier === 1 ? "type-mono" : undefined}>{current.reference.replaceAll(" · ", ", ")}</span>, <span className="type-mono">{formatUsd0(current.amountCents)}</span>, received {new Date(current.receivedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
       </p>
     </figure>

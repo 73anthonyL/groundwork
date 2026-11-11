@@ -22,7 +22,7 @@ export function InviteForm({ own, subs, preselect }: { own: { id: string; name: 
         <Field label="Name" optional error={state.field === "name" ? state.error : undefined}>
           <Input name="name" defaultValue={v?.name} placeholder="Full name" autoComplete="off" />
         </Field>
-        <Field label="Joins">
+        <Field label="Company they join">
           <Select name="orgId" className="read-only:bg-card" defaultValue={company} key={company}>
             <optgroup label="Your company">
               <option value={own.id}>{own.name}</option>
@@ -48,7 +48,7 @@ export function InviteForm({ own, subs, preselect }: { own: { id: string; name: 
         <p role="status" className="flex items-start gap-2 text-sm leading-5">
           <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-settled" />
           <span>
-            Invitation created for <span className="type-mono">{state.created.email}</span> to join {state.created.orgName}. Email sending is not connected; copy the link from the list below and send it yourself.
+            Invitation created for <span className="type-mono">{state.created.email}</span> to join {state.created.orgName}. Groundwork does not send email yet, so copy the link from the list below and send it yourself.
           </span>
         </p>
       )}

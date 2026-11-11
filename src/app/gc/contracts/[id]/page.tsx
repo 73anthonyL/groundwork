@@ -76,7 +76,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
         badge={<StatusPill status={contract.status} />}
         description={
           <>
-            {contract.trade}, <span className="num">{formatCents(contract.contractSumCents)}</span> subcontract. The contract becomes payment rules here: read once, checked against the PDF, approved by you.
+            {contract.trade}, <span className="num">{formatCents(contract.contractSumCents)}</span> subcontract. Groundwork reads its payment terms, checks each quote against the PDF, and you approve the rules once.
           </>
         }
       />
@@ -144,7 +144,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
           </Section>
 
           {contract.status !== "active" && contract.documentId && (
-            <Section title="Use a different PDF" description="Replaces the PDF above.">
+            <Section title="Use a different PDF" description="Upload another file to replace the PDF above. It is read again from the start.">
               {upload("Replacement PDF")}
             </Section>
           )}

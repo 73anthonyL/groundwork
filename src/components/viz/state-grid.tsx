@@ -25,7 +25,7 @@ const NONE: Bin = { label: "No private rule", color: "var(--muted)", ink: "var(-
 export const RULES: Rule[] = [
   {
     id: "promptPay",
-    label: "Pay the sub within",
+    label: "Pay subcontractors within",
     question: "After the contractor is paid, how long does it have to pay its subcontractor?",
     bins: [{ label: "7 days or less", color: "var(--settled)" }, { label: "8 to 14 days", color: "color-mix(in oklch, var(--settled) 55%, var(--card))", ink: "var(--foreground)" }, { label: "15 days or more", color: "var(--hold)" }, NONE],
     bin: (s) => (s.promptPay.days === null ? 3 : s.promptPay.days <= 7 ? 0 : s.promptPay.days <= 14 ? 1 : 2),
@@ -43,8 +43,8 @@ export const RULES: Rule[] = [
   },
   {
     id: "retainageRelease",
-    label: "Pass retainage down within",
-    question: "Once the contractor gets retention back, how long to pass the sub's share down?",
+    label: "Release retainage within",
+    question: "Once the owner releases retainage to the contractor, how long does the contractor have to pay the subcontractor's share?",
     bins: [{ label: "10 days or less", color: "var(--settled)" }, { label: "11 to 30 days", color: "var(--hold)" }, { ...NONE, label: "No private deadline" }],
     bin: (s) => (s.retainageRelease.days === null ? 2 : s.retainageRelease.days <= 10 ? 0 : 1),
     value: (s) => (s.retainageRelease.days === null ? "No private deadline" : `${s.retainageRelease.days} days ${s.retainageRelease.trigger ?? ""}`),
@@ -53,7 +53,7 @@ export const RULES: Rule[] = [
   {
     id: "payIfPaid",
     label: "Pay-if-paid",
-    question: "Can a contract make the sub's pay depend on the owner paying?",
+    question: "Can a contract make the subcontractor's payment depend on the owner paying?",
     bins: [{ label: "Void", color: "var(--settled)" }, { label: "Limited", color: "color-mix(in oklch, var(--settled) 50%, var(--card))", ink: "var(--foreground)" }, { label: "Enforceable", color: "var(--money)" }, { ...NONE, label: "Unsettled" }],
     bin: (s) => ({ void: 0, limited: 1, enforceable: 2, unsettled: 3 })[s.payIfPaid.status],
     value: (s) => ({ void: "Unenforceable: the sub must be paid even if the owner does not pay", limited: "Enforced only within statutory limits", enforceable: "Enforced when clearly worded", unsettled: "No controlling authority" })[s.payIfPaid.status],
@@ -160,7 +160,7 @@ export function StateGrid({ states, initialRule = "promptPay", initialState = "C
                 )}
               </motion.div>
             ) : (
-              <p className="text-sm text-muted-foreground">Pick a state.</p>
+              <p className="text-sm text-muted-foreground">Choose a state on the map to see its rules and sources.</p>
             )}
           </AnimatePresence>
         </aside>

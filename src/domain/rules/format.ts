@@ -3,8 +3,8 @@ import type { RuleFieldPath } from "./schema";
 const TIMING: Record<string, string> = {
   pay_when_paid: "Pay-when-paid",
   pay_if_paid: "Pay-if-paid",
-  fixed_days: "Fixed days",
-  silent: "Silent",
+  fixed_days: "A fixed number of days",
+  silent: "Not stated",
 };
 
 /** Human rendering of a rule value for the review screen. */
@@ -42,7 +42,7 @@ export const FIELD_GROUPS: { title: string; paths: RuleFieldPath[] }[] = [
   { title: "Payment timing", paths: ["timing.type", "timing.days", "timing.agreed_in_writing"] },
   { title: "Retainage", paths: ["retainage.percent_bps", "retainage.cap_bps", "retainage.reduction_trigger", "retainage.release_condition", "retainage.release_days"] },
   { title: "Lien waivers", paths: ["waivers.conditional_before_progress", "waivers.unconditional_after_payment", "waivers.lower_tier_required", "waivers.statutory_form_required"] },
-  { title: "Offsets", paths: ["offsets.joint_check", "offsets.backcharge_setoff", "offsets.withhold_defective"] },
+  { title: "Deductions and joint checks", paths: ["offsets.joint_check", "offsets.backcharge_setoff", "offsets.withhold_defective"] },
   { title: "Stored materials", paths: ["stored_materials"] },
 ];
 

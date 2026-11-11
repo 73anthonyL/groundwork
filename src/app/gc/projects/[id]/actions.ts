@@ -23,13 +23,13 @@ export async function recordOwnerPaymentAction(_prev: RecordState, formData: For
   if (!project) return fail(undefined, "Project not found.");
   const amountCents = parseDollars(values.amount);
   if (!Number.isInteger(amountCents) || amountCents <= 0) return fail("amount", "Enter the amount the owner paid, in dollars.");
-  if (!values.reference) return fail("reference", "Enter the bank reference. It is how Groundwork knows not to record the same payment twice.");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.periodThrough)) return fail("periodThrough", "Choose the last day of the period this payment covers.");
+  if (!values.reference) return fail("reference", "Enter the bank reference. Groundwork uses it to avoid recording the same payment twice.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(values.periodThrough)) return fail("periodThrough", "Choose the last day of work this payment covers.");
   const receivedAt = values.receivedAt ? new Date(values.receivedAt) : new Date();
-  if (Number.isNaN(receivedAt.getTime())) return fail("receivedAt", "That date and time is not valid.");
+  if (Number.isNaN(receivedAt.getTime())) return fail("receivedAt", "Enter the date and time the payment arrived, or leave it blank to use now.");
   const retentionCents = values.retention === "" ? 0 : parseDollars(values.retention);
-  if (Number.isNaN(retentionCents) || retentionCents < 0) return fail("retention", "The retention amount is not valid.");
-  if (retentionCents > amountCents) return fail("retention", "The retention portion cannot be more than the payment.");
+  if (Number.isNaN(retentionCents) || retentionCents < 0) return fail("retention", "Enter the retainage amount in dollars, or leave it blank.");
+  if (retentionCents > amountCents) return fail("retention", "The retainage released cannot be more than the whole payment.");
   const result = await recordOwnerPayment({
     projectId,
     amountCents,

@@ -12,7 +12,6 @@ export const SUB_PAY_APP: StatusMap = {
   ...PAY_APP,
   submitted: { ...PAY_APP.submitted, label: "In review" },
   changes_requested: { ...PAY_APP.changes_requested, label: "Sent back to you" },
-  funded: { ...PAY_APP.funded, label: "Funded by owner" },
 };
 
 export const SUB_RELEASE: StatusMap = {

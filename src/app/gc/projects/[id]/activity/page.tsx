@@ -20,12 +20,12 @@ const TITLE: Record<string, string> = {
   "pay_app.submitted": "Pay app submitted",
   "pay_app.approved": "Pay app approved",
   "release.planned": "Payment planned",
-  "release.settled": "Payment closed out",
+  "release.settled": "Payment received and confirmed",
   "rules.approved": "Payment rules approved",
   "rules.extracted": "Subcontract read into payment rules",
   "rules.field_accepted": "Flagged term accepted",
   "rules.field_overridden": "Term corrected",
-  "rules.anomaly_acknowledged": "Flag acknowledged",
+  "rules.anomaly_acknowledged": "Note acknowledged",
 };
 
 const when = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });

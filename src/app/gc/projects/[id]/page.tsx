@@ -79,7 +79,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
     <PageHeader
       breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: project.name }]}
       title={project.name}
-      badge={items.length > 0 ? <Badge tone="hold">{items.length} waiting</Badge> : undefined}
+      badge={items.length > 0 ? <Badge tone="hold">{items.length} waiting on you</Badge> : undefined}
       description={
         <>
           {project.address ? `${project.address}. ` : ""}Owner {project.owner.name}. Prime contract <span className="num">{formatCentsCompact(project.primeContractSumCents)}</span>.
@@ -123,15 +123,15 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               Project created. {lawLine}
             </p>
           )}
-          <Section title="Upload the first subcontract" description="Groundwork reads its payment terms. You approve them." className="max-w-[640px]">
+          <Section title="Upload the first subcontract" description="Groundwork reads its payment terms, and you approve them before anything is paid." className="max-w-[640px]">
             <div className="border-t pt-5">
               <AddSubcontractForm projectId={id} knownSubs={known} isSample={sample} />
             </div>
           </Section>
           <div className="grid gap-4 md:grid-cols-3">
-            <EmptyState align="start" title="Waiting on you" description="Appears once a subcontract is uploaded." />
-            <EmptyState align="start" title="Owed to subcontractors" description="Appears with the first owner payment." />
-            <EmptyState align="start" title="Money flow" description="Appears with the first owner payment." />
+            <EmptyState align="start" title="Waiting on you" description="Subcontracts to approve and pay apps to review are listed here once a subcontract is uploaded." />
+            <EmptyState align="start" title="Owed to subcontractors" description="Shown once you record the first owner payment." />
+            <EmptyState align="start" title="Money flow" description="A diagram of each owner payment reaching your subcontractors, shown once you record the first one." />
           </div>
         </PageBody>
       </>
@@ -166,7 +166,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         )}
 
         {events.length > 0 && (
-          <section aria-label="Money on this project" className="grid items-end gap-x-8 gap-y-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          <section data-tour="project-money" aria-label="Money on this project" className="grid items-end gap-x-8 gap-y-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
             <dl>
               <Stat
                 size="lg"
@@ -174,7 +174,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                 value={formatCents(owedCents)}
                 hint={
                   owedCents === 0 ? (
-                    "Every payment so far has been paid."
+                    "Every payment so far has reached its subcontractor."
                   ) : (
                     <>
                       {open.length} payment{open.length === 1 ? "" : "s"} to {openSubs} subcontractor{openSubs === 1 ? "" : "s"}
@@ -200,14 +200,15 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           <EmptyState
             align="start"
             title="No owner payments yet"
-            description={`Record an owner payment and Groundwork splits it.`}
+            description="When the owner pays you, record the payment here. Groundwork splits it between the approved pay apps."
           />
         )}
 
         {flow && (
           <Section
+            data-tour="project-flow"
             title="Money flow"
-            description="Owner on the left, subcontractors on the right. Width is dollars."
+            description="Owner on the left, subcontractors on the right. A wider band is more money."
             actions={
               <Link href={`${base}/live`} className={buttonVariants({ variant: "secondary", size: "sm" })}>
                 All charts
@@ -222,6 +223,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
 
         {latest && (
           <Section
+            data-tour="project-latest"
             title="Latest owner payment"
             description={
               <>
@@ -241,7 +243,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                     `${formatCents(released)} to subcontractors`,
                     held > 0 ? `${formatCents(held)} held as retainage` : null,
                     setOff > 0 ? `${formatCents(setOff)} set off as backcharges` : null,
-                    latest.retentionCents > 0 ? `${formatCents(latest.retentionCents)} was the owner releasing retention` : null,
+                    latest.retentionCents > 0 ? `${formatCents(latest.retentionCents)} was the owner releasing retainage` : null,
                     unallocated > 0 ? `${formatCents(unallocated)} not yet matched to a pay app` : null,
                   ]
                     .filter(Boolean)
@@ -254,7 +256,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                     <TableHead>For</TableHead>
                     <TableHead numeric>Funded</TableHead>
                     <TableHead numeric>Retainage</TableHead>
-                    <TableHead numeric>Paid out</TableHead>
+                    <TableHead numeric>Net payment</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Deadline</TableHead>
                   </TableRow>
@@ -263,7 +265,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                   {latest.releases.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={7} className="text-muted-foreground">
-                        No approved pay app was waiting for this money, so none of it has been split yet.
+                        None of this payment has been split yet, because no approved pay app was waiting for it.
                       </TableCell>
                     </TableRow>
                   )}
@@ -278,7 +280,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                         {releaseLabel(r)}
                         {r.awaitingOwnerCents > 0 && (
                           <div className="text-xs">
-                            <span className="type-mono">{formatCents(r.awaitingOwnerCents)}</span> still with the owner
+                            <span className="type-mono">{formatCents(r.awaitingOwnerCents)}</span> not yet paid by the owner
                           </div>
                         )}
                       </TableCell>

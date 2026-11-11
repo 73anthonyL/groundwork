@@ -10,7 +10,7 @@ import { RollingNumber, formatUsd0 } from "./rolling-number";
 // ─── Where every dollar is, over time ───────────────────────────────────────
 
 const BANDS = [
-  { key: "sub_paid", label: "Paid to subs", color: "var(--flow-paid)" },
+  { key: "sub_paid", label: "Paid to subcontractors", color: "var(--flow-paid)" },
   { key: "sub_payable", label: "Owed, on its way", color: "var(--flow-moving)" },
   { key: "retainage_held", label: "Retainage held", color: "var(--flow-held)" },
   { key: "backcharge_recovered", label: "Backcharges kept", color: "var(--flow-setoff)" },
@@ -23,7 +23,7 @@ const BANDS = [
 export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; height?: number }) {
   const [at, setAt] = useState<number | null>(null);
   const clip = useId();
-  if (series.length < 2) return <p className="text-sm text-muted-foreground">The ledger needs at least two postings to draw.</p>;
+  if (series.length < 2) return <p className="text-sm text-muted-foreground">This chart is drawn once money has moved at least twice.</p>;
   const W = 720;
   const pad = { l: 8, r: 8, t: 10, b: 22 };
   const totals = series.map((p) => BANDS.reduce((s, b) => s + Math.max(0, p.balances[b.key] ?? 0), 0));
@@ -47,7 +47,7 @@ export function BalanceChart({ series, height = 220 }: { series: SeriesPoint[]; 
   const shown = at ?? series.length - 1;
   return (
     <figure>
-      <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full" role="img" aria-label="Where the owner's money sits after each ledger posting" onMouseLeave={() => setAt(null)}>
+      <svg viewBox={`0 0 ${W} ${height}`} className="h-auto w-full" role="img" aria-label="Where the owner's money is after each recorded movement" onMouseLeave={() => setAt(null)}>
         <defs>
           <clipPath id={clip}>
             <motion.rect x="0" y="0" height={height} initial={{ width: 0 }} animate={{ width: W }} transition={{ duration: duration.draw, ease: ease.trace }} />

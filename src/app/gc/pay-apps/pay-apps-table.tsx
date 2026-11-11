@@ -30,7 +30,7 @@ export function PayAppsTable({ rows, showProject = false, empty }: { rows: PayAp
         <TableRow>
           <TableHead>Subcontractor</TableHead>
           {showProject && <TableHead>Project</TableHead>}
-          <TableHead>Number</TableHead>
+          <TableHead>Pay app</TableHead>
           <TableHead>Work through</TableHead>
           <TableHead numeric>Billed</TableHead>
           <TableHead>Status</TableHead>

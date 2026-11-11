@@ -29,7 +29,7 @@ export async function ProjectLive({ org, projectId, autoPlay = false }: { org: O
     { label: "Paid to subcontractors", cents: t.paidCents, color: "var(--flow-paid)" },
     { label: "On its way", cents: t.inMotionCents, color: "var(--flow-moving)" },
     { label: "Retainage held", cents: t.retainageHeldCents, color: "var(--flow-held)" },
-    { label: "Billed, waiting on the owner", cents: t.awaitingOwnerCents, color: "var(--flow-idle)" },
+    { label: "Billed, not yet paid by the owner", cents: t.awaitingOwnerCents, color: "var(--flow-idle)" },
   ];
   return (
     <div className="flex flex-col gap-6">
@@ -48,20 +48,20 @@ export async function ProjectLive({ org, projectId, autoPlay = false }: { org: O
         ))}
       </StatGroup>
 
-      <Panel id="flow-heading" title="Money flow" hint="Owner on the left, subcontractors on the right. Width is dollars.">
+      <Panel id="flow-heading" title="Money flow" hint="Owner on the left, subcontractors on the right. A wider band is more money.">
         <MoneyFlow flow={flow} autoPlay={autoPlay} height={340} />
       </Panel>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <Panel id="clocks-heading" title="Deadlines running" hint={`${t.openReleases} payment${t.openReleases === 1 ? "" : "s"} on the way${t.overdueReleases ? `, ${t.overdueReleases} late` : ""}`}>
+        <Panel id="clocks-heading" title="Payment deadlines" hint={`${t.openReleases} payment${t.openReleases === 1 ? "" : "s"} on the way${t.overdueReleases ? `, ${t.overdueReleases} late` : ""}`}>
           <ClockBoard clocks={clocks} nowIso={summary.asOf} empty="Every payment has been paid. No deadline is running." />
         </Panel>
-        <Panel id="contracts-heading" title="Each subcontract" hint="Share of the subcontract sum">
+        <Panel id="contracts-heading" title="Each subcontract" hint="How much of the subcontract sum is paid, on its way and held">
           <ContractBars contracts={summary.contracts} />
         </Panel>
       </div>
 
-      <Panel id="balance-heading" title="Where every dollar sits" hint="After each owner payment and each payment out">
+      <Panel id="balance-heading" title="Where the owner's money is" hint="After each owner payment and each payment to a subcontractor">
         <BalanceChart series={series} />
       </Panel>
 

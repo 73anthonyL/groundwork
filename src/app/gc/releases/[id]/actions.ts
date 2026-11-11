@@ -25,7 +25,7 @@ export async function retryAction(formData: FormData) {
   let msg = "retried=1";
   try {
     const r = await retryRelease({ releaseId, actor: { userId: session.user.id, label: session.user.name } });
-    if (!r.initiated) msg = `error=${encodeURIComponent(r.waitingOn === "lower_tier_waivers" ? "Queued again. It goes out when the lower-tier waivers are signed." : "Queued again. It goes out when its payer has been paid.")}`;
+    if (!r.initiated) msg = `error=${encodeURIComponent(r.waitingOn === "lower_tier_waivers" ? "The payment is queued again. It is sent once the suppliers' and sub-subcontractors' waivers are signed." : "The payment is queued again. It is sent once the company paying it has been paid.")}`;
   } catch (e) {
     msg = `error=${encodeURIComponent((e as Error).message)}`;
   }

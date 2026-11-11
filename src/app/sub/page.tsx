@@ -103,24 +103,24 @@ export default async function SubHome() {
     sentence = parts.join(" ");
   } else if (approved.length) {
     const { p, c } = approved[0];
-    sentence = `Nothing has been released yet. Pay app #${p.number} (${formatCents(p.netDueApprovedCents ?? p.netDueBilledCents)}) is approved and waiting for the owner to pay ${c.payer.name}. Your deadline starts the day that payment arrives.`;
+    sentence = `No payment is on its way yet. Pay app #${p.number} (${formatCents(p.netDueApprovedCents ?? p.netDueBilledCents)}) is approved and waiting for the owner to pay ${c.payer.name}. The deadline to pay you starts the day that payment arrives.`;
   } else if (inReview.length) {
     const { p, c } = inReview[0];
-    sentence = `Nothing has been released yet. Pay app #${p.number} (${formatCents(p.netDueBilledCents)}) is with ${c.payer.name} for review.`;
+    sentence = `No payment is on its way yet. Pay app #${p.number} (${formatCents(p.netDueBilledCents)}) is with ${c.payer.name} for review.`;
   } else if (billable) {
-    sentence = `Nothing is on its way. Bill for ${billable.billing.periodMonth} to start your next payment.`;
+    sentence = `No payment is on its way. Bill for ${billable.billing.periodMonth} to start your next one.`;
   } else {
-    sentence = "Nothing is on its way right now.";
+    sentence = "No payment is on its way right now.";
   }
 
   return (
     <>
-      <PageHeader title="Home" description={`${org.name}: what needs you, and where your money is.`} />
+      <PageHeader title="Home" description={`${org.name}: what is waiting on you, and where your money is.`} />
       <PageBody>
-        <Section title="To do" actions={tasks.length > 0 ? <Badge tone="hold">{tasks.length} waiting on you</Badge> : undefined}>
+        <Section data-tour="sub-todo" title="To do" actions={tasks.length > 0 ? <Badge tone="hold">{tasks.length} waiting on you</Badge> : undefined}>
           {tasks.length === 0 ? (
             <p className="py-2 text-sm text-muted-foreground">
-              Nothing needs you right now. {inReview.length ? `Pay app #${inReview[0].p.number} is with ${inReview[0].c.payer.name} for review.` : "A task appears here when a payment needs your signature or a new period can be billed."}
+              Nothing is waiting on you right now. {inReview.length ? `Pay app #${inReview[0].p.number} is with ${inReview[0].c.payer.name} for review.` : "You will see a task here when a payment needs your signature or a new period can be billed."}
             </p>
           ) : (
             <ul className="divide-y border-y">
@@ -152,7 +152,7 @@ export default async function SubHome() {
           </div>
           <StatGroup>
             <Stat label="Paid to date" value={formatCentsCompact(paid)} />
-            <Stat label="Held as retainage" value={formatCentsCompact(held)} hint={held > 0 ? "Released when your contract says so" : undefined} />
+            <Stat label="Held as retainage" value={formatCentsCompact(held)} hint={held > 0 ? "Paid to you when your contract's release condition is met" : undefined} />
           </StatGroup>
         </section>
 
@@ -169,7 +169,7 @@ export default async function SubHome() {
           <PaymentsTable releases={releases.slice(0, 5)} nowIso={nowIso} empty="No payments yet. One appears here when the owner pays the contractor for a pay app you submitted." />
         </Section>
 
-        <Section title="Contracts">
+        <Section data-tour="sub-contracts" title="Contracts">
           <Table>
             <TableHeader>
               <TableRow>
@@ -220,10 +220,10 @@ function Welcome({ firstName, orgName, contracts }: { firstName: string; orgName
   const contractor = waiting?.payer.name ?? "your contractor";
   return (
     <>
-      <PageHeader width="form" title={`Welcome, ${firstName}`} description={`${orgName} is set up on Groundwork. Nothing needs you yet.`} />
+      <PageHeader width="form" title={`Welcome, ${firstName}`} description={`${orgName} is set up on Groundwork. There is nothing for you to do yet.`} />
       <PageBody width="form">
         <Panel
-          title="What will appear here"
+          title="What happens next"
           footer={
             <p className="type-meta text-muted-foreground">
               Someone else handles billing?{" "}
@@ -235,7 +235,7 @@ function Welcome({ firstName, orgName, contracts }: { firstName: string; orgName
           }
         >
           <p className="text-sm leading-5 text-muted-foreground">
-            Bill for each period, sign waivers, and track every payment to its due date.
+            This is where you will bill for each period, sign lien waivers and see when each payment is due.
           </p>
           <Checklist
             className="mt-4"

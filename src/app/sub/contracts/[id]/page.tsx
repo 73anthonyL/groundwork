@@ -72,12 +72,13 @@ export default async function SubContractPage({ params, searchParams }: { params
                 {gc} reviews it next. Once it is approved and the owner pays, your payment appears below with a waiver to sign.
               </Notice>
             )}
-            {signed && <Notice tone="settled" title="Waiver signed">Your payment is released and on its way.</Notice>}
+            {signed && <Notice tone="settled" title="Waiver signed">Your payment can now be sent. Its steps are listed under Payments below.</Notice>}
             {msg && <Notice tone="info">{decodeURIComponent(msg)}</Notice>}
           </div>
         )}
 
         <Section
+          data-tour="sub-rules"
           title="Payment rules"
           description={
             rules
@@ -109,7 +110,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             <EmptyState
               align="start"
               title="The payment rules are not approved yet"
-              description={`${gc} is reviewing the payment terms. They appear here once approved.`}
+              description={`${gc} is checking the payment terms Groundwork read from your subcontract. They are listed here once approved.`}
             />
           )}
         </Section>
@@ -131,7 +132,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             <TableHeader>
               <TableRow>
                 <TableHead>Pay app</TableHead>
-                <TableHead className="max-sm:hidden">Period through</TableHead>
+                <TableHead className="max-sm:hidden">Work through</TableHead>
                 <TableHead className="max-sm:hidden">Status</TableHead>
                 <TableHead numeric>Billed</TableHead>
                 <TableHead numeric className="max-md:hidden">
@@ -168,7 +169,7 @@ export default async function SubContractPage({ params, searchParams }: { params
                     </div>
                     {p.status === "changes_requested" && (
                       <p className="type-meta mt-1 max-w-md text-hold">
-                        {gc} sent this back{p.reviewNote ? `: “${p.reviewNote}”` : " for correction."} Contact them about the change; a corrected pay app cannot be resubmitted here yet.
+                        {gc} sent this back{p.reviewNote ? `: “${p.reviewNote}”` : " for correction."} Corrected pay apps cannot be resubmitted in Groundwork yet, so contact them to agree the change.
                       </p>
                     )}
                   </TableCell>
@@ -213,7 +214,7 @@ export default async function SubContractPage({ params, searchParams }: { params
             <EmptyState
               align="start"
               title="No payments yet"
-              description={`Payments appear here once the owner pays ${gc}.`}
+              description={`A payment is listed here when the owner pays ${gc} for a pay app you submitted.`}
             />
           )}
           {releases.map((r) => {

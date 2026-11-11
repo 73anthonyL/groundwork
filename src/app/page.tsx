@@ -16,9 +16,9 @@ const H2 = "text-[clamp(1.75rem,1.3rem+1.9vw,2.5rem)] font-medium leading-[1.12]
 const HEADLINE = "When the owner pays, every subcontractor gets paid.";
 
 const STEPS = [
-  { title: "Upload the subcontract", body: "Groundwork reads its payment terms." },
-  { title: "Approve the rules once", body: "You check them against the contract." },
-  { title: "Record the owner's payment", body: "Each share, hold-back and deadline is worked out for you." },
+  { title: "Upload the subcontract", body: "Groundwork reads the payment terms out of the PDF." },
+  { title: "Approve the rules once", body: "Each rule sits beside the clause it came from, so you can check it." },
+  { title: "Record the owner's payment", body: "Groundwork works out each subcontractor's share, the retainage to hold and the pay-by date." },
 ];
 
 /** One small picture per step: the file going in, the rules being approved, the payment coming out. */
@@ -44,7 +44,7 @@ const STEP_PICTURES = [
     </div>
   </div>,
   <ul key="approve" className="w-full max-w-[15rem] divide-y rounded-md border bg-card text-[14px]">
-    {["Pay within 7 days", "Hold back 10%", "Waiver before payment"].map((r, n) => (
+    {["Pay within 7 days", "Hold 10% retainage", "Waiver before payment"].map((r, n) => (
       <li key={r} className="iv flex items-center justify-between gap-3 px-3.5 py-2.5" style={i(9 + n * 3)}>
         <span>{r}</span>
         <Check className="iv-pop size-4 shrink-0 text-money" strokeWidth={2.5} style={i(11 + n * 3)} />
@@ -66,14 +66,14 @@ const STEP_PICTURES = [
     </div>
     <div className="iv mt-3 flex justify-between text-[12px] text-muted-foreground" style={i(34)}>
       <span>3 subcontractors paid</span>
-      <span>$10,000 held</span>
+      <span>$10,000 retainage</span>
     </div>
   </div>,
 ];
 
 const STATUS: Record<SamplePaymentLine["status"], { label: string; icon: typeof Check; tone: string }> = {
   paid: { label: "Paid", icon: Check, tone: "text-settled" },
-  waiver: { label: "Waiting for their signature", icon: PenLine, tone: "text-muted-foreground" },
+  waiver: { label: "Waiting for their signed waiver", icon: PenLine, tone: "text-muted-foreground" },
   due: { label: "Due in 7 days", icon: Clock, tone: "text-money" },
 };
 
@@ -103,7 +103,7 @@ function SplitPicture() {
           );
         })}
         <li className="split-row flex items-center justify-between gap-4 px-6 py-4 text-muted-foreground" style={i(p.lines.length)}>
-          <span className="text-[15px]">Held back until the job is done</span>
+          <span className="text-[15px]">Retainage, held until the job is done</span>
           <span className="num text-[17px]">{formatCentsCompact(p.retainageCents)}</span>
         </li>
       </ul>
@@ -120,7 +120,7 @@ function SplitPicture() {
 export default async function Landing() {
   const session = await auth();
   const run = latestEval();
-  const primary = session ? { href: homeFor(session.org.kind), label: "Open Groundwork" } : { href: "/sign-up", label: "Create your account" };
+  const primary = session ? { href: homeFor(session.org.kind), label: "Open Groundwork" } : { href: "/sign-up", label: "Create an account" };
 
   const cta = (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -128,7 +128,7 @@ export default async function Landing() {
         {primary.label}
       </Link>
       <Link href="/sample" className={buttonVariants({ variant: "secondary", size: "lg", className: "px-5 text-[15px]" })}>
-        Try the sample
+        Explore the sample workspace
       </Link>
     </div>
   );
@@ -144,7 +144,7 @@ export default async function Landing() {
             </Link>
           )}
           <Link href={primary.href} className={buttonVariants({ size: "md", className: "ml-2" })}>
-            {session ? primary.label : "Create account"}
+            {primary.label}
           </Link>
         </nav>
       </header>
@@ -153,7 +153,7 @@ export default async function Landing() {
         <section className={`${WRAP} grid items-center gap-x-16 gap-y-12 pb-20 pt-12 sm:pb-28 sm:pt-20 lg:grid-cols-[1.1fr_1fr]`}>
           <div>
             <h1 className={H1}>{HEADLINE}</h1>
-            <p className="mt-6 max-w-[44ch] text-[19px] leading-[1.5] text-muted-foreground">Groundwork reads your subcontracts and works out every payment: who gets what, what&rsquo;s held back, and when it&rsquo;s due.</p>
+            <p className="mt-6 max-w-[44ch] text-[19px] leading-[1.5] text-muted-foreground">Groundwork reads your subcontracts and works out every payment: who is paid what, how much retainage is held, and the date each payment is due.</p>
             <div className="mt-8">{cta}</div>
           </div>
           <SplitPicture />
@@ -172,7 +172,7 @@ export default async function Landing() {
         <section id="how" className="scroll-mt-8">
           <div className={`${WRAP} py-20 sm:py-28`}>
             <InView>
-              <h2 className={`iv ${H2}`}>Three steps.</h2>
+              <h2 className={`iv ${H2}`}>From signed subcontract to payment in three steps.</h2>
             </InView>
             <InView threshold={0.35}>
             <ol className="mt-12 grid gap-5 md:grid-cols-3">
@@ -210,13 +210,13 @@ export default async function Landing() {
                     </dd>
                   </div>
                   <div className="flex flex-col border-b p-6 sm:border-b-0">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">terms tested across {run.metrics.contracts} subcontracts</dt>
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">contract terms tested, across {run.metrics.contracts} subcontracts</dt>
                     <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">
                       <CountUp value={run.metrics.fields} />
                     </dd>
                   </div>
                   <div className="flex flex-col p-6">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">approved by you before anything is paid</dt>
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">is approved by you before anything is paid</dt>
                     <dd className="text-[32px] font-medium leading-none tracking-[-0.01em] text-money">Every rule</dd>
                   </div>
                 </dl>
@@ -238,7 +238,7 @@ export default async function Landing() {
       <footer className="border-t">
         <div className={`${WRAP} flex flex-wrap items-center justify-between gap-x-8 gap-y-3 py-8`}>
           <Wordmark />
-          <p className="type-meta text-muted-foreground">Test mode: no real money moves. Not legal advice. Built for the BBS and Ramp hackathon.</p>
+          <p className="type-meta text-muted-foreground">Test mode: no real money moves. Groundwork does not give legal advice. Built for the BBS and Ramp hackathon.</p>
         </div>
       </footer>
     </div>

@@ -31,7 +31,7 @@ export function Countdown({
     const id = setInterval(() => setOffset(Date.now() - started), 30_000);
     return () => clearInterval(id);
   }, []);
-  if (!deadline) return <span className="type-meta text-muted-foreground">No deadline</span>;
+  if (!deadline) return <span className="type-meta text-muted-foreground">No deadline set</span>;
   // Dates are formatted in the viewer's locale; the server's guess may differ, so hydration is relaxed here.
   const now = new Date(nowIso).getTime() + offset;
   const due = new Date(deadline).getTime();
@@ -49,7 +49,7 @@ export function Countdown({
     const penalty = Math.round((amountCents * 0.02 * daysLate) / 30);
     return (
       <span suppressHydrationWarning className="type-meta num font-medium text-destructive">
-        {daysLate}d late, about ${(penalty / 100).toFixed(2)} in penalties so far
+        {daysLate} {daysLate === 1 ? "day" : "days"} late, about ${(penalty / 100).toFixed(2)} in penalties so far
       </span>
     );
   }

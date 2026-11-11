@@ -71,7 +71,7 @@ export function ClockRing({ clock, nowIso, size = 64 }: { clock: Clock; nowIso: 
   );
 }
 
-export function ClockBoard({ clocks, nowIso, empty = "Nothing is on a clock right now." }: { clocks: Clock[]; nowIso: string; empty?: string }) {
+export function ClockBoard({ clocks, nowIso, empty = "No payment deadline is running right now." }: { clocks: Clock[]; nowIso: string; empty?: string }) {
   if (!clocks.length) return <p className="text-sm text-muted-foreground">{empty}</p>;
   return (
     <ul className="divide-y">

@@ -44,7 +44,7 @@ export default async function SettingsPage() {
             <div className="flex flex-col gap-2 text-sm leading-5">
               <p className="font-medium">Test mode: no real money moves.</p>
               <p className="text-muted-foreground">
-                No real money moves. Payments are created and marked sent, but no bank transfer is made.
+                Payments are created and marked as sent, but no bank transfer is made. You confirm each one by hand on its payment page.
               </p>
             </div>
           ) : (

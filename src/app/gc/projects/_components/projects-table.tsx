@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableChevron, TableEmpty, TableFoot, Table
 /** "7 days by statute", "10 days unless the contract says otherwise", "Contract terms". */
 export function deadlineText(state: string): string {
   const law = STATE_LAW[state]?.promptPay;
-  if (!law || law.days === null) return "Contract terms";
+  if (!law || law.days === null) return "Set by each subcontract";
   return `${law.days} days${law.contractCanOverride === false ? ", fixed by statute" : ""}`;
 }
 

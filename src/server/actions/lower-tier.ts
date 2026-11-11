@@ -31,16 +31,16 @@ export async function addLowerTierParty(input: {
   actor: Actor;
   id?: string;
 }) {
-  if (input.name.trim().length < 2) throw new Error("name the lower-tier party");
-  if (!Number.isInteger(input.sumCents) || input.sumCents <= 0) throw new Error("enter the agreement amount");
+  if (input.name.trim().length < 2) throw new Error("enter the supplier's or sub-subcontractor's name");
+  if (!Number.isInteger(input.sumCents) || input.sumCents <= 0) throw new Error("enter the agreement amount in dollars");
   const retainageBps = input.retainageBps ?? 0;
   // Retainage one hop down has no release path yet (no certification or final application there), so it is not accepted.
-  if (retainageBps !== 0) throw new Error("retainage on lower-tier agreements is not supported yet; enter the agreement without retainage");
+  if (retainageBps !== 0) throw new Error("retainage on agreements with suppliers and sub-subcontractors is not supported yet; enter the agreement without retainage");
   const db = await getDb();
   return db.transaction(async (tx) => {
     const parent = await tx.query.contracts.findFirst({ where: eq(schema.contracts.id, input.parentContractId), with: { sub: true, project: { with: { owner: true } } } });
     if (!parent) throw new Error("contract not found");
-    if (parent.parentContractId) throw new Error("lower-tier parties are added under a subcontract, not under another lower-tier agreement");
+    if (parent.parentContractId) throw new Error("suppliers can be added to a subcontract, but not to another supplier's agreement");
     const id = input.id ?? randomUUID();
     const orgId = randomUUID();
     const slug = `${input.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${orgId.slice(0, 6)}`;
@@ -131,7 +131,7 @@ export async function createDeclaredApplications(tx: DbLike, parentApp: { id: st
     const rs = child.activeRuleSetId ? await tx.query.ruleSets.findFirst({ where: eq(schema.ruleSets.id, child.activeRuleSetId) }) : null;
     const bps = (rs?.rules as StoredRules | undefined)?.extracted.retainage.percent_bps.value ?? 0;
     const billed = child.payApplications.reduce((s, a) => s + a.workThisPeriodCents + a.storedMaterialsCents, 0);
-    if (billed + d.amountCents > child.contractSumCents) throw new Error(`the amount declared for a lower-tier party exceeds what is left on its agreement`);
+    if (billed + d.amountCents > child.contractSumCents) throw new Error(`the amount owed to a supplier or sub-subcontractor is more than what is left on its agreement`);
     const id = randomUUID();
     const number = child.payApplications.reduce((m, a) => Math.max(m, a.number), 0) + 1;
     const retainage = Math.round((d.amountCents * bps) / 10_000);

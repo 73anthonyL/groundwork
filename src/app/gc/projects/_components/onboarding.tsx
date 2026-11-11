@@ -40,14 +40,14 @@ export function onboardingSteps(o: GcOnboarding, { primary = false }: { primary?
       id: "invite",
       title: "Invite the subcontractor",
       done: o.invited,
-      description: "They bill against the schedule of values and sign lien waivers from their own account. Email sending is not connected, so you copy the link and send it yourself.",
+      description: "They bill against the schedule of values and sign lien waivers from their own account. Groundwork does not send email yet, so you copy the invite link and send it yourself.",
       action: go(o.subToInvite ? `/gc/team?invite=${o.subToInvite}` : "/gc/team", "Invite subcontractor"),
     },
     {
       id: "payment",
       title: "Record the first owner payment",
       done: o.ownerPaymentRecorded,
-      description: "Groundwork splits it between approved pay apps, holds retainage, requests waivers and starts each deadline.",
+      description: "Groundwork splits it between approved pay apps, holds retainage, asks each subcontractor for a lien waiver and starts each payment deadline.",
       action: go(o.projectToFund ? `/gc/projects/${o.projectToFund}?record=1` : project, "Record owner payment"),
     },
   ];

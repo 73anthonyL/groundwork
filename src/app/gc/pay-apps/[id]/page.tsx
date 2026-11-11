@@ -23,7 +23,7 @@ const isoDay = (iso: string) => day(new Date(`${iso}T00:00:00`));
 const STATE = {
   fail: { label: "Failed", tone: "danger", icon: XCircle, rank: 0 },
   warn: { label: "Needs attention", tone: "hold", icon: AlertTriangle, rank: 1 },
-  pass: { label: "Pass", tone: "settled", icon: CheckCircle2, rank: 2 },
+  pass: { label: "Passed", tone: "settled", icon: CheckCircle2, rank: 2 },
 } as const;
 
 /** The checks' own labels say "application" and "contract"; the product says "pay app" and "subcontract". */
@@ -113,9 +113,9 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
   const netDue = app.netDueApprovedCents ?? app.netDueBilledCents;
   const summary =
     checks.length === 0
-      ? "This pay app has not been checked."
+      ? "This pay app has not been checked yet."
       : failing.length + attention.length === 0
-        ? `All ${checks.length} requirements pass.`
+        ? `All ${checks.length} requirements passed.`
         : [failing.length ? `${failing.length} failed` : null, attention.length ? `${attention.length} need${attention.length === 1 ? "s" : ""} attention` : null].filter(Boolean).join(", ") + ` of ${checks.length}.`;
 
   return (
@@ -143,7 +143,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
       <PageBody>
         {error && (
           <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive-soft px-4 py-3">
-            {decodeURIComponent(error).replace(/^cannot approve: failing checks .*/, "This pay app cannot be approved while a requirement is failing. Send it back with a note instead.")}
+            {decodeURIComponent(error).replace(/^cannot approve: failing checks .*/, "This pay app cannot be approved while a requirement has failed. Send it back with a note instead.")}
           </p>
         )}
         {done && !error && (app.status === "approved" || app.status === "changes_requested") && (
@@ -153,8 +153,9 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
         )}
 
         <Section
+          data-tour="payapp-requirements"
           title="Payment requirements"
-          description={`${summary} Each one is arithmetic against the approved payment rules${rules ? ` (version ${rules.version}${rules.approvedBy ? `, approved by ${rules.approvedBy}` : ""})` : ""}; no model is involved.`}
+          description={`${summary} Each one is checked by arithmetic against the approved payment rules${rules ? ` (version ${rules.version}${rules.approvedBy ? `, approved by ${rules.approvedBy}` : ""})` : ""}. Claude is not involved.`}
         >
           <div className="border-y">
             {checks.length === 0 && <p className="px-4 py-6 text-muted-foreground">No requirements were recorded for this pay app.</p>}
@@ -203,7 +204,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           </div>
           {flags.length > 0 && (
             <div className="border-y px-4 py-3">
-              <div className="type-caption font-medium text-muted-foreground">Claude&rsquo;s reading of the results above. It explains; it does not decide.</div>
+              <div className="type-caption font-medium text-muted-foreground">Claude&rsquo;s summary of the results above. It explains them and does not change the outcome.</div>
               <ul className="mt-2 flex flex-col gap-2">
                 {flags.map((f, i) => (
                   <li key={i}>
@@ -216,14 +217,14 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           )}
         </Section>
 
-        <Section title="Billed lines" description="Against the schedule of values in the subcontract.">
+        <Section title="Billed lines" description="What this pay app bills on each line of the subcontract's schedule of values.">
           <Table density="compact" className="min-w-[720px]">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-10">#</TableHead>
                 <TableHead>Line</TableHead>
                 <TableHead numeric>Scheduled</TableHead>
-                <TableHead numeric>Billed before</TableHead>
+                <TableHead numeric>Previously billed</TableHead>
                 <TableHead numeric>This period</TableHead>
                 {anyStored && <TableHead numeric>Stored materials</TableHead>}
                 <TableHead numeric>Left to bill</TableHead>
@@ -296,7 +297,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           </Section>
 
           {reviewable ? (
-            <Panel title="Your decision" description={app.status === "changes_requested" ? `You sent this back to ${sub}. You can still decide on it as it stands.` : undefined}>
+            <Panel data-tour="payapp-decision" title="Your decision" description={app.status === "changes_requested" ? `You sent this back to ${sub}. You can still decide on it as it stands.` : undefined}>
               <form action={reviewPayAppAction} className="flex flex-col gap-4">
                 <input type="hidden" name="payAppId" value={app.id} />
                 {fix ? (
@@ -309,7 +310,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
                   </p>
                 ) : (
                   <p>
-                    Every requirement passes. Approving sets <span className="num font-medium">{formatCents(app.netDueBilledCents)}</span> to be paid out of the next owner payment you record.
+                    Every requirement passed. Approving sets <span className="num font-medium">{formatCents(app.netDueBilledCents)}</span> to be paid out of the next owner payment you record.
                   </p>
                 )}
                 <Field label={`Note to ${sub}`} optional help="Sent with your decision. Say what to change if you are sending it back.">
@@ -340,7 +341,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
               </form>
             </Panel>
           ) : (
-            <Section title="Decision">
+            <Section data-tour="payapp-decision" title="Decision">
               <div className="border-t pt-5">
                 <p>
                   {app.status === "draft" ? "Not submitted yet." : `Approved${reviewedBy ? ` by ${reviewedBy}` : ""}${app.reviewedAt ? ` on ${day(app.reviewedAt)}` : ""}${corrected ? ", with retainage corrected to the subcontract's rate" : ""}.`}

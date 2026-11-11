@@ -28,11 +28,11 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   title: { default: "Groundwork", template: "%s · Groundwork" },
   description:
-    "Reads subcontracts into payment rules a person approves, and pays subcontractors the moment the owner's money lands.",
+    "Groundwork reads a subcontract's payment terms into rules you approve once, then splits every owner payment between your subcontractors.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#151515",
+  themeColor: "#0e1914",
   width: "device-width",
   initialScale: 1,
 };

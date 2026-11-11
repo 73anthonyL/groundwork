@@ -24,7 +24,7 @@ export default async function NewSubcontractPage({ params }: { params: Promise<{
         width="form"
         breadcrumbs={[{ label: "Projects", href: "/gc/projects" }, { label: project.name, href: base }, { label: "Subcontracts", href: `${base}/subcontracts` }, { label: "Add subcontract" }]}
         title="Add subcontract"
-        description="Upload the signed PDF. Groundwork reads its payment terms; you approve them."
+        description="Upload the signed PDF. Groundwork reads its payment terms, and you approve them before anything is paid."
       />
       <PageBody width="form">
         <div className="border-t pt-5">

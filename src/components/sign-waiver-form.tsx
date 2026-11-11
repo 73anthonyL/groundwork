@@ -66,7 +66,7 @@ export function SignWaiverForm({
   }
 
   return (
-    <Panel title="Sign" description={claimantName ? `You are signing for ${claimantName}.` : undefined}>
+    <Panel data-tour="waiver-sign" title="Sign" description={claimantName ? `You are signing for ${claimantName}.` : undefined}>
       <form ref={formRef} action={action} onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
         <input type="hidden" name="waiverId" value={waiverId} />
         {token && <input type="hidden" name="token" value={token} />}

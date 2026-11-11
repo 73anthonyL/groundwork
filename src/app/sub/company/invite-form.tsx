@@ -30,7 +30,7 @@ export function InviteForm({ orgName }: { orgName: string }) {
         <p role="status" className="flex items-start gap-2 text-sm leading-5">
           <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-settled" />
           <span>
-            Invitation created for <span className="type-mono break-all">{state.created.email}</span> to join {orgName}. Email sending is not connected; copy the link below and send it yourself.
+            Invitation created for <span className="type-mono break-all">{state.created.email}</span> to join {orgName}. Groundwork does not send email yet, so copy the link below and send it yourself.
           </span>
         </p>
       )}

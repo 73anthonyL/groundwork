@@ -148,11 +148,11 @@ export function NextSteps({
   const events: TimelineEvent[] = [
     { actor: signerName ?? undefined, verb: "signed the conditional waiver", time: time(signedAt), state: "done" },
     blocked
-      ? { verb: "The payment is on hold", state: "failed", detail: `Contact ${payerName}. As its text says, the conditional waiver takes effect only when you receive this payment.` }
+      ? { verb: "The payment is on hold", state: "failed", detail: `Contact ${payerName} to find out why. As its text says, the conditional waiver takes effect only when you receive this payment.` }
       : {
           verb: sent || landed ? `${payerName} sent ${amount}` : `${payerName} sends ${amount}`,
           state: sent || landed ? "done" : "current",
-          detail: sent || landed ? undefined : waitingOnUpstream ? `It goes out as soon as ${waitingOnUpstream} has paid ${payerName}.` : "Your signature was the last thing it was waiting for.",
+          detail: sent || landed ? undefined : waitingOnUpstream ? `It goes out as soon as ${waitingOnUpstream} has paid ${payerName}.` : "Your signature was the last thing the payment was waiting for.",
         },
     {
       verb: landed ? `${amount} landed in your account` : "The money lands in your account",

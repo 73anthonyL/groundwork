@@ -38,7 +38,7 @@ export function NewProjectForm({ states }: { states: StateOption[] }) {
               {law.cite && <span className="type-mono ml-2 text-xs">{law.cite}</span>}
             </span>
           ) : (
-            "The state the work is in. It decides the payment deadline, the retainage cap and the lien waiver forms."
+            "The state where the work is done. It sets the payment deadline, the retainage cap and the lien waiver forms."
           )
         }
       >
@@ -51,11 +51,11 @@ export function NewProjectForm({ states }: { states: StateOption[] }) {
           ))}
         </Select>
       </Field>
-      <Field label="Owner" help="The company that pays you for this project." error={e.ownerName}>
+      <Field label="Owner" help="The company that pays you on this project." error={e.ownerName}>
         <Input name="ownerName" defaultValue={v?.ownerName} placeholder="Company name" autoComplete="off" />
       </Field>
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Prime contract sum" error={e.primeContractSumCents}>
+        <Field label="Prime contract sum" help="Your contract with the owner, in dollars." error={e.primeContractSumCents}>
           <Input name="sum" defaultValue={v?.sum} inputMode="decimal" placeholder="4,200,000.00" className="type-mono" autoComplete="off" />
         </Field>
         <Field label="Prime contract date" error={e.contractDate}>

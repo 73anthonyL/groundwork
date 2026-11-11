@@ -194,7 +194,7 @@ export async function projectFlow(org: Organization, projectId: string): Promise
     const mine = links.reduce((x, l) => x + Math.max(0, l.cents), 0);
     out.push({
       id: e.id,
-      reference: s.whole ? e.reference : top ? "Owner payment" : "Your lower tier",
+      reference: s.whole ? e.reference : top ? "Owner payment" : "Your suppliers",
       receivedAt: e.receivedAt.toISOString(),
       amountCents: s.whole ? e.amountCents : mine,
       retentionCents: s.whole ? e.retentionCents : 0,
@@ -247,7 +247,7 @@ const TITLES: Record<string, { lane: TimelineEntry["lane"]; title: string }> = {
   "change_order.rejected": { lane: "adjustment", title: "Change order rejected" },
   "backcharge.recorded": { lane: "adjustment", title: "Backcharge recorded" },
   "backcharge.voided": { lane: "adjustment", title: "Backcharge withdrawn" },
-  "retention.certified": { lane: "adjustment", title: "Retention release certified" },
+  "retention.certified": { lane: "adjustment", title: "Retainage release certified" },
   "lower_tier.added": { lane: "adjustment", title: "Lower-tier party added" },
   "payment.retried": { lane: "money", title: "Payment sent again" },
   "document.attached": { lane: "contract", title: "Subcontract uploaded" },

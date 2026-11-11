@@ -111,7 +111,7 @@ export function PayAppForm({
 
   const numberError = /^\d+$/.test(number) && Number(number) >= 1 ? null : "Enter the pay app number.";
   const throughError = /^\d{4}-\d{2}-\d{2}$/.test(through) ? null : "Choose the last day of the period you are billing.";
-  const lowerOver = calc.lowerTotal > calc.net ? `What you owe your lower tier (${usd(calc.lowerTotal)}) cannot be more than the net due (${usd(calc.net)}).` : null;
+  const lowerOver = calc.lowerTotal > calc.net ? `What you owe your suppliers and sub-subcontractors (${usd(calc.lowerTotal)}) cannot be more than the net due (${usd(calc.net)}).` : null;
   const problems: string[] = [
     ...(numberError ? [numberError] : []),
     ...(throughError ? [throughError] : []),
@@ -310,10 +310,10 @@ export function PayAppForm({
         <div className="flex flex-col gap-6">
           {lowerTier.length > 0 && (
             <Panel
-              title="Owed to your lower tier"
-              description="What you owe each supplier or sub-subcontractor out of this pay app."
+              title="Owed to your suppliers and sub-subcontractors"
+              description="Enter what you owe each of them out of this pay app."
               padded={false}
-              footer={<p className="type-meta text-muted-foreground">They are paid from your payment and sign by link. No account needed.</p>}
+              footer={<p className="type-meta text-muted-foreground">Each is paid out of your payment and signs their waiver from a link. They do not need an account.</p>}
             >
               <fieldset>
                 <legend className="sr-only">Owed to your suppliers and sub-subcontractors out of this pay app</legend>
@@ -352,7 +352,7 @@ export function PayAppForm({
           </label>
         </div>
 
-        <Panel title="This pay app" padded={false}>
+        <Panel data-tour="payapp-summary" title="This pay app" padded={false}>
           <dl className="num divide-y text-sm leading-5">
             <div className="grid gap-1.5 px-4 py-3">
               <Row label="Contract sum" value={usd(contractSumCents)} />

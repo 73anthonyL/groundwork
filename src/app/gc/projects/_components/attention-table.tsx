@@ -19,7 +19,7 @@ export function AttentionTable({ items, nowIso, showProject = false, empty = "No
     <Table className="min-w-[680px]">
       <TableHeader>
         <TableRow>
-          <TableHead>Waiting</TableHead>
+          <TableHead>Item</TableHead>
           {showProject && <TableHead>Project</TableHead>}
           <TableHead>Subcontractor</TableHead>
           <TableHead numeric>Amount</TableHead>

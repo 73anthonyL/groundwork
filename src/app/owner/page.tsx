@@ -32,11 +32,11 @@ export default async function OwnerHome() {
         badge={
           <Badge icon={<Eye aria-hidden />}>Read-only</Badge>
         }
-        description={`Where each of your payments has gone. Read-only.`}
+        description="Where each of your payments has gone. You can look at everything here and change nothing."
       />
       <PageBody>
         {projects.length === 0 ? (
-          <EmptyState title="No projects yet" description="Projects appear when your contractor adds you as the owner." />
+          <EmptyState title="No projects yet" description="A project is listed here when your contractor names your company as its owner." />
         ) : (
           <Table>
             <TableHeader>

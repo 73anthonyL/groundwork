@@ -58,15 +58,15 @@ export default async function ProjectPaymentsPage({ params, searchParams }: { pa
             title="No owner payments yet"
             description={
               contracts.length === 0
-                ? "Owner payments and how each one is split appear here once the project has a subcontract with approved payment rules."
+                ? "Each owner payment, and how it was split, is listed here. First add a subcontract and approve its payment rules."
                 : approved
-                  ? `When the owner's money arrives, record it here. Groundwork splits it across the approved pay apps, holds retainage, asks for lien waivers and starts each subcontractor's deadline. ${lawLine ?? ""}`
-                  : "Approve a subcontract's payment rules first. Then each owner payment you record is split here by those rules."
+                  ? `When the owner pays you, record the payment here. Groundwork splits it between the approved pay apps, holds retainage, asks each subcontractor for a lien waiver and starts each payment deadline. ${lawLine ?? ""}`
+                  : "Approve a subcontract's payment rules first. After that, each owner payment you record is split by those rules and listed here."
             }
           />
         ) : (
           <>
-            {lawLine && <p className="text-muted-foreground">Each owner payment is split by the approved payment rules the moment it is recorded. {lawLine}</p>}
+            {lawLine && <p className="text-muted-foreground">Each owner payment is split by the approved payment rules as soon as you record it. {lawLine}</p>}
             {events.map((e) => {
               const released = e.releases.reduce((s, r) => s + r.releaseCents, 0);
               const held = e.releases.reduce((s, r) => s + (r.kind === "retention" ? 0 : r.retainageWithheldCents), 0);
@@ -76,7 +76,7 @@ export default async function ProjectPaymentsPage({ params, searchParams }: { pa
               const active = highlighted === e.id;
               const notes = [
                 e.retentionCents > 0 ? `${formatCents(e.retentionCents)} of this payment was the owner releasing retainage.` : null,
-                unallocated > 0 ? `${formatCents(unallocated)} is not matched to an approved pay app yet and stays with you until one is.` : null,
+                unallocated > 0 ? `${formatCents(unallocated)} is not matched to an approved pay app yet. It stays with you until a pay app is approved.` : null,
               ].filter(Boolean);
               return (
                 <Section
@@ -103,7 +103,7 @@ export default async function ProjectPaymentsPage({ params, searchParams }: { pa
                           <TableHead numeric>Funded</TableHead>
                           <TableHead numeric>Retainage</TableHead>
                           <TableHead numeric>Backcharge</TableHead>
-                          <TableHead numeric>Paid out</TableHead>
+                          <TableHead numeric>Net payment</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Deadline</TableHead>
                         </TableRow>
@@ -112,7 +112,7 @@ export default async function ProjectPaymentsPage({ params, searchParams }: { pa
                         {e.releases.length === 0 && (
                           <TableRow>
                             <TableCell colSpan={7} className="text-muted-foreground">
-                              Nothing was paid out of this payment: no approved pay app was waiting for it.
+                              None of this payment has been split yet, because no approved pay app was waiting for it.
                             </TableCell>
                           </TableRow>
                         )}

@@ -57,7 +57,7 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
         {sample ? (
           <Panel title="Invitations are turned off in the sample workspace">
             <p className="max-w-2xl text-sm leading-5 text-muted-foreground">
-              Invitations are off in the sample workspace.
+              The people here are made up. Create your own account to invite real teammates and subcontractors.
             </p>
           </Panel>
         ) : (
@@ -66,12 +66,12 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
               <InviteForm own={{ id: org.id, name: org.name }} subs={subs} preselect={invite} />
             </Panel>
 
-            <Section title="Invitations" description="Email isn't connected: copy the link. Single use, 14 days.">
+            <Section title="Invitations" description="Groundwork does not send email yet. Copy each link and send it yourself. A link works once and expires after 14 days.">
               <Table className="min-w-[860px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Email</TableHead>
-                    <TableHead>Joins</TableHead>
+                    <TableHead>Company they join</TableHead>
                     <TableHead>Invited by</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="w-[30%] min-w-[260px]">Invite link</TableHead>
@@ -96,7 +96,7 @@ export default async function TeamPage({ searchParams }: { searchParams: Promise
                         {i.status === "pending" ? <Badge tone="hold">Not accepted yet</Badge> : i.status === "accepted" ? <Badge tone="settled">Accepted</Badge> : <Badge>Expired</Badge>}
                         <div className="type-meta mt-0.5 text-muted-foreground">{i.status === "pending" ? `Expires ${date(i.expiresAt)}` : i.status === "accepted" && i.acceptedAt ? date(i.acceptedAt) : `Expired ${date(i.expiresAt)}`}</div>
                       </TableCell>
-                      <TableCell>{i.path ? <CopyField value={`${origin}${i.path}`} ariaLabel={`Invite link for ${i.email}`} /> : <span className="type-meta text-muted-foreground">{i.status === "accepted" ? "Used" : "Create a new invitation for this email"}</span>}</TableCell>
+                      <TableCell>{i.path ? <CopyField value={`${origin}${i.path}`} ariaLabel={`Invite link for ${i.email}`} /> : <span className="type-meta text-muted-foreground">{i.status === "accepted" ? "Used" : "Expired. Create a new invitation for this email."}</span>}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

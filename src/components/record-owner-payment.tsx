@@ -46,7 +46,7 @@ export function RecordOwnerPayment({
         <form action={action} noValidate>
           <div className="border-b px-5 py-4 pr-12">
             <DialogTitle className="text-base leading-6 font-semibold">Record owner payment</DialogTitle>
-            <DialogDescription className="type-meta mt-0.5">Groundwork splits it and starts each deadline.</DialogDescription>
+            <DialogDescription className="type-meta mt-0.5">Groundwork splits it between the approved pay apps and starts each payment deadline.</DialogDescription>
           </div>
           <input type="hidden" name="projectId" value={projectId} />
           <div className="flex flex-col gap-4 px-5 py-4">
@@ -54,17 +54,17 @@ export function RecordOwnerPayment({
               <Input id="amount" name="amount" inputMode="decimal" defaultValue={v.amount} placeholder="0.00" className="type-mono" autoComplete="off" />
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Bank reference" error={err("reference")}>
+              <Field label="Bank reference" help="From your bank statement." error={err("reference")}>
                 <Input id="reference" name="reference" defaultValue={v.reference} placeholder="ACH or wire reference" className="type-mono" autoComplete="off" />
               </Field>
-              <Field label="Pay period through" error={err("periodThrough")}>
+              <Field label="For work through" error={err("periodThrough")}>
                 <Input id="periodThrough" name="periodThrough" type="date" defaultValue={v.periodThrough} />
               </Field>
             </div>
-            <Field label="Received" optional error={err("receivedAt")} help={`Leave blank for now. ${deadlineDays ? `Each subcontractor's ${deadlineDays}-day deadline` : "Each subcontractor's payment deadline"} runs from this moment.`}>
+            <Field label="Date and time received" optional error={err("receivedAt")} help={`Leave blank to use the current time. ${deadlineDays ? `Each subcontractor's ${deadlineDays}-day deadline` : "Each subcontractor's payment deadline"} is counted from it.`}>
               <Input id="receivedAt" name="receivedAt" type="datetime-local" defaultValue={v.receivedAt} />
             </Field>
-            <Field label="Of which, retention released by the owner" optional error={err("retention")} help="Pays out retainage you have certified for release. The rest funds progress billing.">
+            <Field label="Retainage the owner released in this payment" optional error={err("retention")} help="This part pays out retainage you have certified for release. The rest of the payment goes to approved pay apps.">
               <Input id="retention" name="retention" inputMode="decimal" defaultValue={v.retention} placeholder="0.00" className="type-mono" autoComplete="off" />
             </Field>
             {state.error && !state.field && (
@@ -76,7 +76,7 @@ export function RecordOwnerPayment({
           <div className="flex flex-wrap items-center justify-end gap-2 border-t bg-muted/60 px-5 py-3">
             <DialogClose render={<Button type="button" variant="secondary" />}>Cancel</DialogClose>
             <Button type="submit" loading={pending}>
-              Record and split
+              Record and split payment
             </Button>
           </div>
         </form>

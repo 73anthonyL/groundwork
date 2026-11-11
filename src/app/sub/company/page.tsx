@@ -76,7 +76,7 @@ export default async function SubCompanyPage() {
 
         {sample ? (
           <Notice tone="hold" title="You cannot invite teammates in the sample workspace">
-            <p>Invitations are off in the sample workspace.</p>
+            <p>The people here are made up. Create your own account to invite real teammates.</p>
           </Notice>
         ) : (
           <Panel title="Invite a teammate" description={`They join ${org.name} and can bill, sign waivers and see payments.`}>
@@ -85,7 +85,7 @@ export default async function SubCompanyPage() {
         )}
 
         {!sample && (
-          <Section title="Pending invitations" description="Email isn't connected: copy the link. Single use, 14 days.">
+          <Section title="Pending invitations" description="Groundwork does not send email yet. Copy each link and send it yourself. A link works once and expires after 14 days.">
             {pending.length === 0 ? (
               <p className="py-2 text-sm text-muted-foreground">No invitations are waiting. Create one above and its link appears here.</p>
             ) : (

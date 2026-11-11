@@ -222,8 +222,8 @@ export function ArrivalFragment() {
 /** The 17-day and 50-day medians as two measured bars on the dark section. */
 export function DaysFragment() {
   const rows = [
-    { label: "Owner pays the contractor", days: 17 },
-    { label: "The subcontractor is paid", days: 50 },
+    { label: "The contractor is paid by the owner", days: 17 },
+    { label: "The subcontractor is paid by the contractor", days: 50 },
   ];
   return (
     <figure aria-label="Median days to payment: 17 for the contractor, 50 for the subcontractor">

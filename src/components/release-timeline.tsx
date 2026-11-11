@@ -105,10 +105,10 @@ export function ReleaseTimeline({
             {r.offsetCents ? `, less ${formatCents(r.offsetCents)} backcharge` : ""}, leaves{" "}
           </>
         ) : (
-          "Released on certification: "
+          "Released after its release condition was certified: "
         )}
         <strong className="font-medium text-foreground">{formatCents(r.releaseCents)}</strong>
-        {r.awaitingOwnerCents ? `. ${formatCents(r.awaitingOwnerCents)} more is still with the owner.` : ""}
+        {r.awaitingOwnerCents ? `. ${formatCents(r.awaitingOwnerCents)} more has not been paid by the owner yet.` : ""}
       </span>
     ),
   });
@@ -160,7 +160,7 @@ export function ReleaseTimeline({
     if (r.payment.status === "failed") events.push({ id: "failed", state: "failed", verb: "The bank did not accept the payment. Nothing was sent.", time: fmt(r.payment.updatedAt) });
   } else {
     const ready = r.status === "waiver_signed";
-    events.push({ id: "send", state: ready ? "current" : "todo", verb: ready ? "Payment queued" : "Payment sent", detail: ready ? "It goes out as soon as nothing else is holding it." : undefined });
+    events.push({ id: "send", state: ready ? "current" : "todo", verb: ready ? "Payment queued" : "Payment sent", detail: ready ? "It is sent as soon as every required waiver is signed and the company paying it has been paid." : undefined });
   }
 
   // 6. Paid, or the deadline it is running against.
@@ -176,7 +176,7 @@ export function ReleaseTimeline({
     events.push({
       id: "paid",
       state: moving ? "current" : "todo",
-      verb: moving ? "On its way to the bank account" : "Paid",
+      verb: moving ? "On its way to the bank account" : "Payment arrives",
       detail: <Countdown deadline={r.payByAt?.toISOString() ?? null} amountCents={r.releaseCents} settled={false} nowIso={nowIso} label="Due by" />,
     });
   }
