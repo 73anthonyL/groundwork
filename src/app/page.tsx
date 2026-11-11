@@ -21,7 +21,7 @@ const STEPS = [
 ];
 
 const STATUS: Record<SamplePaymentLine["status"], { label: string; icon: typeof Check; tone: string }> = {
-  paid: { label: "Paid", icon: Check, tone: "text-foreground" },
+  paid: { label: "Paid", icon: Check, tone: "text-settled" },
   waiver: { label: "Waiting for their signature", icon: PenLine, tone: "text-muted-foreground" },
   due: { label: "Due in 7 days", icon: Clock, tone: "text-money" },
 };

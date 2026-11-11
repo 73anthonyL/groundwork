@@ -98,57 +98,58 @@
 
 :root {
   /*
-    The default theme is built from three colors and nothing else:
+    The default theme is built from three colors:
 
-      eggshell    #f4f1de  oklch(0.955 0.025 99.5)   the page
-      terracotta  #e07a5f  oklch(0.688 0.133 35.8)   the accent: money on its way, a running clock, links
-      ink         #3d405b  oklch(0.380 0.046 279.1)  text, primary buttons, the dark section, paid
+      indigo  #2e294e  oklch(0.306 0.065 288.1)  ink: text, primary buttons, the dark section
+      teal    #1b998b  oklch(0.616 0.104 183.2)  paid and approved; links
+      orange  #f46036  oklch(0.674 0.191 36.3)   money on its way, a running deadline, the one call to action
 
-    Every other value is one of those three made lighter or darker along its own hue, so text
-    clears 4.5:1 and marks clear 3:1 (`node scripts/contrast.mjs`). Terracotta itself is too light
-    to carry small text on eggshell, so text uses its deeper step. Status is never color alone:
-    each state has an icon and a word.
+    The page is white with a trace of the indigo, so the three colors do the talking. Teal and
+    orange are both too light to carry small text on white, so text uses a deeper step of each;
+    the exact colors appear on fills, marks and icons. Every other value is one of the three made
+    lighter or darker along its own hue. Checked by `node scripts/contrast.mjs` (text 4.5:1, marks
+    3:1). Status is never color alone: each state has an icon and a word.
   */
-  --background: oklch(0.955 0.025 99.5);
-  --foreground: oklch(0.38 0.046 279.1);
-  --card: oklch(0.982 0.014 99.5);
-  --card-foreground: oklch(0.38 0.046 279.1);
-  --popover: oklch(0.99 0.008 99.5);
-  --popover-foreground: oklch(0.38 0.046 279.1);
-  --primary: oklch(0.38 0.046 279.1);
-  --primary-foreground: oklch(0.975 0.018 99.5);
-  --secondary: oklch(0.925 0.028 99.5);
-  --secondary-foreground: oklch(0.38 0.046 279.1);
-  --muted: oklch(0.935 0.027 99.5);
-  --muted-foreground: oklch(0.47 0.04 279.1);
-  --accent: oklch(0.925 0.028 99.5);
-  --accent-foreground: oklch(0.38 0.046 279.1);
-  --destructive: oklch(0.47 0.16 28);
-  --destructive-foreground: oklch(0.975 0.018 99.5);
-  --destructive-soft: oklch(0.925 0.03 35.8);
-  --border: oklch(0.38 0.046 279.1 / 0.16);
-  --input: oklch(0.38 0.046 279.1 / 0.32);
-  --ring: oklch(0.38 0.046 279.1);
-  --surface-sunken: oklch(0.935 0.027 99.5);
+  --background: oklch(0.985 0.004 288.1);
+  --foreground: oklch(0.306 0.065 288.1);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.306 0.065 288.1);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.306 0.065 288.1);
+  --primary: oklch(0.306 0.065 288.1);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.012 288.1);
+  --secondary-foreground: oklch(0.306 0.065 288.1);
+  --muted: oklch(0.965 0.009 288.1);
+  --muted-foreground: oklch(0.5 0.04 288.1);
+  --accent: oklch(0.95 0.012 288.1);
+  --accent-foreground: oklch(0.306 0.065 288.1);
+  --destructive: oklch(0.5 0.19 27);
+  --destructive-foreground: oklch(1 0 0);
+  --destructive-soft: oklch(0.95 0.02 27);
+  --border: oklch(0.306 0.065 288.1 / 0.13);
+  --input: oklch(0.306 0.065 288.1 / 0.28);
+  --ring: oklch(0.616 0.104 183.2);
+  --surface-sunken: oklch(0.965 0.009 288.1);
 
-  /* Links: terracotta, a step deeper so it reads as text. */
-  --link: oklch(0.5 0.13 35.8);
-  --link-soft: oklch(0.925 0.04 60);
+  /* Links: teal, a step deeper so it reads as text. */
+  --link: oklch(0.47 0.085 183.2);
+  --link-soft: oklch(0.955 0.03 183.2);
 
-  /* Terracotta twice: the color itself for marks and fills, and the deeper step for text. */
-  --signal: oklch(0.688 0.133 35.8);
-  --signal-foreground: oklch(0.25 0.04 279.1);
-  --money: oklch(0.5 0.13 35.8);
-  --money-foreground: oklch(0.975 0.018 99.5);
-  --money-soft: oklch(0.925 0.04 60);
-  /* Paid is ink: settled, nothing left to watch. */
-  --settled: oklch(0.38 0.046 279.1);
-  --settled-foreground: oklch(0.975 0.018 99.5);
-  --settled-soft: oklch(0.915 0.02 279.1);
-  /* Held or waiting: ink, a step lighter. */
-  --hold: oklch(0.47 0.04 279.1);
-  --hold-foreground: oklch(0.975 0.018 99.5);
-  --hold-soft: oklch(0.925 0.028 99.5);
+  /* Orange twice: the color itself for marks and fills, a deeper step for text. */
+  --signal: oklch(0.674 0.191 36.3);
+  --signal-foreground: oklch(0.2 0.05 288.1);
+  --money: oklch(0.52 0.17 36.3);
+  --money-foreground: oklch(1 0 0);
+  --money-soft: oklch(0.95 0.022 45);
+  /* Teal: paid, approved, done. */
+  --settled: oklch(0.47 0.085 183.2);
+  --settled-foreground: oklch(1 0 0);
+  --settled-soft: oklch(0.955 0.03 183.2);
+  /* Held or waiting: indigo, a step lighter. */
+  --hold: oklch(0.5 0.04 288.1);
+  --hold-foreground: oklch(1 0 0);
+  --hold-soft: oklch(0.95 0.012 288.1);
 
   --chart-1: var(--flow-moving);
   --chart-2: var(--flow-paid);
@@ -156,39 +157,39 @@
   --chart-4: var(--foreground);
   --chart-5: var(--muted-foreground);
 
-  /* The one dark surface: ink, with eggshell on it. */
-  --stage: oklch(0.38 0.046 279.1);
-  --stage-deep: oklch(0.31 0.045 279.1);
-  --stage-foreground: oklch(0.955 0.025 99.5);
-  --stage-muted: oklch(0.86 0.03 99.5);
+  /* The one dark surface: indigo. */
+  --stage: oklch(0.306 0.065 288.1);
+  --stage-deep: oklch(0.25 0.06 288.1);
+  --stage-foreground: oklch(0.985 0.004 288.1);
+  --stage-muted: oklch(0.84 0.03 288.1);
 
   /* A page of the contract. */
-  --paper: oklch(0.99 0.008 99.5);
-  --paper-ink: oklch(0.38 0.046 279.1);
-  --paper-muted: oklch(0.47 0.04 279.1);
+  --paper: oklch(1 0 0);
+  --paper-ink: oklch(0.306 0.065 288.1);
+  --paper-muted: oklch(0.5 0.04 288.1);
 
   /* One meaning per color, shared by every chart: where the money is. */
-  --flow-paid: oklch(0.38 0.046 279.1);
-  --flow-moving: oklch(0.655 0.14 35.8);
-  --flow-held: oklch(0.62 0.035 279.1);
-  --flow-setoff: oklch(0.55 0.09 35.8);
-  --flow-idle: oklch(0.8 0.02 279.1);
+  --flow-paid: oklch(0.616 0.104 183.2);
+  --flow-moving: oklch(0.674 0.191 36.3);
+  --flow-held: oklch(0.6 0.05 288.1);
+  --flow-setoff: oklch(0.45 0.09 288.1);
+  --flow-idle: oklch(0.82 0.02 288.1);
 
   --radius: 0.5rem;
 
   /* Panels are outlined, not lifted: "shadow-card" is a 1px border. Only floating things cast a shadow. */
   --shadow-card-value: 0 0 0 1px var(--border);
-  --shadow-float-value: 0 0 0 1px oklch(0.38 0.046 279.1 / 0.1), 0 4px 8px -2px oklch(0.38 0.046 279.1 / 0.1), 0 16px 32px -8px oklch(0.38 0.046 279.1 / 0.18);
+  --shadow-float-value: 0 0 0 1px oklch(0.306 0.065 288.1 / 0.1), 0 4px 8px -2px oklch(0.306 0.065 288.1 / 0.1), 0 16px 32px -8px oklch(0.306 0.065 288.1 / 0.18);
   --shadow-lift-value: 0 0 0 0 transparent;
 
   --numeral-font: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
 
   /* The sidebar sits one step below the page. */
-  --sidebar: oklch(0.938 0.027 99.5);
+  --sidebar: oklch(0.965 0.009 288.1);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.9 0.03 99.5);
+  --sidebar-accent: oklch(0.93 0.016 288.1);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
