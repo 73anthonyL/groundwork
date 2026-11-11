@@ -588,6 +588,7 @@ main [role="alert"] {
 }
 [data-face-live]:hover .face-eyes,
 [data-face-live]:focus-visible .face-eyes,
-[data-face-live][aria-checked="true"] .face-eyes {
+[data-face-live][aria-checked="true"] .face-eyes,
+[data-face-live="always"] .face-eyes {
   animation: gw-blink 3.4s ease-in-out infinite;
 }
