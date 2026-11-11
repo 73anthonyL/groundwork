@@ -28,9 +28,9 @@ function Panel({
   ...props
 }: Omit<React.ComponentProps<"section">, "title"> & HeadingProps & { footer?: React.ReactNode; padded?: boolean }) {
   return (
-    <section data-slot="panel" className={cn("overflow-hidden rounded-lg border bg-card", className)} {...props}>
+    <section data-slot="panel" className={cn("border-t", className)} {...props}>
       {(title || actions) && (
-        <header className="flex min-h-12 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-4 py-2.5">
+        <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-4">
           <div className="min-w-0">
             {title && <h2 className="text-sm leading-5 font-semibold">{title}</h2>}
             {description && <p className="type-meta text-muted-foreground">{description}</p>}
@@ -38,8 +38,8 @@ function Panel({
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={padded ? "p-4" : undefined}>{children}</div>
-      {footer && <footer className="border-t bg-muted/60 px-4 py-3">{footer}</footer>}
+      <div className={padded ? "py-4" : undefined}>{children}</div>
+      {footer && <footer className="border-t py-3">{footer}</footer>}
     </section>
   )
 }

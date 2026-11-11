@@ -15,12 +15,12 @@ import { cn } from "cn"
 export type BadgeTone = "neutral" | "money" | "settled" | "hold" | "danger" | "info"
 
 const TONE: Record<BadgeTone, string> = {
-  neutral: "bg-secondary text-muted-foreground",
-  money: "bg-money-soft text-money",
-  settled: "bg-settled-soft text-settled",
-  hold: "bg-hold-soft text-hold",
-  danger: "bg-destructive-soft text-destructive",
-  info: "bg-link-soft text-link",
+  neutral: "text-muted-foreground",
+  money: "text-money",
+  settled: "text-settled",
+  hold: "text-hold",
+  danger: "text-destructive",
+  info: "text-link",
 }
 
 function Badge({
@@ -35,7 +35,7 @@ function Badge({
     <span
       data-slot="badge"
       data-tone={tone}
-      className={cn("inline-flex h-5 w-fit shrink-0 items-center gap-1 rounded-sm px-1.5 text-xs leading-4 font-medium whitespace-nowrap [&>svg]:size-3 [&>svg]:shrink-0", TONE[tone], className)}
+      className={cn("inline-flex h-5 w-fit shrink-0 items-center gap-1.5 text-[13px] leading-5 font-medium whitespace-nowrap [&>svg]:size-3.5 [&>svg]:shrink-0", TONE[tone], className)}
       {...props}
     >
       {icon ?? (dot && <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-current" />)}

@@ -44,7 +44,7 @@ function StatGroup({ className, ...props }: React.ComponentProps<"dl">) {
   return (
     <dl
       data-slot="stat-group"
-      className={cn("grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border sm:flex [&>[data-slot=stat]]:flex-1 [&>[data-slot=stat]]:bg-card [&>[data-slot=stat]]:px-4 [&>[data-slot=stat]]:py-3 [&>[data-slot=stat]:last-child:nth-child(odd)]:col-span-2", className)}
+      className={cn("flex flex-wrap gap-x-10 gap-y-4", className)}
       {...props}
     />
   )

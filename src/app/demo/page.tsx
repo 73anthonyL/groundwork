@@ -42,7 +42,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
       />
       <PageBody>
         {msg && (
-          <p role="status" className="rounded-md border bg-card px-3 py-2">
+          <p role="status" className="border-y px-3 py-2">
             {msg}
           </p>
         )}
@@ -125,7 +125,7 @@ export default async function SampleWorkspacePage({ searchParams }: { searchPara
         </Section>
 
         <Section title="Environment">
-          <dl className="grid overflow-hidden rounded-lg border bg-card sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="grid border-y sm:grid-cols-2 lg:grid-cols-4">
             {[
               ["Clock", `${now().toISOString().slice(0, 16).replace("T", " ")} UTC${process.env.DEMO_NOW ? " (fixed)" : ""}`],
               ["Database", dbDriver() === "neon" ? "Neon Postgres" : "Embedded PGlite"],

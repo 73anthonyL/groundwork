@@ -45,7 +45,7 @@ export default async function SamplePage({ searchParams }: { searchParams: Promi
                 {g.title}
               </h2>
               <p className="type-meta mt-0.5 text-muted-foreground">{g.does}</p>
-              <ul className="mt-3 divide-y overflow-hidden rounded-lg border bg-card">
+              <ul className="mt-3 divide-y border-y">
                 {rows.map(({ user, org }) => (
                   <li key={user.id}>
                     <form action={enterSample}>

@@ -28,7 +28,7 @@ export default async function SubCompanyPage() {
     <>
       <PageHeader title="Company" description="Who can bill, sign waivers and see payments for your company." />
       <PageBody>
-        <dl className="grid gap-px overflow-hidden rounded-lg border bg-border sm:grid-cols-3">
+        <dl className="flex flex-wrap gap-x-10 gap-y-4 [&>*]:bg-transparent [&>*]:p-0">
           <div className="bg-card px-4 py-3">
             <dt className="type-meta text-muted-foreground">Company name</dt>
             <dd className="mt-0.5 text-sm leading-5 font-medium">{org.name}</dd>
@@ -87,9 +87,9 @@ export default async function SubCompanyPage() {
         {!sample && (
           <Section title="Pending invitations" description="Email isn't connected: copy the link. Single use, 14 days.">
             {pending.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-input px-4 py-4 text-sm text-muted-foreground">No invitations are waiting. Create one above and its link appears here.</p>
+              <p className="py-2 text-sm text-muted-foreground">No invitations are waiting. Create one above and its link appears here.</p>
             ) : (
-              <ul className="divide-y overflow-hidden rounded-lg border bg-card">
+              <ul className="divide-y border-y">
                 {pending.map((i) => (
                   <li key={i.id} className="grid gap-x-6 gap-y-2 px-4 py-3 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] md:items-center">
                     <div className="min-w-0">

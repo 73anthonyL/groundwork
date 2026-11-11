@@ -86,7 +86,7 @@ export default async function SubContractPage({ params, searchParams }: { params
           }
         >
           {rules ? (
-            <dl className="divide-y overflow-hidden rounded-lg border bg-card">
+            <dl className="divide-y border-y">
               {rules.map((g) => (
                 <div key={g.id} className="grid gap-x-6 gap-y-1 px-4 py-3 md:grid-cols-[12rem_minmax(0,1fr)]">
                   <dt className="text-sm leading-5 font-medium">{g.heading}</dt>

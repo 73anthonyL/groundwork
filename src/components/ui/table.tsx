@@ -32,7 +32,7 @@ function Table({
   ...props
 }: React.ComponentProps<"table"> & { density?: "default" | "compact"; bare?: boolean }) {
   return (
-    <div data-slot="table-container" className={cn("relative w-full overflow-x-auto", !bare && "rounded-lg border bg-card")}>
+    <div data-slot="table-container" className={cn("relative w-full overflow-x-auto", !bare && "border-y [&_td:first-child]:pl-0 [&_td:last-child]:pr-0 [&_th:first-child]:pl-0 [&_th:last-child]:pr-0")}>
       <table data-slot="table" data-density={density} className={cn("group/table w-full caption-bottom border-collapse text-sm leading-5", className)} {...props} />
     </div>
   )
@@ -47,7 +47,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 }
 
 function TableFoot({ className, ...props }: React.ComponentProps<"tfoot">) {
-  return <tfoot data-slot="table-foot" className={cn("border-t bg-muted/60 font-medium [&_tr]:border-0 [&_tr]:hover:bg-transparent", className)} {...props} />
+  return <tfoot data-slot="table-foot" className={cn("border-t font-semibold [&_tr]:border-0 [&_tr]:hover:bg-transparent", className)} {...props} />
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {

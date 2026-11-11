@@ -21,7 +21,7 @@ export function NewProjectForm({ states }: { states: StateOption[] }) {
   const picked = choice && choice.attempt === state ? choice.code : (v?.state ?? "");
   const law = states.find((s) => s.code === picked);
   return (
-    <form action={action} noValidate className="flex flex-col gap-5 rounded-lg border bg-card p-5">
+    <form action={action} noValidate className="flex flex-col gap-5 border-t pt-5">
       <Field label="Project name" error={e.name}>
         <Input name="name" defaultValue={v?.name} placeholder="Bayview Clinic tenant improvement" autoComplete="off" autoFocus />
       </Field>

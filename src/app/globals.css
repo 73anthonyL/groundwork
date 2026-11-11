@@ -13,8 +13,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-host), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-host), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-franklin), ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
   --font-heading: var(--font-sans);
   --font-numeral: var(--numeral-font);
@@ -180,7 +180,7 @@
   --shadow-float-value: 0 0 0 1px oklch(0.21 0.02 255 / 0.08), 0 4px 8px -2px oklch(0.21 0.02 255 / 0.08), 0 16px 32px -8px oklch(0.21 0.02 255 / 0.16);
   --shadow-lift-value: 0 0 0 0 transparent;
 
-  --numeral-font: var(--font-host), ui-sans-serif, system-ui, sans-serif;
+  --numeral-font: var(--font-franklin), ui-sans-serif, system-ui, sans-serif;
 
   /* The sidebar sits one step below the page. */
   --sidebar: oklch(0.968 0.004 255);
@@ -256,7 +256,7 @@
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
   --shadow-float-value: 0 8px 32px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
 
-  --numeral-font: var(--font-host), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-franklin), ui-sans-serif, sans-serif;
 
   --sidebar: #ffffff;
   --sidebar-foreground: #1b2228;
@@ -282,7 +282,7 @@
   --link: #1f6b4a;
   --link-soft: #e0ede5;
   --shadow-card-value: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
-  --numeral-font: var(--font-host), ui-sans-serif, sans-serif;
+  --numeral-font: var(--font-franklin), ui-sans-serif, sans-serif;
   --background: #f3f4f2;
   --foreground: #10261c;
   --card: #ffffff;
@@ -415,8 +415,7 @@
 }
 /* Figures: amounts in tables, IDs, hashes, clause references. Plex Mono, tabular, a touch smaller so it sits level with the sans. */
 @utility type-mono {
-  font-family: var(--font-mono);
-  font-size: 0.9286em;
+  font-family: var(--font-sans);
   font-variant-numeric: lining-nums tabular-nums;
   letter-spacing: -0.01em;
 }
@@ -514,7 +513,7 @@
   }
   h1, h2, h3 {
     font-family: var(--font-sans);
-    letter-spacing: -0.012em;
+    letter-spacing: -0.005em;
     text-wrap: balance;
   }
   p {

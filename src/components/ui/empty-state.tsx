@@ -31,9 +31,9 @@ function EmptyState({
     <div
       data-slot="empty-state"
       className={cn(
-        "flex flex-col gap-1 px-6 py-8",
+        "flex flex-col gap-1",
         align === "center" ? "items-center text-center" : "items-start",
-        variant === "dashed" && "rounded-lg border border-dashed border-input",
+        variant === "dashed" ? "border-t py-5" : "py-4",
         className
       )}
     >

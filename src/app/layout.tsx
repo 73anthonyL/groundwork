@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Host_Grotesk, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Libre_Franklin, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import { MotionProvider } from "@/components/viz/motion-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 /** Host Grotesk: the one sans, for interface and display. Weights 400, 500 and 600 are the ones in use. */
-const host = Host_Grotesk({
-  variable: "--font-host",
+const franklin = Libre_Franklin({
+  variable: "--font-franklin",
   subsets: ["latin"],
 });
 
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${host.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${franklin.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

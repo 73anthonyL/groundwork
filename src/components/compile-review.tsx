@@ -152,7 +152,7 @@ export function CompileReview({
                 Open the PDF
               </a>
             </div>
-            <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[55vh] w-full rounded-lg border bg-card lg:h-[calc(100dvh-9.5rem)]" />
+            <iframe key={page} title={`${subName} subcontract, page ${page}`} src={`${documentUrl}#page=${page}&view=FitH`} className="h-[55vh] w-full border-y lg:h-[calc(100dvh-9.5rem)]" />
           </>
         ) : (
           (upload ?? <EmptyState title="No subcontract uploaded yet" description="Upload the signed PDF to read its payment terms." />)
@@ -228,7 +228,7 @@ export function CompileReview({
                         Settle {waiting} below before approving.
                       </p>
                     )}
-                    <ul className="divide-y rounded-lg border bg-card">
+                    <ul className="divide-y border-y">
                       {blocking.map((p) => (
                         <DecisionItem key={p} path={p} stored={stored} notes={unacked.filter((a) => a.field === p)} contractId={contractId} ruleSetId={ruleSet.id} onJump={jump} />
                       ))}
@@ -267,7 +267,7 @@ export function CompileReview({
 
             {anomalies.some((a) => a.ack || !editable) && (
               <Disclosure title="Notes from the reading" count={anomalies.filter((a) => a.ack || !editable).length}>
-                <ul className="divide-y rounded-lg border bg-card">
+                <ul className="divide-y border-y">
                   {anomalies
                     .filter((a) => a.ack || !editable)
                     .map((a) => (
@@ -446,7 +446,7 @@ function DecisionItem({
         </ul>
       )}
       {changing ? (
-        <form action={resolveFieldAction} className="flex flex-col gap-3 rounded-md border bg-background p-3">
+        <form action={resolveFieldAction} className="flex flex-col gap-3 border-t pt-3">
           {hidden}
           <input type="hidden" name="decision" value="override" />
           <Field label="What the contract actually says">
@@ -506,7 +506,7 @@ function VerifiedTerms({ stored, editable, count, defaultOpen, onJump }: { store
         {groups.map((g) => (
           <section key={g.title} aria-label={g.title}>
             <h4 className="type-meta mb-1.5 font-medium text-muted-foreground">{g.title}</h4>
-            <ul className="divide-y rounded-lg border bg-card">
+            <ul className="divide-y border-y">
               {g.paths.map((p) => (
                 <VerifiedRow key={p} path={p} extracted={stored.extracted} stored={stored} onJump={onJump} />
               ))}
@@ -750,7 +750,7 @@ function Reading() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="overflow-hidden rounded-lg border bg-card" role="status" aria-label="Reading the contract">
+    <div className="border-y" role="status" aria-label="Reading the contract">
       <div className="h-0.5 w-full overflow-hidden bg-muted">
         <div className="reading-bar h-full w-1/3 bg-signal" />
       </div>

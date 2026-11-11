@@ -39,7 +39,7 @@ export default async function SubPayAppsPage() {
       <PageBody>
         {billable.length > 1 && (
           <Section title="Bill for this period" description="Pick the contract to bill.">
-            <ul className="divide-y overflow-hidden rounded-lg border bg-card">
+            <ul className="divide-y border-y">
               {billable.map((c) => (
                 <li key={c.id} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                   <div className="min-w-0">
@@ -59,7 +59,7 @@ export default async function SubPayAppsPage() {
           </Section>
         )}
         {billable.length === 0 && waiting.length > 0 && (
-          <p className="rounded-lg border border-dashed border-input px-4 py-3 text-sm leading-5 text-muted-foreground">
+          <p className="py-2 text-sm leading-5 text-muted-foreground">
             Nothing to bill right now.{" "}
             {waiting.map((c) => (
               <span key={c.id}>

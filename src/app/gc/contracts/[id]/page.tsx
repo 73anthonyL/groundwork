@@ -82,7 +82,7 @@ export default async function ContractPage({ params, searchParams }: { params: P
       />
       <PageBody width="full">
         {msg && (
-          <p role="status" className="rounded-lg border bg-card px-4 py-3">
+          <p role="status" className="border-y px-4 py-3">
             {decodeURIComponent(msg)}
           </p>
         )}

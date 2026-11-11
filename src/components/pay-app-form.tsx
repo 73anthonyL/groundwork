@@ -408,7 +408,7 @@ export function PayAppForm({
         </Panel>
       </div>
 
-      <div className="sticky bottom-2 z-20 flex flex-col gap-3 rounded-lg border bg-card px-4 py-3 shadow-float sm:bottom-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky bottom-2 z-20 flex flex-col gap-3 border-y px-4 py-3 shadow-float sm:bottom-4 sm:flex-row sm:items-center sm:justify-between">
         <dl className="num flex items-baseline justify-between gap-x-6 text-sm leading-5 sm:justify-start">
           <div className="flex gap-2 max-lg:hidden">
             <dt className="text-muted-foreground">Billed</dt>

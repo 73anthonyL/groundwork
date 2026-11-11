@@ -46,7 +46,7 @@ function FoldedForm({ label, action, submit, children }: { label: string; action
   return (
     <details className="group">
       <summary className={buttonVariants({ variant: "secondary", size: "sm", className: "cursor-pointer list-none [&::-webkit-details-marker]:hidden" })}>{label}</summary>
-      <form action={action} className="mt-3 flex max-w-[640px] flex-col gap-4 rounded-lg border bg-card p-4">
+      <form action={action} className="mt-3 flex max-w-[640px] flex-col gap-4 border-t pt-5">
         {children}
         <FormActions>
           <SubmitButton variant="secondary">{submit}</SubmitButton>
@@ -171,7 +171,7 @@ export function ContractAdjustments({ data, role, actions }: { data: Data; role:
           </>
         }
       >
-        <dl className="grid gap-x-8 gap-y-3 rounded-lg border bg-card p-4 sm:grid-cols-2">
+        <dl className="grid gap-x-8 gap-y-3 border-t pt-5 sm:grid-cols-2">
           <div>
             <dt className="type-meta text-muted-foreground">Released when (from the approved rules)</dt>
             <dd className="mt-0.5">{rules?.retainage.release_condition ?? "Not stated in the contract."}</dd>

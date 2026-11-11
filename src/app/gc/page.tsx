@@ -29,7 +29,7 @@ export default async function GcHome() {
       <>
         <PageHeader width="form" title="Home" />
         <PageBody width="form">
-          <section aria-labelledby="start-heading" className="overflow-hidden rounded-lg border bg-card">
+          <section aria-labelledby="start-heading" className="border-y">
             <div className="p-6">
               <h2 id="start-heading" className="type-section">
                 Pay every subcontractor what the contract says, by the day the law allows
@@ -63,7 +63,7 @@ export default async function GcHome() {
       <PageHeader title="Home" badge={items.length > 0 ? <Badge tone="hold">{items.length} waiting</Badge> : undefined} description={org.name} />
       <PageBody>
         {onboarding.done < onboarding.total && (
-          <details open={items.length === 0} className="group overflow-hidden rounded-lg border bg-card">
+          <details open={items.length === 0} className="group border-y">
             <summary className="flex min-h-10 cursor-pointer list-none flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 hover:bg-muted/60 [&::-webkit-details-marker]:hidden">
               <span className="text-sm font-medium">
                 Finish setting up

@@ -124,7 +124,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
             </p>
           )}
           <Section title="Upload the first subcontract" description="Groundwork reads its payment terms. You approve them." className="max-w-[640px]">
-            <div className="rounded-lg border bg-card p-5">
+            <div className="border-t pt-5">
               <AddSubcontractForm projectId={id} knownSubs={known} isSample={sample} />
             </div>
           </Section>
@@ -214,7 +214,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
               </Link>
             }
           >
-            <div className="rounded-lg border bg-card p-4">
+            <div className="border-t pt-5">
               <MoneyFlow flow={flow} height={300} autoPlay={landedAt >= 0 && !duplicate} playFrom={landedAt >= 0 ? Math.max(0, landedAt - 1) : undefined} />
             </div>
           </Section>

@@ -119,11 +119,11 @@ export default async function SubHome() {
       <PageBody>
         <Section title="To do" actions={tasks.length > 0 ? <Badge tone="hold">{tasks.length} waiting on you</Badge> : undefined}>
           {tasks.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-input px-4 py-4 text-sm text-muted-foreground">
+            <p className="py-2 text-sm text-muted-foreground">
               Nothing needs you right now. {inReview.length ? `Pay app #${inReview[0].p.number} is with ${inReview[0].c.payer.name} for review.` : "A task appears here when a payment needs your signature or a new period can be billed."}
             </p>
           ) : (
-            <ul className="divide-y overflow-hidden rounded-lg border bg-card">
+            <ul className="divide-y border-y">
               {tasks.map((t, i) => (
                 <li key={t.id} className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                   <div className="flex min-w-0 gap-3">

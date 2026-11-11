@@ -93,12 +93,12 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
         {(settled || retried || error || failed || waitingOnLowerTier) && (
           <div className="flex flex-col gap-2">
             {settled && (
-              <p role="status" className="rounded-lg border bg-card px-4 py-3">
+              <p role="status" className="border-y px-4 py-3">
                 The bank confirmed the payment. The unconditional waiver has been sent to {sub} to sign.
               </p>
             )}
             {retried && (
-              <p role="status" className="rounded-lg border bg-card px-4 py-3">
+              <p role="status" className="border-y px-4 py-3">
                 Payment sent again.
               </p>
             )}
@@ -199,7 +199,7 @@ export default async function ReleasePage({ params, searchParams }: { params: Pr
           </div>
 
           <Section title="What happened" className="min-w-0">
-            <div className="rounded-lg border bg-card p-4">
+            <div className="border-t pt-5">
               <ReleaseTimeline r={r} ownerName={project.owner.name} gcName={project.gc.name} nowIso={nowIso} payee={sub} log={log} />
             </div>
             <p className="type-meta text-muted-foreground">Test mode: no real money moves.</p>

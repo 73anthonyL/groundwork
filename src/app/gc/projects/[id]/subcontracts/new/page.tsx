@@ -27,7 +27,7 @@ export default async function NewSubcontractPage({ params }: { params: Promise<{
         description="Upload the signed PDF. Groundwork reads its payment terms; you approve them."
       />
       <PageBody width="form">
-        <div className="rounded-lg border bg-card p-5">
+        <div className="border-t pt-5">
           <AddSubcontractForm projectId={id} knownSubs={knownSubs} isSample={isSampleWorkspace(org)} cancelHref={`${base}/subcontracts`} />
         </div>
       </PageBody>

@@ -147,7 +147,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           </p>
         )}
         {done && !error && (app.status === "approved" || app.status === "changes_requested") && (
-          <p role="status" className="rounded-lg border bg-card px-4 py-3">
+          <p role="status" className="border-y px-4 py-3">
             {app.status === "approved" ? `Approved. ${sub} is paid ${formatCents(netDue)} out of the next owner payment you record.` : `Sent back to ${sub} with your note.`}
           </p>
         )}
@@ -156,7 +156,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
           title="Payment requirements"
           description={`${summary} Each one is arithmetic against the approved payment rules${rules ? ` (version ${rules.version}${rules.approvedBy ? `, approved by ${rules.approvedBy}` : ""})` : ""}; no model is involved.`}
         >
-          <div className="overflow-hidden rounded-lg border bg-card">
+          <div className="border-y">
             {checks.length === 0 && <p className="px-4 py-6 text-muted-foreground">No requirements were recorded for this pay app.</p>}
             {checks.map((c) => {
               const s = STATE[c.status];
@@ -202,7 +202,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
             })}
           </div>
           {flags.length > 0 && (
-            <div className="rounded-lg border bg-card px-4 py-3">
+            <div className="border-y px-4 py-3">
               <div className="type-caption font-medium text-muted-foreground">Claude&rsquo;s reading of the results above. It explains; it does not decide.</div>
               <ul className="mt-2 flex flex-col gap-2">
                 {flags.map((f, i) => (
@@ -341,7 +341,7 @@ export default async function PayAppReviewPage({ params, searchParams }: { param
             </Panel>
           ) : (
             <Section title="Decision">
-              <div className="rounded-lg border bg-card p-4">
+              <div className="border-t pt-5">
                 <p>
                   {app.status === "draft" ? "Not submitted yet." : `Approved${reviewedBy ? ` by ${reviewedBy}` : ""}${app.reviewedAt ? ` on ${day(app.reviewedAt)}` : ""}${corrected ? ", with retainage corrected to the subcontract's rate" : ""}.`}
                 </p>
