@@ -22,7 +22,7 @@ export default async function OwnerProjectPage({ params }: { params: Promise<{ i
         description={`Built by ${project.gc.name} under a ${formatCentsCompact(project.primeContractSumCents)} prime contract${project.address ? `, ${project.address}` : ""}. You can see where each of your payments went. There is nothing for you to do here.`}
       />
       <PageBody>
-        <ProjectLive org={org} projectId={project.id} />
+        <ProjectLive org={org} projectId={project.id} autoPlay />
       </PageBody>
     </>
   );

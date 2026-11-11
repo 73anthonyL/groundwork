@@ -112,7 +112,7 @@ export default async function OwnerHome() {
 
         {only && (
           <Section title={only.name} description={`How each of your payments to ${only.gc.name} was split and where it stands now.`}>
-            <ProjectLive org={org} projectId={only.id} />
+            <ProjectLive org={org} projectId={only.id} autoPlay />
           </Section>
         )}
       </PageBody>
