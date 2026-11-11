@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { DaysFragment } from "@/components/landing/fragments";
 import { SAMPLE_PAYMENT, type SamplePaymentLine } from "@/lib/sample-flow";
 import { formatCentsCompact } from "@/lib/money";
+import { CountUp, InView } from "@/components/in-view";
 
 /** Landing type, set here because it is larger than anything in the app. */
 const WRAP = "mx-auto w-full max-w-[1120px] px-5 sm:px-8";
@@ -21,39 +22,49 @@ const STEPS = [
 ];
 
 /** One small picture per step: the file going in, the rules being approved, the payment coming out. */
+const i = (n: number) => ({ "--i": n }) as React.CSSProperties;
+
+/**
+ * One small picture per step: the file going in, the rules being approved, the payment coming out.
+ * They play in order when the section scrolls into view (the numbers are beats of 90ms):
+ * the file lands and is read, each rule is ticked, the payment splits bar by bar.
+ */
 const STEP_PICTURES = [
-  <div key="upload" className="w-full max-w-[15rem] rounded-md border border-dashed border-input bg-card px-4 py-4">
+  <div key="upload" className="iv w-full max-w-[15rem] rounded-md border border-dashed border-input bg-card px-4 py-4" style={i(2)}>
     <div className="flex items-center gap-3">
-      <FileText className="size-8 shrink-0 text-money" />
+      <FileText className="iv-pop size-8 shrink-0 text-money" style={i(4)} />
       <div className="min-w-0">
         <div className="truncate text-[14px] font-medium">subcontract.pdf</div>
         <div className="text-[12px] text-muted-foreground">7 pages</div>
       </div>
     </div>
+    {/* Being read: the bar keeps sweeping. */}
     <div className="mt-3 h-1 overflow-hidden rounded-full bg-secondary">
-      <div className="h-full w-2/3 rounded-full bg-signal" />
+      <div className="reading-bar h-full w-1/3 rounded-full bg-signal" />
     </div>
   </div>,
   <ul key="approve" className="w-full max-w-[15rem] divide-y rounded-md border bg-card text-[14px]">
-    {["Pay within 7 days", "Hold back 10%", "Waiver before payment"].map((r) => (
-      <li key={r} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+    {["Pay within 7 days", "Hold back 10%", "Waiver before payment"].map((r, n) => (
+      <li key={r} className="iv flex items-center justify-between gap-3 px-3.5 py-2.5" style={i(9 + n * 3)}>
         <span>{r}</span>
-        <Check className="size-4 shrink-0 text-money" />
+        <Check className="iv-pop size-4 shrink-0 text-money" strokeWidth={2.5} style={i(11 + n * 3)} />
       </li>
     ))}
   </ul>,
   <div key="pay" className="w-full max-w-[15rem]">
-    <div className="flex items-baseline justify-between text-[14px]">
+    <div className="iv flex items-baseline justify-between text-[14px]" style={i(20)}>
       <span className="text-muted-foreground">Owner payment</span>
-      <span className="num font-semibold">$125,000</span>
+      <span className="num font-semibold">
+        <CountUp value={125000} prefix="$" seconds={1.6} />
+      </span>
     </div>
     <div className="mt-3 flex h-3 gap-1">
-      <span className="rounded-sm bg-signal" style={{ width: "36%" }} />
-      <span className="rounded-sm bg-signal/80" style={{ width: "38%" }} />
-      <span className="rounded-sm bg-signal/60" style={{ width: "18%" }} />
-      <span className="rounded-sm bg-primary" style={{ width: "8%" }} />
+      <span className="iv-grow rounded-sm bg-signal" style={{ width: "36%", ...i(23) }} />
+      <span className="iv-grow rounded-sm bg-signal/80" style={{ width: "38%", ...i(26) }} />
+      <span className="iv-grow rounded-sm bg-signal/60" style={{ width: "18%", ...i(29) }} />
+      <span className="iv-grow rounded-sm bg-primary" style={{ width: "8%", ...i(32) }} />
     </div>
-    <div className="mt-3 flex justify-between text-[12px] text-muted-foreground">
+    <div className="iv mt-3 flex justify-between text-[12px] text-muted-foreground" style={i(34)}>
       <span>3 subcontractors paid</span>
       <span>$10,000 held</span>
     </div>
@@ -76,10 +87,10 @@ function SplitPicture() {
         <span className="num text-[28px] font-semibold leading-none">{formatCentsCompact(p.amountCents)}</span>
       </div>
       <ul className="border-t">
-        {p.lines.map((l, i) => {
+        {p.lines.map((l, n) => {
           const s = STATUS[l.status];
           return (
-            <li key={l.name} className="split-row flex items-center justify-between gap-4 border-b px-6 py-4" style={{ "--i": i } as React.CSSProperties}>
+            <li key={l.name} className="split-row flex items-center justify-between gap-4 border-b px-6 py-4" style={i(n)}>
               <div className="min-w-0">
                 <div className="text-[15px] font-medium">{l.name}</div>
                 <div className={`mt-0.5 flex items-center gap-1.5 text-[13px] ${s.tone}`}>
@@ -91,7 +102,7 @@ function SplitPicture() {
             </li>
           );
         })}
-        <li className="split-row flex items-center justify-between gap-4 px-6 py-4 text-muted-foreground" style={{ "--i": p.lines.length } as React.CSSProperties}>
+        <li className="split-row flex items-center justify-between gap-4 px-6 py-4 text-muted-foreground" style={i(p.lines.length)}>
           <span className="text-[15px]">Held back until the job is done</span>
           <span className="num text-[17px]">{formatCentsCompact(p.retainageCents)}</span>
         </li>
@@ -149,64 +160,78 @@ export default async function Landing() {
         </section>
 
         <section className="stage">
-          <div className={`${WRAP} grid gap-x-16 gap-y-12 py-20 sm:py-24 lg:grid-cols-2 lg:items-center`}>
-            <h2 className={`${H2} max-w-[16ch]`}>The owner pays in 17 days. The sub waits 50.</h2>
-            <div>
+          <InView className={`${WRAP} grid gap-x-16 gap-y-12 py-20 sm:py-24 lg:grid-cols-2 lg:items-center`}>
+            <h2 className={`iv ${H2} max-w-[16ch]`}>The owner pays in 17 days. The sub waits 50.</h2>
+            <div className="iv" style={i(2)}>
               <DaysFragment />
               <p className="type-meta mt-8 text-stage-muted">Median days to payment, US commercial construction. Built payment ledger, August 2026.</p>
             </div>
-          </div>
+          </InView>
         </section>
 
         <section id="how" className="scroll-mt-8">
           <div className={`${WRAP} py-20 sm:py-28`}>
-            <h2 className={H2}>Three steps.</h2>
+            <InView>
+              <h2 className={`iv ${H2}`}>Three steps.</h2>
+            </InView>
+            <InView threshold={0.35}>
             <ol className="mt-12 grid gap-5 md:grid-cols-3">
-              {STEPS.map((s, i) => (
-                <li key={s.title} className="relative flex flex-col rounded-lg border bg-card">
+              {STEPS.map((s, idx) => (
+                <li key={s.title} className="iv group relative flex flex-col rounded-lg border bg-card transition-[border-color,translate,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:border-signal/60 hover:shadow-float" style={i(idx * 8)}>
                   {/* What the step looks like in the product. */}
                   <div aria-hidden className="flex h-44 items-center justify-center rounded-t-lg border-b bg-background/60 px-6">
-                    {STEP_PICTURES[i]}
+                    {STEP_PICTURES[idx]}
                   </div>
                   <div className="flex gap-4 p-6">
-                    <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-signal text-[15px] font-semibold text-signal-foreground">{i + 1}</span>
+                    <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-signal text-[15px] font-semibold text-signal-foreground transition-[scale] duration-200 ease-out group-hover:scale-110">{idx + 1}</span>
                     <div>
                       <h3 className="text-[19px] font-medium leading-7">{s.title}</h3>
                       <p className="mt-1 text-[15px] leading-6 text-muted-foreground">{s.body}</p>
                     </div>
                   </div>
                   {/* The arrow to the next step. */}
-                  {i < STEPS.length - 1 && (
-                    <span aria-hidden className="absolute -right-[27px] top-[5.5rem] z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border bg-card text-muted-foreground md:flex">
+                  {idx < STEPS.length - 1 && (
+                    <span aria-hidden style={i(idx * 8 + 7)} className="iv-pop absolute -right-[27px] top-[5.5rem] z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border bg-card text-muted-foreground md:flex">
                       <ArrowRight className="size-4" />
                     </span>
                   )}
                 </li>
               ))}
             </ol>
+            </InView>
 
             {run && (
-              <dl className="mt-5 grid overflow-hidden rounded-lg border bg-card sm:grid-cols-3 sm:divide-x">
-                {[
-                  { value: `${(run.metrics.accuracy * 100).toFixed(1)}%`, label: "of contract terms read correctly" },
-                  { value: String(run.metrics.fields), label: `terms tested across ${run.metrics.contracts} subcontracts` },
-                  { value: "Every rule", label: "approved by you before anything is paid" },
-                ].map((m) => (
-                  <div key={m.label} className="flex flex-col border-b p-6 last:border-b-0 sm:border-b-0">
-                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">{m.label}</dt>
-                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">{m.value}</dd>
+              <InView>
+                <dl className="iv mt-5 grid overflow-hidden rounded-lg border bg-card sm:grid-cols-3 sm:divide-x">
+                  <div className="flex flex-col border-b p-6 sm:border-b-0">
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">of contract terms read correctly</dt>
+                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">
+                      <CountUp value={run.metrics.accuracy * 100} decimals={1} suffix="%" />
+                    </dd>
                   </div>
-                ))}
-              </dl>
+                  <div className="flex flex-col border-b p-6 sm:border-b-0">
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">terms tested across {run.metrics.contracts} subcontracts</dt>
+                    <dd className="num text-[32px] font-medium leading-none tracking-[-0.01em] text-money">
+                      <CountUp value={run.metrics.fields} />
+                    </dd>
+                  </div>
+                  <div className="flex flex-col p-6">
+                    <dt className="order-2 mt-1 text-[15px] leading-6 text-muted-foreground">approved by you before anything is paid</dt>
+                    <dd className="text-[32px] font-medium leading-none tracking-[-0.01em] text-money">Every rule</dd>
+                  </div>
+                </dl>
+              </InView>
             )}
           </div>
         </section>
 
         <section className="border-t">
-          <div className={`${WRAP} py-20 sm:py-28`}>
-            <h2 className={`${H1} max-w-[18ch]`}>See it with your own subcontract.</h2>
-            <div className="mt-8">{cta}</div>
-          </div>
+          <InView className={`${WRAP} py-20 sm:py-28`}>
+            <h2 className={`iv ${H1} max-w-[18ch]`}>See it with your own subcontract.</h2>
+            <div className="iv mt-8" style={i(2)}>
+              {cta}
+            </div>
+          </InView>
         </section>
       </main>
 

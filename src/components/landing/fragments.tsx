@@ -1,4 +1,5 @@
 import { Check, FileText } from "lucide-react";
+import { CountUp } from "@/components/in-view";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { formatCents } from "@/lib/money";
 import { SAMPLE_PAYMENT } from "@/lib/sample-flow";
@@ -232,11 +233,11 @@ export function DaysFragment() {
             <div className="flex items-baseline justify-between gap-4">
               <dt className="text-[15px] leading-6 text-stage-muted">{r.label}</dt>
               <dd className="num text-[15px] leading-6 text-stage-muted">
-                <span className="mr-1.5 text-[40px] font-medium leading-none tracking-[-0.02em] text-stage-foreground">{r.days}</span>days
+                <CountUp value={r.days} className="mr-1.5 text-[40px] font-medium leading-none tracking-[-0.02em] text-stage-foreground" />days
               </dd>
             </div>
             <div aria-hidden className="mt-3 h-1.5 rounded-full bg-stage-foreground/10">
-              <div className={`h-full rounded-full ${r.days > 17 ? "bg-signal" : "bg-stage-foreground"}`} style={{ width: `${(r.days / 50) * 100}%` }} />
+              <div className={`iv-grow h-full rounded-full ${r.days > 17 ? "bg-signal" : "bg-stage-foreground"}`} style={{ width: `${(r.days / 50) * 100}%`, "--i": r.days > 17 ? 4 : 0 } as React.CSSProperties} />
             </div>
           </div>
         ))}

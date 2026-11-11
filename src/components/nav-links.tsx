@@ -28,8 +28,8 @@ const ICONS: Record<NavIcon, LucideIcon> = {
 
 /** Shared by links and the Sign out button so every sidebar row is the same size and answers hover the same way. */
 export const navRow =
-  "group flex h-8 w-full items-center gap-2 rounded-md px-2 text-left text-sm leading-5 text-foreground/80 -outline-offset-2 hover:bg-sidebar-accent hover:text-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-foreground";
-export const navIcon = "size-4 shrink-0 text-muted-foreground group-hover:text-foreground group-aria-[current=page]:text-foreground";
+  "group flex h-8 w-full items-center gap-2 rounded-md px-2 text-left text-sm leading-5 text-foreground/80 -outline-offset-2 transition-colors duration-150 ease-out hover:bg-sidebar-accent hover:text-foreground aria-[current=page]:bg-sidebar-accent aria-[current=page]:font-medium aria-[current=page]:text-foreground";
+export const navIcon = "size-4 shrink-0 text-muted-foreground transition-[translate,color] duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-foreground group-aria-[current=page]:text-foreground";
 
 /** Pages that live outside their section's URL still belong to it in the sidebar. */
 const SECTION: [prefix: string, section: string][] = [

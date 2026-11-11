@@ -45,6 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
+        <noscript>
+          <style>{`[data-inview] .iv,[data-inview] .iv-pop{opacity:1!important}[data-inview] .iv-grow{transform:none!important}`}</style>
+        </noscript>
         <MotionProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </MotionProvider>

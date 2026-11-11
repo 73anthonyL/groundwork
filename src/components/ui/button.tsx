@@ -17,12 +17,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { Spinner } from "./spinner"
 
-const primary = "border-transparent bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--primary-foreground)_18%)]"
-const secondary = "border-input bg-card text-foreground hover:bg-muted aria-expanded:bg-muted"
+const primary = "border-transparent bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--primary),var(--primary-foreground)_18%)] hover:shadow-[0_6px_22px_-6px_var(--primary)]"
+const secondary = "border-input bg-card text-foreground hover:border-[color-mix(in_oklch,var(--foreground),transparent_45%)] hover:bg-muted aria-expanded:bg-muted"
 const tertiary = "border-transparent text-foreground hover:bg-secondary aria-expanded:bg-secondary"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center rounded-md border font-medium whitespace-nowrap select-none transition-[background-color,border-color,color,scale] duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-busy:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center rounded-md border font-medium whitespace-nowrap select-none transition-[background-color,border-color,color,scale,box-shadow,filter] duration-150 ease-out active:scale-[0.96] active:duration-75 disabled:pointer-events-none disabled:opacity-50 aria-busy:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -35,7 +35,7 @@ const buttonVariants = cva(
         default: primary,
         money: primary,
         /* The accent button: terracotta, for the one call to action on a marketing page. */
-        signal: "bg-signal text-signal-foreground font-semibold hover:brightness-105",
+        signal: "border-transparent bg-signal text-signal-foreground font-semibold hover:brightness-110 hover:shadow-[0_8px_28px_-8px_var(--signal)]",
         outline: secondary,
         stage: secondary,
         ghost: tertiary,

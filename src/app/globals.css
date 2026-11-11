@@ -402,3 +402,143 @@
     width: 100% !important;
   }
 }
+
+/* ── Motion ─────────────────────────────────────────────────────────────────────────────────────
+   Everything below answers something: a page arriving, a row loading, a cursor, a press, a result.
+   All of it is transform and opacity, and the reduced-motion block above shortens it to nothing. */
+
+@keyframes gw-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gw-row {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gw-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gw-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes gw-pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes gw-breathe {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* A page arriving: the header, then each section of the body in turn. */
+[data-page="header"] {
+  animation: gw-enter 0.45s var(--ease-out) both;
+}
+[data-page="body"] > * {
+  animation: gw-enter 0.5s var(--ease-out) both;
+  animation-delay: calc(70ms + var(--n, 0) * 70ms);
+}
+[data-page="body"] > :nth-child(2) { --n: 1; }
+[data-page="body"] > :nth-child(3) { --n: 2; }
+[data-page="body"] > :nth-child(4) { --n: 3; }
+[data-page="body"] > :nth-child(5) { --n: 4; }
+[data-page="body"] > :nth-child(n + 6) { --n: 5; }
+
+/* Rows of a table arriving one after another (the first dozen; the rest come with the twelfth). */
+[data-slot="table-body"] > tr {
+  animation: gw-row 0.35s var(--ease-out) both;
+  animation-delay: calc(120ms + var(--r, 11) * 35ms);
+}
+[data-slot="table-body"] > tr:nth-child(1) { --r: 0; }
+[data-slot="table-body"] > tr:nth-child(2) { --r: 1; }
+[data-slot="table-body"] > tr:nth-child(3) { --r: 2; }
+[data-slot="table-body"] > tr:nth-child(4) { --r: 3; }
+[data-slot="table-body"] > tr:nth-child(5) { --r: 4; }
+[data-slot="table-body"] > tr:nth-child(6) { --r: 5; }
+[data-slot="table-body"] > tr:nth-child(7) { --r: 6; }
+[data-slot="table-body"] > tr:nth-child(8) { --r: 7; }
+[data-slot="table-body"] > tr:nth-child(9) { --r: 8; }
+[data-slot="table-body"] > tr:nth-child(10) { --r: 9; }
+[data-slot="table-body"] > tr:nth-child(11) { --r: 10; }
+
+/* A result or an error appearing after an action. */
+main p[role="status"],
+main div[role="status"],
+main [role="alert"] {
+  animation: gw-drop 0.3s var(--ease-out) both;
+}
+
+/* A field taking focus: the outline is instant, a soft halo follows it. */
+[data-slot="input"],
+[data-slot="select"],
+[data-slot="textarea"] {
+  transition: border-color 0.15s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+[data-slot="input"]:focus-visible,
+[data-slot="select"]:focus-visible,
+[data-slot="textarea"]:focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--ring), transparent 78%);
+}
+
+/* Scroll-triggered pieces (see src/components/in-view.tsx). */
+[data-inview="false"] .iv,
+[data-inview="false"] .iv-pop {
+  opacity: 0;
+}
+[data-inview="false"] .iv-grow {
+  transform: scaleX(0);
+}
+[data-inview="true"] .iv {
+  animation: gw-enter 0.6s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+[data-inview="true"] .iv-pop {
+  animation: gw-pop 0.4s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+.iv-grow {
+  transform-origin: left;
+}
+[data-inview="true"] .iv-grow {
+  animation: gw-grow 0.8s var(--ease-trace) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Something waiting on a person, or money in motion: it breathes. */
+@utility breathe {
+  animation: gw-breathe 2.4s ease-in-out infinite;
+}

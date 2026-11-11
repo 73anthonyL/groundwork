@@ -51,7 +51,7 @@ function TableFoot({ className, ...props }: React.ComponentProps<"tfoot">) {
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return <tr data-slot="table-row" className={cn("border-b hover:bg-muted/60 data-[state=selected]:bg-muted", className)} {...props} />
+  return <tr data-slot="table-row" className={cn("group/row border-b hover:bg-muted/60 data-[state=selected]:bg-muted", className)} {...props} />
 }
 
 function TableHead({ className, numeric, ...props }: React.ComponentProps<"th"> & { numeric?: boolean }) {
@@ -93,7 +93,7 @@ function TableLink({ className, ...props }: React.ComponentProps<typeof Link>) {
 function TableChevron({ className }: { className?: string }) {
   return (
     <td data-slot="table-chevron" className={cn("w-8 pr-3 text-muted-foreground", className)} aria-hidden>
-      <ChevronRight className="ml-auto size-4" />
+      <ChevronRight className="ml-auto size-4 transition-[translate,color] duration-150 ease-out group-hover/row:translate-x-1 group-hover/row:text-foreground" />
     </td>
   )
 }

@@ -215,7 +215,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
             }
           >
             <div className="border-t pt-5">
-              <MoneyFlow flow={flow} height={300} autoPlay={landedAt >= 0 && !duplicate} playFrom={landedAt >= 0 ? Math.max(0, landedAt - 1) : undefined} />
+              <MoneyFlow flow={flow} height={300} autoPlay={!duplicate} playFrom={landedAt >= 0 ? Math.max(0, landedAt - 1) : 0} />
             </div>
           </Section>
         )}
